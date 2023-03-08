@@ -86,14 +86,11 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/zucchero-sintattico/Jhaturanga/blob/main/LICENSE) for more information.
-
+Distributed under the MIT License. See [LICENSE](https://github.com/zucchero-sintattico/piperchat/blob/main/LICENSE) for more information.
 
 
 <!-- CONTACT -->
 ## Contact
-
-Zucchero Sintattico on Instagram - [@Instagram page](https://www.instagram.com/zucchero_sintattico/)
 
 Project Link: [https://github.com/zucchero-sintattico/piperchat](https://github.com/zucchero-sintattico/piperchat)
 
