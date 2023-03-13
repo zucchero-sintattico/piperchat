@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-13T17:34:22.046Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="HZLT2XBSRw3HtG7Ms5jq" version="21.0.6" type="github">
+<mxfile host="app.diagrams.net" modified="2023-03-13T17:34:55.430Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="-nwYLGQB0P4P-J0xV4zy" version="21.0.6" type="github">
   <diagram name="casi d&#39;uso" id="L522oNF_uNWGlUxBPbBV">
     <mxGraphModel dx="1270" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
@@ -94,7 +94,7 @@
           <mxGeometry x="545" y="950" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-40" value="Aggiunge amico&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="680" y="854.5" width="140" height="70" as="geometry" />
+          <mxGeometry x="680" y="874.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-76" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-43" target="ZlrdZ9Rfqk7_zWv-UgOn-74">
           <mxGeometry relative="1" as="geometry" />
@@ -109,7 +109,7 @@
           <mxGeometry x="545" y="757.5" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-56" value="Rimuove utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="680" y="945" width="140" height="70" as="geometry" />
+          <mxGeometry x="680" y="965" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-57" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="250" y="945" width="140" height="70" as="geometry" />
@@ -118,7 +118,7 @@
           <mxGeometry x="250" y="857.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-70" value="Genera link per entrare nel server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="680" y="1037.5" width="140" height="70" as="geometry" />
+          <mxGeometry x="680" y="1057.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-78" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-71" target="ZlrdZ9Rfqk7_zWv-UgOn-57">
           <mxGeometry relative="1" as="geometry" />
