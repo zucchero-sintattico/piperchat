@@ -10,7 +10,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/zucchero-sintattico/piperchat">
-    <img src="./resources/piperchat-logo.jpg" alt="Logo" width="512" height="512" />
+    <img src="./resources/piperchat-logo.jpg" alt="Logo" width="256" height="256" />
   </a>
 
   <h3 align="center">Piperchat</h3>
