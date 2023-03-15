@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-15T18:21:43.537Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="D3qpS5CznrEI8U7lfoA4" version="21.0.6" type="github">
+<mxfile host="app.diagrams.net" modified="2023-03-15T18:24:34.335Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="5DW-0ABM5ZW2_zOBUqTc" version="21.0.6" type="github">
   <diagram name="casi d&#39;uso" id="L522oNF_uNWGlUxBPbBV">
     <mxGraphModel dx="1451" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
@@ -93,7 +93,7 @@
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-33" value="Amministratore&lt;br&gt;server" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" parent="1" vertex="1">
           <mxGeometry x="545" y="950" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-40" value="Aggiunge amico&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-40" value="Aggiungere amico&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="874.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-76" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-43" target="ZlrdZ9Rfqk7_zWv-UgOn-74" edge="1">
@@ -108,7 +108,7 @@
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-43" value="Utente Loggato" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;labelPosition=center;align=center;" parent="1" vertex="1">
           <mxGeometry x="545" y="757.5" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-56" value="Rimuove utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-56" value="Rimuovere utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="965" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-57" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -207,7 +207,7 @@
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-30" value="Amministratore&lt;br&gt;server" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" vertex="1" parent="1">
           <mxGeometry x="1755" y="965.75" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-31" value="Aggiungi&amp;nbsp;al server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-31" value="Aggiungere utente&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1890" y="875" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="N8Tcrw5aQN3_MhM3PGC5-35" target="N8Tcrw5aQN3_MhM3PGC5-47">
@@ -219,7 +219,7 @@
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-35" value="Utente Loggato" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;labelPosition=center;align=center;" vertex="1" parent="1">
           <mxGeometry x="1755" y="773.25" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-36" value="Rimuove&amp;nbsp;dal server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-36" value="Rimuove utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1890" y="987.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-37" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
