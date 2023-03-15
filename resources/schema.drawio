@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-15T18:24:34.335Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="5DW-0ABM5ZW2_zOBUqTc" version="21.0.6" type="github">
+<mxfile host="app.diagrams.net" modified="2023-03-15T20:04:39.965Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="_7GQj0Imo8R6r6Y5KaAe" version="21.0.6" type="github">
   <diagram name="casi d&#39;uso" id="L522oNF_uNWGlUxBPbBV">
     <mxGraphModel dx="1451" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
@@ -28,37 +28,37 @@
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;startSize=10;endSize=10;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-2" target="ZlrdZ9Rfqk7_zWv-UgOn-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-8" value="Visualizza Dashboard" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-8" value="Visualizza Dashboard" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="325" y="70" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-9" value="Login / Signup" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-9" value="Login / Signup" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="515" y="70" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-2" value="Utente" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" parent="1" vertex="1">
           <mxGeometry x="475" y="180" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-17" value="Aggiungere amico" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-17" value="Aggiungere amico" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="260" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-18" value="Blocca contatto" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-18" value="Bloccare utente" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="345" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-19" value="Chat / Chiamata con altro utente" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-19" value="Chat / Chiamata&lt;br&gt;con un amico" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="430" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-20" value="Riceve notifica" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-20" value="Riceve notifica" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="540" y="345" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;dashed=1;endSize=10;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-26" target="ZlrdZ9Rfqk7_zWv-UgOn-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-26" value="Notifica Messaggio" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-26" value="Notifica Messaggio" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="750" y="345" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=open;endFill=0;dashed=1;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-27" target="ZlrdZ9Rfqk7_zWv-UgOn-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-27" value="Notifica Chiamata" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-27" value="Notifica Chiamata" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="750" y="440" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=open;endFill=0;dashed=1;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-28" target="ZlrdZ9Rfqk7_zWv-UgOn-20" edge="1">
@@ -69,7 +69,7 @@
             <mxPoint x="9" y="-27" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-28" value="Richiesta di amicizia" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-28" value="Richiesta di amicizia" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="750" y="250" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=10;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-33" target="ZlrdZ9Rfqk7_zWv-UgOn-43" edge="1">
@@ -93,7 +93,7 @@
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-33" value="Amministratore&lt;br&gt;server" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" parent="1" vertex="1">
           <mxGeometry x="545" y="950" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-40" value="Aggiungere amico&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-40" value="Aggiungere amico&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="874.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-76" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-43" target="ZlrdZ9Rfqk7_zWv-UgOn-74" edge="1">
@@ -108,31 +108,31 @@
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-43" value="Utente Loggato" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;labelPosition=center;align=center;" parent="1" vertex="1">
           <mxGeometry x="545" y="757.5" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-56" value="Rimuovere utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-56" value="Rimuovere utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="965" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-57" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-57" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="250" y="945" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-58" value="Crea server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-58" value="Crea server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="250" y="857.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-70" value="Genera link per entrare nel server" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-70" value="Genera link per entrare nel server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="1057.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-78" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-71" target="ZlrdZ9Rfqk7_zWv-UgOn-57" edge="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-78" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;shadow=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-71" target="ZlrdZ9Rfqk7_zWv-UgOn-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-71" value="Crea canale&lt;br&gt;di testo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-71" value="Crea canale&lt;br&gt;di testo" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="160" y="1057.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-79" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-72" target="ZlrdZ9Rfqk7_zWv-UgOn-57" edge="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-79" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;shadow=1;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-72" target="ZlrdZ9Rfqk7_zWv-UgOn-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-72" value="Crea canale&lt;br&gt;multimediale" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="350" y="1057.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-73" value="Invia messaggio in canale di testo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-73" value="Invia messaggio in canale di testo" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="660" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-81" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="ZlrdZ9Rfqk7_zWv-UgOn-43" target="ZlrdZ9Rfqk7_zWv-UgOn-74" edge="1">
@@ -141,10 +141,10 @@
             <mxPoint x="380" y="737.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-74" value="Entra in canale multimediale" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-74" value="Entra in canale multimediale" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="755" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-86" value="Sottoscrivi a canale" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="ZlrdZ9Rfqk7_zWv-UgOn-86" value="Entrare in &lt;br&gt;un server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="250" y="717.5" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;endArrow=block;endFill=0;endSize=10;" edge="1" parent="1" source="N8Tcrw5aQN3_MhM3PGC5-6" target="N8Tcrw5aQN3_MhM3PGC5-11">
@@ -168,22 +168,22 @@
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;startSize=10;endSize=10;endArrow=none;endFill=0;" edge="1" parent="1" source="N8Tcrw5aQN3_MhM3PGC5-11" target="N8Tcrw5aQN3_MhM3PGC5-9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-9" value="Visualizza Dashboard" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-9" value="Visualizza Dashboard" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1480" y="140" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-10" value="Login / Signup" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-10" value="Login / Signup" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1730" y="140" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-11" value="Utente" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" vertex="1" parent="1">
           <mxGeometry x="1654" y="240" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-12" value="Aggiungere amico" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-12" value="Aggiungere amico" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1439" y="350" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-14" value="Chat / Chiamata con altro utente" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-14" value="Chat / Chiamata&lt;br&gt;con un amico" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1439" y="440" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-15" value="Riceve notifiche" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-15" value="Ricevere notifiche" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1760" y="405" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-23" value="&lt;font style=&quot;font-size: 32px;&quot;&gt;&lt;b&gt;Report iniziale&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
@@ -207,7 +207,7 @@
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-30" value="Amministratore&lt;br&gt;server" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;horizontal=1;labelPosition=center;align=center;" vertex="1" parent="1">
           <mxGeometry x="1755" y="965.75" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-31" value="Aggiungere utente&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-31" value="Aggiungere utente&lt;br&gt;al server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1890" y="875" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="N8Tcrw5aQN3_MhM3PGC5-35" target="N8Tcrw5aQN3_MhM3PGC5-47">
@@ -219,19 +219,19 @@
         <mxCell id="N8Tcrw5aQN3_MhM3PGC5-35" value="Utente Loggato" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;outlineConnect=0;labelPosition=center;align=center;" vertex="1" parent="1">
           <mxGeometry x="1755" y="773.25" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-36" value="Rimuove utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-36" value="Rimuove utente&lt;br&gt;dal server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1890" y="987.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-37" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-37" value="Crea canale" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1514" y="987.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-38" value="Crea server" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-38" value="Crea server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1514" y="874.5" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-47" value="Sottoscrivi a canale" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-47" value="Entrare in&amp;nbsp;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;un server" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1514" y="730" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-48" value="Interagisci con canale" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="N8Tcrw5aQN3_MhM3PGC5-48" value="Interagire con canale" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="1890" y="730" width="140" height="70" as="geometry" />
         </mxCell>
       </root>
