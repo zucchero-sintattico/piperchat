@@ -11,7 +11,6 @@ export class RabbitMQ {
 		if (!RabbitMQ.instance) {
 			RabbitMQ.instance = new RabbitMQ(connectionUri);
 			await RabbitMQ.instance.connect();
-			console.log("Connected to RabbitMQ");
 		}
 	}
 
@@ -30,6 +29,7 @@ export class RabbitMQ {
 		try {
 			this.connection = await amqp.connect(this.connectionUri);
 			this.channel = await this.connection.createChannel();
+			console.log("Connected to RabbitMQ");
 		} catch (err) {
 			console.error(err);
 		}

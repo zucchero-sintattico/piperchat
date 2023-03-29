@@ -1,1 +1,31 @@
 version: "1"
+
+services:
+  # Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - .docker/rabbitmq/data/:/var/lib/rabbitmq/
+    networks:
+      - rabbitmq_go_net
+
+  # simple-service
+  simple-service:
+    build: simple-service/
+    container_name: "simple-service"
+    ports:
+      - 8080:8080
+    networks:
+      - rabbitmq_go_net
+    depends_on:
+      - rabbitmq
+    environment:
+      - AMQP_URI=amqp://rabbitmq:5672/
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge

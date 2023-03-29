@@ -27,7 +27,7 @@ const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
 // Start function
 const start = async () => {
 	// Initialize mongoose
-	await MongooseUtils.initialize(mongoUri);
+	// await MongooseUtils.initialize(mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(amqpUri);
