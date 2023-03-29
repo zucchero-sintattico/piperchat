@@ -1,13 +1,21 @@
 import { RabbitMQ } from "../utils/rabbit-mq";
 
 export class EntityEvents {
-	private instance: RabbitMQ;
-	constructor() {
-		this.instance = RabbitMQ.getInstance();
+	private static _instance: RabbitMQ;
+
+	static getInstance() {
+		if (!this._instance) {
+			this._instance = RabbitMQ.getInstance();
+		}
+		return this._instance;
 	}
 
-	async publishEntityCreated(entity: any) {
-		const channel = this.instance.getChannel();
+	static getChannel() {
+		return this.getInstance().getChannel();
+	}
+
+	static async publishEntityCreated(entity: any) {
+		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
 				"entity",
@@ -17,8 +25,8 @@ export class EntityEvents {
 		}
 	}
 
-	async publishEntityUpdated(entity: any) {
-		const channel = this.instance.getChannel();
+	static async publishEntityUpdated(entity: any) {
+		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
 				"entity",

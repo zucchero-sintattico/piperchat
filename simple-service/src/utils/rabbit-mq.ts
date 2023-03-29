@@ -11,6 +11,7 @@ export class RabbitMQ {
 		if (!RabbitMQ.instance) {
 			RabbitMQ.instance = new RabbitMQ(connectionUri);
 			await RabbitMQ.instance.connect();
+			console.log("Connected to RabbitMQ");
 		}
 	}
 
