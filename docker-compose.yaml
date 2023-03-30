@@ -13,6 +13,19 @@ services:
     networks:
       - rabbitmq_go_net
 
+  # simple-service-db
+  db-simple-service:
+    container_name: piperchat-db-simple-service
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${SIMPLE_SERVICE_DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${SIMPLE_SERVICE_DB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${SIMPLE_SERVICE_DB_NAME}
+    volumes:
+      - ./.docker/simple-service:/data/db
+    networks:
+      - simple-service-net
+
   # simple-service
   simple-service:
     build: simple-service/
@@ -21,11 +34,16 @@ services:
       - 8080:8080
     networks:
       - rabbitmq_go_net
+      - simple-service-net
     depends_on:
       - rabbitmq
+      - db-simple-service
     environment:
       - AMQP_URI=amqp://rabbitmq:5672/
+      - MONGO_URI=mongodb://${SIMPLE_SERVICE_DB_USERNAME}:${SIMPLE_SERVICE_DB_PASSWORD}@db-simple-service:${SIMPLE_SERVICE_DB_PORT}/${SIMPLE_SERVICE_DB_NAME}?authSource=admin
 
 networks:
   rabbitmq_go_net:
+    driver: bridge
+  simple-service-net:
     driver: bridge
