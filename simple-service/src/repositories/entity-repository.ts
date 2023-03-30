@@ -1,5 +1,9 @@
 import { Entity } from "../models/entity-model";
 
+/**
+ * The repository of a generic entity.
+ * It is responsible for handling the database operations.
+ */
 export class EntityRepository {
 	async getEntities() {
 		return await Entity.find();

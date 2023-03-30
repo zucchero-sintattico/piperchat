@@ -3,6 +3,9 @@ import { EntityController } from "../controllers/entity-controller";
 
 const entityController = new EntityController();
 
+/**
+ * The router of a generic entity.
+ */
 const entityRouter = Router();
 
 entityRouter

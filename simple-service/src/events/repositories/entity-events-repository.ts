@@ -1,5 +1,9 @@
-import { RabbitMQ } from "../utils/rabbit-mq";
+import { RabbitMQ } from "../../utils/rabbit-mq";
 
+/**
+ * Entity events repository
+ * It is responsible for publishing events to the message broker.
+ */
 export class EntityEventsRepository {
 	private broker: RabbitMQ | undefined;
 

@@ -1,6 +1,6 @@
 import { Entity } from "../models/entity-model";
 import { Request, Response } from "express";
-import { EntityEventsRepository } from "../events/entity-events-repository";
+import { EntityEventsRepository } from "../events/repositories/entity-events-repository";
 import { EntityRepository } from "../repositories/entity-repository";
 
 /**
