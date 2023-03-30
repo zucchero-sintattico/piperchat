@@ -4,23 +4,18 @@ import { config } from "dotenv";
 import { RabbitMQ } from "./utils/rabbit-mq";
 import { MongooseUtils } from "./utils/mongoose";
 import { ServiceEvents } from "./events/events";
+import { SimpleServiceServer } from "./server";
 
 // Load environment variables
 config();
 
-// Express app
-const app = express();
-
-// Middleware
-app.use(express.json());
-
-// Service router
-app.use("/", serviceRouter);
-
 // Connections info
-const port = process.env.PORT || 3000;
+const port = Number.parseInt(process.env.PORT!) || 3000;
 const amqpUri = process.env.AMQP_URI || "amqp://localhost";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
+
+// Express app
+const app: SimpleServiceServer = new SimpleServiceServer(port);
 
 // Start function
 const start = async () => {
@@ -33,8 +28,8 @@ const start = async () => {
 	// Initialize service events listeners
 	await ServiceEvents.initialize();
 
-	app.listen(port, () => {
-		console.log(`Listening on port ${port}`);
+	app.start(() => {
+		console.log(`Started on port: ${port}`);
 	});
 };
 

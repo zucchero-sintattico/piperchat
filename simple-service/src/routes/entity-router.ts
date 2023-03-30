@@ -10,13 +10,13 @@ const entityRouter = Router();
 
 entityRouter
 	.route("/")
-	.get(entityController.getEntities)
-	.post(entityController.createEntity);
+	.get(entityController.getEntities.bind(entityController))
+	.post(entityController.createEntity.bind(entityController));
 
 entityRouter
 	.route("/:id")
-	.get(entityController.getEntityById)
-	.put(entityController.updateEntity)
-	.delete(entityController.deleteEntity);
+	.get(entityController.getEntityById.bind(entityController))
+	.put(entityController.updateEntity.bind(entityController))
+	.delete(entityController.deleteEntity.bind(entityController));
 
 export { entityRouter };
