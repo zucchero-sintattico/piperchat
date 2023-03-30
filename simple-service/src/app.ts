@@ -1,6 +1,4 @@
 import express from "express";
-import mongoose, { Mongoose } from "mongoose";
-import amqp from "amqplib";
 import { serviceRouter } from "./routes/router";
 import { config } from "dotenv";
 import { RabbitMQ } from "./utils/rabbit-mq";
@@ -27,7 +25,7 @@ const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
 // Start function
 const start = async () => {
 	// Initialize mongoose
-	// await MongooseUtils.initialize(mongoUri);
+	await MongooseUtils.initialize(mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(amqpUri);
