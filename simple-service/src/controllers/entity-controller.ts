@@ -1,10 +1,20 @@
 import { Entity } from "../models/entity-model";
 import { Request, Response } from "express";
-import { EntityEvents } from "../events/entity-events";
+import { EntityEventsRepository } from "../events/entity-events-repository";
 import { EntityRepository } from "../repositories/entity-repository";
 
+/**
+ * The controller of a generic entity.
+ * It is responsible for handling the requests and responses from Express.
+ * It is also responsible for publishing events to the message broker.
+ */
 export class EntityController {
+	// The repository is a private property of the controller.
 	private entityRepository: EntityRepository = new EntityRepository();
+
+	// The events repository is a private property of the controller.
+	private entityEventsRepository: EntityEventsRepository =
+		new EntityEventsRepository();
 
 	async getEntities(req: Request, res: Response) {
 		const entities = await this.entityRepository.getEntities();
@@ -19,7 +29,7 @@ export class EntityController {
 	async createEntity(req: Request, res: Response) {
 		const entity = await this.entityRepository.createEntity(req.body);
 		res.json(entity);
-		EntityEvents.publishEntityCreated(entity);
+		this.entityEventsRepository.publishEntityCreated(entity);
 	}
 
 	async updateEntity(req: Request, res: Response) {
@@ -28,6 +38,6 @@ export class EntityController {
 			req.body
 		);
 		res.json(entity);
-		EntityEvents.publishEntityUpdated(entity);
+		this.entityEventsRepository.publishEntityUpdated(entity);
 	}
 }

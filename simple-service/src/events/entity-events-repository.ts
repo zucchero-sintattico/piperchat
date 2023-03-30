@@ -1,20 +1,16 @@
 import { RabbitMQ } from "../utils/rabbit-mq";
 
-export class EntityEvents {
-	private static _instance: RabbitMQ;
+export class EntityEventsRepository {
+	private broker: RabbitMQ | undefined;
 
-	static getInstance() {
-		if (!this._instance) {
-			this._instance = RabbitMQ.getInstance();
+	getChannel() {
+		if (!this.broker) {
+			this.broker = RabbitMQ.getInstance();
 		}
-		return this._instance;
+		return this.broker.getChannel();
 	}
 
-	static getChannel() {
-		return this.getInstance().getChannel();
-	}
-
-	static async publishEntityCreated(entity: any) {
+	async publishEntityCreated(entity: any) {
 		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
@@ -25,7 +21,7 @@ export class EntityEvents {
 		}
 	}
 
-	static async publishEntityUpdated(entity: any) {
+	async publishEntityUpdated(entity: any) {
 		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
