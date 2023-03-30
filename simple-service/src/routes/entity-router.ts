@@ -16,6 +16,7 @@ entityRouter
 entityRouter
 	.route("/:id")
 	.get(entityController.getEntityById)
-	.put(entityController.updateEntity);
+	.put(entityController.updateEntity)
+	.delete(entityController.deleteEntity);
 
 export { entityRouter };

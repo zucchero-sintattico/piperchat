@@ -40,4 +40,10 @@ export class EntityController {
 		res.json(entity);
 		this.entityEventsRepository.publishEntityUpdated(entity);
 	}
+
+	async deleteEntity(req: Request, res: Response) {
+		const entity = await this.entityRepository.deleteEntity(req.params.id);
+		res.json(entity);
+		this.entityEventsRepository.publishEntityDeleted(entity);
+	}
 }

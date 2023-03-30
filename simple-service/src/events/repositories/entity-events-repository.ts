@@ -35,4 +35,15 @@ export class EntityEventsRepository {
 			);
 		}
 	}
+
+	async publishEntityDeleted(entity: any) {
+		const channel = this.getChannel();
+		if (channel) {
+			channel.publish(
+				"entity",
+				"entity.deleted",
+				Buffer.from(JSON.stringify(entity))
+			);
+		}
+	}
 }
