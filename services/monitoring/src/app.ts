@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import { RabbitMQ } from "./utils/rabbit-mq";
 import { MongooseUtils } from "./utils/mongoose";
 import { ServiceEvents } from "./events/events";
-import { NotificationsServer } from "./server";
+import { MonitoringServer } from "./server";
 
 // Load environment variables
 config();
@@ -15,7 +15,7 @@ const amqpUri = process.env.AMQP_URI || "amqp://localhost";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
 
 // Express app
-const app: NotificationsServer = new NotificationsServer(port);
+const app: MonitoringServer = new MonitoringServer(port);
 
 // Start function
 const start = async () => {

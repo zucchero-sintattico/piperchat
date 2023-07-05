@@ -2,7 +2,7 @@ import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
 
-export class NotificationsServer {
+export class PiperchatServer {
 	private port: number;
 	private app: express.Application;
 	public server: http.Server;
