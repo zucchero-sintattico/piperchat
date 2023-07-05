@@ -10,9 +10,20 @@ import { RabbitMQ } from "../utils/rabbit-mq";
 export class ServiceEvents {
 	private static broker: RabbitMQ;
 	private static entityRepository: EntityRepository = new EntityRepository();
+
 	static async initialize() {
 		this.broker = RabbitMQ.getInstance();
-		this.setupListeners();
+		await this.declareQueue();
+		await this.setupListeners();
+	}
+
+	static async declareQueue() {
+		// Declare queue
+		/*
+		this.broker.getChannel()?.assertQueue("entity.entity.created", {
+			durable: true,
+		});
+		*/
 	}
 
 	static async setupListeners() {
