@@ -1,7 +1,6 @@
 version: "1"
 
 services:
-  
   # Broker
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -14,10 +13,10 @@ services:
     networks:
       - rabbitmq_go_net
     healthcheck:
-        test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-        interval: 10s
-        timeout: 10s
-        retries: 10
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   # simple-service-db
   db-simple-service:
@@ -34,7 +33,7 @@ services:
 
   # simple-service
   simple-service:
-    build: simple-service/
+    build: services/simple-service/
     container_name: "simple-service"
     ports:
       - 8080:8080
@@ -46,7 +45,7 @@ services:
         condition: service_started
       rabbitmq:
         condition: service_healthy
-      
+
     environment:
       - AMQP_URI=amqp://rabbitmq:5672/
       - MONGO_URI=mongodb://${SIMPLE_SERVICE_DB_USERNAME}:${SIMPLE_SERVICE_DB_PASSWORD}@db-simple-service:${SIMPLE_SERVICE_DB_PORT}/${SIMPLE_SERVICE_DB_NAME}?authSource=admin
