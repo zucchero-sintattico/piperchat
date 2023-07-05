@@ -17,6 +17,7 @@ export class ServiceEvents {
 
 	static async setupListeners() {
 		// Setup listeners
+		/*
 		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
 			if (msg) {
 				console.log("Entity created", msg.content.toString());
@@ -24,5 +25,6 @@ export class ServiceEvents {
 				this.entityRepository.createEntity(JSON.parse(msg.content.toString()));
 			}
 		});
+		*/
 	}
 }
