@@ -1,16 +1,14 @@
 import { Schema, model } from "mongoose";
 
-type Image = {
-	data: Buffer;
-	contentType: string;
-};
-
 const UserSchema = new Schema({
 	username: String,
 	password: String,
 	salt: String,
 	email: String,
-	photo: Image,
+	photo: {
+		data: Buffer,
+		contentType: String,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

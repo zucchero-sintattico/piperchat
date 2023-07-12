@@ -1,0 +1,29 @@
+version: "1"
+
+services:
+  # Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - .docker/rabbitmq/data/:/var/lib/rabbitmq/
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  db-users-service:
+    container_name: piperchat-db-users-service
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=db-users-service-username
+      - MONGO_INITDB_ROOT_PASSWORD=db-users-service-password
+      - MONGO_INITDB_DATABASE=db-users-service-database
+    volumes:
+      - ./.docker/users-service:/data/db
+    ports:
+      - 27017:27017
