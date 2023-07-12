@@ -41,4 +41,4 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://db-users-service-username:db-users-service-password@localhost:27017/db-users-service-database?authSource=admin
+      - ME_CONFIG_MONGODB_URL=mongodb://db-users-service-username:db-users-service-password@localhost:27017/db-users-service-database
