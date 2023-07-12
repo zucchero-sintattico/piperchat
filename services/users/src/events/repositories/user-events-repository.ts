@@ -4,7 +4,7 @@ import { RabbitMQ } from "../../utils/rabbit-mq";
  * Entity events repository
  * It is responsible for publishing events to the message broker.
  */
-export class EntityEventsRepository {
+export class UserEventsRepository {
 	private broker: RabbitMQ | undefined;
 
 	getChannel() {
@@ -14,35 +14,35 @@ export class EntityEventsRepository {
 		return this.broker.getChannel();
 	}
 
-	async publishEntityCreated(entity: any) {
+	async publishUserCreated(user: any) {
 		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
-				"entity",
-				"entity.created",
-				Buffer.from(JSON.stringify(entity))
+				"user",
+				"user.created",
+				Buffer.from(JSON.stringify(user))
 			);
 		}
 	}
 
-	async publishEntityUpdated(entity: any) {
+	async publishUserUpdated(user: any) {
 		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
-				"entity",
-				"entity.updated",
-				Buffer.from(JSON.stringify(entity))
+				"user",
+				"user.updated",
+				Buffer.from(JSON.stringify(user))
 			);
 		}
 	}
 
-	async publishEntityDeleted(entity: any) {
+	async publishUserDeleted(user: any) {
 		const channel = this.getChannel();
 		if (channel) {
 			channel.publish(
-				"entity",
-				"entity.deleted",
-				Buffer.from(JSON.stringify(entity))
+				"user",
+				"user.deleted",
+				Buffer.from(JSON.stringify(user))
 			);
 		}
 	}
