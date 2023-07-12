@@ -19,4 +19,10 @@ userRouter
 	.put(userController.updateEntity.bind(userController))
 	.delete(userController.deleteEntity.bind(userController));
 
+userRouter
+	.route("/register")
+	.post(userController.register.bind(userController));
+
+userRouter.route("/login").post(userController.login.bind(userController));
+
 export { userRouter };
