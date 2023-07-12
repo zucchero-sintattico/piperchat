@@ -1,13 +1,27 @@
 import { Schema, model } from "mongoose";
 
 const UserSchema = new Schema({
-	username: String,
-	password: String,
-	salt: String,
-	email: String,
+	username: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	password: {
+		type: String,
+		required: true,
+	},
+	salt: {
+		type: String,
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
+		required: true,
 	},
 });
 
