@@ -33,12 +33,14 @@ services:
         mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
 
   mongo-express:
-    depends_on:
-      db-users-service:
-        condition: service_healthy
-    image: mongo-express
+    image: mongo-express:latest
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      db-users-service:
+        condition: service_healthy
     environment:
-      - ME_CONFIG_MONGODB_URL=mongodb://db-users-service-username:db-users-service-password@localhost:27017/db-users-service-database
+      ME_CONFIG_MONGODB_ADMINUSERNAME: db-users-service-username
+      ME_CONFIG_MONGODB_ADMINPASSWORD: db-users-service-password
+      ME_CONFIG_MONGODB_SERVER: piperchat-db-users-service
