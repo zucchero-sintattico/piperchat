@@ -20,6 +20,14 @@ const UserSchema = new Schema({
 		default: Date.now,
 		required: true,
 	},
+	online: {
+		type: Boolean,
+		default: false,
+	},
+	lastActive: {
+		type: Date,
+		default: Date.now,
+	},
 });
 
 const User = model("User", UserSchema);
