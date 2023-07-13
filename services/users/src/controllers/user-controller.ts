@@ -5,7 +5,6 @@ import { UserRepository } from "../repositories/user-repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
 /**
  * The controller of a generic entity.
  * It is responsible for handling the requests and responses from Express.
@@ -22,7 +21,6 @@ export class UserController {
 	async register(req: Request, res: Response) {
 		const password = req.body.password;
 		const salt = await bcrypt.genSalt(10);
-		console.log(password, salt);
 		const hashedPassword = await bcrypt.hash(password, salt);
 		const user = new User({
 			username: req.body.username,
@@ -31,6 +29,7 @@ export class UserController {
 		});
 		try {
 			await this.userRepository.createUser(user);
+			await this.userEventsRepository.publishUserCreated(user);
 			res.json(user);
 		} catch (err) {
 			return res.status(400).send(err);
@@ -39,7 +38,7 @@ export class UserController {
 
 	async login(req: Request, res: Response) {
 		const user = await this.userRepository.getUserByUsername(req.body.username);
-		
+
 		if (!user) {
 			return res.status(400).send("Username or password is wrong");
 		}
@@ -52,12 +51,17 @@ export class UserController {
 		}
 
 		const accessSecret = process.env.ACCESS_TOKEN_SECRET || "access";
-		const accessToken = jwt.sign({
-			username: user.username,
-			email: user.email,
-			_id: user._id,
-		}, accessSecret);
+		const accessToken = jwt.sign(
+			{
+				username: user.username,
+				email: user.email,
+				_id: user._id,
+			},
+			accessSecret
+		);
 
-		res.cookie( "jwt", accessToken, { httpOnly: true, secure: true } ).json({ accessToken });
+		res
+			.cookie("jwt", accessToken, { httpOnly: true, secure: true })
+			.json({ accessToken });
 	}
 }
