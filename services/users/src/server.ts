@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
+import cookieParser from "cookie-parser";
 
 export class UsersServer {
 	private port: number;
@@ -17,6 +18,8 @@ export class UsersServer {
 
 	private setupMiddleware() {
 		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: true }));
+		this.app.use(cookieParser());
 	}
 
 	private setupRouter() {

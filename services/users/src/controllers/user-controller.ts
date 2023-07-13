@@ -4,6 +4,7 @@ import { UserEventsRepository } from "../events/repositories/user-events-reposit
 import { UserRepository } from "../repositories/user-repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { decode } from "punycode";
 
 /**
  * The controller of a generic entity.
@@ -20,8 +21,7 @@ export class UserController {
 
 	async register(req: Request, res: Response) {
 		const password = req.body.password;
-		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
+		const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt());
 		const user = new User({
 			username: req.body.username,
 			email: req.body.email,
@@ -36,13 +36,12 @@ export class UserController {
 		}
 	}
 
-
 	async login(req: Request, res: Response) {
 		const user = await this.userRepository.getUserByUsername(req.body.username);
-
 		if (!user) {
 			return res.status(400).send("Username or password is wrong");
 		}
+
 		const validPassword = await bcrypt.compare(
 			req.body.password,
 			user.password
@@ -51,51 +50,54 @@ export class UserController {
 			return res.status(400).send("Username or password is wrong");
 		}
 
-
-		const accessToken = jwt.sign({ username: user.username, email: user.email, id: user._id },
-			process.env.ACCESS_TOKEN_SECRET || "access", { expiresIn: "15s" });
-
-		user.refreshToken = jwt.sign({ username: user.username, email: user.email, id: user._id },
-			process.env.REFRESH_TOKEN_SECRET || "refresh", { expiresIn: "15s" });
-		user.save();
-		
-
-		res.cookie("jwt", accessToken, { httpOnly: true });
-
-
+		const accessToken = await this.userRepository.createAccessAndRefreshToken(
+			user
+		);
+		res.cookie("jwt", accessToken, { httpOnly: true, secure: true }).send();
 	}
-
 
 	async refreshToken(req: Request, res: Response) {
-		 const refreshToken = await this.userRepository.getRefreshTokenFromUser(req.body.username);
-		if (!refreshToken) {
-			return res.status(401).send("Refresh token not found");
+		if (!req.cookies.jwt) {
+			return res.status(403).send("Access token not valid");
 		}
-		jwt.verify(refreshToken,
-			process.env.REFRESH_TOKEN_SECRET || "refresh",
-			(err: any, user: any) => {
-				if (err) {
-					return res.status(403).send("Refresh token not valid");
-				}
-				const accessToken = jwt.sign(
-					{ username: user.username, email: user.email, id: user._id },
-					process.env.ACCESS_TOKEN_SECRET || "access",
-					{ expiresIn: "15s" }
-				);
-				res.json({ accessToken: accessToken });
-			}
+
+		const decodedAccessToken: any = jwt.decode(req.cookies.jwt);
+		if (!decodedAccessToken) {
+			return res.status(403).send("Access token not valid");
+		}
+
+		console.log("Decoded access token:", decodedAccessToken);
+
+		const user = await this.userRepository.getUserByUsername(
+			decodedAccessToken.username
 		);
+
+		console.log("Retrieving refresh token of:", user);
+		if (!user) {
+			return res.status(403).send("Access token not valid");
+		}
+
+		const refreshToken = await this.userRepository.getRefreshTokenFromUser(
+			user.username
+		);
+
+		if (!refreshToken) {
+			return res.status(403).send("Refresh token not valid");
+		}
+
+		console.log("Refresh token:", refreshToken);
+
+		try {
+			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "refresh");
+			const accessToken = this.userRepository.generateAccessToken(user);
+			console.log("New Access token:", accessToken);
+			res.cookie("jwt", accessToken, { httpOnly: true, secure: true }).send();
+		} catch (err) {
+			return res.status(403).send("Refresh token not valid");
+		}
 	}
 
-
-
-
-			
-			
-
-	async logout(req: Request, res: Response) {	
+	async logout(req: Request, res: Response) {
 		res.clearCookie("jwt").send("Logged out");
 	}
-
-		
 }

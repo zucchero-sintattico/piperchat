@@ -8,10 +8,15 @@ const userController = new UserController();
  */
 const userRouter = Router();
 
+userRouter.route("/login").post((req, res) => userController.login(req, res));
+userRouter.route("/logout").post((req, res) => userController.logout(req, res));
+
 userRouter
 	.route("/register")
 	.post((req, res) => userController.register(req, res));
 
-userRouter.route("/login").post((req, res) => userController.login(req, res));
+userRouter
+	.route("/refresh-token")
+	.post((req, res) => userController.refreshToken(req, res));
 
 export { userRouter };
