@@ -18,21 +18,49 @@ export class ServiceEvents {
 	}
 
 	static async declareQueue() {
-		await this.broker.getChannel()?.assertExchange("entity", "topic", {
+		const channel = this.broker.getChannel();
+
+		await channel?.assertExchange("user", "fanout", {
 			durable: true,
 		});
 	}
 
 	static async setupListeners() {
-		// Setup listeners
-		/*
-		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
-			if (msg) {
-				console.log("Entity created", msg.content.toString());
-				this.broker.getChannel()?.ack(msg);
-				this.entityRepository.createEntity(JSON.parse(msg.content.toString()));
+		this.subscribeToExchange("user", async (event, data) => {
+			switch (event) {
+				case "user.created":
+					console.log("User created", data);
+					break;
+				case "user.updated":
+					console.log("User updated", data);
+					break;
+				case "user.deleted":
+					console.log("User deleted", data);
+					break;
 			}
 		});
-		*/
+	}
+
+	private static async subscribeToExchange(
+		exchange: string,
+		callback: (event: string, data: any) => void
+	) {
+		const channel = this.broker.getChannel();
+		const queue = await channel?.assertQueue("", {
+			exclusive: true,
+		});
+		if (!queue) {
+			return;
+		}
+		await channel?.bindQueue(queue.queue, exchange, "");
+		channel?.consume(queue.queue, async (message) => {
+			if (!message) {
+				return;
+			}
+
+			const content = message.content.toString();
+			const data = JSON.parse(content);
+			callback(message.fields.routingKey, data);
+		});
 	}
 }
