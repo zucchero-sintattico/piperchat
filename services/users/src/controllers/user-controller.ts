@@ -37,11 +37,13 @@ export class UserController {
 	}
 
 	async login(req: Request, res: Response) {
+		// Retrieve the user from the database
 		const user = await this.userRepository.getUserByUsername(req.body.username);
 		if (!user) {
 			return res.status(400).send("Username or password is wrong");
 		}
 
+		// Check if the password is correct
 		const validPassword = await bcrypt.compare(
 			req.body.password,
 			user.password
@@ -50,6 +52,7 @@ export class UserController {
 			return res.status(400).send("Username or password is wrong");
 		}
 
+		// Create and send the access token
 		const accessToken = await this.userRepository.createAccessAndRefreshToken(
 			user
 		);
@@ -57,36 +60,41 @@ export class UserController {
 	}
 
 	async refreshToken(req: Request, res: Response) {
+		// Check if the access token is present
 		if (!req.cookies.jwt) {
 			return res.status(403).send("Access token not valid");
 		}
 
+		// Decode the access token
 		const decodedAccessToken: any = jwt.decode(req.cookies.jwt);
 		if (!decodedAccessToken) {
 			return res.status(403).send("Access token not valid");
 		}
 
-		console.log("Decoded access token:", decodedAccessToken);
+		// Check if the access token is valid
+		try {
+			jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET || "access");
+			res.status(403).send("Access token is valid yet");
+			return;
+		} catch (err) {}
 
+		// Retrieve the user from the database
 		const user = await this.userRepository.getUserByUsername(
 			decodedAccessToken.username
 		);
-
-		console.log("Retrieving refresh token of:", user);
 		if (!user) {
 			return res.status(403).send("Access token not valid");
 		}
 
+		// Retrieve the refresh token from the database
 		const refreshToken = await this.userRepository.getRefreshTokenFromUser(
 			user.username
 		);
-
 		if (!refreshToken) {
 			return res.status(403).send("Refresh token not valid");
 		}
 
-		console.log("Refresh token:", refreshToken);
-
+		// Check if the refresh token is valid and create a new access token
 		try {
 			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "refresh");
 			const accessToken = this.userRepository.generateAccessToken(user);
@@ -98,6 +106,14 @@ export class UserController {
 	}
 
 	async logout(req: Request, res: Response) {
-		res.clearCookie("jwt").send("Logged out");
+		const user = await this.userRepository.getUserByAccessToken(
+			req.cookies.jwt
+		);
+		if (!user) {
+			return res.status(403).send("Access token not valid");
+		}
+		this.userRepository.deleteRefreshTokenOfUser(user.username);
+
+		res.clearCookie("jwt").status(200).send();
 	}
 }

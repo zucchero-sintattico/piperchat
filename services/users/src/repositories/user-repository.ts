@@ -51,4 +51,16 @@ export class UserRepository {
 		);
 		return refreshToken?.refreshToken || null;
 	}
+
+	async getUserByAccessToken(accessToken: string) {
+		const decodedAccessToken: any = jwt.decode(accessToken);
+		if (!decodedAccessToken) {
+			return null;
+		}
+		return await User.findOne({ username: decodedAccessToken.username });
+	}
+
+	async deleteRefreshTokenOfUser(username: string) {
+		return await User.updateOne({ username: username }, { refreshToken: "" });
+	}
 }
