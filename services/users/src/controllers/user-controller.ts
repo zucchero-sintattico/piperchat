@@ -22,14 +22,19 @@ export class UserController {
 	async register(req: Request, res: Response) {
 		const password = req.body.password;
 		const salt = await bcrypt.genSalt(10);
+		console.log(password, salt);
 		const hashedPassword = await bcrypt.hash(password, salt);
 		const user = new User({
 			username: req.body.username,
 			email: req.body.email,
 			password: hashedPassword,
 		});
-		await this.userRepository.createUser(user);
-		res.json(user);
+		try {
+			await this.userRepository.createUser(user);
+			res.json(user);
+		} catch (err) {
+			return res.status(400).send(err);
+		}
 	}
 
 	async login(req: Request, res: Response) {
