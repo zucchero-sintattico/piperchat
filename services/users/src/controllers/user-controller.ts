@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { UserEventsRepository } from "../events/repositories/user-events-repository";
 import { UserRepository } from "../repositories/user-repository";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 /**
  * The controller of a generic entity.
@@ -32,6 +34,7 @@ export class UserController {
 
 	async login(req: Request, res: Response) {
 		const user = await this.userRepository.getUserByUsername(req.body.username);
+		
 		if (!user) {
 			return res.status(400).send("Username or password is wrong");
 		}
@@ -42,6 +45,14 @@ export class UserController {
 		if (!validPassword) {
 			return res.status(400).send("Username or password is wrong");
 		}
-		res.json(user);
+
+		const accessSecret = process.env.ACCESS_TOKEN_SECRET || "access";
+		const accessToken = jwt.sign({
+			username: user.username,
+			email: user.email,
+			_id: user._id,
+		}, accessSecret);
+
+		res.cookie( "jwt", accessToken, { httpOnly: true, secure: true } ).json({ accessToken });
 	}
 }
