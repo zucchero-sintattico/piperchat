@@ -18,12 +18,9 @@ export class ServiceEvents {
 	}
 
 	static async declareQueue() {
-		// Declare queue
-		/*
-		this.broker.getChannel()?.assertQueue("entity.entity.created", {
+		await this.broker.getChannel()?.assertExchange("entity", "topic", {
 			durable: true,
 		});
-		*/
 	}
 
 	static async setupListeners() {

@@ -4,6 +4,6 @@ import { userRouter } from "./user-router";
 const serviceRouter = Router();
 
 // Register all routers
-serviceRouter.use("/users", userRouter);
+serviceRouter.use("", userRouter);
 
 export { serviceRouter };
