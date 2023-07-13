@@ -9,20 +9,9 @@ const userController = new UserController();
 const userRouter = Router();
 
 userRouter
-	.route("/")
-	.get(userController.getEntities.bind(userController))
-	.post(userController.createEntity.bind(userController));
-
-userRouter
-	.route("/:id")
-	.get(userController.getEntityById.bind(userController))
-	.put(userController.updateEntity.bind(userController))
-	.delete(userController.deleteEntity.bind(userController));
-
-userRouter
 	.route("/register")
-	.post(userController.register.bind(userController));
+	.post((req, res) => userController.register(req, res));
 
-userRouter.route("/login").post(userController.login.bind(userController));
+userRouter.route("/login").post((req, res) => userController.login(req, res));
 
 export { userRouter };

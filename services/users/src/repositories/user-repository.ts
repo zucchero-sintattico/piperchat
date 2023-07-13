@@ -13,23 +13,11 @@ export class UserRepository {
 		return await User.findOne({ username: username });
 	}
 
-	async getUserById(id: string) {
-		return await User.findById(id);
+	async getUserByEmail(email: string) {
+		return await User.findOne({ email: email });
 	}
 
-	async createUser(entity: any) {
-		const newEntity = new User(entity);
-		await newEntity.save();
-		return newEntity;
-	}
-
-	async updateUser(id: string, entity: any) {
-		return await User.findByIdAndUpdate(id, entity, {
-			new: true,
-		});
-	}
-
-	async deleteUser(id: string) {
-		return await User.findByIdAndDelete(id);
+	async createUser(user: any) {
+		await user.save();
 	}
 }

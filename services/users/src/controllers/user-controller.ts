@@ -31,7 +31,7 @@ export class UserController {
 	}
 
 	async login(req: Request, res: Response) {
-		const user = await this.userRepository.getUserById(req.body.username);
+		const user = await this.userRepository.getUserByUsername(req.body.username);
 		if (!user) {
 			return res.status(400).send("Username or password is wrong");
 		}
@@ -43,36 +43,5 @@ export class UserController {
 			return res.status(400).send("Username or password is wrong");
 		}
 		res.json(user);
-	}
-
-	async getEntities(req: Request, res: Response) {
-		const entities = await this.userRepository.getUsers();
-		res.json(entities);
-	}
-
-	async getEntityById(req: Request, res: Response) {
-		const entity = await this.userRepository.getUserById(req.params.id);
-		res.json(entity);
-	}
-
-	async createEntity(req: Request, res: Response) {
-		const entity = await this.userRepository.createUser(req.body);
-		res.json(entity);
-		this.userEventsRepository.publishUserCreated(entity);
-	}
-
-	async updateEntity(req: Request, res: Response) {
-		const entity = await this.userRepository.updateUser(
-			req.params.id,
-			req.body
-		);
-		res.json(entity);
-		this.userEventsRepository.publishUserUpdated(entity);
-	}
-
-	async deleteEntity(req: Request, res: Response) {
-		const entity = await this.userRepository.deleteUser(req.params.id);
-		res.json(entity);
-		this.userEventsRepository.publishUserDeleted(entity);
 	}
 }
