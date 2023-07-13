@@ -37,6 +37,7 @@ export class UserController {
 		}
 	}
 
+
 	async login(req: Request, res: Response) {
 		const user = await this.userRepository.getUserByUsername(req.body.username);
 		
@@ -51,13 +52,49 @@ export class UserController {
 			return res.status(400).send("Username or password is wrong");
 		}
 
-		const accessSecret = process.env.ACCESS_TOKEN_SECRET || "access";
-		const accessToken = jwt.sign({
-			username: user.username,
-			email: user.email,
-			_id: user._id,
-		}, accessSecret);
+		const accessToken = jwt.sign({ username: user.username, email: user.email, id: user._id },
+			process.env.ACCESS_TOKEN_SECRET || "access", { expiresIn: "15s" });
 
-		res.cookie( "jwt", accessToken, { httpOnly: true, secure: true } ).json({ accessToken });
+		user.refreshToken = jwt.sign({ username: user.username, email: user.email, id: user._id },
+			process.env.REFRESH_TOKEN_SECRET || "refresh", { expiresIn: "15s" });
+		user.save();
+		
+
+		res.cookie("jwt", accessToken, { httpOnly: true });
+
 	}
+
+
+	async refreshToken(req: Request, res: Response) {
+		 const refreshToken = await this.userRepository.getRefreshTokenFromUser(req.body.username);
+		if (!refreshToken) {
+			return res.status(401).send("Refresh token not found");
+		}
+		jwt.verify(refreshToken,
+			process.env.REFRESH_TOKEN_SECRET || "refresh",
+			(err: any, user: any) => {
+				if (err) {
+					return res.status(403).send("Refresh token not valid");
+				}
+				const accessToken = jwt.sign(
+					{ username: user.username, email: user.email, id: user._id },
+					process.env.ACCESS_TOKEN_SECRET || "access",
+					{ expiresIn: "15s" }
+				);
+				res.json({ accessToken: accessToken });
+			}
+		);
+	}
+
+
+
+
+			
+			
+
+	async logout(req: Request, res: Response) {	
+		res.clearCookie("jwt").send("Logged out");
+	}
+
+		
 }

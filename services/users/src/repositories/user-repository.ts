@@ -16,4 +16,8 @@ export class UserRepository {
 	async createUser(user: any) {
 		await user.save();
 	}
+
+	async getRefreshTokenFromUser(username: string) {
+		return (await User.findOne({ username: username }).select("refreshToken"))?.refreshToken;
+		}
 }
