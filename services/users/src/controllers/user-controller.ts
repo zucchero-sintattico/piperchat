@@ -65,12 +65,6 @@ export class UserController {
 			return res.status(403).send("Access token not valid");
 		}
 
-		// Decode the access token
-		const decodedAccessToken: any = jwt.decode(req.cookies.jwt);
-		if (!decodedAccessToken) {
-			return res.status(403).send("Access token not valid");
-		}
-
 		// Check if the access token is valid
 		try {
 			jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET || "access");
@@ -79,8 +73,8 @@ export class UserController {
 		} catch (err) {}
 
 		// Retrieve the user from the database
-		const user = await this.userRepository.getUserByUsername(
-			decodedAccessToken.username
+		const user = await this.userRepository.getUserByAccessToken(
+			req.cookies.jwt
 		);
 		if (!user) {
 			return res.status(403).send("Access token not valid");
