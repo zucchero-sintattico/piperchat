@@ -20,6 +20,7 @@ export class ServiceEvents {
 	static async declareQueue() {
 		const channel = this.broker.getChannel();
 
+		// Declare the exchange
 		await channel?.assertExchange("user", "fanout", {
 			durable: true,
 		});

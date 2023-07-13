@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { EntityController } from "../controllers/entity-controller";
+import { EntityController } from "../controllers/monitoring-controller";
 
 const entityController = new EntityController();
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { entityRouter } from "./entity-router";
+import { entityRouter } from "./monitoring-router";
 
 const serviceRouter = Router();
 
