@@ -1,5 +1,6 @@
 import { User } from "../models/user-model";
 import jwt from "jsonwebtoken";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 export class UserRepository {
 	async getUsers() {
@@ -19,29 +20,13 @@ export class UserRepository {
 	}
 
 	async createAccessAndRefreshToken(user: any) {
-		const accessToken = this.generateAccessToken(user);
-		const refreshToken = this.generateRefreshToken(user);
+		const accessToken = generateAccessToken(user);
+		const refreshToken = generateRefreshToken(user);
 
 		user.refreshToken = refreshToken;
 		await user.save();
 
 		return accessToken;
-	}
-
-	generateAccessToken(user: any) {
-		return jwt.sign(
-			{ username: user.username, email: user.email, id: user._id },
-			process.env.ACCESS_TOKEN_SECRET || "access",
-			{ expiresIn: "15s" }
-		);
-	}
-
-	generateRefreshToken(user: any) {
-		return jwt.sign(
-			{ username: user.username, email: user.email, id: user._id },
-			process.env.REFRESH_TOKEN_SECRET || "refresh",
-			{ expiresIn: "1d" }
-		);
 	}
 
 	async getRefreshTokenFromUser(username: string): Promise<string | null> {
@@ -50,14 +35,6 @@ export class UserRepository {
 			"refreshToken"
 		);
 		return refreshToken?.refreshToken || null;
-	}
-
-	async getUserByAccessToken(accessToken: string) {
-		const decodedAccessToken: any = jwt.decode(accessToken);
-		if (!decodedAccessToken) {
-			return null;
-		}
-		return await User.findOne({ username: decodedAccessToken.username });
 	}
 
 	async deleteRefreshTokenOfUser(username: string) {
