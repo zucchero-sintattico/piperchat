@@ -89,6 +89,8 @@ export class UserController {
 		}
 		this.userRepository.deleteRefreshTokenOfUser(user.username);
 
-		res.clearCookie("jwt").status(200).send();
+		res.clearCookie("jwt").status(200).json({
+			message: "User logged out",
+		});
 	}
 }
