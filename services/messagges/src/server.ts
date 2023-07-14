@@ -17,11 +17,11 @@ export class MessagesServer {
 	}
 
 	private setupMiddleware() {
+		this.app.use(jwtValidTokenRequired);
 		this.app.use(express.json());
 	}
 
 	private setupRouter() {
-		this.app.use(jwtValidTokenRequired);
 		this.app.use("/", serviceRouter);
 	}
 

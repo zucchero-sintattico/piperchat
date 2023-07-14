@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
+import { jwtValidTokenRequired } from "./utils/jwt";
 
 export class WebRTCServer {
 	private port: number;
@@ -16,6 +17,7 @@ export class WebRTCServer {
 	}
 
 	private setupMiddleware() {
+		this.app.use(jwtValidTokenRequired);
 		this.app.use(express.json());
 	}
 
