@@ -1,0 +1,32 @@
+name: Testing services
+run-name: Microservices testing started by ${{ github.actor }}
+on:
+  push:
+  workflow_dispatch:
+
+env:
+    TESTING_PATH: "services"
+
+jobs:
+    get-changes:
+        name: Get microservices to test
+        # get the list of files changed
+        runs-on: ubuntu-latest
+        outputs:
+            microservices: ${{ steps.get-microservices.outputs.microservices }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
+            - name: Get changed microservices
+              id: get-microservices
+              run: |
+                # based on modified files, get the list of microservices to test
+                # matching with the path defined in env.TESTING_PATH
+                folders=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '^${{ env.TESTING_PATH }}/' | cut -d'/' -f1-2 | sort | uniq | sed -e 's/^/"/' -e 's/$/"/' | paste -sd "," -)
+
+                echo "microservices=[$folders]" >> $GITHUB_OUTPUT
+            - name: Print microservices to test
+              run: |
+                echo ${{ steps.get-microservices.outputs.microservices }}
