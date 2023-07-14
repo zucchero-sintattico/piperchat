@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
+import { jwtValidTokenRequired } from "./utils/jwt";
 
 export class MessagesServer {
 	private port: number;
@@ -20,6 +21,7 @@ export class MessagesServer {
 	}
 
 	private setupRouter() {
+		this.app.use(jwtValidTokenRequired);
 		this.app.use("/", serviceRouter);
 	}
 
