@@ -13,7 +13,7 @@ const MessageSchema = new Schema({
 	conversationID: String,
 });
 
-const ConversationEntity = model("ConversationEntity", ConversationSchema);
-const MessageEntity = model("MessageEntity", MessageSchema);
+const Conversations = model("Conversations", ConversationSchema);
+const Messages = model("Messages", MessageSchema);
 
-export { ConversationEntity, MessageEntity };
+export { Conversations, Messages };

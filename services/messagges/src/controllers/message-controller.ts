@@ -1,4 +1,4 @@
-import { MessageEntity } from "../models/message-model";
+import { Messages } from "../models/message-model";
 import { Request, Response } from "express";
 import { MessageEventsRepository } from "../events/repositories/message-events-repository";
 import { MessageRepository } from "../repositories/message-repository";
@@ -16,34 +16,17 @@ export class MessageController {
 	private messageEventsRepository: MessageEventsRepository =
 		new MessageEventsRepository();
 
-	async getEntities(req: Request, res: Response) {
-		const entities = await this.messageRepository.getEntities();
-		res.json(entities);
+	async getConversation(req: Request, res: Response) {
+		const { id } = req.params;
+		res.send();
 	}
 
-	async getEntityById(req: Request, res: Response) {
-		const entity = await this.messageRepository.getEntityById(req.params.id);
-		res.json(entity);
+	async sendMessaage(req: Request, res: Response) {
+		const { id } = req.params;
+		const { content } = req.body;
+		const { username } = req.user;
+		await this.messageRepository.sendMessage(id, content, username);
+		res.send();
 	}
 
-	async createEntity(req: Request, res: Response) {
-		const entity = await this.messageRepository.createEntity(req.body);
-		res.json(entity);
-		this.messageEventsRepository.publishNewMessage(entity);
-	}
-
-	async updateEntity(req: Request, res: Response) {
-		const entity = await this.messageRepository.updateEntity(
-			req.params.id,
-			req.body
-		);
-		res.json(entity);
-		// TODO
-	}
-
-	async deleteEntity(req: Request, res: Response) {
-		const entity = await this.messageRepository.deleteEntity(req.params.id);
-		res.json(entity);
-		// TODO
-	}
 }

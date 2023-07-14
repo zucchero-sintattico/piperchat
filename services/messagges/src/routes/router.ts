@@ -4,6 +4,6 @@ import { entityRouter } from "./message-router";
 const serviceRouter = Router();
 
 // Register all routers
-serviceRouter.use("/entity", entityRouter);
+serviceRouter.use("", entityRouter);
 
 export { serviceRouter };

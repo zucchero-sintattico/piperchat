@@ -9,14 +9,11 @@ const messageController = new MessageController();
 const messageRouter = Router();
 
 messageRouter
-	.route("/messages")
-	.get(messageController.getEntities.bind(messageController))
-	.post(messageController.createEntity.bind(messageController));
+	.route("/messages");
 
 messageRouter
-	.route("messages/:id")
-	.get(messageController.getEntityById.bind(messageController))
-	.put(messageController.updateEntity.bind(messageController))
-	.delete(messageController.deleteEntity.bind(messageController));
+	.route("/messages/:id")
+	.get(messageController.getConversation.bind(messageController))
+	.post(messageController.sendMessaage.bind(messageController))
 
 export { messageRouter as entityRouter };
