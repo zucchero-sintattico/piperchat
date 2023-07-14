@@ -22,4 +22,11 @@ export class ConversationsController {
 		res.json(listOfMessages);
 	}
 
+	async createConversation(req: Request, res: Response) {
+		const { participants } = req.body;
+		participants.push(req.user.username);
+		const conversation = await this.conversationRepository.createConversation(participants);
+		res.json(conversation);
+	}
+
 }

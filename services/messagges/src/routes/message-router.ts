@@ -10,7 +10,8 @@ const conversationsController = new ConversationsController();
 const messageRouter = Router();
 
 messageRouter
-	.route("/messages");
+	.route("/messages")
+	.post(conversationsController.createConversation.bind(conversationsController))
 
 messageRouter
 	.route("/messages/:id")

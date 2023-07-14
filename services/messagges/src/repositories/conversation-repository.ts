@@ -15,4 +15,9 @@ export class ConversationsRepository {
 		return null;
 	}
 
+	async createConversation(participants: String[]) {
+		const conversation = new Conversations({ participants: participants });
+		return await conversation.save();
+	}
+
 }
