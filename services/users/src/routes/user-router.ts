@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user-controller";
+import { jwtMiddleware } from "../utils/jwt-middleware";
 
 const userController = new UserController();
 
@@ -15,6 +16,7 @@ userRouter
 	.route("/register")
 	.post((req, res) => userController.register(req, res));
 
+userRouter.use("/refresh-token", jwtMiddleware);
 userRouter
 	.route("/refresh-token")
 	.post((req, res) => userController.refreshToken(req, res));
