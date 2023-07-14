@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
+import { jwtValidTokenRequired } from "./utils/jwt";
 
 export class MonitoringServer {
 	private port: number;
