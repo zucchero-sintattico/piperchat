@@ -21,7 +21,7 @@ export class ServiceEvents {
 		const channel = this.broker.getChannel();
 
 		// Declare the exchange
-		await channel?.assertExchange("user", "fanout", {
+		await channel?.assertExchange("message", "fanout", {
 			durable: true,
 		});
 	}

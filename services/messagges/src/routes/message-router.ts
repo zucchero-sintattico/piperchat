@@ -9,12 +9,12 @@ const messageController = new MessageController();
 const messageRouter = Router();
 
 messageRouter
-	.route("/")
+	.route("/messages")
 	.get(messageController.getEntities.bind(messageController))
 	.post(messageController.createEntity.bind(messageController));
 
 messageRouter
-	.route("/:id")
+	.route("messages/:id")
 	.get(messageController.getEntityById.bind(messageController))
 	.put(messageController.updateEntity.bind(messageController))
 	.delete(messageController.deleteEntity.bind(messageController));
