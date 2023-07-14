@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
+import cookieParser from "cookie-parser";
 
 export class NotificationsServer {
 	private port: number;
@@ -17,6 +18,7 @@ export class NotificationsServer {
 
 	private setupMiddleware() {
 		this.app.use(express.json());
+		this.app.use(cookieParser());
 	}
 
 	private setupRouter() {
