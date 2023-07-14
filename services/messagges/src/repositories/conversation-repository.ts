@@ -1,30 +1,18 @@
 import { Conversations } from "../models/message-model";
+import { Messages } from "../models/message-model";
 /**
  * The repository of a generic entity.
  * It is responsible for handling the database operations.
  */
-export class MessageRepository {
-	async getEntities() {
-		return await Conversations.find();
+export class ConversationsRepository {
+
+	async getConversation(id: String, user: String) {
+		const conversation = await Conversations.findOne({ id: id, participants: user });
+
+		if (conversation != null) {
+			return await Messages.find({ conversationID: id });
+		}
+		return null;
 	}
 
-	async getEntityById(id: string) {
-		return await Conversations.findById(id);
-	}
-
-	async createEntity(entity: any) {
-		const newEntity = new Conversations(entity);
-		await newEntity.save();
-		return newEntity;
-	}
-
-	async updateEntity(id: string, entity: any) {
-		return await Conversations.findByIdAndUpdate(id, entity, {
-			new: true,
-		});
-	}
-
-	async deleteEntity(id: string) {
-		return await Conversations.findByIdAndDelete(id);
-	}
 }

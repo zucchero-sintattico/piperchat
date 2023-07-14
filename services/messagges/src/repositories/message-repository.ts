@@ -4,10 +4,10 @@ import { Messages } from "../models/message-model";
  * It is responsible for handling the database operations.
  */
 export class MessageRepository {
-	async sendMessage(conversation: String, content: String, sender: String) {
+	async sendMessage(conversationID: String, content: String, sender: String) {
 		const newMessage = new Messages({
 			sender: sender,
-			conversation: conversation,
+			conversationID: conversationID,
 			content: content,
 		});
 		await newMessage.save();

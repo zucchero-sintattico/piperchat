@@ -7,10 +7,10 @@ const ConversationSchema = new Schema({
 
 const MessageSchema = new Schema({
 	sender: String,
-	content: String,
+	content: { type: String, required: true },
 	visualizedFrom: [String],
 	timecreated: { type: Date, default: Date.now },
-	conversationID: String,
+	conversationID: { type: String, required: true },
 });
 
 const Conversations = model("Conversations", ConversationSchema);

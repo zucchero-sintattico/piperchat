@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { MessageController } from "../controllers/message-controller";
+import { ConversationsController } from "../controllers/conversation-controller";
 
 const messageController = new MessageController();
-
+const conversationsController = new ConversationsController();
 /**
  * The router of a generic entity.
  */
@@ -13,7 +14,7 @@ messageRouter
 
 messageRouter
 	.route("/messages/:id")
-	.get(messageController.getConversation.bind(messageController))
+	.get(conversationsController.getConversation.bind(conversationsController))
 	.post(messageController.sendMessaage.bind(messageController))
 
 export { messageRouter as entityRouter };
