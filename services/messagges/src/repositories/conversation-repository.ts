@@ -15,9 +15,17 @@ export class ConversationsRepository {
 		return null;
 	}
 
-	async createConversation(participants: String[]) {
-		const conversation = new Conversations({ participants: participants });
-		return await conversation.save();
+	async createConversation(participants: String[], isAGroup: Boolean = false, groupName: String = "") {
+		if (isAGroup) {
+			if (groupName == "") {
+				throw new Error("Group name is required");
+			}
+			const conversation = new Conversations({ participants: participants, isAGroup: true, groupName: groupName });
+			return await conversation.save();
+		} else {
+			const conversation = new Conversations({ participants: participants });
+			return await conversation.save();
+		}
 	}
 
 }

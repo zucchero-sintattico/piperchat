@@ -25,8 +25,18 @@ export class ConversationsController {
 	async createConversation(req: Request, res: Response) {
 		const { participants } = req.body;
 		participants.push(req.user.username);
+
+		const { isAGroup, groupName } = req.body;
+
+		if (isAGroup || participants.length > 2) {
+			const conversation = await this.conversationRepository.createConversation(participants, true, groupName);
+			res.json(conversation);
+			return;
+		}
+
 		const conversation = await this.conversationRepository.createConversation(participants);
 		res.json(conversation);
 	}
+
 
 }
