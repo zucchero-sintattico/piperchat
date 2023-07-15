@@ -14,7 +14,6 @@ const ConversationSchema = new Schema({
 });
 
 const ChannelSchema = new Schema({
-  id: String,
   name: { type: String, required: true },
   type: { type: String, required: true, default: "text" },
   description: String,

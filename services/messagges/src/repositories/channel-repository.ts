@@ -1,6 +1,10 @@
 import { Channels } from "../models/chat-model";
 import { Servers } from "../models/chat-model";
 export class ChannelRepository {
+  async getAllChannels() {
+    const QUERY_LIMIT = 1000;
+    return await Channels.find().limit(QUERY_LIMIT);
+  }
   async getChannelsFromServer(serverId: String) {
     return await Servers.find({ id: serverId }).select("channels");
   }
@@ -38,5 +42,23 @@ export class ChannelRepository {
 
   async deleteChannel(channelId: String) {
     return await Channels.deleteOne({ id: channelId });
+  }
+
+  async addMemberToChannel(channelId: String, member: String) {
+    const channel = await Channels.findOne({ id: channelId });
+    if (!channel) {
+      return null;
+    }
+    channel.members.push(member.toString());
+    return await channel.save();
+  }
+
+  async removeMemberFromChannel(channelId: String, member: String) {
+    const channel = await Channels.findOne({ id: channelId });
+    if (!channel) {
+      return null;
+    }
+    channel.members = channel.members.filter((m) => m != member);
+    return await channel.save();
   }
 }
