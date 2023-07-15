@@ -4,10 +4,6 @@ import { Conversations, Messages } from "../models/server-model";
  * It is responsible for handling the database operations.
  */
 export class MessageRepository {
-  async getMessagesFromConversation(conversationId: String) {
-    return await Conversations.find({ id: conversationId }).select("messages");
-  }
-
   async createMessage(sender: String, content: String) {
     const message = new Messages({
       sender: sender,
@@ -16,10 +12,12 @@ export class MessageRepository {
     return await message.save();
   }
 
-  async addMessageToConversation(conversationId: String, message: any) {
-    return await Conversations.updateOne(
-      { id: conversationId },
-      { $push: { messages: message } }
-    );
+  async getMessagesFromSender(sender: String) {
+    return await Messages.find({ sender: sender });
+  }
+
+  async getAllMessages() {
+    const QUERY_LIMIT = 1000;
+    return await Messages.find().limit(QUERY_LIMIT);
   }
 }

@@ -1,4 +1,4 @@
-import { Messages } from "../models/message-model";
+import { Messages } from "../models/server-model";
 import { Request, Response } from "express";
 import { MessageEventsRepository } from "../events/repositories/message-events-repository";
 import { MessageRepository } from "../repositories/message-repository";
@@ -9,24 +9,25 @@ import { MessageRepository } from "../repositories/message-repository";
  * It is also responsible for publishing events to the message broker.
  */
 export class MessageController {
-	// The repository is a private property of the controller.
-	private messageRepository: MessageRepository = new MessageRepository();
+  // The repository is a private property of the controller.
+  private messageRepository: MessageRepository = new MessageRepository();
 
-	// The events repository is a private property of the controller.
-	private messageEventsRepository: MessageEventsRepository =
-		new MessageEventsRepository();
+  // The events repository is a private property of the controller.
+  private messageEventsRepository: MessageEventsRepository =
+    new MessageEventsRepository();
 
-	async getConversation(req: Request, res: Response) {
-		const { id } = req.params;
-		res.send();
-	}
+  async getMessageFromSender(req: Request, res: Response) {
+    const { sender } = req.params;
+    res.json(await this.messageRepository.getMessagesFromSender(sender));
+  }
 
-	async sendMessaage(req: Request, res: Response) {
-		const { id } = req.params;
-		const { content } = req.body;
-		const { username } = req.user;
-		await this.messageRepository.sendMessage(id, content, username);
-		res.send();
-	}
+  async createMessage(req: Request, res: Response) {
+    const { sender, content } = req.body;
+    const message = await this.messageRepository.createMessage(sender, content);
+    res.json(message);
+  }
 
+  async getAllMessages(req: Request, res: Response) {
+    res.json(await this.messageRepository.getAllMessages());
+  }
 }

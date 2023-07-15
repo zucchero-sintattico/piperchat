@@ -9,13 +9,15 @@ const conversationsController = new ConversationsController();
  */
 const messageRouter = Router();
 
-messageRouter
-	.route("/messages")
-	.post(conversationsController.createConversation.bind(conversationsController))
+// TODO: ServerRoutes, ChannelRoutes, MessageRoutes, ConversationRoutes
 
 messageRouter
-	.route("/messages/:id")
-	.get(conversationsController.getConversation.bind(conversationsController))
-	.post(messageController.sendMessaage.bind(messageController))
+  .route("/messages")
+  .get(messageController.getAllMessages.bind(messageController))
+  .post(messageController.createMessage.bind(messageController));
+
+messageRouter
+  .route("/messages/:username")
+  .get(messageController.getMessageFromSender.bind(messageController));
 
 export { messageRouter as entityRouter };
