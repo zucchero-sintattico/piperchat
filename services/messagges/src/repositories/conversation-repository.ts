@@ -1,31 +1,27 @@
-import { Conversations } from "../models/message-model";
-import { Messages } from "../models/message-model";
+import { Conversations } from "../models/server-model";
+import { Messages } from "../models/server-model";
+
 /**
- * The repository of a generic entity.
- * It is responsible for handling the database operations.
+ * The repository of the conversation entity.
  */
 export class ConversationsRepository {
+  async getConversationByIdAndUserName(id: String, user: String) {
+    return await Conversations.findOne({ id: id, participants: user });
+  }
 
-	async getConversation(id: String, user: String) {
-		const conversation = await Conversations.findOne({ id: id, participants: user });
+  async getMessagesFromConversation(conversationId: String) {
+    return await Conversations.find({ id: conversationId }).select("messages");
+  }
 
-		if (conversation != null) {
-			return await Messages.find({ conversationID: id });
-		}
-		return null;
-	}
+  async getConversationsByUserName(user: String) {
+    return await Conversations.find({ participants: user });
+  }
 
-	async createConversation(participants: String[], isAGroup: Boolean = false, groupName: String = "") {
-		if (isAGroup) {
-			if (groupName == "") {
-				throw new Error("Group name is required");
-			}
-			const conversation = new Conversations({ participants: participants, isAGroup: true, groupName: groupName });
-			return await conversation.save();
-		} else {
-			const conversation = new Conversations({ participants: participants });
-			return await conversation.save();
-		}
-	}
-
+  async createConversation(name: String, participants: String[]) {
+    const conversation = new Conversations({
+      name: name,
+      participants: participants,
+    });
+    return await conversation.save();
+  }
 }

@@ -10,7 +10,7 @@ const MessageSchema = new Schema({
 const ConversationSchema = new Schema({
   id: String,
   participants: { type: [String], required: true },
-  messages: { type: [MessageSchema] },
+  messages: { type: [MessageSchema], required: true, default: [] },
 });
 
 const ChannelSchema = new Schema({
