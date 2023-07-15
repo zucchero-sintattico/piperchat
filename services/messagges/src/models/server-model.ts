@@ -20,7 +20,7 @@ const ChannelSchema = new Schema({
   description: String,
   creator: { type: String, required: true },
   members: { type: [String], required: true },
-  messages: { type: [MessageSchema] },
+  messages: { type: [MessageSchema], required: true, default: [] },
 });
 
 const ServerSchema = new Schema({
