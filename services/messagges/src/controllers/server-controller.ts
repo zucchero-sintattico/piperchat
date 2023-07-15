@@ -57,4 +57,18 @@ export class MessageController {
     const { member } = req.body;
     res.json(await this.serverRepository.addMemberToServer(name, member));
   }
+
+  async addChannel(req: Request, res: Response) {
+    const { name } = req.params;
+    const { channel } = req.body;
+    res.json(await this.serverRepository.addChannelToServer(name, channel));
+  }
+
+  async removeChannel(req: Request, res: Response) {
+    const { name } = req.params;
+    const { channel } = req.body;
+    res.json(
+      await this.serverRepository.removeChannelFromServer(name, channel)
+    );
+  }
 }
