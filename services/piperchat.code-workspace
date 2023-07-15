@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "notifications",
+			"path": "notifications"
+		},
+		{
+			"name": "monitoring",
+			"path": "monitoring"
+		},
+		{
+			"name": "webrtc",
+			"path": "webrtc"
+		},
+		{
+			"name": "messagges",
+			"path": "messagges"
+		},
+		{
+			"name": "users",
+			"path": "users"
+		},
+		{
+			"name": "snippets",
+			"path": "monitoring/.docker/monitoring-service/.mongodb/mongosh/snippets"
+		},
+		{
+			"name": "piperchat",
+			"path": "piperchat"
+		},
+		{
+			"name": "snippets",
+			"path": "users/.docker/users-service/.mongodb/mongosh/snippets"
+		}
+	],
+	"settings": {
+		"jest.disabledWorkspaceFolders": [
+			"piperchat",
+			"snippets",
+			"snippets"
+		]
+	}
+}
