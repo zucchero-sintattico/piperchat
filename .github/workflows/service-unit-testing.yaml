@@ -2,7 +2,6 @@ name: Testing services
 run-name: Microservices testing started by ${{ github.actor }}
 on:
   push:
-  workflow_dispatch:
 
 env:
     TESTING_PATH: "services"

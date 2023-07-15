@@ -1,0 +1,54 @@
+name: Dispatch tests
+run-name: Dispached tests by ${{ github.actor }}
+on:
+  push:
+    branches:
+        - main
+        - develop
+  workflow_dispatch:
+
+jobs:
+    test-microservice:
+        name: Testing ${{ matrix.path }}
+        runs-on: ubuntu-latest
+        services:
+            rabbitmq:
+                image: rabbitmq:3
+                options: >-
+                    --health-cmd "rabbitmq-diagnostics -q ping"
+                    --health-interval 10s
+                    --health-timeout 10s
+                    --health-retries 10
+                ports:
+                    - 5672:5672
+            mongodb:
+                image: mongo
+                env:
+                    MONGO_INITDB_ROOT_USERNAME: admin
+                    MONGO_INITDB_ROOT_PASSWORD: admin
+                options: >-
+                    --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+                    --health-interval 10s
+                    --health-timeout 10s
+                    --health-retries 10
+                ports:
+                    - 27017:27017
+        strategy:
+            fail-fast: false
+            matrix: 
+                path: ${{ fromJson(vars.MICROSERVICES_TO_TEST) }}
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v3
+            - name: setup node
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18.x'
+            - name: Run tests
+              run: |
+                cd ${{ matrix.path }}
+                npm ci
+                npm test
+              env:
+                AMQP_URI: amqp://rabbitmq:5672/
+                MONGO_URI: mongodb://admin:admin@mongodb:27017/
