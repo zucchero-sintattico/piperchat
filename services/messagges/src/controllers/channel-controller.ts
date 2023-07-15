@@ -37,4 +37,22 @@ export class ChannelController {
     const { id } = req.params;
     res.json(await this.channelRepository.deleteChannel(id));
   }
+
+  async addMember(req: Request, res: Response) {
+    const { id } = req.params;
+    const { member } = req.body;
+    res.json(await this.channelRepository.addMemberToChannel(id, member));
+  }
+
+  async removeMember(req: Request, res: Response) {
+    const { id } = req.params;
+    const { member } = req.body;
+    res.json(await this.channelRepository.removeMemberFromChannel(id, member));
+  }
+
+  async addMessage(req: Request, res: Response) {
+    const { id } = req.params;
+    const { message } = req.body;
+    res.json(await this.channelRepository.addMessageToChannel(id, message));
+  }
 }
