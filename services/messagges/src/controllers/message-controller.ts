@@ -1,4 +1,4 @@
-import { Messages } from "../models/server-model";
+import { Messages } from "../models/chat-model";
 import { Request, Response } from "express";
 import { MessageEventsRepository } from "../events/repositories/message-events-repository";
 import { MessageRepository } from "../repositories/message-repository";

@@ -1,6 +1,5 @@
-import { Conversations } from "../models/message-model";
+import { Conversations } from "../models/chat-model";
 import { Request, Response } from "express";
-import { MessageEventsRepository } from "../events/repositories/message-events-repository";
 import { ConversationsRepository } from "../repositories/conversation-repository";
 
 /**
@@ -14,38 +13,26 @@ export class ConversationsController {
     new ConversationsRepository();
 
   // The events repository is a private property of the controller.
-  private conversationEventsRepository: MessageEventsRepository =
-    new MessageEventsRepository();
+  /*  private conversationEventsRepository: MessageEventsRepository =
+    new MessageEventsRepository(); */
 
-  async getConversation(req: Request, res: Response) {
-    const { id } = req.params;
-    const listOfMessages =
-      await this.conversationRepository.getConversationByIdAndUserName(
-        id,
+  async getConversationFromUsername(req: Request, res: Response) {
+    res.json(
+      await this.conversationRepository.getConversationsByUserName(
         req.user.username
-      );
-    res.json(listOfMessages);
+      )
+    );
   }
 
   async createConversation(req: Request, res: Response) {
     const { participants } = req.body;
-    participants.push(req.user.username);
-
-    const { isAGroup, groupName } = req.body;
-
-    if (isAGroup || participants.length > 2) {
-      const conversation = await this.conversationRepository.createConversation(
-        participants,
-        true,
-        groupName
-      );
-      res.json(conversation);
-      return;
-    }
-
     const conversation = await this.conversationRepository.createConversation(
       participants
     );
     res.json(conversation);
+  }
+
+  async getConversations(req: Request, res: Response) {
+    res.json(await this.conversationRepository.getAllConversations());
   }
 }

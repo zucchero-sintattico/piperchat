@@ -1,4 +1,4 @@
-import { Servers } from "../models/server-model";
+import { Servers } from "../models/chat-model";
 import { Request, Response } from "express";
 import { ServersRepository } from "../repositories/server-repository";
 

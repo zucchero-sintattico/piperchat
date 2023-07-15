@@ -1,4 +1,4 @@
-import { Conversations, Messages } from "../models/server-model";
+import { Conversations, Messages } from "../models/chat-model";
 /**
  * The repository of a generic entity.
  * It is responsible for handling the database operations.

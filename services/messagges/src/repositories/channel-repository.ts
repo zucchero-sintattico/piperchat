@@ -1,5 +1,5 @@
-import { Channels } from "../models/server-model";
-import { Servers } from "../models/server-model";
+import { Channels } from "../models/chat-model";
+import { Servers } from "../models/chat-model";
 export class ChannelRepository {
   async getChannelsFromServer(serverId: String) {
     return await Servers.find({ id: serverId }).select("channels");

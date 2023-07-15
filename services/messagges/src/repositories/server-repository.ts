@@ -1,7 +1,4 @@
-import { Servers } from "../models/server-model";
-import { Channels } from "../models/server-model";
-import { Conversations } from "../models/server-model";
-import { Messages } from "../models/server-model";
+import { Servers } from "../models/chat-model";
 
 export class ServersRepository {
   async getServerById(id: String, user: String) {
@@ -29,5 +26,41 @@ export class ServersRepository {
   async getAllServers() {
     const QUERY_LIMIT = 1000;
     return await Servers.find().limit(QUERY_LIMIT);
+  }
+
+  async addMemberToServer(id: String, member: String) {
+    const server = await Servers.findOne({ id: id });
+    if (!server) {
+      return null;
+    }
+    server.members.push(member.toString());
+    return await server.save();
+  }
+
+  async removeMemberFromServer(id: String, member: String) {
+    const server = await Servers.findOne({ id: id });
+    if (!server) {
+      return null;
+    }
+    server.members = server.members.filter((m) => m != member);
+    return await server.save();
+  }
+
+  async addChannelToServer(id: String, channel: String) {
+    const server = await Servers.findOne({ id: id });
+    if (!server) {
+      return null;
+    }
+    server.channels.push(channel);
+    return await server.save();
+  }
+
+  async removeChannelFromServer(id: String, channel: String) {
+    const server = await Servers.findOne({ id: id });
+    if (!server) {
+      return null;
+    }
+    server.channels.remove(channel);
+    return await server.save();
   }
 }
