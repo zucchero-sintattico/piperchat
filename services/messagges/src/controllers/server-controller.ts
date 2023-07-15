@@ -14,10 +14,7 @@ export class MessageController {
   // The events repository is a private property of the controller.
   async getServerById(req: Request, res: Response) {
     const { id } = req.params;
-    const servers = await this.serverRepository.getServerById(
-      id,
-      req.user.username
-    );
+    const servers = await this.serverRepository.getServerById(id);
     res.json(servers);
   }
 
@@ -32,5 +29,32 @@ export class MessageController {
       channels
     );
     res.json(server);
+  }
+
+  async getAllServers(req: Request, res: Response) {
+    res.json(await this.serverRepository.getAllServers());
+  }
+
+  async deleteServer(req: Request, res: Response) {
+    const { id } = req.params;
+    res.json(await this.serverRepository.deleteServer(id));
+  }
+
+  async updateServer(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, description, members, channels } = req.body;
+    res.json(await this.serverRepository.updateServer(name, description));
+  }
+
+  async addMember(req: Request, res: Response) {
+    const { name } = req.params;
+    const { member } = req.body;
+    res.json(await this.serverRepository.addMemberToServer(name, member));
+  }
+
+  async removeMember(req: Request, res: Response) {
+    const { name } = req.params;
+    const { member } = req.body;
+    res.json(await this.serverRepository.addMemberToServer(name, member));
   }
 }

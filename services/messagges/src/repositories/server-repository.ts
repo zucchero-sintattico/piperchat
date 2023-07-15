@@ -6,6 +6,11 @@ export class ServersRepository {
     return server;
   }
 
+  async getServerByName(name: String) {
+    const server = await Servers.findOne({ name: name });
+    return server;
+  }
+
   async getServersByUsername(username: String) {
     const server = await Servers.find({ members: username });
     return server;
@@ -26,6 +31,14 @@ export class ServersRepository {
       channels: channels,
     });
     return await server.save();
+  }
+
+  async updateServer(name: String, description: String) {
+    return await Servers.updateOne({ name: name, description: description });
+  }
+
+  async deleteServer(serverId: String) {
+    return await Servers.deleteOne({ id: serverId });
   }
 
   async getAllServers() {

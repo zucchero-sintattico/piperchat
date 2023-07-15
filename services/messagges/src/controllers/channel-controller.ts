@@ -26,4 +26,15 @@ export class ChannelController {
     const { id } = req.params;
     res.json(await this.channelRepository.getChannelById(id));
   }
+
+  async updateChannel(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    res.json(await this.channelRepository.updateChannel(id, name, description));
+  }
+
+  async deleteChannel(req: Request, res: Response) {
+    const { id } = req.params;
+    res.json(await this.channelRepository.deleteChannel(id));
+  }
 }

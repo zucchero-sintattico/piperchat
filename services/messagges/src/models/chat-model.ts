@@ -28,7 +28,7 @@ const ChannelSchema = new Schema({
 
 const ServerSchema = new Schema({
   id: String,
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   description: String,
   creator: { type: String, required: true },
   members: { type: [String], required: true },

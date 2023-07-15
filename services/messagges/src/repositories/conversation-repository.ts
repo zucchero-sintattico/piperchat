@@ -22,6 +22,10 @@ export class ConversationsRepository {
     return await conversation.save();
   }
 
+  async deleteConversation(name: String) {
+    await Conversations.deleteOne({ name: name });
+  }
+
   async getAllConversations() {
     const QUERY_LIMIT = 1000;
     return await Conversations.find().limit(QUERY_LIMIT);

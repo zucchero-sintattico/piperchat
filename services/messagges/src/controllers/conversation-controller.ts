@@ -35,4 +35,9 @@ export class ConversationsController {
   async getConversations(req: Request, res: Response) {
     res.json(await this.conversationRepository.getAllConversations());
   }
+
+  async deleteConversation(req: Request, res: Response) {
+    const { name } = req.params;
+    res.json(await this.conversationRepository.deleteConversation(name));
+  }
 }
