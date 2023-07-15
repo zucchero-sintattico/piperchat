@@ -5,17 +5,10 @@ export class ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepository();
 
   // The events repository is a private property of the controller.
-  async getChannelByServerId(req: Request, res: Response) {
-    const { id } = req.params;
-    const channels = await this.channelRepository.getChannelsFromServer(id);
-    res.json(channels);
-  }
 
   async createChannel(req: Request, res: Response) {
-    const { serverId, name, type, description, members } = req.body;
-    const creator = req.user.username;
+    const { name, type, description, creator, members } = req.body;
     const channel = await this.channelRepository.createChannel(
-      serverId,
       name,
       type,
       description,
@@ -23,5 +16,14 @@ export class ChannelController {
       members
     );
     res.json(channel);
+  }
+
+  async getAllChannels(req: Request, res: Response) {
+    res.json(await this.channelRepository.getAllChannels());
+  }
+
+  async getChannelById(req: Request, res: Response) {
+    const { id } = req.params;
+    res.json(await this.channelRepository.getChannelById(id));
   }
 }

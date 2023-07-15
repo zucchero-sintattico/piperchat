@@ -5,12 +5,8 @@ export class ChannelRepository {
     const QUERY_LIMIT = 1000;
     return await Channels.find().limit(QUERY_LIMIT);
   }
-  async getChannelsFromServer(serverId: String) {
-    return await Servers.find({ id: serverId }).select("channels");
-  }
 
   async createChannel(
-    serverId: String,
     name: String,
     type: String,
     description: String,
@@ -24,13 +20,17 @@ export class ChannelRepository {
       creator: creator,
       members: members,
     });
-    // update the server copy
-    await Servers.updateOne({ id: serverId }, { $push: { channels: channel } });
     return await channel.save();
   }
 
-  async getChannelById(channelId: String) {
-    return await Channels.findOne({ id: channelId });
+  async getChannelById(id: String) {
+    const channel = await Channels.findOne({ id: id });
+    return channel;
+  }
+
+  async getChannelsByUsername(username: String) {
+    const channel = await Channels.find({ members: username });
+    return channel;
   }
 
   async updateChannel(channelId: String, name: String, description: String) {
@@ -59,6 +59,15 @@ export class ChannelRepository {
       return null;
     }
     channel.members = channel.members.filter((m) => m != member);
+    return await channel.save();
+  }
+
+  async addMessageToChannel(channelId: String, message: String) {
+    const channel = await Channels.findOne({ id: channelId });
+    if (!channel) {
+      return null;
+    }
+    channel.messages.push(message);
     return await channel.save();
   }
 }

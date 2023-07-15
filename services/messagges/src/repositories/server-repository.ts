@@ -1,8 +1,13 @@
 import { Servers } from "../models/chat-model";
 
 export class ServersRepository {
-  async getServerById(id: String, user: String) {
-    const server = await Servers.findOne({ id: id, members: user });
+  async getServerById(id: String) {
+    const server = await Servers.findOne({ id: id });
+    return server;
+  }
+
+  async getServersByUsername(username: String) {
+    const server = await Servers.find({ members: username });
     return server;
   }
 
