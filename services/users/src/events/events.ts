@@ -1,4 +1,4 @@
-import { UserRepository } from "../repositories/user-repository";
+import { UserRepositoryImpl } from "../repositories/user-repository";
 import { RabbitMQ } from "../utils/rabbit-mq";
 
 /**
@@ -9,7 +9,7 @@ import { RabbitMQ } from "../utils/rabbit-mq";
  */
 export class ServiceEvents {
 	private static broker: RabbitMQ;
-	private static userRepository: UserRepository = new UserRepository();
+	private static userRepository: UserRepositoryImpl = new UserRepositoryImpl();
 
 	static async initialize() {
 		this.broker = RabbitMQ.getInstance();

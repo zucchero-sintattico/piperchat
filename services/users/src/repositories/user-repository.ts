@@ -1,43 +1,38 @@
 import { User } from "../models/user-model";
-import jwt from "jsonwebtoken";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
-export class UserRepository {
-	async getUsers() {
-		return await User.find();
-	}
+export interface UserRepository {
+	/**
+	 * Create a new user.
+	 * @param username
+	 * @param email
+	 * @param hashedPassword
+	 * @returns The created user.
+	 */
+	createUser(
+		username: string,
+		email: string,
+		hashedPassword: string
+	): Promise<User>;
 
-	async getUserByUsername(username: string) {
-		return await User.findOne({ username: username });
-	}
+	/**
+	 * Get user by username.
+	 * @param username
+	 * @returns The user.
+	 */
+	getUserByUsername(username: string): Promise<User>;
 
-	async getUserByEmail(email: string) {
-		return await User.findOne({ email: email });
-	}
+	/**
+	 * Get user by email.
+	 * @param email
+	 * @returns The user.
+	 */
+	getUserByEmail(email: string): Promise<User>;
 
-	async createUser(user: any) {
-		await user.save();
-	}
-
-	async createAccessAndRefreshToken(user: any) {
-		const accessToken = generateAccessToken(user);
-		const refreshToken = generateRefreshToken(user);
-
-		user.refreshToken = refreshToken;
-		await user.save();
-
-		return accessToken;
-	}
-
-	async getRefreshTokenFromUser(username: string): Promise<string | null> {
-		const refreshToken = await User.findOne(
-			{ username: username },
-			"refreshToken"
-		);
-		return refreshToken?.refreshToken || null;
-	}
-
-	async deleteRefreshTokenOfUser(username: string) {
-		return await User.updateOne({ username: username }, { refreshToken: "" });
-	}
+	/**
+	 * Login a user.
+	 * Create a new access token and refresh token.
+	 * @param username
+	 * @returns The access token.
+	 */
+	login(username: string): Promise<string>;
 }
