@@ -29,4 +29,4 @@ serverRouter
   .post(serverController.addChannel.bind(serverController))
   .delete(serverController.removeChannel.bind(serverController));
 
-export { serverRouter as entityRouter };
+export { serverRouter };

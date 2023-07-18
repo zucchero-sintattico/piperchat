@@ -1,12 +1,8 @@
 import { Router } from "express";
 import { MessageController } from "../controllers/message-controller";
-import { ConversationsController } from "../controllers/conversation-controller";
-
 const messageController = new MessageController();
 
 const messageRouter = Router();
-
-// TODO: ServerRoutes, ChannelRoutes, MessageRoutes, ConversationRoutes
 
 messageRouter
   .route("/messages")
@@ -17,4 +13,4 @@ messageRouter
   .route("/messages/:username")
   .get(messageController.getMessageFromSender.bind(messageController));
 
-export { messageRouter as entityRouter };
+export { messageRouter };
