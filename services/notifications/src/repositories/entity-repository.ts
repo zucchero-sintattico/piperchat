@@ -1,4 +1,4 @@
-import { Entity } from "../models/entity-model";
+import { NotificationEntity } from "../models/notification-model";
 
 /**
  * The repository of a generic entity.
@@ -6,26 +6,26 @@ import { Entity } from "../models/entity-model";
  */
 export class EntityRepository {
 	async getEntities() {
-		return await Entity.find();
+		return await NotificationEntity.find();
 	}
 
 	async getEntityById(id: string) {
-		return await Entity.findById(id);
+		return await NotificationEntity.findById(id);
 	}
 
 	async createEntity(entity: any) {
-		const newEntity = new Entity(entity);
+		const newEntity = new NotificationEntity(entity);
 		await newEntity.save();
 		return newEntity;
 	}
 
 	async updateEntity(id: string, entity: any) {
-		return await Entity.findByIdAndUpdate(id, entity, {
+		return await NotificationEntity.findByIdAndUpdate(id, entity, {
 			new: true,
 		});
 	}
 
 	async deleteEntity(id: string) {
-		return await Entity.findByIdAndDelete(id);
+		return await NotificationEntity.findByIdAndDelete(id);
 	}
 }

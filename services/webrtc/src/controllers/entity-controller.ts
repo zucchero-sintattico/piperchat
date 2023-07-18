@@ -1,7 +1,7 @@
-import { Entity } from "../models/entity-model";
+import { Entity } from "../models/session-model";
 import { Request, Response } from "express";
 import { EntityEventsRepository } from "../events/repositories/entity-events-repository";
-import { EntityRepository } from "../repositories/entity-repository";
+import { SessionRepository } from "../repositories/session-repository";
 
 /**
  * The controller of a generic entity.
@@ -10,7 +10,7 @@ import { EntityRepository } from "../repositories/entity-repository";
  */
 export class EntityController {
 	// The repository is a private property of the controller.
-	private entityRepository: EntityRepository = new EntityRepository();
+	private entityRepository: SessionRepository = new SessionRepository();
 
 	// The events repository is a private property of the controller.
 	private entityEventsRepository: EntityEventsRepository =
