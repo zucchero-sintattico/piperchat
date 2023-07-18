@@ -1,7 +1,7 @@
 import { describe } from "node:test";
 import supertest from "supertest";
 import { MessagesServer } from "../src/server";
-import { MessagesApi } from "./api/entity-api";
+import { MessagesApi } from "./api/message-api";
 import { MongooseUtils } from "../src/utils/mongoose";
 import { RabbitMQ } from "../src/utils/rabbit-mq";
 import { ServiceEvents } from "../src/events/events";
