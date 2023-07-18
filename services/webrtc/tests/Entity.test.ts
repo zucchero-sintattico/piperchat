@@ -1,9 +1,9 @@
 import { describe } from "node:test";
 import supertest from "supertest";
-import { SimpleServiceServer } from "../src/server";
+import { WebRTCServer } from "../src/server";
 import { EntityApi } from "./api/entity-api";
 
-const server = new SimpleServiceServer(3000);
+const server = new WebRTCServer(3000);
 
 let entityApi: EntityApi;
 
