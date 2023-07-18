@@ -16,8 +16,15 @@ export class UserRepositoryImpl implements UserRepository {
 		const user = await this.getUserByUsername(username);
 		const accessToken = generateAccessToken(user);
 		const refreshToken = generateRefreshToken(user);
-		// TODO: UPDATE THE REFRESH TOKEN IN THE USER
+		await Users.findOneAndUpdate(
+			{ username: username },
+			{ refreshToken: refreshToken }
+		);
 		return accessToken;
+	}
+
+	async logout(username: string): Promise<void> {
+		await Users.findOneAndUpdate({ username: username }, { refreshToken: "" });
 	}
 
 	async createUser(

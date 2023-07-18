@@ -1,6 +1,7 @@
 import { UserEventsRepository } from "../../events/repositories/user-events-repository";
 import { User, Users } from "../../models/user-model";
-import { UserRepositoryImpl } from "../../repositories/user-repository";
+import { UserRepository } from "../../repositories/user-repository";
+import { UserRepositoryImpl } from "../../repositories/user-repository-impl";
 import { UserController, UserControllerExceptions } from "./user-controller";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -11,7 +12,7 @@ import {
 } from "../../utils/jwt";
 
 export class UserControllerImpl implements UserController {
-	private userRepository: UserRepositoryImpl = new UserRepositoryImpl();
+	private userRepository: UserRepository = new UserRepositoryImpl();
 	private userEventsRepository: UserEventsRepository =
 		new UserEventsRepository();
 
@@ -42,9 +43,7 @@ export class UserControllerImpl implements UserController {
 			throw new UserControllerExceptions.InvalidUsernameOrPassword();
 		}
 
-		const accessToken = await this.userRepository.createAccessAndRefreshToken(
-			user
-		);
+		const accessToken = await this.userRepository.login(user.username);
 		return accessToken;
 	}
 
@@ -67,7 +66,7 @@ export class UserControllerImpl implements UserController {
 	}
 
 	async logout(username: string): Promise<void> {
-		await this.userRepository.deleteRefreshTokenOfUser(username).catch(() => {
+		await this.userRepository.logout(username).catch(() => {
 			throw new UserControllerExceptions.UserNotFound();
 		});
 	}

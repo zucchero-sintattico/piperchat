@@ -35,4 +35,10 @@ export interface UserRepository {
 	 * @returns The access token.
 	 */
 	login(username: string): Promise<string>;
+
+	/**
+	 * Logout a user
+	 * Remove the refresh token from db.
+	 */
+	logout(username: string): Promise<void>;
 }

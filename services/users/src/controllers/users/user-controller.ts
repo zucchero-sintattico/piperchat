@@ -1,7 +1,6 @@
 import { User } from "../../models/user-model";
 import { Request, Response } from "express";
 import { UserEventsRepository } from "../../events/repositories/user-events-repository";
-import { UserRepositoryImpl } from "../../repositories/user-repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { decode } from "punycode";
