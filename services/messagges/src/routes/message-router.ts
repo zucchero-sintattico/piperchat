@@ -10,7 +10,7 @@ messageRouter
   .post(messageController.createMessage.bind(messageController));
 
 messageRouter
-  .route("/messages/:username")
-  .get(messageController.getMessageFromSender.bind(messageController));
+  .route("/messages/:username/:type")
+  .get(messageController.getMessagesForUser.bind(messageController));
 
 export { messageRouter };

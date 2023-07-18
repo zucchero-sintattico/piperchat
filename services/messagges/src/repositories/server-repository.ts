@@ -6,6 +6,12 @@ export class ServersRepository {
     return server;
   }
 
+  async getMessagesForUser(username: String) {
+    // select only messages from the user
+    const server = await Servers.find({ members: username }).select("channels");
+    return server;
+  }
+
   async getServerByName(name: String) {
     const server = await Servers.findOne({ name: name });
     return server;
