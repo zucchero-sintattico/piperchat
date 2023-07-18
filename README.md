@@ -107,6 +107,7 @@ Project Link: [https://github.com/zucchero-sintattico/piperchat](https://github.
 - [Alessandro Mazzoli](https://www.linkedin.com/in/alessandro-mazzoli-009868140/)
 - [Manuel Andruccioli](https://www.linkedin.com/in/manuel-andruccioli-9259a5189/)
 - [Luigi Borriello](https://www.linkedin.com/in/luigi-borriello/)
+- [Tommaso Patriti](https://www.linkedin.com/in/tommaso-patriti/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
