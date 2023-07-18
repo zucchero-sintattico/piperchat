@@ -5,6 +5,7 @@ import { UserRepository } from "../repositories/user-repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { decode } from "punycode";
+import { generateAccessToken } from "../utils/jwt";
 
 /**
  * The controller of a generic entity.
@@ -60,25 +61,7 @@ export class UserController {
 	}
 
 	async refreshToken(req: Request, res: Response) {
-		// Check if the access token is present
-		if (!req.cookies.jwt) {
-			return res.status(403).send("Access token not valid");
-		}
-
-		// Check if the access token is valid
-		try {
-			jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET || "access");
-			res.status(403).send("Access token is valid yet");
-			return;
-		} catch (err) {}
-
-		// Retrieve the user from the database
-		const user = await this.userRepository.getUserByAccessToken(
-			req.cookies.jwt
-		);
-		if (!user) {
-			return res.status(403).send("Access token not valid");
-		}
+		const user = req.user;
 
 		// Retrieve the refresh token from the database
 		const refreshToken = await this.userRepository.getRefreshTokenFromUser(
@@ -91,7 +74,7 @@ export class UserController {
 		// Check if the refresh token is valid and create a new access token
 		try {
 			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "refresh");
-			const accessToken = this.userRepository.generateAccessToken(user);
+			const accessToken = generateAccessToken(user);
 			console.log("New Access token:", accessToken);
 			res.cookie("jwt", accessToken, { httpOnly: true, secure: true }).send();
 		} catch (err) {
@@ -100,14 +83,14 @@ export class UserController {
 	}
 
 	async logout(req: Request, res: Response) {
-		const user = await this.userRepository.getUserByAccessToken(
-			req.cookies.jwt
-		);
+		const user = req.user;
 		if (!user) {
 			return res.status(403).send("Access token not valid");
 		}
 		this.userRepository.deleteRefreshTokenOfUser(user.username);
 
-		res.clearCookie("jwt").status(200).send();
+		res.clearCookie("jwt").status(200).json({
+			message: "User logged out",
+		});
 	}
 }
