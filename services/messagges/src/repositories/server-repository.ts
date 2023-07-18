@@ -70,7 +70,7 @@ export class ServersRepository {
     return await server.save();
   }
 
-  async addChannelToServer(id: String, channel: String) {
+  async createChannel(id: String, channel: String) {
     const server = await Servers.findOne({ id: id });
     if (!server) {
       return null;

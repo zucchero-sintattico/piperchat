@@ -1,4 +1,6 @@
 import { MessageRepository } from "../repositories/message-repository";
+import { ConversationsRepository } from "../repositories/conversation-repository";
+import { ServersRepository } from "../repositories/server-repository";
 import { RabbitMQ } from "../utils/rabbit-mq";
 
 /**
@@ -9,7 +11,10 @@ import { RabbitMQ } from "../utils/rabbit-mq";
  */
 export class ServiceEvents {
   private static broker: RabbitMQ;
-  private static userRepository: MessageRepository = new MessageRepository();
+  private static messageRepository: MessageRepository = new MessageRepository();
+  private static conversationRepository: ConversationsRepository =
+    new ConversationsRepository();
+  private static serverRepository: ServersRepository = new ServersRepository();
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance();
@@ -27,11 +32,43 @@ export class ServiceEvents {
   }
 
   static async setupListeners() {
-    this.subscribeToExchange("", async (event, data) => {
-      switch (
-        event
-        // all messages cases
-      ) {
+    this.subscribeToExchange("message", async (event, data) => {
+      switch (event) {
+        case "message.created":
+          await this.messageRepository.createMessage(data.sender, data.content);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    this.subscribeToExchange("conversation", async (event, data) => {
+      switch (event) {
+        case "conversation.created":
+          await this.conversationRepository.createConversation(
+            data.participants
+          );
+          break;
+
+        case "conversation.deleted":
+          await this.conversationRepository.deleteConversation(data.name);
+          break;
+      }
+    });
+
+    this.subscribeToExchange("channel", async (event, data) => {
+      switch (event) {
+        case "channel.created":
+          await this.serverRepository.createChannel(data.name, data.serverId);
+          break;
+
+        case "channel.deleted":
+          await this.serverRepository.removeChannelFromServer(
+            data.name,
+            data.serverId
+          );
+          break;
       }
     });
   }
