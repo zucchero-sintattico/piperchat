@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { EntityController } from "../controllers/entity-controller";
+import { SessionController } from "../controllers/entity-controller";
 
-const entityController = new EntityController();
+const entityController = new SessionController();
 
 /**
  * The router of a generic entity.

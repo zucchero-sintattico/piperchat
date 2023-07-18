@@ -9,13 +9,20 @@ const SessionSchema = new Schema({
 		type: Array,
 		required: true,
 		fields: {
-			userId: {
+			username: {
 				type: String,
 				required: true,
 			},
 			sdp: {
 				type: String,
-				required: true,
+			},
+			iceCandidates: {
+				type: Array,
+				fields: {
+					candidate: {
+						type: String,
+					},
+				},
 			},
 		},
 	},
