@@ -42,35 +42,6 @@ export class ServiceEvents {
           break;
       }
     });
-
-    this.subscribeToExchange("conversation", async (event, data) => {
-      switch (event) {
-        case "conversation.created":
-          await this.conversationRepository.createConversation(
-            data.participants
-          );
-          break;
-
-        case "conversation.deleted":
-          await this.conversationRepository.deleteConversation(data.name);
-          break;
-      }
-    });
-
-    this.subscribeToExchange("channel", async (event, data) => {
-      switch (event) {
-        case "channel.created":
-          await this.serverRepository.createChannel(data.name, data.serverId);
-          break;
-
-        case "channel.deleted":
-          await this.serverRepository.removeChannelFromServer(
-            data.name,
-            data.serverId
-          );
-          break;
-      }
-    });
   }
 
   private static async subscribeToExchange(

@@ -8,7 +8,7 @@ import { ServiceEvents } from "../src/events/events";
 
 const server = new MessagesServer(3000);
 
-let entityApi: MessagesApi;
+let messageApi: MessagesApi;
 
 beforeAll(async () => {
   const port = Number.parseInt(process.env.PORT!) || 3000;
@@ -25,7 +25,7 @@ beforeAll(async () => {
   // Initialize service events listeners
   await ServiceEvents.initialize();
   await server.start();
-  entityApi = new MessagesApi(supertest(server.server));
+  messageApi = new MessagesApi(supertest(server.server));
 });
 
 afterAll(async () => {
@@ -36,11 +36,9 @@ afterAll(async () => {
 
 //test if the server is running
 
-describe("Messages API", () => {
-  describe("GET /messages", () => {
-    it("should return an empty array", async () => {
-      const response = await entityApi.getAllEntities();
-      expect(response.status).toBe(200);
-    });
+describe("GET /messages", () => {
+  it("should return an empty array", async () => {
+    const response = await messageApi.getAllEntities();
+    expect(response.status).toBe(200);
   });
 });
