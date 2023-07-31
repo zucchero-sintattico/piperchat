@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
-import { UserController } from "../controllers/user/user-controller";
-import { UserControllerImpl } from "../controllers/user/user-controller-impl";
-import { jwtValidTokenRequired } from "../utils/jwt";
+import { UserController } from "../../controllers/user/user-controller";
+import { UserControllerImpl } from "../../controllers/user/user-controller-impl";
+import { jwtValidTokenRequired } from "../../utils/jwt";
 
 const userController: UserController = new UserControllerImpl();
 

@@ -1,4 +1,4 @@
-import { UserEventsRepository } from "../../events/repositories/user-events-repository";
+import { UserEventsRepository } from "../../events/repositories/user/user-events-repository";
 import { User, Users } from "../../models/user-model";
 import { UserRepository } from "../../repositories/user/user-repository";
 import { UserRepositoryImpl } from "../../repositories/user-repository-impl";

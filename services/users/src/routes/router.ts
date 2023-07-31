@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { userRouter } from "./user-router";
-import { authRouter } from "./auth-router";
-import { friendsRouter } from "./friends-router";
+import { userRouter } from "./routers/user-router";
+import { authRouter } from "./routers/auth-router";
+import { friendsRouter } from "./routers/friends-router";
 
 const serviceRouter = Router();
 

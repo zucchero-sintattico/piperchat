@@ -1,7 +1,10 @@
 import { Request, Router, Response } from "express";
-import { AuthController } from "../controllers/auth/auth-controller";
-import { AuthControllerImpl } from "../controllers/auth/auth-controller-impl";
-import { jwtInvalidTokenRequired, jwtValidTokenRequired } from "../utils/jwt";
+import { AuthController } from "../../controllers/auth/auth-controller";
+import { AuthControllerImpl } from "../../controllers/auth/auth-controller-impl";
+import {
+	jwtInvalidTokenRequired,
+	jwtValidTokenRequired,
+} from "../../utils/jwt";
 
 const authController: AuthController = new AuthControllerImpl();
 
