@@ -1,20 +1,20 @@
 import { UserEventsRepository } from "../../events/repositories/user/user-events-repository";
 import { User, Users } from "../../models/user-model";
 import { UserRepository } from "../../repositories/user/user-repository";
-import { UserRepositoryImpl } from "../../repositories/user-repository-impl";
+import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl";
 import { AuthController, UserControllerExceptions } from "./auth-controller";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import {
 	generateAccessToken,
-	verifyAccessToken,
+	generateRefreshToken,
 	verifyRefreshToken,
 } from "../../utils/jwt";
+import { UserEventsRepositoryImpl } from "../../events/repositories/user/user-events-repository-impl";
 
 export class AuthControllerImpl implements AuthController {
 	private userRepository: UserRepository = new UserRepositoryImpl();
 	private userEventsRepository: UserEventsRepository =
-		new UserEventsRepository();
+		new UserEventsRepositoryImpl();
 
 	async register(
 		username: string,
@@ -43,7 +43,10 @@ export class AuthControllerImpl implements AuthController {
 			throw new UserControllerExceptions.InvalidUsernameOrPassword();
 		}
 
-		const accessToken = await this.userRepository.login(user.username);
+		const accessToken = generateAccessToken(user);
+		const refreshToken = generateRefreshToken(user);
+
+		await this.userRepository.login(user.username, refreshToken);
 		return accessToken;
 	}
 

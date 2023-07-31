@@ -1,7 +1,5 @@
 import { UserRepository } from "./user-repository";
-import jwt from "jsonwebtoken";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import { Users, User } from "../models/user-model";
+import { Users, User } from "../../models/user-model";
 
 export class UserRepositoryImpl implements UserRepository {
 	async getUserByUsername(username: string): Promise<User> {
@@ -12,15 +10,12 @@ export class UserRepositoryImpl implements UserRepository {
 		return await Users.findOne({ email: email }).orFail();
 	}
 
-	async login(username: string): Promise<string> {
+	async login(username: string, refreshToken: string): Promise<void> {
 		const user = await this.getUserByUsername(username);
-		const accessToken = generateAccessToken(user);
-		const refreshToken = generateRefreshToken(user);
 		await Users.findOneAndUpdate(
 			{ username: username },
 			{ refreshToken: refreshToken }
 		);
-		return accessToken;
 	}
 
 	async logout(username: string): Promise<void> {

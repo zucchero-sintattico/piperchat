@@ -32,9 +32,9 @@ export interface UserRepository {
 	 * Login a user.
 	 * Create a new access token and refresh token.
 	 * @param username
-	 * @returns The access token.
+	 * @param refreshToken
 	 */
-	login(username: string): Promise<string>;
+	login(username: string, refreshToken: string): Promise<void>;
 
 	/**
 	 * Logout a user
