@@ -1,11 +1,11 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T08:45:46.777Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="n1itpPGmMvl-FOVc0eT1" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T09:13:35.664Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="dm37Ey1CrX9T-X47Yrtz" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="2528" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2525" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="7wh-No2WTboaJmC7Gdfl-18" value="Messages Service" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="-210" y="660" width="560" height="280" as="geometry" />
+          <mxGeometry x="-210" y="660" width="780" height="610" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-14" value="Piperchat Service" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="-290" y="-90" width="780" height="600" as="geometry" />
@@ -31,7 +31,7 @@
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-5" value="Text Channel" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-30" y="370" width="160" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="s29pFKMHYIw3pCDYSGQ6-6" value="+ name&lt;br&gt;+ createdAt: Date" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-5" vertex="1">
+        <mxCell id="s29pFKMHYIw3pCDYSGQ6-6" value="+ ID: String&lt;br&gt;+ name: String&lt;br&gt;+ createdAt: Date" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-5" vertex="1">
           <mxGeometry y="50" width="160" height="70" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-7" value="Multimedia Channel" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -77,13 +77,10 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-4" value="Message" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="-40" y="690" width="180" height="120" as="geometry" />
+          <mxGeometry x="120" y="980" width="180" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="7wh-No2WTboaJmC7Gdfl-5" value="+ ID: String&lt;br&gt;+ from: username&lt;br&gt;+ timestamp: Date&lt;br&gt;+ seen_by: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="7wh-No2WTboaJmC7Gdfl-4" vertex="1">
+        <mxCell id="7wh-No2WTboaJmC7Gdfl-5" value="+ ID: String&lt;br&gt;+ from: username&lt;br&gt;+ content: String&lt;br&gt;+ timestamp: Date&lt;br&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="7wh-No2WTboaJmC7Gdfl-4" vertex="1">
           <mxGeometry y="50" width="180" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="7wh-No2WTboaJmC7Gdfl-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="s29pFKMHYIw3pCDYSGQ6-6" target="7wh-No2WTboaJmC7Gdfl-4" edge="1">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-7" value="Offer" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1080" y="370" width="210" height="120" as="geometry" />
@@ -107,10 +104,40 @@
           <mxGeometry x="790" y="-260" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-1" value="Out-Events:&lt;br&gt;- TEXT_CHANNEL.NEW_MESSAGE&lt;br&gt;&lt;br&gt;- CHAT.NEW_MESSAGE&lt;br&gt;&lt;br&gt;- USER.CONNECTED&lt;br&gt;- USER.DISCONNECTED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
-          <mxGeometry x="70" y="940" width="280" height="170" as="geometry" />
+          <mxGeometry x="570" y="680" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-2" value="Out-Events:&lt;br&gt;- SESSION.USER_JOINED&lt;br&gt;- SESSION.USER_LEAVE&lt;br&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1070" y="560" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-8" value="Conversation" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="255" y="710" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-9" value="+ ID: String&lt;br&gt;+ Participants: List[2]&amp;lt;username&amp;gt;&lt;br&gt;+ messages: List&amp;lt;Message&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-8">
+          <mxGeometry y="50" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="sGge5SKSTXFPz8y5dbad-9" target="7wh-No2WTboaJmC7Gdfl-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-11" value="Text Channel" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-65" y="710" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-12" value="+ ID: String&lt;br&gt;+ messages: List&amp;lt;Message&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-11">
+          <mxGeometry y="50" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="sGge5SKSTXFPz8y5dbad-12" target="7wh-No2WTboaJmC7Gdfl-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="s29pFKMHYIw3pCDYSGQ6-6" target="sGge5SKSTXFPz8y5dbad-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="sGge5SKSTXFPz8y5dbad-19" target="sGge5SKSTXFPz8y5dbad-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-19" value="Server" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-200" y="890" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-20" value="+ ID: String&lt;br&gt;+ Participants: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-19">
+          <mxGeometry y="50" width="190" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
