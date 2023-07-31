@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T08:38:16.915Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="xLljKQ1W9San0j5GfQoo" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T08:45:46.777Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="n1itpPGmMvl-FOVc0eT1" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="2276" dy="1864" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2528" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -20,10 +20,10 @@
           <mxGeometry y="50" width="190" height="110" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-3" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="810" y="-30" width="200" height="160" as="geometry" />
+          <mxGeometry x="810" y="-40" width="200" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ refreshToken: String?&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
-          <mxGeometry y="50" width="200" height="110" as="geometry" />
+        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ refreshToken: String?&lt;br&gt;+ online: boolean&lt;br&gt;+ lastOnline: Date&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
+          <mxGeometry y="50" width="200" height="150" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="s29pFKMHYIw3pCDYSGQ6-5" target="s29pFKMHYIw3pCDYSGQ6-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -100,11 +100,17 @@
         <mxCell id="7wh-No2WTboaJmC7Gdfl-20" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="780" y="405" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;- SERVER_CREATED&lt;br&gt;- USER_ADDED_TO_SERVER&lt;br&gt;- USER_REMOVED_FROM_SERVER&lt;br&gt;- TEXT_CHANNEL_CREATED&lt;br&gt;- TEXT_CHANNEL_DELETED&lt;br&gt;- MULTIMEDIA_CHANNEL_CREATED&lt;br&gt;- MULTIMEDIA_CHANNEL_DELETED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+        <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;&lt;br&gt;- SERVER.CREATED&lt;br&gt;- SERVER.USER_ADDED&lt;br&gt;- SERVER.USER_REMOVED&lt;br&gt;&lt;br&gt;- TEXT_CHANNEL.CREATED&lt;br&gt;- TEXT_CHANNEL.DELETED&lt;br&gt;&lt;br&gt;- MULTIMEDIA_CHANNEL.CREATED&lt;br&gt;- MULTIMEDIA_CHANNEL.DELETED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="210" y="-260" width="280" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="9NbjZctbXflYfwBN7HnV-2" value="Out-Events:&lt;br&gt;- NEW_USER_CREATED&lt;br&gt;- NEW_FRIEND_REQUEST&lt;br&gt;- USER_LOGGED_IN&lt;br&gt;- USER_TOKEN_REFRESHED&lt;br&gt;- USER_LOGGED_OUT&lt;br&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+        <mxCell id="9NbjZctbXflYfwBN7HnV-2" value="Out-Events:&lt;br&gt;- USER.CREATED&lt;br&gt;- USER.FRIEND_REQUEST&lt;br&gt;- USER.LOGGED_IN&lt;br&gt;- USER.TOKEN_REFRESHED&lt;br&gt;- USER.LOGGED_OUT" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="790" y="-260" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-1" value="Out-Events:&lt;br&gt;- TEXT_CHANNEL.NEW_MESSAGE&lt;br&gt;&lt;br&gt;- CHAT.NEW_MESSAGE&lt;br&gt;&lt;br&gt;- USER.CONNECTED&lt;br&gt;- USER.DISCONNECTED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="70" y="940" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-2" value="Out-Events:&lt;br&gt;- SESSION.USER_JOINED&lt;br&gt;- SESSION.USER_LEAVE&lt;br&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="560" width="280" height="170" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
