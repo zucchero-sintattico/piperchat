@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T08:29:11.364Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="T2uEfeK68JMu-ckUFPfl" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T08:38:16.915Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="xLljKQ1W9San0j5GfQoo" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="3227" dy="2373" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2276" dy="1864" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,7 +22,7 @@
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-3" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="810" y="-30" width="200" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
+        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ refreshToken: String?&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
           <mxGeometry y="50" width="200" height="110" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="s29pFKMHYIw3pCDYSGQ6-5" target="s29pFKMHYIw3pCDYSGQ6-2" edge="1">
@@ -103,9 +103,17 @@
         <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;- SERVER_CREATED&lt;br&gt;- USER_ADDED_TO_SERVER&lt;br&gt;- USER_REMOVED_FROM_SERVER&lt;br&gt;- TEXT_CHANNEL_CREATED&lt;br&gt;- TEXT_CHANNEL_DELETED&lt;br&gt;- MULTIMEDIA_CHANNEL_CREATED&lt;br&gt;- MULTIMEDIA_CHANNEL_DELETED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="210" y="-260" width="280" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="9NbjZctbXflYfwBN7HnV-2" value="Out-Events:&lt;br&gt;- NEW_USER_CREATED&lt;br&gt;- NEW_FRIEND_REQUEST&lt;br&gt;- USER_LOGGED_IN&lt;br&gt;- USER_TOKEN_REFRESHED&lt;br&gt;- USER_LOGGED_OUT" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+        <mxCell id="9NbjZctbXflYfwBN7HnV-2" value="Out-Events:&lt;br&gt;- NEW_USER_CREATED&lt;br&gt;- NEW_FRIEND_REQUEST&lt;br&gt;- USER_LOGGED_IN&lt;br&gt;- USER_TOKEN_REFRESHED&lt;br&gt;- USER_LOGGED_OUT&lt;br&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="790" y="-260" width="280" height="170" as="geometry" />
         </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="amCAOWOZRxVOXFIg68wc" name="Gateway">
+    <mxGraphModel dx="1426" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
       </root>
     </mxGraphModel>
   </diagram>
@@ -142,14 +150,6 @@
     </mxGraphModel>
   </diagram>
   <diagram id="PXEkbHz4YBZyNrTI2job" name="Notifications">
-    <mxGraphModel dx="1426" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="amCAOWOZRxVOXFIg68wc" name="Gateway">
     <mxGraphModel dx="1426" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
