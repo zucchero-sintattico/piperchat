@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T13:55:06.570Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="BSrGGLQd_-ujcGSwpX1B" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T14:03:09.027Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="shS1kLi7Am_073pXfF-I" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2274" dy="1864" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -154,8 +154,8 @@
         <mxCell id="sGge5SKSTXFPz8y5dbad-26" value="API:&lt;br&gt;&lt;br&gt;- /login { username, password }&lt;br&gt;- /register { username, password, email, &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;description?, photo? }&lt;br&gt;- /refresh-token { username }&lt;br&gt;- /logout { username }&lt;br&gt;&lt;br&gt;- /friends/request { from, to }&lt;br&gt;- /friends/request/accept { requestId }&lt;br&gt;- /friends { username }&lt;br&gt;&lt;br&gt;- /status { username }&lt;br&gt;&lt;br&gt;- /user/set-photo { username, photo }&lt;br&gt;- /user/set-description { username, description }" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1080" y="-350" width="260" height="260" as="geometry" />
         </mxCell>
-        <mxCell id="sGge5SKSTXFPz8y5dbad-27" value="API:&lt;br&gt;&lt;br&gt;- /create&lt;br&gt;- /join&lt;br&gt;- /leave&lt;br&gt;&lt;br&gt;- /text-channel/create&lt;br&gt;- /text-channel/delete&lt;br&gt;&lt;br&gt;- /multimedia-channel/create&lt;br&gt;- /multimedia-channel/delete" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
-          <mxGeometry x="-80" y="-310" width="260" height="220" as="geometry" />
+        <mxCell id="sGge5SKSTXFPz8y5dbad-27" value="API:&lt;br&gt;&lt;br&gt;- /servers { username }&lt;br&gt;- /server/create { username, name, description? }&lt;br&gt;- /server/join { username, serverID }&lt;br&gt;- /server/leave { username, serverID }&lt;br&gt;&lt;br&gt;- /text-channel/create&lt;br&gt;- /text-channel/delete&lt;br&gt;&lt;br&gt;- /multimedia-channel/create&lt;br&gt;- /multimedia-channel/delete" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-110" y="-310" width="305" height="220" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-28" value="API: ???" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1340" y="310" width="260" height="220" as="geometry" />
