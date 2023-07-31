@@ -1,10 +1,30 @@
-import { BasicEventsRepository } from "./basic-events-repository";
+import { User } from "../../models/user-model";
+import { BasicEventsRepository } from "../../utils/basic-events-repository";
 
-/**
- * Entity events repository
- * It is responsible for publishing events to the message broker.
- */
-export class UserEventsRepository extends BasicEventsRepository {
+export interface UserEventsRepository {
+	/**
+	 * Publish user created event.
+	 * @param user
+	 */
+	publishUserCreated(user: User): Promise<void>;
+
+	/**
+	 * Publish user updated event.
+	 * @param user
+	 */
+	publishUserUpdated(user: User): Promise<void>;
+
+	/**
+	 * Publish user deleted event.
+	 * @param user
+	 */
+	publishUserDeleted(user: User): Promise<void>;
+}
+
+export class UserEventsRepositoryImpl
+	extends BasicEventsRepository
+	implements UserEventsRepository
+{
 	async publishUserCreated(user: any) {
 		const channel = this.getChannel();
 		channel?.publish("user", "user.created", Buffer.from(JSON.stringify(user)));

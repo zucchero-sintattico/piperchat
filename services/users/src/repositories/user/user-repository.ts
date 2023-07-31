@@ -1,4 +1,4 @@
-import { User } from "../models/user-model";
+import { User } from "../../models/user-model";
 
 export interface UserRepository {
 	/**

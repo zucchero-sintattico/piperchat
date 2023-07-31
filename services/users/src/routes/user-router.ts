@@ -1,111 +1,68 @@
-import { Request, Router, Response } from "express";
-import { AuthController } from "../controllers/auth/auth-controller";
-import { AuthControllerImpl } from "../controllers/auth/auth-controller-impl";
+import { Request, Response, Router } from "express";
 import { UserController } from "../controllers/user/user-controller";
 import { UserControllerImpl } from "../controllers/user/user-controller-impl";
-import { jwtInvalidTokenRequired, jwtValidTokenRequired } from "../utils/jwt";
+import { jwtValidTokenRequired } from "../utils/jwt";
 
-const authController: AuthController = new AuthControllerImpl();
 const userController: UserController = new UserControllerImpl();
-/**
- * The router of the users endpoints.
- */
-const userRouter = Router();
 
-/**
- * Register a new user.
- * @route POST /user/register
- */
-userRouter.route("/register").post((req: Request, res: Response) => {
-	if (!req.body.username || !req.body.password || !req.body.email) {
-		return res
-			.status(400)
-			.json({ message: "Missing username, password or email" });
-	}
-	authController
-		.register(req.body.username, req.body.password, req.body.email)
+export const userRouter = Router();
+userRouter.use(jwtValidTokenRequired);
+
+userRouter.route("/status/:username").get((req: Request, res: Response) => {
+	userController
+		.getUserStatus(req.params.username)
+		.then((status) => {
+			return res.status(200).json({ status: status });
+		})
+		.catch((e) => {
+			return res.status(404).json({ message: "User not found", error: e });
+		});
+});
+
+userRouter.route("/photo/:username").get((req: Request, res: Response) => {
+	userController
+		.getUserPhoto(req.params.username)
+		.then((photo) => {
+			return res.status(200).json({ photo: photo });
+		})
+		.catch((e) => {
+			return res.status(404).json({ message: "User not found", error: e });
+		});
+});
+
+userRouter.route("/photo/:username").post((req: Request, res: Response) => {
+	userController
+		.setUserPhoto(req.params.username, req.body.photo)
 		.then(() => {
-			return res.status(200).json({ message: "Registered" });
+			return res.status(200).json({ message: "Photo set" });
 		})
 		.catch((e) => {
-			return res
-				.status(500)
-				.json({ message: "Internal Server Error", error: e });
+			return res.status(404).json({ message: "User not found", error: e });
 		});
 });
 
-/**
- * Login a user.
- * @route POST /user/login
- * @body {
- * 		username: string,
- * 		password: string
- * }
- */
-userRouter.route("/login").post((req: Request, res: Response) => {
-	if (!req.body.username || !req.body.password) {
-		return res.status(400).json({ message: "Missing username or password" });
-	}
-	authController
-		.login(req.body.username, req.body.password)
-		.then((token) => {
-			res.cookie("jwt", token, { httpOnly: true });
-			return res.status(200).json({ message: "Logged in" });
-		})
-		.catch((e) => {
-			return res
-				.status(401)
-				.json({ message: "Invalid username or password", error: e });
-		});
-});
-
-/**
- * Logout a user.
- * @route POST /user/logout
- * @cookies {
- * 		jwt: string
- * }
- */
 userRouter
-	.use("/logout", jwtValidTokenRequired)
-	.route("/logout")
+	.route("/description/:username")
+	.get((req: Request, res: Response) => {
+		userController
+			.getUserDescription(req.params.username)
+			.then((description) => {
+				return res.status(200).json({ description: description });
+			})
+			.catch((e) => {
+				return res.status(404).json({ message: "User not found", error: e });
+			});
+	});
+
+userRouter
+	.route("/description/:username")
 	.post((req: Request, res: Response) => {
-		authController
-			.logout(req.user.username)
+		userController
+			.setUserDescription(req.params.username, req.body.description)
 			.then(() => {
-				res.clearCookie("jwt");
-				return res.status(200).json({ message: "Logged out" });
+				return res.status(200).json({ message: "Description set" });
 			})
 			.catch((e) => {
-				return res.status(500).json({ message: "Internal Server Error" });
+				return res.status(404).json({ message: "User not found", error: e });
 			});
 	});
-
-/**
- * Refresh the token of a user.
- * @route POST /user/refresh-token
- * @cookies {
- * 		jwt: string
- * }
- * @returns {
- * 		jwt: string
- * }
- */
-userRouter
-	.use("/refresh-token", jwtInvalidTokenRequired)
-	.route("/refresh-token")
-	.post((req: Request, res: Response) => {
-		authController
-			.refreshToken(req.user.username)
-			.then((token) => {
-				return res
-					.status(200)
-					.cookie("jwt", token, { httpOnly: true })
-					.json({ message: "Refreshed token" });
-			})
-			.catch((e) => {
-				return res.status(500).json({ message: "Internal Server Error" });
-			});
-	});
-
-export { userRouter };
