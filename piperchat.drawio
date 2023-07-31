@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T13:45:56.709Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="-7Dt3sgleOvnksOGDCn0" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T13:55:06.570Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="BSrGGLQd_-ujcGSwpX1B" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2274" dy="1864" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -139,16 +139,16 @@
         <mxCell id="sGge5SKSTXFPz8y5dbad-20" value="+ ID: String&lt;br&gt;+ participants: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-19">
           <mxGeometry y="50" width="190" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="sGge5SKSTXFPz8y5dbad-22" value="Notification Service" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="sGge5SKSTXFPz8y5dbad-22" value="Reactor Service" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1070" y="930" width="500" height="300" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-23" value="Out-Events:&lt;br&gt;- USER.CONNECTED&lt;br&gt;- USER.DISCONNECTED&lt;br&gt;-&amp;nbsp;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1580" y="960" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-24" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="990" width="190" height="170" as="geometry" />
+          <mxGeometry x="1090" y="995" width="190" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="sGge5SKSTXFPz8y5dbad-25" value="+ username: String&lt;br&gt;+ conversation: Set&amp;lt;String&amp;gt;&lt;br&gt;+ text_channel: Set&amp;lt;String&amp;gt;&lt;br&gt;+ friend_request: boolean&lt;br&gt;+&amp;nbsp;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-24">
+        <mxCell id="sGge5SKSTXFPz8y5dbad-25" value="+ username: String&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ servers: List&amp;lt;Server&amp;gt;&lt;br&gt;+ conversation: Set&amp;lt;String&amp;gt;&lt;br&gt;+ text_channel: Set&amp;lt;String&amp;gt;&lt;br&gt;+ friend_request: boolean&lt;br&gt;+&amp;nbsp;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-24">
           <mxGeometry y="50" width="190" height="120" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-26" value="API:&lt;br&gt;&lt;br&gt;- /login { username, password }&lt;br&gt;- /register { username, password, email, &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;description?, photo? }&lt;br&gt;- /refresh-token { username }&lt;br&gt;- /logout { username }&lt;br&gt;&lt;br&gt;- /friends/request { from, to }&lt;br&gt;- /friends/request/accept { requestId }&lt;br&gt;- /friends { username }&lt;br&gt;&lt;br&gt;- /status { username }&lt;br&gt;&lt;br&gt;- /user/set-photo { username, photo }&lt;br&gt;- /user/set-description { username, description }" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
@@ -165,6 +165,15 @@
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-30" value="API:&lt;br&gt;&lt;br&gt;- /conversation/send&lt;br&gt;- /text-channel/send&lt;br&gt;&lt;br&gt;- /conversation/get&lt;br&gt;- /text-channel/get" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="570" y="890" width="260" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-36" value="Server" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="1050" width="190" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-37" value="+ ID: String&lt;br&gt;+ participants: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-36">
+          <mxGeometry y="50" width="190" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="sGge5SKSTXFPz8y5dbad-25" target="sGge5SKSTXFPz8y5dbad-37">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
