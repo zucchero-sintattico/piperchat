@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T12:48:13.031Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="rrneoHBoVty1tTsvQR8T" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T12:51:18.365Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="lQp7YveM9atH-H30lBwg" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="2525" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1420" dy="1406" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -153,6 +153,9 @@
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-26" value="API:&lt;br&gt;&lt;br&gt;- /login&lt;br&gt;- /register&lt;br&gt;- /refresh-token&lt;br&gt;- /logout&lt;br&gt;&lt;br&gt;- /friends/request&lt;br&gt;- /friends&lt;br&gt;&lt;br&gt;- /status/:userID" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1080" y="-260" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-27" value="API:&lt;br&gt;&lt;br&gt;- /servers/create&lt;br&gt;- /server/join/:serverID&lt;br&gt;- /server/leave/:serverID&lt;br&gt;- /" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="-310" width="260" height="220" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
