@@ -2,7 +2,7 @@ import { UserEventsRepository } from "../../events/repositories/user-events-repo
 import { User, Users } from "../../models/user-model";
 import { UserRepository } from "../../repositories/user-repository";
 import { UserRepositoryImpl } from "../../repositories/user-repository-impl";
-import { UserController, UserControllerExceptions } from "./user-controller";
+import { AuthController, UserControllerExceptions } from "./auth-controller";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {
@@ -11,7 +11,7 @@ import {
 	verifyRefreshToken,
 } from "../../utils/jwt";
 
-export class UserControllerImpl implements UserController {
+export class AuthControllerImpl implements AuthController {
 	private userRepository: UserRepository = new UserRepositoryImpl();
 	private userEventsRepository: UserEventsRepository =
 		new UserEventsRepository();

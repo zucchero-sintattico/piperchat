@@ -1,12 +1,6 @@
 import { User } from "../../models/user-model";
-import { Request, Response } from "express";
-import { UserEventsRepository } from "../../events/repositories/user-events-repository";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { decode } from "punycode";
-import { generateAccessToken } from "../../utils/jwt";
 
-export interface UserController {
+export interface AuthController {
 	/**
 	 * Register a new user.
 	 * @param username The username of the user.

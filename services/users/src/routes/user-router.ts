@@ -1,12 +1,12 @@
 import { Request, Router, Response } from "express";
-import {
-	UserController,
-	UserControllerImpl,
-} from "../controllers/users/user-controller";
+import { AuthController } from "../controllers/auth/auth-controller";
+import { AuthControllerImpl } from "../controllers/auth/auth-controller-impl";
+import { UserController } from "../controllers/user/user-controller";
+import { UserControllerImpl } from "../controllers/user/user-controller-impl";
 import { jwtInvalidTokenRequired, jwtValidTokenRequired } from "../utils/jwt";
 
+const authController: AuthController = new AuthControllerImpl();
 const userController: UserController = new UserControllerImpl();
-
 /**
  * The router of the users endpoints.
  */
@@ -22,7 +22,7 @@ userRouter.route("/register").post((req: Request, res: Response) => {
 			.status(400)
 			.json({ message: "Missing username, password or email" });
 	}
-	userController
+	authController
 		.register(req.body.username, req.body.password, req.body.email)
 		.then(() => {
 			return res.status(200).json({ message: "Registered" });
@@ -46,7 +46,7 @@ userRouter.route("/login").post((req: Request, res: Response) => {
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).json({ message: "Missing username or password" });
 	}
-	userController
+	authController
 		.login(req.body.username, req.body.password)
 		.then((token) => {
 			res.cookie("jwt", token, { httpOnly: true });
@@ -70,7 +70,7 @@ userRouter
 	.use("/logout", jwtValidTokenRequired)
 	.route("/logout")
 	.post((req: Request, res: Response) => {
-		userController
+		authController
 			.logout(req.user.username)
 			.then(() => {
 				res.clearCookie("jwt");
@@ -95,7 +95,7 @@ userRouter
 	.use("/refresh-token", jwtInvalidTokenRequired)
 	.route("/refresh-token")
 	.post((req: Request, res: Response) => {
-		userController
+		authController
 			.refreshToken(req.user.username)
 			.then((token) => {
 				return res
