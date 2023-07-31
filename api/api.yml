@@ -1,0 +1,66 @@
+openapi: '3.0.2'
+info:
+  title: Piperchat API
+  version: '1.0'
+  description: |
+    Piperchat design API description
+
+paths:
+  /auth/login:
+    get:
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Username of the user to be logged in
+          example: user1
+        - in: query
+          name: password
+          schema:
+            type: string
+          required: true
+          description: Password of the user to be logged in
+          example: 123456
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+
+
+
+components:
+  schemas:
+    User:
+
+      required:
+        - username
+        - password
+        - email
+
+      type: object
+      properties:
+        username: 
+          type: string
+        password: 
+          type: string
+        email: 
+          type: string
+        photo: 
+          type: string
+        description: 
+          type: string
+        refreshToken: 
+          type: string
+        online: 
+          type: boolean
+        lastOnline: 
+          type: string
+        friends:
+          type: array
+        friends_request:
+          type: array
+        pending_friends_request:
+          type: array
