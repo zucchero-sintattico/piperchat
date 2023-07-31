@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T09:31:11.010Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="-C1ORLLpHxQy8l5z4Tln" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-07-31T12:47:08.731Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="kfDGFXc75AdhGFJla87V" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2525" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -20,10 +20,10 @@
           <mxGeometry y="50" width="190" height="110" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-3" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="810" y="-40" width="250" height="200" as="geometry" />
+          <mxGeometry x="810" y="-45" width="250" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ refreshToken: String?&lt;br&gt;+ online: boolean&lt;br&gt;+ lastOnline: Date&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;&lt;br&gt;+ pending_friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
-          <mxGeometry y="50" width="250" height="150" as="geometry" />
+        <mxCell id="s29pFKMHYIw3pCDYSGQ6-4" value="+ username: String&lt;br&gt;+ password: String&lt;br&gt;+ email: String&lt;br&gt;+ photo: String&lt;br&gt;+ description: String&lt;br&gt;+ refreshToken: String?&lt;br&gt;+ online: boolean&lt;br&gt;+ lastOnline: Date&lt;br&gt;+ friends: List&amp;lt;username&amp;gt;&lt;br&gt;+ friends_request: List&amp;lt;username&amp;gt;&lt;br&gt;+ pending_friends_request: List&amp;lt;username&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="s29pFKMHYIw3pCDYSGQ6-3" vertex="1">
+          <mxGeometry y="50" width="250" height="170" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="s29pFKMHYIw3pCDYSGQ6-5" target="s29pFKMHYIw3pCDYSGQ6-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -144,6 +144,15 @@
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-23" value="Out-Events:&lt;br&gt;- USER.CONNECTED&lt;br&gt;- USER.DISCONNECTED&lt;br&gt;-&amp;nbsp;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
           <mxGeometry x="1350" y="990" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-24" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="1020" width="250" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-25" value="+ username: String&lt;br&gt;+&amp;nbsp;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="sGge5SKSTXFPz8y5dbad-24">
+          <mxGeometry y="50" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="sGge5SKSTXFPz8y5dbad-26" value="API:&lt;br&gt;&lt;br&gt;- /login&lt;br&gt;- /register&lt;br&gt;- /refresh-token&lt;br&gt;- /logout&lt;br&gt;&lt;br&gt;- /friends/request&lt;br&gt;- /friends&lt;br&gt;&lt;br&gt;- /status/:userID" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="-260" width="260" height="170" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
