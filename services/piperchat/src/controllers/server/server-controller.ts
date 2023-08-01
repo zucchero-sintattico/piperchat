@@ -18,6 +18,19 @@ export interface ServerController {
 	getServer(id: number): Promise<Server>;
 
 	/**
+	 * Create a server
+	 * @param name
+	 * @param description
+	 * @param owner
+	 * @returns the created server
+	 */
+	createServer(
+		name: string,
+		description: string,
+		owner: string
+	): Promise<Server>;
+
+	/**
 	 * Update a server
 	 * @param id
 	 * @param name? the new name of the server

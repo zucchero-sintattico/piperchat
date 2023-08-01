@@ -2,6 +2,13 @@ import { Server } from "../../models/server-model";
 import { ServerController } from "./server-controller";
 
 export class ServerControllerImpl implements ServerController {
+	createServer(
+		name: string,
+		description: string,
+		owner: string
+	): Promise<Server> {
+		throw new Error("Method not implemented.");
+	}
 	getServers(username: string): Promise<Server[]> {
 		throw new Error("Method not implemented.");
 	}
