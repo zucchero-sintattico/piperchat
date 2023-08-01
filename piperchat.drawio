@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-08-01T10:01:29.634Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="TRvRfmULjFkrby2L9_QR" version="21.6.6" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-08-01T10:04:13.178Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="t1Cf_W11Zkw1_b-w4gXo" version="21.6.6" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="2633" dy="2055" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3044" dy="2275" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -53,7 +53,7 @@
           <mxGeometry x="20" y="280" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-12" value="WebRTC Service" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="780" y="350" width="560" height="280" as="geometry" />
+          <mxGeometry x="1210" y="370" width="560" height="280" as="geometry" />
         </mxCell>
         <mxCell id="s29pFKMHYIw3pCDYSGQ6-15" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="150" y="135" width="30" height="30" as="geometry" />
@@ -68,7 +68,7 @@
           <mxGeometry x="780" y="20" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-1" value="Session" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="810" y="440" width="210" height="120" as="geometry" />
+          <mxGeometry x="1240" y="460" width="210" height="120" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-2" value="+ ID: String&lt;br&gt;+ participants: List&amp;lt;username&amp;gt;&lt;br&gt;+ startedAt; Date&lt;br&gt;+ offers: List&amp;lt;Offer&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="7wh-No2WTboaJmC7Gdfl-1" vertex="1">
           <mxGeometry y="50" width="210" height="70" as="geometry" />
@@ -83,7 +83,7 @@
           <mxGeometry y="50" width="180" height="70" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-7" value="Offer" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1080" y="440" width="210" height="120" as="geometry" />
+          <mxGeometry x="1510" y="460" width="210" height="120" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-8" value="+ from: username&lt;br&gt;+ sdp: String&lt;br&gt;+ ice_candidates: List&amp;lt;String&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="7wh-No2WTboaJmC7Gdfl-7" vertex="1">
           <mxGeometry y="50" width="210" height="70" as="geometry" />
@@ -95,7 +95,7 @@
           <mxGeometry x="415" y="360" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="7wh-No2WTboaJmC7Gdfl-20" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="780" y="475" width="30" height="30" as="geometry" />
+          <mxGeometry x="1210" y="495" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;&lt;br&gt;- SERVER.CREATED&lt;br&gt;- SERVER.UPDATED&lt;br&gt;- SERVER.DELETED&lt;br&gt;&lt;br&gt;- SERVER.USER_JOINED&lt;br&gt;- SERVER.USER_LEAVED&lt;br&gt;&lt;br&gt;- MESSAGE_CHANNEL.CREATED&lt;br&gt;- MESSAGE_CHANNEL.UPDATED&lt;br&gt;- MESSAGE_CHANNEL.DELETED&lt;br&gt;&lt;br&gt;- MULTIMEDIA_CHANNEL.CREATED&lt;br&gt;. MULTIMEDIA_CHANNEL.UDPATED&lt;br&gt;- MULTIMEDIA_CHANNEL.DELETED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
           <mxGeometry x="210" y="-360" width="280" height="260" as="geometry" />
@@ -107,7 +107,7 @@
           <mxGeometry x="570" y="680" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-2" value="Out-Events:&lt;br&gt;- SESSION.CREATED&lt;br&gt;- SESSION.USER_JOINED&lt;br&gt;- SESSION.USER_LEAVE" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
-          <mxGeometry x="1070" y="630" width="280" height="170" as="geometry" />
+          <mxGeometry x="1500" y="650" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-8" value="Conversation" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="255" y="710" width="230" height="150" as="geometry" />
@@ -154,8 +154,8 @@
         <mxCell id="sGge5SKSTXFPz8y5dbad-26" value="AUTH API [ /auth ]:&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;- /login -&amp;gt; USER.LOGGED_IN&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;{ username, password }&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;- /register -&amp;gt; USER.CREATED&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;{ username, password, &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;email,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;description?, photo? }&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;- /refresh-token -&amp;gt; USER.TOKEN_REFRESHED&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;{ username }&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;- /logout -&amp;gt; USER.LOGGED_OUT&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;{ username }&lt;/span&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
           <mxGeometry x="1350" y="-220" width="310" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="sGge5SKSTXFPz8y5dbad-28" value="API: ???" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
-          <mxGeometry x="1340" y="380" width="260" height="220" as="geometry" />
+        <mxCell id="sGge5SKSTXFPz8y5dbad-28" value="SESSION API [ /session ]:&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;- /create -&amp;gt; Session.ID&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;{ multimediaChannelID }" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1770" y="400" width="260" height="220" as="geometry" />
         </mxCell>
         <mxCell id="sGge5SKSTXFPz8y5dbad-29" value="API: ???" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
           <mxGeometry x="1190" y="1230" width="260" height="220" as="geometry" />
