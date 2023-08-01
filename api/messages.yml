@@ -1,0 +1,62 @@
+asyncapi: 2.6.0
+info:
+  title: Piperchat Message broker
+  version: 1.0.0
+  description: |
+    Piperchat intra microservices messages design
+
+channels:
+  user.logged.in:
+    description: A user logged in
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+
+  user.logged.out:
+    description: A user logged out
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+  
+  user.created:
+    description: A user is registered to the system
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+  
+  user.token.refreshed:
+    description: A user refreshed his token
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+
+
+
+
+components:
+  messages:
+    User:
+      summary: The user who perform the action
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/UserSchema"
+
+    FriendRequest:
+      summary: A friend request from a user to another one
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          sender:
+            "$ref": "#/components/schemas/UserSchema"
+          recipient:
+            "$ref": "#/components/schemas/UserSchema"
+
+  schemas:
+    UserSchema:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
