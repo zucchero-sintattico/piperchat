@@ -10,6 +10,13 @@ export interface FriendsController {
 	getFriends(username: string): Promise<User[]>;
 
 	/**
+	 * Get friend's requests
+	 * @param username
+	 * @returns
+	 */
+	getFriendsRequests(username: string): Promise<string[]>;
+
+	/**
 	 * Send a friend request to a user.
 	 * @param username The username of the user.
 	 * @param friendUsername The username of the friend.

@@ -4,10 +4,15 @@ export interface User {
 	username: string;
 	email: string;
 	password: string;
+	description: string;
+	profilePicture: Buffer;
 	createdAt: Date;
 	online: boolean;
 	lastActive: Date;
 	refreshToken: string;
+	friends: string[];
+	friendsRequests: string[];
+	pendingFriendsRequests: string[];
 }
 
 export const UserSchema = new Schema({
@@ -26,6 +31,14 @@ export const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	description: {
+		type: String,
+		default: "",
+	},
+	profilePicture: {
+		type: Buffer,
+		contentType: String,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
@@ -43,6 +56,21 @@ export const UserSchema = new Schema({
 		type: String,
 		default: "",
 	},
+	friends: [
+		{
+			type: String,
+		},
+	],
+	friendsRequests: [
+		{
+			type: String,
+		},
+	],
+	pendingFriendsRequests: [
+		{
+			type: String,
+		},
+	],
 });
 
 export const Users = model<User>("User", UserSchema);

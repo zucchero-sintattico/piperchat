@@ -19,9 +19,23 @@ friendsRouter.route("/").get((req: Request, res: Response) => {
 		});
 });
 
-friendsRouter.route("/").post((req: Request, res: Response) => {
+friendsRouter.route("/requests").get((req: Request, res: Response) => {
 	friendsController
-		.sendFriendRequest(req.user.username, req.body.friend)
+		.getFriendsRequests(req.user.username)
+		.then((requests) => {
+			return res.status(200).json({ requests: requests });
+		})
+		.catch((e) => {
+			return res.status(404).json({ message: "User not found", error: e });
+		});
+});
+
+friendsRouter.route("/requests").post((req: Request, res: Response) => {
+	if (!req.body.to) {
+		return res.status(400).json({ message: "Missing 'to' parameter in body" });
+	}
+	friendsController
+		.sendFriendRequest(req.user.username, req.body.to)
 		.then(() => {
 			return res.status(200).json({ message: "Friend added" });
 		})
@@ -31,8 +45,13 @@ friendsRouter.route("/").post((req: Request, res: Response) => {
 });
 
 friendsRouter.route("accept").post((req: Request, res: Response) => {
+	if (!req.body.from) {
+		return res
+			.status(400)
+			.json({ message: "Missing 'from' parameter in body" });
+	}
 	friendsController
-		.acceptFriendRequest(req.user.username, req.body.friend)
+		.acceptFriendRequest(req.user.username, req.body.from)
 		.then(() => {
 			return res.status(200).json({ message: "Friend added" });
 		})

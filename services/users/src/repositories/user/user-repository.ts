@@ -6,12 +6,16 @@ export interface UserRepository {
 	 * @param username
 	 * @param email
 	 * @param hashedPassword
+	 * @param description
+	 * @param photo
 	 * @returns The created user.
 	 */
 	createUser(
 		username: string,
 		email: string,
-		hashedPassword: string
+		hashedPassword: string,
+		description: string | null,
+		photo: Buffer | null
 	): Promise<User>;
 
 	/**

@@ -25,12 +25,16 @@ export class UserRepositoryImpl implements UserRepository {
 	async createUser(
 		username: string,
 		email: string,
-		hashedPassword: string
+		hashedPassword: string,
+		description: string | null,
+		photo: Buffer | null
 	): Promise<User> {
 		const user = await Users.create({
 			username,
 			email,
 			password: hashedPassword,
+			description,
+			photo,
 		});
 		return user;
 	}

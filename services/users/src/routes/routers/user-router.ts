@@ -8,7 +8,7 @@ const userController: UserController = new UserControllerImpl();
 export const userRouter = Router();
 userRouter.use(jwtValidTokenRequired);
 
-userRouter.route("/status/:username").get((req: Request, res: Response) => {
+userRouter.route(":username/status").get((req: Request, res: Response) => {
 	userController
 		.getUserStatus(req.params.username)
 		.then((status) => {
@@ -19,7 +19,7 @@ userRouter.route("/status/:username").get((req: Request, res: Response) => {
 		});
 });
 
-userRouter.route("/photo/:username").get((req: Request, res: Response) => {
+userRouter.route(":username/photo").get((req: Request, res: Response) => {
 	userController
 		.getUserPhoto(req.params.username)
 		.then((photo) => {
@@ -30,7 +30,10 @@ userRouter.route("/photo/:username").get((req: Request, res: Response) => {
 		});
 });
 
-userRouter.route("/photo/:username").post((req: Request, res: Response) => {
+userRouter.route(":username/photo").post((req: Request, res: Response) => {
+	if (!req.body.photo) {
+		return res.status(400).json({ message: "Missing 'photo' in body" });
+	}
 	userController
 		.setUserPhoto(req.params.username, req.body.photo)
 		.then(() => {
@@ -41,22 +44,23 @@ userRouter.route("/photo/:username").post((req: Request, res: Response) => {
 		});
 });
 
-userRouter
-	.route("/description/:username")
-	.get((req: Request, res: Response) => {
-		userController
-			.getUserDescription(req.params.username)
-			.then((description) => {
-				return res.status(200).json({ description: description });
-			})
-			.catch((e) => {
-				return res.status(404).json({ message: "User not found", error: e });
-			});
-	});
+userRouter.route(":username/description").get((req: Request, res: Response) => {
+	userController
+		.getUserDescription(req.params.username)
+		.then((description) => {
+			return res.status(200).json({ description: description });
+		})
+		.catch((e) => {
+			return res.status(404).json({ message: "User not found", error: e });
+		});
+});
 
 userRouter
-	.route("/description/:username")
+	.route(":username/description")
 	.post((req: Request, res: Response) => {
+		if (!req.body.description) {
+			return res.status(400).json({ message: "Missing 'description' in body" });
+		}
 		userController
 			.setUserDescription(req.params.username, req.body.description)
 			.then(() => {

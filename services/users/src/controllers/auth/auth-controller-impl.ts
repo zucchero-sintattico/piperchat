@@ -19,11 +19,13 @@ export class AuthControllerImpl implements AuthController {
 	async register(
 		username: string,
 		email: string,
-		password: string
+		password: string,
+		description: string | null,
+		photo: Buffer | null
 	): Promise<User> {
 		const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt());
 		const user = await this.userRepository
-			.createUser(username, email, hashedPassword)
+			.createUser(username, email, hashedPassword, description, photo)
 			.catch(() => {
 				throw new UserControllerExceptions.UserAlreadyExists();
 			});

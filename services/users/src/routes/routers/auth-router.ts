@@ -21,7 +21,13 @@ authRouter.route("/register").post((req: Request, res: Response) => {
 			.json({ message: "Missing username, password or email" });
 	}
 	authController
-		.register(req.body.username, req.body.password, req.body.email)
+		.register(
+			req.body.username,
+			req.body.password,
+			req.body.email,
+			req.body.description,
+			req.body.photo
+		)
 		.then(() => {
 			return res.status(200).json({ message: "Registered" });
 		})

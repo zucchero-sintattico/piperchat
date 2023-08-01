@@ -6,9 +6,17 @@ export interface AuthController {
 	 * @param username The username of the user.
 	 * @param email The email of the user.
 	 * @param password The password of the user.
+	 * @param description The description of the user.
+	 * @param photo The profile picture of the user.
 	 * @throws {UserAlreadyExists} If the user already exists.
 	 */
-	register(username: string, email: string, password: string): Promise<User>;
+	register(
+		username: string,
+		email: string,
+		password: string,
+		description: string | null,
+		photo: Buffer | null
+	): Promise<User>;
 
 	/**
 	 * Login a user.
