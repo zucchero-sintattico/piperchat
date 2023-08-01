@@ -1,17 +1,17 @@
-openapi: "3.0.3"
+openapi: '3.0.3'
 info:
   title: Piperchat API
-  version: "1.0"
+  version: '1.0'
   description: |
     Piperchat design API description
 
 tags:
   - name: auth
     description: Everything about authentication
-  - name: friends
-    description: Everything about friends relationships
   - name: users
     description: Everything about users informations
+  - name: friends
+    description: Everything about friends relationships
   - name: servers
     description: Everything about servers informations
   - name: message-channels
@@ -25,133 +25,119 @@ paths:
   /auth/login:
     post:
       tags:
-        - "auth"
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: Username of the user to be logged in
-          schema:
-            type: string
-          example: user1
-        - in: query
-          name: password
-          schema:
-            type: string
-          required: true
-          description: Password of the user to be logged in
-          example: 123456
+        - 'auth'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: user1
+                  description: Username of the user to be logged in
+                password:
+                  type: string
+                  example: password123
+              required:
+                  - username
+                  - password
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
+  
   /auth/register:
     post:
       tags:
-        - "auth"
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: Username of the user to be registered
-          schema:
-            type: string
-          example: user1
-        - in: query
-          name: password
-          schema:
-            type: string
-          required: true
-          description: Password of the user to be registered
-          example: 123456
-        - in: query
-          name: email
-          schema:
-            type: string
-          required: true
-          description: Email of the user to be registered
-          example: user1@provider.com
-        - in: query
-          name: description
-          schema:
-            type: string
-          required: false
-          description: Description of the user to be registered
-          example: "I'm here to make new friends"
-        - in: query
-          name: photo
-          schema:
-            type: string
-            format: base64
-          required: false
-          description: Photo of the user to be registered
+        - 'auth'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: user1
+                password:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example:
+                description:
+                  type: string
+                  example: 'Here to make new friends'
+                photo:
+                  type: string
+                  format: base64
+              required:
+                - username
+                - password
+                - email
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok, either the user is created or already exists, a verification email is sent to the user
+        '400':
           description: Bad request
-        "401":
-          description: Unauthorized
+        # '409':
+        #   description: Username already exists # this is a security issue, we should not tell the user that the username already exists
+  
   /auth/logout:
     post:
       tags:
-        - "auth"
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: Username of the user to be logged out
-          schema:
-            type: string
-          example: user1
+        - 'auth'
+      security:
+        - bearerAuth: []
       responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad request
-        "401":
-          description: Unauthorized
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+  
   /auth/refresh-token:
     post:
       tags:
-        - "auth"
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user who has to refresh the token
-          schema:
-            type: string
-          example: user1
+        - 'auth'
+      security:
+        - bearerAuth: []
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+  
+  /users/{username}/status:
+    get:
+      tags:
+        - 'users'
+      description: Get the online status of a user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  online:
+                    type: boolean
+        '400':
           description: Bad request
-        "401":
-          description: Unauthorized
-  /users/status:
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+
+  /users/{username}/photo:
     get:
       tags:
-        - "users"
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user whose status you want to obtain
-          schema:
-            type: string
-          example: user1
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Unauthorized
-  /users/photo:
-    get:
-      tags:
-        - "users"
+        - 'users'
+      
       parameters:
         - in: query
           name: username
@@ -161,13 +147,13 @@ paths:
             type: string
           example: user1
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
     post:
       tags:
-        - "users"
+        - 'users'
       parameters:
         - in: query
           name: username
@@ -184,16 +170,16 @@ paths:
             type: string
             format: base64
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /users/description:
     get:
       tags:
-        - "users"
+        - 'users'
       parameters:
         - in: query
           name: username
@@ -203,13 +189,13 @@ paths:
             type: string
           example: user1
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
     post:
       tags:
-        - "users"
+        - 'users'
       parameters:
         - in: query
           name: username
@@ -226,16 +212,16 @@ paths:
             type: string
           example: I'm here to make new friends!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /servers/{serverId}:
     get:
       tags:
-        - "servers"
+        - 'servers'
       parameters:
         - in: query
           name: serverId
@@ -245,22 +231,22 @@ paths:
             type: string
           example: server1
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
   /servers:
     get:
       tags:
-        - "servers"
+        - 'servers'
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
     post:
       tags:
-        - "servers"
+        - 'servers'
       parameters:
         - in: query
           name: name
@@ -277,15 +263,15 @@ paths:
             type: string
           example: This server is created for make new friends!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     put:
       tags:
-        - "servers"
+        - 'servers'
       parameters:
         - in: query
           name: serverId
@@ -309,15 +295,15 @@ paths:
             type: string
           example: This is a new description for my server!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     delete:
       tags:
-        - "servers"
+        - 'servers'
       parameters:
         - in: query
           name: serverId
@@ -327,27 +313,27 @@ paths:
             type: string
           example: server1
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /friends:
     get:
       tags:
-        - "friends"
+        - 'friends'
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /friends/requests/:
     post:
       tags:
-        - "friends"
+        - 'friends'
       parameters:
         - in: query
           name: to
@@ -357,16 +343,16 @@ paths:
             type: string
           example: user1
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /friends/requests/accept:
     post:
       tags:
-        - "friends"
+        - 'friends'
       parameters:
         - in: query
           name: from
@@ -376,16 +362,16 @@ paths:
             type: string
           example: user1
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /message-channels/{messageChannelID}:
     get:
       tags:
-        - "message-channels"
+        - 'message-channels'
       parameters:
         - in: query
           name: messageChannelID
@@ -395,22 +381,22 @@ paths:
             type: string
           example: message-channel1
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
   /message-channels:
     get:
       tags:
-        - "message-channels"
+        - 'message-channels'
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
     post:
       tags:
-        - "message-channels"
+        - 'message-channels'
       parameters:
         - in: query
           name: serverId
@@ -434,15 +420,15 @@ paths:
             type: string
           example: This channel is created for make new friends!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     put:
       tags:
-        - "message-channels"
+        - 'message-channels'
       parameters:
         - in: query
           name: messageChannelID
@@ -466,15 +452,15 @@ paths:
             type: string
           example: This is a new description for my channel!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     delete:
       tags:
-        - "message-channels"
+        - 'message-channels'
       parameters:
         - in: query
           name: messageChannelID
@@ -484,16 +470,16 @@ paths:
             type: string
           example: message-channel1
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /multimedia-channels/{multimediaChannelID}:
     get:
       tags:
-        - "multimedia-channels"
+        - 'multimedia-channels'
       parameters:
         - in: query
           name: multimediaChannelID
@@ -503,22 +489,22 @@ paths:
             type: string
           example: multimedia-channel1
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
   /multimedia-channels:
     get:
       tags:
-        - "multimedia-channels"
+        - 'multimedia-channels'
       responses:
-        "200":
-          description: OK
-        "401":
+        '200':
+          description: Ok
+        '401':
           description: Unauthorized
     post:
       tags:
-        - "multimedia-channels"
+        - 'multimedia-channels'
       parameters:
         - in: query
           name: serverId
@@ -542,15 +528,15 @@ paths:
             type: string
           example: This channel is created for make new friends!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     put:
       tags:
-        - "multimedia-channels"
+        - 'multimedia-channels'
       parameters:
         - in: query
           name: multimediaChannelID
@@ -574,15 +560,15 @@ paths:
             type: string
           example: This is a new description for my channel!
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
     delete:
       tags:
-        - "multimedia-channels"
+        - 'multimedia-channels'
       parameters:
         - in: query
           name: multimediaChannelID
@@ -592,17 +578,17 @@ paths:
             type: string
           example: multimedia-channel1
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
 
   /conversation:
     post:
       tags:
-        - "conversation"
+        - 'conversation'
       parameters:
         - in: query
           name: conversationID
@@ -617,18 +603,18 @@ paths:
           description: content of the message
           schema:
             type: string
-          example: "Hello Word"
+          example: 'Hello Word'
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /conversation/{conversationID, lastN}:
     get:
       tags:
-        - "conversation"
+        - 'conversation'
       parameters:
         - in: query
           name: conversationID
@@ -645,16 +631,16 @@ paths:
             type: number
           example: 12345
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
   /conversation/range/{from, to}:
     get:
       tags:
-        - "conversation"
+        - 'conversation'
       parameters:
         - in: query
           name: conversationID
@@ -678,9 +664,32 @@ paths:
             type: number
           example: 12345
       responses:
-        "200":
-          description: OK
-        "400":
+        '200':
+          description: Ok
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Unauthorized
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    ForbiddenError:
+      description: You don't have permission to access this resource
+
+  parameters:
+    username:
+      name: username
+      in: path
+      required: true
+      description: username of the user whose information you want to obtain
+      schema:
+        type: string
+      example: user1
