@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-08-01T10:29:01.691Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="B-_jgqGAk5ixQOXmABIA" version="21.6.6" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2023-08-01T10:35:13.157Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="eBQkhQpowWAJjO6XUJ4X" version="21.6.6" type="github" pages="8">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2924" dy="2250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -251,10 +251,55 @@
     </mxGraphModel>
   </diagram>
   <diagram id="qYjvqvgn68T2RJMQHCX6" name="Casi d&#39;uso">
-    <mxGraphModel dx="2074" dy="1150" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1338" dy="742" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="qNvglGq1U7psTr_Z48XS-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="of5lLhZEvwiHHSzf0syT-1" target="of5lLhZEvwiHHSzf0syT-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-3" value="send request&lt;br&gt;accept request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qNvglGq1U7psTr_Z48XS-2">
+          <mxGeometry x="0.0097" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-5" value="create server&lt;br&gt;delete server&lt;br&gt;update server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="of5lLhZEvwiHHSzf0syT-1" target="qNvglGq1U7psTr_Z48XS-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="of5lLhZEvwiHHSzf0syT-1" value="Logged User&lt;br&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="315" y="250" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="of5lLhZEvwiHHSzf0syT-5" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="of5lLhZEvwiHHSzf0syT-2" target="of5lLhZEvwiHHSzf0syT-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="of5lLhZEvwiHHSzf0syT-6" value="login&lt;br&gt;register&lt;br&gt;logout&lt;br&gt;refresh token" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="of5lLhZEvwiHHSzf0syT-5">
+          <mxGeometry x="-0.1105" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="of5lLhZEvwiHHSzf0syT-2" value="User&lt;br&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="of5lLhZEvwiHHSzf0syT-4" value="User&lt;br&gt;Service" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="90" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-4" value="Piperchat&lt;br&gt;Service" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="450" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="qNvglGq1U7psTr_Z48XS-6" target="qNvglGq1U7psTr_Z48XS-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-8" value="create channels&lt;br&gt;update channels&lt;br&gt;delete channels&lt;br&gt;getChannelsInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qNvglGq1U7psTr_Z48XS-7">
+          <mxGeometry x="-0.1905" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-6" value="Server Owner&lt;br&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="90" y="460" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qNvglGq1U7psTr_Z48XS-9" value="" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="640" width="120" height="80" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
