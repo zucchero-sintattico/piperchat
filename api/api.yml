@@ -14,6 +14,10 @@ tags:
     description: Everything about users informations
   - name: servers
     description: Everything about servers informations
+  - name: message-channels
+    description: Everything about message-channel informations
+  - name: multimedia-channels
+    description: Everything about multimedia-channel informations
   - name: conversation
     description: Everything about friends conversation
 
@@ -228,7 +232,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /servers/{serverId}:
     get:
       tags:
@@ -330,7 +333,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /friends:
     get:
       tags:
@@ -342,7 +344,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /friends/requests/:
     post:
       tags:
@@ -362,7 +363,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /friends/requests/accept:
     post:
       tags:
@@ -375,6 +375,222 @@ paths:
           schema:
             type: string
           example: user1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /message-channels/{messageChannelID}:
+    get:
+      tags:
+        - "message-channels"
+      parameters:
+        - in: query
+          name: messageChannelID
+          required: true
+          description: Id of the message channel
+          schema:
+            type: string
+          example: message-channel1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /message-channels:
+    get:
+      tags:
+        - "message-channels"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      tags:
+        - "message-channels"
+      parameters:
+        - in: query
+          name: serverId
+          required: true
+          description: serverId of the message channel that you want to create
+          schema:
+            type: string
+          example: server1
+        - in: query
+          name: name
+          required: true
+          description: name of the message channel that you want to create
+          schema:
+            type: string
+          example: Beautiful Channel
+        - in: query
+          name: description
+          required: false
+          description: description of the message channel that you want to create
+          schema:
+            type: string
+          example: This channel is created for make new friends!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+    put:
+      tags:
+        - "message-channels"
+      parameters:
+        - in: query
+          name: messageChannelID
+          required: true
+          description: messageChannelID of the message channel that you want to update
+          schema:
+            type: string
+          example: message-channel1
+        - in: query
+          name: name
+          required: false
+          description: name of the message channel that you want to set
+          schema:
+            type: string
+          example: Beautiful channel 2.0!
+        - in: query
+          name: description
+          required: false
+          description: description of the message channel that you want to set
+          schema:
+            type: string
+          example: This is a new description for my channel!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+    delete:
+      tags:
+        - "message-channels"
+      parameters:
+        - in: query
+          name: messageChannelID
+          required: true
+          description: messageChannelID of the message channel that you want to delete
+          schema:
+            type: string
+          example: message-channel1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /multimedia-channels/{multimediaChannelID}:
+    get:
+      tags:
+        - "multimedia-channels"
+      parameters:
+        - in: query
+          name: multimediaChannelID
+          required: true
+          description: Id of the multimedia channel
+          schema:
+            type: string
+          example: multimedia-channel1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /multimedia-channels:
+    get:
+      tags:
+        - "multimedia-channels"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      tags:
+        - "multimedia-channels"
+      parameters:
+        - in: query
+          name: serverId
+          required: true
+          description: serverId of the multimedia channel that you want to create
+          schema:
+            type: string
+          example: server1
+        - in: query
+          name: name
+          required: true
+          description: name of the multimedia channel that you want to create
+          schema:
+            type: string
+          example: Beautiful Channel
+        - in: query
+          name: description
+          required: false
+          description: description of the multimedia channel that you want to create
+          schema:
+            type: string
+          example: This channel is created for make new friends!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+    put:
+      tags:
+        - "multimedia-channels"
+      parameters:
+        - in: query
+          name: multimediaChannelID
+          required: true
+          description: multimediaChannelID of the multimedia channel that you want to update
+          schema:
+            type: string
+          example: multimedia-channel1
+        - in: query
+          name: name
+          required: false
+          description: name of the multimedia channel that you want to set
+          schema:
+            type: string
+          example: Beautiful channel 2.0!
+        - in: query
+          name: description
+          required: false
+          description: description of the multimedia channel that you want to set
+          schema:
+            type: string
+          example: This is a new description for my channel!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+    delete:
+      tags:
+        - "multimedia-channels"
+      parameters:
+        - in: query
+          name: multimediaChannelID
+          required: true
+          description: multimediaChannelID of the multimedia channel that you want to delete
+          schema:
+            type: string
+          example: multimedia-channel1
       responses:
         "200":
           description: OK
@@ -409,7 +625,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /conversation/{conversationID, lastN}:
     get:
       tags:
@@ -436,7 +651,6 @@ paths:
           description: Bad request
         "401":
           description: Unauthorized
-
   /conversation/range/{from, to}:
     get:
       tags:
