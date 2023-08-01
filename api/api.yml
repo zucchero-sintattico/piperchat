@@ -1,13 +1,27 @@
-openapi: '3.0.3'
+openapi: "3.0.3"
 info:
   title: Piperchat API
-  version: '1.0'
+  version: "1.0"
   description: |
     Piperchat design API description
+
+tags:
+  - name: auth
+    description: Everything about authentication
+  - name: friends
+    description: Everything about friends relationships
+  - name: users
+    description: Everything about users informations
+  - name: servers
+    description: Everything about servers informations
+  - name: conversation
+    description: Everything about friends conversation
 
 paths:
   /auth/login:
     post:
+      tags:
+        - "auth"
       parameters:
         - in: query
           name: username
@@ -24,7 +38,384 @@ paths:
           description: Password of the user to be logged in
           example: 123456
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
+          description: Unauthorized
+  /auth/register:
+    post:
+      tags:
+        - "auth"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: Username of the user to be registered
+          schema:
+            type: string
+          example: user1
+        - in: query
+          name: password
+          schema:
+            type: string
+          required: true
+          description: Password of the user to be registered
+          example: 123456
+        - in: query
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email of the user to be registered
+          example: user1@provider.com
+        - in: query
+          name: description
+          schema:
+            type: string
+          required: false
+          description: Description of the user to be registered
+          example: "I'm here to make new friends"
+        - in: query
+          name: photo
+          schema:
+            type: string
+            format: base64
+          required: false
+          description: Photo of the user to be registered
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/logout:
+    post:
+      tags:
+        - "auth"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: Username of the user to be logged out
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/refresh-token:
+    post:
+      tags:
+        - "auth"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user who has to refresh the token
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/status:
+    get:
+      tags:
+        - "users"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose status you want to obtain
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /users/photo:
+    get:
+      tags:
+        - "users"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose photo you want to obtain
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      tags:
+        - "users"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose photo you want to set
+          schema:
+            type: string
+          example: user1
+        - in: query
+          name: photo
+          required: true
+          description: photo of the user whose photo you want to set
+          schema:
+            type: string
+            format: base64
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/description:
+    get:
+      tags:
+        - "users"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose description you want to obtain
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      tags:
+        - "users"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose photo you want to set
+          schema:
+            type: string
+          example: user1
+        - in: query
+          name: description
+          required: true
+          description: description of the user whose photo you want to set
+          schema:
+            type: string
+          example: I'm here to make new friends!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /servers/{serverId}:
+    get:
+      tags:
+        - "servers"
+      parameters:
+        - in: query
+          name: serverId
+          required: true
+          description: serverId of the server whose informations you want to get
+          schema:
+            type: string
+          example: server1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /servers/:
+    get:
+      tags:
+        - "servers"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      tags:
+        - "servers"
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: username of the user whose photo you want to set
+          schema:
+            type: string
+          example: user1
+        - in: query
+          name: description
+          required: true
+          description: description of the user whose photo you want to set
+          schema:
+            type: string
+          example: I'm here to make new friends!
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /friends:
+    get:
+      tags:
+        - "friends"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /friends/requests/:
+    post:
+      tags:
+        - "friends"
+      parameters:
+        - in: query
+          name: to
+          required: true
+          description: Username you want to send a friend request to
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /friends/requests/accept:
+    post:
+      tags:
+        - "friends"
+      parameters:
+        - in: query
+          name: from
+          required: true
+          description: Username you want to accept a friend request to
+          schema:
+            type: string
+          example: user1
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /conversation:
+    get:
+      tags:
+        - "conversation"
+      parameters:
+        - in: query
+          name: conversationID
+          required: true
+          description: Id of the conversation
+          schema:
+            type: number
+          example: 12345
+        - in: query
+          name: lastN
+          required: true
+          description: Number of message to load
+          schema:
+            type: number
+          example: 12345
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+    post:
+      tags:
+        - "conversation"
+      parameters:
+        - in: query
+          name: conversationID
+          required: true
+          description: Id of the conversation
+          schema:
+            type: number
+          example: 12345
+        - in: query
+          name: content
+          required: true
+          description: content of the message
+          schema:
+            type: string
+          example: "Hello Word"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /conversation/range:
+    get:
+      tags:
+        - "conversation"
+      parameters:
+        - in: query
+          name: conversationID
+          required: true
+          description: Id of the conversation
+          schema:
+            type: number
+          example: 12345
+        - in: query
+          name: from
+          required: true
+          description: message to lode from
+          schema:
+            type: number
+          example: 12345
+        - in: query
+          name: to
+          required: true
+          description: message to lode to
+          schema:
+            type: number
+          example: 12345
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "401":
           description: Unauthorized
