@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { userRouter } from "./user-router";
+import { userRouter } from "./routers/user-router";
+import { authRouter } from "./routers/auth-router";
+import { friendsRouter } from "./routers/friends-router";
 
 const serviceRouter = Router();
 
-// Register all routers
-serviceRouter.use("", userRouter);
+serviceRouter.use("/auth", authRouter);
+serviceRouter.use("/user", userRouter);
+serviceRouter.use("/friends", friendsRouter);
 
 export { serviceRouter };

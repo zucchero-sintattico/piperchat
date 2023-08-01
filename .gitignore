@@ -3,3 +3,4 @@ node_modules/
 .docker/
 dist/
 .env
+piperchat.code-workspace

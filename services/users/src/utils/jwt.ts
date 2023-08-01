@@ -23,12 +23,20 @@ export const generateAccessToken = (user: any) => {
 	);
 };
 
+export const verifyAccessToken = async (token: string) => {
+	return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "access");
+};
+
 export const generateRefreshToken = (user: any) => {
 	return jwt.sign(
 		{ username: user.username, email: user.email, id: user._id } as UserJWTInfo,
 		process.env.REFRESH_TOKEN_SECRET || "refresh",
 		{ expiresIn: "1d" }
 	);
+};
+
+export const verifyRefreshToken = async (token: string) => {
+	return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET || "refresh");
 };
 
 export const jwtValidTokenRequired = (req: Request, res: any, next: any) => {

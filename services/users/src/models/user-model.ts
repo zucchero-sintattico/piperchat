@@ -1,10 +1,26 @@
 import { Schema, model } from "mongoose";
 
-const UserSchema = new Schema({
+export interface User {
+	username: string;
+	email: string;
+	password: string;
+	description: string;
+	profilePicture: Buffer;
+	createdAt: Date;
+	online: boolean;
+	lastActive: Date;
+	refreshToken: string;
+	friends: string[];
+	friendsRequests: string[];
+	pendingFriendsRequests: string[];
+}
+
+export const UserSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
 		unique: true,
+		key: true,
 	},
 	email: {
 		type: String,
@@ -14,6 +30,14 @@ const UserSchema = new Schema({
 	password: {
 		type: String,
 		required: true,
+	},
+	description: {
+		type: String,
+		default: "",
+	},
+	profilePicture: {
+		type: Buffer,
+		contentType: String,
 	},
 	createdAt: {
 		type: Date,
@@ -32,8 +56,21 @@ const UserSchema = new Schema({
 		type: String,
 		default: "",
 	},
+	friends: [
+		{
+			type: String,
+		},
+	],
+	friendsRequests: [
+		{
+			type: String,
+		},
+	],
+	pendingFriendsRequests: [
+		{
+			type: String,
+		},
+	],
 });
 
-const User = model("User", UserSchema);
-
-export { User };
+export const Users = model<User>("User", UserSchema);
