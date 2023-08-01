@@ -34,3 +34,11 @@ export interface MessageChannelController {
 	 */
 	deleteMessageChannel(id: number): Promise<MessageChannel>;
 }
+
+export class MessageChannelControllerExceptions {
+	static ServerNotFound = class extends Error {};
+	static UserNotAuthorized = class extends Error {};
+	static MessageChannelAlreadyExists = class extends Error {};
+	static MessageChannelNameInvalid = class extends Error {};
+	static MessageChannelNotFound = class extends Error {};
+}
