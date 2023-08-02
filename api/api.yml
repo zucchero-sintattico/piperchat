@@ -8,6 +8,8 @@ info:
 tags:
   - name: auth
     description: Everything about authentication
+  - name: profile
+    description: Everything about user profile
   - name: users
     description: Everything about users informations
   - name: friends
@@ -24,6 +26,7 @@ tags:
 paths:
   /auth/login:
     post:
+      description: Login the user
       tags:
         - 'auth'
       requestBody:
@@ -50,6 +53,7 @@ paths:
   
   /auth/register:
     post:
+      description: Register a new user
       tags:
         - 'auth'
       requestBody:
@@ -87,6 +91,7 @@ paths:
   
   /auth/logout:
     post:
+      description: Logout the user
       tags:
         - 'auth'
       security:
@@ -99,6 +104,7 @@ paths:
   
   /auth/refresh-token:
     post:
+      description: Refresh the user authentication token
       tags:
         - 'auth'
       security:
@@ -109,11 +115,55 @@ paths:
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
   
+  /profile/photo:
+    put:
+      description: Change user profile photo
+      tags:
+        - 'profile'
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: base64
+      responses:
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+
+  /profile/description:
+    put:
+      description: Change user profile description
+      tags:
+        - 'profile'
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: 'Here to make new friends'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+
   /users/{username}/status:
     get:
+      description: Get the online status of a user
       tags:
         - 'users'
-      description: Get the online status of a user
       security:
         - bearerAuth: []
       parameters:
@@ -132,92 +182,55 @@ paths:
           description: Bad request
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: User not found
 
   /users/{username}/photo:
     get:
+      description: Get the photo of a user
       tags:
         - 'users'
-      
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user whose photo you want to obtain
-          schema:
-            type: string
-          example: user1
+        - $ref: '#/components/parameters/username'
       responses:
         '200':
           description: Ok
-        '401':
-          description: Unauthorized
-    post:
-      tags:
-        - 'users'
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user whose photo you want to set
-          schema:
-            type: string
-          example: user1
-        - in: query
-          name: photo
-          required: true
-          description: photo of the user whose photo you want to set
-          schema:
-            type: string
-            format: base64
-      responses:
-        '200':
-          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  photo:
+                    type: string
+                    format: base64
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
-  /users/description:
+          "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: User not found
+
+  /users/{username}/description:
     get:
+      description: Get the description of a user
       tags:
         - 'users'
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user whose description you want to obtain
-          schema:
-            type: string
-          example: user1
-      responses:
-        '200':
-          description: Ok
-        '401':
-          description: Unauthorized
-    post:
-      tags:
-        - 'users'
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: username of the user whose photo you want to set
-          schema:
-            type: string
-          example: user1
-        - in: query
-          name: description
-          required: true
-          description: description of the user whose photo you want to set
-          schema:
-            type: string
-          example: I'm here to make new friends!
+        - $ref: '#/components/parameters/username'
       responses:
         '200':
           description: Ok
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: User not found
+
   /servers/{serverId}:
     get:
       tags:
