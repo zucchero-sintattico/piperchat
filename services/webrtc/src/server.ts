@@ -1,9 +1,14 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
-import { isAccessTokenValid, jwtValidTokenRequired } from "./utils/jwt";
+import {
+	decodeAccessToken,
+	isAccessTokenValid,
+	jwtValidTokenRequired,
+} from "./utils/jwt";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
+import { handleSocket } from "./socket-handler";
 
 export class WebRTCServer {
 	private port: number;
@@ -42,31 +47,10 @@ export class WebRTCServer {
 				socket.disconnect();
 				return;
 			}
-
-			console.log("New connection");
-
-			socket.on("join-room", (roomId, userId) => {
-				console.log("Joining room", roomId, userId);
-
-				socket.join(roomId);
-				socket.to(roomId).emit("user-connected", userId);
-
-				socket.on("disconnect", () => {
-					socket.to(roomId).emit("user-disconnected", userId);
-				});
-
-				socket.on("offer", (offer, userId) => {
-					socket.to(roomId).emit("offer", offer, userId);
-				});
-
-				socket.on("answer", (answer, userId) => {
-					socket.to(roomId).emit("answer", answer, userId);
-				});
-
-				socket.on("ice-candidate", (candidate, userId) => {
-					socket.to(roomId).emit("ice-candidate", candidate, userId);
-				});
-			});
+			const username = decodeAccessToken(socket.handshake.auth.token)?.username;
+			if (username) {
+				handleSocket(socket, username);
+			}
 		});
 	}
 

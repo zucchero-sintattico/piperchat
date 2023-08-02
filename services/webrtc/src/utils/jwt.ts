@@ -18,8 +18,26 @@ declare global {
 export const isAccessTokenValid = (accessToken: string) => {
 	try {
 		jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET || "access");
+		return true;
 	} catch (e) {
+		console.error(e);
 		return false;
+	}
+};
+
+export const decodeAccessToken = (accessToken: string): UserJWTInfo | null => {
+	try {
+		const decoded = jwt.verify(
+			accessToken,
+			process.env.ACCESS_TOKEN_SECRET || "access"
+		) as any;
+		return {
+			id: decoded.id,
+			username: decoded.username,
+			email: decoded.email,
+		};
+	} catch (e) {
+		return null;
 	}
 };
 
