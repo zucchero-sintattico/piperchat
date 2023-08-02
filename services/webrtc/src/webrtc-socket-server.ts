@@ -30,34 +30,46 @@ export class WebRTCSocketServer {
 	async handleSocket(socket: Socket, username: string) {
 		console.log("Socket connected", socket.id, username);
 
-		socket.on("join-room", async (roomId) => {
-			console.log("Joining room", roomId);
+		socket.on("join-room", async (sessionId) => {
+			console.log("Joining room", sessionId);
 
-			const users = await this.sessionRepository.getUsersInSession(roomId);
-			if (username in users) {
-				console.log("Already in room, disconnecting");
-				socket.disconnect();
-				socket.to(roomId).emit("user-disconnected", username);
-				return;
+			try {
+				const session = await this.sessionRepository.getSessionById(sessionId);
+			} catch (e) {
+				console.log("Session does not exist, creating new one");
+				await this.sessionRepository.createNewSession(sessionId);
+			}
+
+			const users = await this.sessionRepository.getUsersInSession(sessionId);
+
+			const userInSession = users.find((user) => user.username === username);
+			if (userInSession) {
+				console.log("User already in session");
+				this.io.sockets.sockets.get(userInSession.socketId)?.disconnect();
+				socket.to(sessionId).emit("user-disconnected", username);
+				await this.sessionRepository.removeUserFromSession(
+					sessionId,
+					userInSession.username
+				);
 			}
 
 			await this.sessionRepository.addNewUserToSession(
-				roomId,
+				sessionId,
 				username,
 				socket.id
 			);
 
-			socket.to(roomId).emit("user-connected", username);
-			socket.join(roomId);
+			socket.to(sessionId).emit("user-connected", username);
+			socket.join(sessionId);
 
 			socket.on("disconnect", () => {
-				socket.to(roomId).emit("user-disconnected", username);
+				socket.to(sessionId).emit("user-disconnected", username);
 			});
 
 			socket.on("offer", async (offer, to) => {
 				const socketId =
 					await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-						roomId,
+						sessionId,
 						to
 					);
 				this.io.sockets.sockets.get(socketId)?.emit("offer", offer, username);
@@ -66,7 +78,7 @@ export class WebRTCSocketServer {
 			socket.on("answer", async (answer, to) => {
 				const socketId =
 					await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-						roomId,
+						sessionId,
 						to
 					);
 				this.io.sockets.sockets.get(socketId)?.emit("answer", answer, username);
@@ -75,7 +87,7 @@ export class WebRTCSocketServer {
 			socket.on("ice-candidate", async (candidate, to) => {
 				const socketId =
 					await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-						roomId,
+						sessionId,
 						to
 					);
 				this.io.sockets.sockets

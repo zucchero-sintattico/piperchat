@@ -15,7 +15,7 @@ export interface SessionRepository {
 	 * @returns the session
 	 * @throws {Error} if session already exists
 	 */
-	createNewSession(): Promise<Session>;
+	createNewSession(id: string): Promise<Session>;
 
 	/**
 	 * Add a new user to a session
@@ -30,6 +30,15 @@ export interface SessionRepository {
 		username: string,
 		socketId: string
 	): Promise<void>;
+
+	/**
+	 * Remove a user from a session
+	 * @param sessionId the id of the session
+	 * @param username the username of the user
+	 * @throws {Error} if session does not exist
+	 * @throws {Error} if user does not exist in session
+	 */
+	removeUserFromSession(sessionId: string, username: string): Promise<void>;
 
 	/**
 	 * Get all users in a session

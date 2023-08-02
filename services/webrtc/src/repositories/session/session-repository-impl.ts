@@ -2,6 +2,22 @@ import { Session, Sessions, UserInSession } from "../../models/session-model";
 import { SessionRepository } from "./session-repository";
 
 export class SessionRepositoryImpl implements SessionRepository {
+	async removeUserFromSession(
+		sessionId: string,
+		username: string
+	): Promise<void> {
+		const session = await this.getSessionById(sessionId);
+		const user = session.participants!.find(
+			(user) => user.username === username
+		);
+		if (!user) {
+			throw new Error("User does not exist in session");
+		}
+		await Sessions.updateOne(
+			{ id: sessionId },
+			{ $pull: { participants: { username: username } } }
+		);
+	}
 	async getSocketIdBySessionIdAndUsername(
 		sessionId: string,
 		username: string
@@ -19,8 +35,10 @@ export class SessionRepositoryImpl implements SessionRepository {
 		return await Sessions.findOne({ id: id }).orFail();
 	}
 
-	async createNewSession(): Promise<Session> {
-		const session = new Sessions();
+	async createNewSession(id: string): Promise<Session> {
+		const session = new Sessions({
+			id: id,
+		});
 		await session.save();
 		return session;
 	}
