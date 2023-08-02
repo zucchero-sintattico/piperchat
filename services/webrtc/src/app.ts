@@ -16,9 +16,6 @@ const mongoUri =
 	process.env.MONGO_URI ||
 	"mongodb://db-users-service-username:db-users-service-password@localhost:27017/db-users-service-database?authSource=admin";
 
-// Express app
-const app: WebRTCServer = new WebRTCServer(port);
-
 // Start function
 const start = async () => {
 	// Initialize mongoose
@@ -29,6 +26,9 @@ const start = async () => {
 
 	// Initialize service events listeners
 	await ServiceEvents.initialize();
+
+	// Express app
+	const app: WebRTCServer = new WebRTCServer(port);
 
 	app.start(() => {
 		console.log(`Started on port: ${port}`);

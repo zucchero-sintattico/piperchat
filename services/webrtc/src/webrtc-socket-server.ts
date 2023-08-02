@@ -3,10 +3,13 @@ import { decodeAccessToken, isAccessTokenValid } from "./utils/jwt";
 import http from "http";
 import { SessionRepository } from "./repositories/session/session-repository";
 import { SessionRepositoryImpl } from "./repositories/session/session-repository-impl";
+import { SessionEventsRepository } from "./events/repositories/session/session-events-repository";
+import { SessionEventsRepositoryImpl } from "./events/repositories/session/session-events-repository-impl";
 export class WebRTCSocketServer {
 	private sessionRepository: SessionRepository = new SessionRepositoryImpl();
+	private sessionEventsRepository: SessionEventsRepository =
+		new SessionEventsRepositoryImpl();
 	private io: Server;
-	// private sessions: Map<string, Map<string, Socket>> = new Map();
 
 	constructor(server: http.Server) {
 		this.io = new Server(server, {
@@ -45,12 +48,8 @@ export class WebRTCSocketServer {
 			const userInSession = users.find((user) => user.username === username);
 			if (userInSession) {
 				console.log("User already in session");
-				this.io.sockets.sockets.get(userInSession.socketId)?.disconnect();
-				socket.to(sessionId).emit("user-disconnected", username);
-				await this.sessionRepository.removeUserFromSession(
-					sessionId,
-					userInSession.username
-				);
+				socket.disconnect();
+				return;
 			}
 
 			await this.sessionRepository.addNewUserToSession(
@@ -61,9 +60,19 @@ export class WebRTCSocketServer {
 
 			socket.to(sessionId).emit("user-connected", username);
 			socket.join(sessionId);
+			this.sessionEventsRepository.publishUserJoinedSessionEvent(
+				sessionId,
+				username
+			);
 
 			socket.on("disconnect", () => {
+				console.log("DISCONNECTING USER: ", username);
 				socket.to(sessionId).emit("user-disconnected", username);
+				this.sessionRepository.removeUserFromSession(sessionId, username);
+				this.sessionEventsRepository.publishUserLeftSessionEvent(
+					sessionId,
+					username
+				);
 			});
 
 			socket.on("offer", async (offer, to) => {

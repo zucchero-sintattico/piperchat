@@ -7,7 +7,7 @@ export class SessionRepositoryImpl implements SessionRepository {
 		username: string
 	): Promise<void> {
 		const session = await this.getSessionById(sessionId);
-		const user = session.participants!.find(
+		const user = session.participants.find(
 			(user) => user.username === username
 		);
 		if (!user) {
@@ -23,7 +23,7 @@ export class SessionRepositoryImpl implements SessionRepository {
 		username: string
 	): Promise<string> {
 		const session = await this.getSessionById(sessionId);
-		const user = session.participants!.find(
+		const user = session.participants.find(
 			(user) => user.username === username
 		);
 		if (!user) {
