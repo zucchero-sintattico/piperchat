@@ -15,6 +15,14 @@ declare global {
 	}
 }
 
+export const isAccessTokenValid = (accessToken: string) => {
+	try {
+		jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET || "access");
+	} catch (e) {
+		return false;
+	}
+};
+
 export const jwtValidTokenRequired = (req: Request, res: any, next: any) => {
 	console.log("[JWT-Middleware] - Checking if JWT Token is valid");
 	const accessToken = req.cookies.jwt;
