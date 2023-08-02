@@ -5,6 +5,7 @@ import { SessionRepository } from "./repositories/session/session-repository";
 import { SessionRepositoryImpl } from "./repositories/session/session-repository-impl";
 import { SessionEventsRepository } from "./events/repositories/session/session-events-repository";
 import { SessionEventsRepositoryImpl } from "./events/repositories/session/session-events-repository-impl";
+
 export class WebRTCSocketServer {
 	private sessionRepository: SessionRepository = new SessionRepositoryImpl();
 	private sessionEventsRepository: SessionEventsRepository =

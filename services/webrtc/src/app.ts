@@ -1,5 +1,4 @@
 import express from "express";
-import { serviceRouter } from "./routes/router";
 import { config } from "dotenv";
 import { RabbitMQ } from "./utils/rabbit-mq";
 import { MongooseUtils } from "./utils/mongoose";
