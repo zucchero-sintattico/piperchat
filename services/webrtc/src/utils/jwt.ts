@@ -15,6 +15,21 @@ declare global {
 	}
 }
 
+export const generateAccessToken = (user: UserJWTInfo) => {
+	const accessToken = jwt.sign(
+		{
+			id: user.id,
+			username: user.username,
+			email: user.email,
+		},
+		process.env.ACCESS_TOKEN_SECRET || "access",
+		{
+			expiresIn: "100d",
+		}
+	);
+	return accessToken;
+};
+
 export const isAccessTokenValid = (accessToken: string) => {
 	try {
 		jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET || "access");

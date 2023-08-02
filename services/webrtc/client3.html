@@ -21,9 +21,10 @@
 		<div id="videos"></div>
 		<script type="module">
 			import { connect } from "./webrtc.js";
-			const token1 =
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJvMHQtc2V0IiwiZW1haWwiOiJwd2RAcHdkLmNvbSIsImlkIjoiNjRiNWFlZjhiODIzODBkMWQzM2FkNzQ1IiwiaWF0IjoxNjg5NjMwOTU0LCJleHAiOjE3MDI1OTA5NTR9.b-pXklIx0_TF6iLTqwcO0uweWCmcINy0xiYLYILaTSc";
-			connect(token1, (username, stream) => {
+			const token3 =
+				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZW1henpvIiwiaWF0IjoxNjkwOTgwODA3LCJleHAiOjE2OTk2MjA4MDd9.vXyATZoJzmyW3CHErVI8HkloXpSZhnDedCPLtyBoeYc";
+
+			connect(token3, (username, stream) => {
 				const videos = document.getElementById("videos");
 				// Create a new video element and add to videos
 				const video = document.createElement("video");
