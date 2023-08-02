@@ -45,4 +45,17 @@ export interface UserRepository {
 	 * Remove the refresh token from db.
 	 */
 	logout(username: string): Promise<void>;
+
+
+	/**
+	 * Get all friends of a user.
+	 * @param username
+	 */
+	getFriends(username: string): Promise<string[]>;
+
+	/**
+	 * Get all friends requests of a user.
+	 * @param username
+	 */
+	getFriendsRequests(username: string): Promise<string[]>;
 }

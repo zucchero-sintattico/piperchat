@@ -23,8 +23,8 @@ authRouter.route("/register").post((req: Request, res: Response) => {
 	authController
 		.register(
 			req.body.username,
-			req.body.password,
 			req.body.email,
+			req.body.password,
 			req.body.description,
 			req.body.photo
 		)
@@ -57,6 +57,7 @@ authRouter.route("/login").post((req: Request, res: Response) => {
 			return res.status(200).json({ message: "Logged in" });
 		})
 		.catch((e) => {
+			console.log(e);
 			return res
 				.status(401)
 				.json({ message: "Invalid username or password", error: e });

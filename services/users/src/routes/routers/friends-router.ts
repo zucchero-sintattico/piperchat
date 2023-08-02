@@ -44,18 +44,5 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 		});
 });
 
-friendsRouter.route("accept").post((req: Request, res: Response) => {
-	if (!req.body.from) {
-		return res
-			.status(400)
-			.json({ message: "Missing 'from' parameter in body" });
-	}
-	friendsController
-		.acceptFriendRequest(req.user.username, req.body.from)
-		.then(() => {
-			return res.status(200).json({ message: "Friend added" });
-		})
-		.catch((e) => {
-			return res.status(404).json({ message: "User not found", error: e });
-		});
-});
+
+

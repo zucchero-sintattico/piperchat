@@ -38,4 +38,16 @@ export class UserRepositoryImpl implements UserRepository {
 		});
 		return user;
 	}
+
+	async getFriends(username: string): Promise<string[]> {
+		const user = await this.getUserByUsername(username);
+		const friends = user.friends
+		return friends;
+
+	}
+
+	async getFriendsRequests(username: string): Promise<string[]> {
+		const user = await this.getUserByUsername(username);
+		return user.friendsRequests;
+	}
 }

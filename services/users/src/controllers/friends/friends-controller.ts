@@ -7,7 +7,7 @@ export interface FriendsController {
 	 * @returns The friends of the user.
 	 * @throws {UserNotFound} If the user is not found.
 	 */
-	getFriends(username: string): Promise<User[]>;
+	getFriends(username: string): Promise<string[]>;
 
 	/**
 	 * Get friend's requests
@@ -37,6 +37,6 @@ export interface FriendsController {
 }
 
 export class FriendsControllerExceptions {
-	static UserNotFound = class extends Error {};
-	static FriendRequestNotPresent = class extends Error {};
+	static UserNotFound = class extends Error { };
+	static FriendRequestNotPresent = class extends Error { };
 }
