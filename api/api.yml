@@ -131,9 +131,13 @@ paths:
                 photo:
                   type: string
                   format: base64
+              required:
+                - photo
       responses:
         '200':
           description: Ok
+        '400':
+          description: Bad request
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
 
@@ -153,9 +157,13 @@ paths:
                 description:
                   type: string
                   example: 'Here to make new friends'
+              required:
+                - description
       responses:
         '200':
           description: Ok
+        '400':
+          description: Bad request
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
 
@@ -224,10 +232,95 @@ paths:
       responses:
         '200':
           description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                    example: 'Here to make new friends'
         '400':
           description: Bad request
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: User not found
+
+  /friends:
+    get:
+      description: Get the list of friends of the user
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user1
+                  - user2
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+
+  /friends/requests:
+    get:
+      description: Get the list of friend requests of the user
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user3
+                  - user4
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+    post:
+      description: Manage a friend request in order to send, accept or deny it
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                    - send
+                    - accept
+                    - deny
+                otherUser:
+                  type: string
+                  example: user4
+              required:
+                - action
+                - otherUser
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '401':
+          "$ref": '#/components/responses/UnauthorizedError'
         '404':
           description: User not found
 
@@ -332,55 +425,7 @@ paths:
           description: Bad request
         '401':
           description: Unauthorized
-  /friends:
-    get:
-      tags:
-        - 'friends'
-      responses:
-        '200':
-          description: Ok
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-  /friends/requests/:
-    post:
-      tags:
-        - 'friends'
-      parameters:
-        - in: query
-          name: to
-          required: true
-          description: Username you want to send a friend request to
-          schema:
-            type: string
-          example: user1
-      responses:
-        '200':
-          description: Ok
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-  /friends/requests/accept:
-    post:
-      tags:
-        - 'friends'
-      parameters:
-        - in: query
-          name: from
-          required: true
-          description: Username you want to accept a friend request to
-          schema:
-            type: string
-          example: user1
-      responses:
-        '200':
-          description: Ok
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
+
   /message-channels/{messageChannelID}:
     get:
       tags:
