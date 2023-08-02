@@ -8,20 +8,21 @@ import {
 } from "./utils/jwt";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
-import { handleSocket } from "./socket-handler";
+import { WebRTCSocketServer } from "./webrtc-socket-server";
 
 export class WebRTCServer {
 	private port: number;
 	private app: express.Application;
+	private webRTCSocketServer: WebRTCSocketServer;
 	public server: http.Server;
 
 	constructor(port: number) {
 		this.port = port;
 		this.app = express();
 		this.server = http.createServer(this.app);
+		this.webRTCSocketServer = new WebRTCSocketServer(this.server);
 		this.setupMiddleware();
 		this.setupRouter();
-		this.setupSocket();
 	}
 
 	private setupMiddleware() {
@@ -31,27 +32,6 @@ export class WebRTCServer {
 
 	private setupRouter() {
 		this.app.use("/", serviceRouter);
-	}
-
-	private setupSocket() {
-		const io = new Server(this.server, {
-			cors: {
-				origin: "*",
-				methods: ["GET", "POST"],
-			},
-		});
-
-		io.on("connection", (socket) => {
-			if (!isAccessTokenValid(socket.handshake.auth.token)) {
-				console.log("Invalid token");
-				socket.disconnect();
-				return;
-			}
-			const username = decodeAccessToken(socket.handshake.auth.token)?.username;
-			if (username) {
-				handleSocket(socket, username);
-			}
-		});
 	}
 
 	async start(onStarted: () => void = () => {}) {

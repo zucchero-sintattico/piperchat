@@ -1,6 +1,6 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
-export const connect = (token, onStream) => {
+export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 	const socket = io("http://localhost:3000", {
 		transports: ["websocket"],
 		auth: {
@@ -8,9 +8,16 @@ export const connect = (token, onStream) => {
 		},
 	});
 
-	const roomId = "room1";
 	socket.on("connect", () => {
 		console.log("connected to the service");
+
+		navigator.mediaDevices
+			.getUserMedia({ video: true, audio: false })
+			.then((stream) => {
+				stream.getTracks().forEach((track) => {
+					onMyStream(stream);
+				});
+			});
 
 		const peers = {};
 
@@ -62,6 +69,8 @@ export const connect = (token, onStream) => {
 		socket.on("user-disconnected", (userId) => {
 			console.log("user-disconnected", userId);
 			peers[userId].close();
+			delete peers[userId];
+			onUserLeave(userId);
 		});
 		socket.on("offer", async (offer, from) => {
 			console.log("Received offer", offer + " from " + from);

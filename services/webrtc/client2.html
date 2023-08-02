@@ -21,17 +21,44 @@
 		<div id="videos"></div>
 		<script type="module">
 			import { connect } from "./webrtc.js";
-			const token2 =
+			const token =
 				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFsZW1henoiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsImlhdCI6MTY5MDk3MTE3NiwiZXhwIjoxNjk5NjExMTc2fQ.lI4YAr9tN5p_dO783HwMUfRQroWARcqCOk3__CpSj7E";
 
-			connect(token2, (username, stream) => {
-				const videos = document.getElementById("videos");
-				// Create a new video element and add to videos
-				const video = document.createElement("video");
-				video.srcObject = stream;
-				video.autoplay = true;
-				videos.appendChild(video);
-			});
+			const urlParams = new URLSearchParams(window.location.search);
+			const sessionId = urlParams.get("session");
+
+			const videoMap = {};
+			connect(
+				sessionId,
+				token,
+				(stream) => {
+					const video = document.getElementById("video");
+					video.srcObject = stream;
+					video.autoplay = true;
+					videos.appendChild(video);
+					// Added the username over the video
+					const usernameDiv = document.createElement("div");
+					usernameDiv.innerText = "Me";
+					videos.appendChild(usernameDiv);
+				},
+				(username, stream) => {
+					const videos = document.getElementById("videos");
+					// Create a new video element and add to videos
+					const video = document.createElement("video");
+					video.srcObject = stream;
+					video.autoplay = true;
+					videos.appendChild(video);
+					videoMap[username] = video;
+					// Added the username over the video
+					const usernameDiv = document.createElement("div");
+					usernameDiv.innerText = username;
+					videos.appendChild(usernameDiv);
+				},
+				(username) => {
+					const video = videoMap[username];
+					video.remove();
+				}
+			);
 		</script>
 	</body>
 </html>
