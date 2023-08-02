@@ -1,7 +1,7 @@
-openapi: '3.0.3'
+openapi: "3.0.3"
 info:
   title: Piperchat API
-  version: '1.0'
+  version: "1.0"
   description: |
     Piperchat design API description
 
@@ -29,7 +29,7 @@ paths:
       summary: Login a user
       description: Login the user using his username and password
       tags:
-        - 'auth'
+        - "auth"
       requestBody:
         content:
           application/json:
@@ -44,20 +44,20 @@ paths:
                   type: string
                   example: password123
               required:
-                  - username
-                  - password
+                - username
+                - password
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
+        "401":
           description: Unauthorized
-  
+
   /auth/register:
     post:
       summary: Register a new user
       description: Register a new user with some information
       tags:
-        - 'auth'
+        - "auth"
       requestBody:
         content:
           application/json:
@@ -75,7 +75,7 @@ paths:
                   example:
                 description:
                   type: string
-                  example: 'Here to make new friends'
+                  example: "Here to make new friends"
                 photo:
                   type: string
                   format: base64
@@ -84,11 +84,11 @@ paths:
                 - password
                 - email
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '409':
+        "409":
           description: Username or mail already exists # this is a security issue, we should not tell the user that the username already exists
 
   /auth/logout:
@@ -96,35 +96,35 @@ paths:
       summary: Logout a user
       description: Logout the user
       tags:
-        - 'auth'
+        - "auth"
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-  
+
   /auth/refresh-token:
     post:
       summary: Refresh token
       description: Refresh the user authentication token
       tags:
-        - 'auth'
+        - "auth"
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-  
+
   /profile/photo:
     put:
       summary: Change photo
       description: Change user profile photo
       tags:
-        - 'profile'
+        - "profile"
       security:
         - bearerAuth: []
       requestBody:
@@ -139,11 +139,11 @@ paths:
               required:
                 - photo
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
 
   /profile/description:
@@ -151,7 +151,7 @@ paths:
       summary: Change description
       description: Change user profile description
       tags:
-        - 'profile'
+        - "profile"
       security:
         - bearerAuth: []
       requestBody:
@@ -162,15 +162,15 @@ paths:
               properties:
                 description:
                   type: string
-                  example: 'Here to make new friends'
+                  example: "Here to make new friends"
               required:
                 - description
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
 
   /users/{username}/status:
@@ -178,13 +178,13 @@ paths:
       summary: Get online status
       description: Get the online status of a user
       tags:
-        - 'users'
+        - "users"
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/username'
+        - $ref: "#/components/parameters/username"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -193,11 +193,11 @@ paths:
                 properties:
                   online:
                     type: boolean
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '404':
+        "404":
           description: User not found
 
   /users/{username}/photo:
@@ -205,13 +205,13 @@ paths:
       summary: Get photo
       description: Get the photo of a user
       tags:
-        - 'users'
+        - "users"
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/username'
+        - $ref: "#/components/parameters/username"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -221,11 +221,11 @@ paths:
                   photo:
                     type: string
                     format: base64
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '404':
+        "404":
           description: User not found
 
   /users/{username}/description:
@@ -233,13 +233,13 @@ paths:
       summary: Get description
       description: Get the description of a user
       tags:
-        - 'users'
+        - "users"
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/username'
+        - $ref: "#/components/parameters/username"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -248,12 +248,12 @@ paths:
                 properties:
                   description:
                     type: string
-                    example: 'Here to make new friends'
-        '400':
+                    example: "Here to make new friends"
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '404':
+        "404":
           description: User not found
 
   /friends:
@@ -261,11 +261,11 @@ paths:
       summary: Get friends list
       description: Get the list of friends of the user
       tags:
-        - 'friends'
+        - "friends"
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -276,7 +276,7 @@ paths:
                 example:
                   - user1
                   - user2
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
 
   /friends/requests:
@@ -284,11 +284,11 @@ paths:
       summary: Get friend requests list
       description: Get the list of friend requests of the user
       tags:
-        - 'friends'
+        - "friends"
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -299,13 +299,13 @@ paths:
                 example:
                   - user3
                   - user4
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
     post:
       summary: Manage friend request
       description: Manage a friend request in order to send, accept or deny it
       tags:
-        - 'friends'
+        - "friends"
       security:
         - bearerAuth: []
       requestBody:
@@ -327,13 +327,13 @@ paths:
                 - action
                 - otherUser
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          "$ref": '#/components/responses/UnauthorizedError'
-        '404':
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "404":
           description: User not found
 
   /servers:
@@ -341,11 +341,11 @@ paths:
       summary: Get servers list
       description: Get the list of servers in which the user is joined
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -356,13 +356,13 @@ paths:
                 example:
                   - server1
                   - server2
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
     post:
       summary: Create server
       description: Create a new server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       requestBody:
@@ -380,11 +380,11 @@ paths:
               required:
                 - name
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
 
   /servers/{serverId}:
@@ -392,27 +392,27 @@ paths:
       summary: Get server information
       description: Get information about a server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/server"
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '404':
+        "404":
           description: Server not found
     put:
       summary: Modify server
       description: The owner modify server information
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
@@ -423,33 +423,33 @@ paths:
             schema:
               "$ref": "#/components/schemas/server"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '403':
+        "403":
           "$ref": "#/components/responses/ForbiddenError"
-        '404':  
+        "404":
           description: Server not found
     delete:
       summary: Delete server
       description: The owner delete the server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '403':
+        "403":
           "$ref": "#/components/responses/ForbiddenError"
-        '404':
+        "404":
           description: Server not found
 
   /servers/{serverId}/partecipants:
@@ -457,13 +457,13 @@ paths:
       summary: Get partecipants list of a specific server
       description: Get the list of partecipants of the server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
@@ -474,33 +474,33 @@ paths:
                 example:
                   - user1
                   - user2
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '403':
+        "403":
           "$ref": "#/components/responses/ForbiddenError"
-        '404':
+        "404":
           description: Server not found
     post:
       summary: Request to join the server
       description: The user request to join the server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '404':
+        "404":
           description: Server not found
     delete:
       summary: Leave or kick from the server
       description: The user leave or the owner kick a user from the server
       tags:
-        - 'servers'
+        - "servers"
       security:
         - bearerAuth: []
       parameters:
@@ -516,113 +516,130 @@ paths:
                   type: string
                   example: user1
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: "Bad request: the user not found in the server"
-        '401':
+        "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        '403':
+        "403":
           "$ref": "#/components/responses/ForbiddenError"
-        '404':
+        "404":
           description: Server not found
-        '422':
+        "422":
           description: "Unprocessable entity: the user is the owner of the server"
 
-
-  /message-channels/{messageChannelID}:
-    get:
-      tags:
-        - 'message-channels'
-      parameters:
-        - in: query
-          name: messageChannelID
-          required: true
-          description: Id of the message channel
-          schema:
-            type: string
-          example: message-channel1
-      responses:
-        '200':
-          description: Ok
-        '401':
-          description: Unauthorized
   /message-channels:
     get:
+      summary: Get message channels list
+      description: Get the list of message channels
       tags:
-        - 'message-channels'
+        - "message-channels"
+      security:
+        - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
-          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/messageChannel"
+        "401":
+          description: Access token is missing or invalid
     post:
+      summary: Create a new message channel
+      description: The owner create a new message channel
       tags:
-        - 'message-channels'
-      parameters:
-        - in: query
-          name: serverId
-          required: true
-          description: serverId of the message channel that you want to create
-          schema:
-            type: string
-          example: server1
-        - in: query
-          name: name
-          required: true
-          description: name of the message channel that you want to create
-          schema:
-            type: string
-          example: Beautiful Channel
-        - in: query
-          name: description
-          required: false
-          description: description of the message channel that you want to create
-          schema:
-            type: string
-          example: This channel is created for make new friends!
+        - "message-channels"
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serverId:
+                  type: string
+                  example: server1
+                name:
+                  type: string
+                  example: Beautiful Channel
+                description:
+                  type: string
+                  example: This channel is created for make new friends!
+              required:
+                - "serverId"
+                - "name"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Server not found
+  /message-channels/{messageChannelID}:
+    get:
+      summary: Get message channel information
+      description: Get information about a message channel
+      tags:
+        - "message-channels"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/messageChannelID"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/messageChannel"
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Message channel not found
     put:
+      summary: Modify message channel
+      description: The owner modify message channel information
       tags:
-        - 'message-channels'
+        - "message-channels"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: messageChannelID
-          required: true
-          description: messageChannelID of the message channel that you want to update
-          schema:
-            type: string
-          example: message-channel1
-        - in: query
-          name: name
-          required: false
-          description: name of the message channel that you want to set
-          schema:
-            type: string
-          example: Beautiful channel 2.0!
-        - in: query
-          name: description
-          required: false
-          description: description of the message channel that you want to set
-          schema:
-            type: string
-          example: This is a new description for my channel!
+        - "$ref": "#/components/parameters/messageChannelID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beautiful Channel 2.0
+                description:
+                  type: string
+                  example: This channel is created for make new friends! 2.0
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Message channel not found
     delete:
+      summary: Delete message channel
+      description: The owner delete a message channel
       tags:
-        - 'message-channels'
+        - "message-channels"
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: messageChannelID
@@ -632,125 +649,137 @@ paths:
             type: string
           example: message-channel1
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
-  /multimedia-channels/{multimediaChannelID}:
-    get:
-      tags:
-        - 'multimedia-channels'
-      parameters:
-        - in: query
-          name: multimediaChannelID
-          required: true
-          description: Id of the multimedia channel
-          schema:
-            type: string
-          example: multimedia-channel1
-      responses:
-        '200':
-          description: Ok
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Message channel not found
+
   /multimedia-channels:
     get:
+      summary: Get multimedia channels list
+      description: Get the list of multimedia channels
       tags:
-        - 'multimedia-channels'
+        - "multimedia-channels"
+      security:
+        - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Ok
-        '401':
-          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/multimediaChannel"
+        "401":
+          description: Access token is missing or invalid
     post:
+      summary: Create a new multimedia channel
+      description: The owner create a new multimedia channel
       tags:
-        - 'multimedia-channels'
-      parameters:
-        - in: query
-          name: serverId
-          required: true
-          description: serverId of the multimedia channel that you want to create
-          schema:
-            type: string
-          example: server1
-        - in: query
-          name: name
-          required: true
-          description: name of the multimedia channel that you want to create
-          schema:
-            type: string
-          example: Beautiful Channel
-        - in: query
-          name: description
-          required: false
-          description: description of the multimedia channel that you want to create
-          schema:
-            type: string
-          example: This channel is created for make new friends!
+        - "multimedia-channels"
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serverId:
+                  type: string
+                  example: server1
+                name:
+                  type: string
+                  example: Beautiful Channel
+                description:
+                  type: string
+                  example: This channel is created for make new friends!
+              required:
+                - "serverId"
+                - "name"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Server not found
+
+  /multimedia-channels/{multimediaChannelID}:
+    get:
+      summary: Get multimedia channel information
+      description: Get information about a multimedia channel
+      tags:
+        - "multimedia-channels"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/multimediaChannelID"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/multimediaChannel"
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Multimedia channel not found
+
     put:
+      summary: Modify multimedia channel
+      description: The owner modify multimedia channel information
       tags:
-        - 'multimedia-channels'
+        - "multimedia-channels"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: multimediaChannelID
-          required: true
-          description: multimediaChannelID of the multimedia channel that you want to update
-          schema:
-            type: string
-          example: multimedia-channel1
-        - in: query
-          name: name
-          required: false
-          description: name of the multimedia channel that you want to set
-          schema:
-            type: string
-          example: Beautiful channel 2.0!
-        - in: query
-          name: description
-          required: false
-          description: description of the multimedia channel that you want to set
-          schema:
-            type: string
-          example: This is a new description for my channel!
+        - "$ref": "#/components/parameters/multimediaChannelID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/multimediaChannel"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Multimedia channel not found
     delete:
+      summary: Delete multimedia channel
+      description: The owner delete a multimedia channel
       tags:
-        - 'multimedia-channels'
+        - "multimedia-channels"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: multimediaChannelID
-          required: true
-          description: multimediaChannelID of the multimedia channel that you want to delete
-          schema:
-            type: string
-          example: multimedia-channel1
+        - "$ref": "#/components/parameters/multimediaChannelID"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
-          description: Unauthorized
+        "401":
+          description: Access token is missing or invalid
+        "404":
+          description: Multimedia channel not found
 
   /conversation:
     post:
       tags:
-        - 'conversation'
+        - "conversation"
       parameters:
         - in: query
           name: conversationID
@@ -765,18 +794,18 @@ paths:
           description: content of the message
           schema:
             type: string
-          example: 'Hello Word'
+          example: "Hello Word"
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Unauthorized
   /conversation/{conversationID, lastN}:
     get:
       tags:
-        - 'conversation'
+        - "conversation"
       parameters:
         - in: query
           name: conversationID
@@ -793,16 +822,16 @@ paths:
             type: number
           example: 12345
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Unauthorized
   /conversation/range/{from, to}:
     get:
       tags:
-        - 'conversation'
+        - "conversation"
       parameters:
         - in: query
           name: conversationID
@@ -826,11 +855,11 @@ paths:
             type: number
           example: 12345
       responses:
-        '200':
+        "200":
           description: Ok
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Unauthorized
 
 components:
@@ -857,6 +886,25 @@ components:
           type: string
           example: This server is created for make new friends!
 
+    messageChannel:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Beautiful Channel
+        description:
+          type: string
+          example: This channel is created for make new friends!
+    multimediaChannel:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Beautiful Channel
+        description:
+          type: string
+          example: This channel is created for make new friends!
+
   parameters:
     username:
       name: username
@@ -866,7 +914,7 @@ components:
       schema:
         type: string
       example: user1
-      
+
     serverId:
       name: serverId
       in: path
@@ -875,3 +923,21 @@ components:
       schema:
         type: string
       example: server1
+
+    messageChannelID:
+      name: messageChannelID
+      in: path
+      required: true
+      description: messageChannelID of the message channel that you want to interact with
+      schema:
+        type: string
+      example: message-channel1
+
+    multimediaChannelID:
+      name: multimediaChannelID
+      in: path
+      required: true
+      description: multimediaChannelID of the multimedia channel that you want to interact with
+      schema:
+        type: string
+      example: multimedia-channel1
