@@ -1,5 +1,5 @@
 import { UserRepository } from "../repositories/user/user-repository";
-import { UserRepositoryImpl } from "../repositories/user-repository-impl";
+import { UserRepositoryImpl } from "../repositories/user/user-repository-impl";
 import { RabbitMQ } from "../utils/rabbit-mq";
 
 /**
