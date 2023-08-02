@@ -11,15 +11,15 @@ tags:
   - name: profile
     description: Everything about user profile
   - name: users
-    description: Everything about users informations
+    description: Everything about users information
   - name: friends
     description: Everything about friends relationships
   - name: servers
-    description: Everything about servers informations
+    description: Everything about servers information
   - name: message-channels
-    description: Everything about message-channel informations
+    description: Everything about message-channel information
   - name: multimedia-channels
-    description: Everything about multimedia-channel informations
+    description: Everything about multimedia-channel information
   - name: conversation
     description: Everything about friends conversation
 
@@ -55,7 +55,7 @@ paths:
   /auth/register:
     post:
       summary: Register a new user
-      description: Register a new user with some informations
+      description: Register a new user with some information
       tags:
         - 'auth'
       requestBody:
@@ -85,12 +85,12 @@ paths:
                 - email
       responses:
         '200':
-          description: Ok, either the user is created or already exists, a verification email is sent to the user
+          description: Ok
         '400':
           description: Bad request
-        # '409':
-        #   description: Username already exists # this is a security issue, we should not tell the user that the username already exists
-  
+        '409':
+          description: Username or mail already exists # this is a security issue, we should not tell the user that the username already exists
+
   /auth/logout:
     post:
       summary: Logout a user
@@ -336,107 +336,199 @@ paths:
         '404':
           description: User not found
 
-  /servers/{serverId}:
-    get:
-      tags:
-        - 'servers'
-      parameters:
-        - in: query
-          name: serverId
-          required: true
-          description: serverId of the server whose informations you want to get
-          schema:
-            type: string
-          example: server1
-      responses:
-        '200':
-          description: Ok
-        '401':
-          description: Unauthorized
   /servers:
     get:
+      summary: Get servers list
+      description: Get the list of servers in which the user is joined
       tags:
         - 'servers'
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - server1
+                  - server2
         '401':
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
     post:
+      summary: Create server
+      description: Create a new server
       tags:
         - 'servers'
-      parameters:
-        - in: query
-          name: name
-          required: true
-          description: name of the server that you want to create
-          schema:
-            type: string
-          example: Beautiful Server
-        - in: query
-          name: description
-          required: false
-          description: description of the server that you want to create
-          schema:
-            type: string
-          example: This server is created for make new friends!
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beautiful Server
+                description:
+                  type: string
+                  example: This server is created for make new friends!
+              required:
+                - name
       responses:
         '200':
           description: Ok
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
+
+  /servers/{serverId}:
+    get:
+      summary: Get server information
+      description: Get information about a server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/server"
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: Server not found
     put:
+      summary: Modify server
+      description: The owner modify server information
       tags:
         - 'servers'
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: serverId
-          required: true
-          description: serverId of the server that you want to update
-          schema:
-            type: string
-          example: Beautiful Server
-        - in: query
-          name: name
-          required: false
-          description: name of the server that you want to set
-          schema:
-            type: string
-          example: Beautiful server 2.0!
-        - in: query
-          name: description
-          required: false
-          description: description of the server that you want to set
-          schema:
-            type: string
-          example: This is a new description for my server!
+        - "$ref": "#/components/parameters/serverId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/server"
       responses:
         '200':
           description: Ok
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
+        '403':
+          "$ref": "#/components/responses/ForbiddenError"
+        '404':  
+          description: Server not found
     delete:
+      summary: Delete server
+      description: The owner delete the server
       tags:
         - 'servers'
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: serverId
-          required: true
-          description: serverId of the server that you want to delete
-          schema:
-            type: string
-          example: server1
+        - "$ref": "#/components/parameters/serverId"
+      responses:
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+        '403':
+          "$ref": "#/components/responses/ForbiddenError"
+        '404':
+          description: Server not found
+
+  /servers/{serverId}/partecipants:
+    get:
+      summary: Get partecipants list of a specific server
+      description: Get the list of partecipants of the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user1
+                  - user2
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+        '403':
+          "$ref": "#/components/responses/ForbiddenError"
+        '404':
+          description: Server not found
+    post:
+      summary: Request to join the server
+      description: The user request to join the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+      responses:
+        '200':
+          description: Ok
+        '401':
+          "$ref": "#/components/responses/UnauthorizedError"
+        '404':
+          description: Server not found
+    delete:
+      summary: Leave or kick from the server
+      description: The user leave or the owner kick a user from the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+      requestBody:
+        description: The server owner can kick a user from the server
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                  example: user1
       responses:
         '200':
           description: Ok
         '400':
-          description: Bad request
+          description: "Bad request: the user not found in the server"
         '401':
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
+        '403':
+          "$ref": "#/components/responses/ForbiddenError"
+        '404':
+          description: Server not found
+        '422':
+          description: "Unprocessable entity: the user is the owner of the server"
+
 
   /message-channels/{messageChannelID}:
     get:
@@ -754,12 +846,32 @@ components:
     ForbiddenError:
       description: You don't have permission to access this resource
 
+  schemas:
+    server:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Beautiful Server
+        description:
+          type: string
+          example: This server is created for make new friends!
+
   parameters:
     username:
       name: username
       in: path
       required: true
-      description: username of the user whose information you want to obtain
+      description: username of the user that you want to interact with
       schema:
         type: string
       example: user1
+      
+    serverId:
+      name: serverId
+      in: path
+      required: true
+      description: serverId of the server that you want to interact with
+      schema:
+        type: string
+      example: server1
