@@ -26,7 +26,8 @@ tags:
 paths:
   /auth/login:
     post:
-      description: Login the user
+      summary: Login a user
+      description: Login the user using his username and password
       tags:
         - 'auth'
       requestBody:
@@ -53,7 +54,8 @@ paths:
   
   /auth/register:
     post:
-      description: Register a new user
+      summary: Register a new user
+      description: Register a new user with some informations
       tags:
         - 'auth'
       requestBody:
@@ -91,6 +93,7 @@ paths:
   
   /auth/logout:
     post:
+      summary: Logout a user
       description: Logout the user
       tags:
         - 'auth'
@@ -104,6 +107,7 @@ paths:
   
   /auth/refresh-token:
     post:
+      summary: Refresh token
       description: Refresh the user authentication token
       tags:
         - 'auth'
@@ -117,6 +121,7 @@ paths:
   
   /profile/photo:
     put:
+      summary: Change photo
       description: Change user profile photo
       tags:
         - 'profile'
@@ -143,6 +148,7 @@ paths:
 
   /profile/description:
     put:
+      summary: Change description
       description: Change user profile description
       tags:
         - 'profile'
@@ -169,6 +175,7 @@ paths:
 
   /users/{username}/status:
     get:
+      summary: Get online status
       description: Get the online status of a user
       tags:
         - 'users'
@@ -195,6 +202,7 @@ paths:
 
   /users/{username}/photo:
     get:
+      summary: Get photo
       description: Get the photo of a user
       tags:
         - 'users'
@@ -222,6 +230,7 @@ paths:
 
   /users/{username}/description:
     get:
+      summary: Get description
       description: Get the description of a user
       tags:
         - 'users'
@@ -249,6 +258,7 @@ paths:
 
   /friends:
     get:
+      summary: Get friends list
       description: Get the list of friends of the user
       tags:
         - 'friends'
@@ -271,6 +281,7 @@ paths:
 
   /friends/requests:
     get:
+      summary: Get friend requests list
       description: Get the list of friend requests of the user
       tags:
         - 'friends'
@@ -291,6 +302,7 @@ paths:
         '401':
           "$ref": "#/components/responses/UnauthorizedError"
     post:
+      summary: Manage friend request
       description: Manage a friend request in order to send, accept or deny it
       tags:
         - 'friends'
