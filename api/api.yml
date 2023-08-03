@@ -529,14 +529,16 @@ paths:
         "422":
           description: "Unprocessable entity: the user is the owner of the server"
 
-  /message-channels:
+  /servers/{serverId}/message-channels:
     get:
       summary: Get message channels list
-      description: Get the list of message channels
+      description: Get the list of message channels in a server
       tags:
         - "message-channels"
       security:
         - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
       responses:
         "200":
           description: Ok
@@ -547,23 +549,26 @@ paths:
                 items:
                   "$ref": "#/components/schemas/messageChannel"
         "401":
-          description: Access token is missing or invalid
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server not found
     post:
       summary: Create a new message channel
-      description: The owner create a new message channel
+      description: The server owner create a new message channel
       tags:
         - "message-channels"
       security:
         - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                serverId:
-                  type: string
-                  example: server1
                 name:
                   type: string
                   example: Beautiful Channel
@@ -571,7 +576,6 @@ paths:
                   type: string
                   example: This channel is created for make new friends!
               required:
-                - "serverId"
                 - "name"
       responses:
         "200":
@@ -579,10 +583,13 @@ paths:
         "400":
           description: Bad request
         "401":
-          description: Access token is missing or invalid
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
         "404":
           description: Server not found
-  /message-channels/{messageChannelID}:
+
+  /servers/{serverId}/message-channels/{messageChannelID}:
     get:
       summary: Get message channel information
       description: Get information about a message channel
@@ -591,6 +598,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - "$ref": "#/components/parameters/serverId"
         - "$ref": "#/components/parameters/messageChannelID"
       responses:
         "200":
@@ -600,9 +608,11 @@ paths:
               schema:
                 "$ref": "#/components/schemas/messageChannel"
         "401":
-          description: Access token is missing or invalid
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
         "404":
-          description: Message channel not found
+          description: Server or Message channel not found
     put:
       summary: Modify message channel
       description: The owner modify message channel information
@@ -611,6 +621,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - "$ref": "#/components/parameters/serverId"
         - "$ref": "#/components/parameters/messageChannelID"
       requestBody:
         content:
@@ -630,9 +641,11 @@ paths:
         "400":
           description: Bad request
         "401":
-          description: Access token is missing or invalid
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
         "404":
-          description: Message channel not found
+          description: Server or Message channel not found
     delete:
       summary: Delete message channel
       description: The owner delete a message channel
@@ -641,22 +654,17 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - in: query
-          name: messageChannelID
-          required: true
-          description: messageChannelID of the message channel that you want to delete
-          schema:
-            type: string
-          example: message-channel1
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/messageChannelID"
       responses:
         "200":
           description: Ok
-        "400":
-          description: Bad request
         "401":
-          description: Access token is missing or invalid
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
         "404":
-          description: Message channel not found
+          description: Server or Message channel not found
 
   /multimedia-channels:
     get:
@@ -895,6 +903,7 @@ components:
         description:
           type: string
           example: This channel is created for make new friends!
+
     multimediaChannel:
       type: object
       properties:
