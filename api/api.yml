@@ -11,15 +11,17 @@ tags:
   - name: profile
     description: Everything about user profile
   - name: users
-    description: Everything about users information
+    description: Everything about users and pair communication
   - name: friends
     description: Everything about friends relationships
   - name: servers
     description: Everything about servers information
   - name: channels
     description: Everything about channels information
-  - name: conversation
-    description: Everything about friends conversation
+  - name: message-channel
+    description: Everything about message channel information
+  - name: multimedia-channel
+    description: Everything about multimedia channel information
 
 paths:
   /auth/login:
@@ -247,6 +249,99 @@ paths:
                   description:
                     type: string
                     example: "Here to make new friends"
+        "400":
+          description: Bad request
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "404":
+          description: User not found
+
+  /users/{username}/messages:
+    get:
+      summary: Get messages list
+      description: Get the list of messages in a conversation with another user
+      tags:
+        - "users"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/username"
+        - in: query
+          name: from
+          required: false
+          description: Starting index of messages to return
+          schema:
+            type: number
+          example: 0
+        - in: query
+          name: limit
+          required: false
+          description: Limit of messages to return
+          schema:
+            type: number
+          example: 10
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/message"
+                example:
+                  - messageId: message123
+                    sender: user1
+                    content: Hello World!
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "404":
+          description: User not found
+    post:
+      summary: Send a message
+      description: Send a message to another user
+      tags:
+        - "users"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/username"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/message"
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: Bad request
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "404":
+          description: User not found
+
+  /users/{username}/session:
+    get:
+      summary: Get session for a call
+      description: Get the session of a user to perform a call
+      tags:
+        - "users"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/username"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session:
+                    type: string
+                    example: session123
         "400":
           description: Bad request
         "401":
@@ -545,8 +640,7 @@ paths:
               schema:
                 type: array
                 items:
-                  oneOf:
-                    - "$ref": "#/components/schemas/channel"
+                  "$ref": "#/components/schemas/channel"
                 example:
                   - channelId: channel123
                     name: channel1
@@ -679,91 +773,105 @@ paths:
         "404":
           description: Server or Channel not found
 
-  /conversation:
-    post:
-      tags:
-        - "conversation"
-      parameters:
-        - in: query
-          name: conversationID
-          required: true
-          description: Id of the conversation
-          schema:
-            type: number
-          example: 12345
-        - in: query
-          name: content
-          required: true
-          description: content of the message
-          schema:
-            type: string
-          example: "Hello Word"
-      responses:
-        "200":
-          description: Ok
-        "400":
-          description: Bad request
-        "401":
-          description: Unauthorized
-  /conversation/{conversationID, lastN}:
+  /servers/{serverId}/channels/{channelId}/messages:
     get:
+      summary: Get messages list
+      description: Get the list of messages in a channel
       tags:
-        - "conversation"
+        - "message-channel"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: query
-          name: conversationID
-          required: true
-          description: Id of the conversation
-          schema:
-            type: number
-          example: 12345
-        - in: query
-          name: lastN
-          required: true
-          description: Number of message to load
-          schema:
-            type: number
-          example: 12345
-      responses:
-        "200":
-          description: Ok
-        "400":
-          description: Bad request
-        "401":
-          description: Unauthorized
-  /conversation/range/{from, to}:
-    get:
-      tags:
-        - "conversation"
-      parameters:
-        - in: query
-          name: conversationID
-          required: true
-          description: Id of the conversation
-          schema:
-            type: number
-          example: 12345
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/channelId"
         - in: query
           name: from
-          required: true
-          description: message to lode from
+          required: false
+          description: Starting index of messages to return
           schema:
             type: number
-          example: 12345
+          example: 0
         - in: query
-          name: to
-          required: true
-          description: message to lode to
+          name: limit
+          required: false
+          description: Limit of messages to return
           schema:
             type: number
-          example: 12345
+          example: 10
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/message"
+                example:
+                  - messageId: message123
+                    sender: user1
+                    content: Hello World!
+        "400":
+          description: This is not a message channel
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server or Channel not found
+    post:
+      tags:
+        - "message-channel"
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/channelId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/message"
       responses:
         "200":
           description: Ok
         "400":
           description: Bad request
         "401":
-          description: Unauthorized
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server or Channel not found
+
+  /servers/{serverId}/channels/{channelId}/session:
+    get:
+      summary: Get session
+      description: Get the session of the multimedia channel to join
+      tags:
+        - "multimedia-channel"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    example: session123
+        "400":
+          description: This is not a multimedia channel
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server or Channel not found
 
 components:
   securitySchemes:
@@ -827,6 +935,19 @@ components:
       oneOf:
         - "$ref": "#/components/schemas/messageChannel"
         - "$ref": "#/components/schemas/multimediaChannel"
+
+    message:
+      type: object
+      properties:
+        messageId:
+          type: string
+          example: message123
+        sender:
+          type: string
+          example: user1
+        content:
+          type: string
+          example: Hello World
 
   parameters:
     username:
