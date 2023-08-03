@@ -58,4 +58,18 @@ export interface UserRepository {
 	 * @param username
 	 */
 	getFriendsRequests(username: string): Promise<string[]>;
+
+	/**
+	 * Send a friend request to a user.
+	 * @param username
+	 * @param friendUsername
+	 */
+	sendFriendRequest(username: string, friendUsername: string): Promise<void>;
+
+	/**
+	 * Accept a friend request from a user.
+	 * @param username
+	 * @param friendUsername
+	 */
+	acceptFriendRequest(username: string, friendUsername: string): Promise<void>;
 }

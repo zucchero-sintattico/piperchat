@@ -1,5 +1,6 @@
 import { UserRepository } from "./user-repository";
 import { Users, User } from "../../models/user-model";
+import e from "express";
 
 export class UserRepositoryImpl implements UserRepository {
 	async getUserByUsername(username: string): Promise<User> {
@@ -49,5 +50,29 @@ export class UserRepositoryImpl implements UserRepository {
 	async getFriendsRequests(username: string): Promise<string[]> {
 		const user = await this.getUserByUsername(username);
 		return user.friendsRequests;
+	}
+
+	async sendFriendRequest(username: string, friendUsername: string): Promise<void> {
+		const user = await this.getUserByUsername(username);
+		if (user.friends.includes(friendUsername)) {
+			throw new Error("Already friends");
+		}
+		else if (user.friendsRequests.includes(friendUsername)) {
+			await Users.findOneAndUpdate({ username: friendUsername }, { $push: { friendsRequests: username } });
+			await Users.findOneAndUpdate({ username: username }, { $push: { pendingFriendsRequests: friendUsername } });
+		} else {
+			throw new Error("Friend request already exists");
+		}
+	}
+
+	async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
+		const user = await this.getUserByUsername(username);
+		if (user.friendsRequests.includes(friendUsername)) {
+			await Users.findOneAndUpdate({ username: username }, { $push: { friends: friendUsername } });
+			await Users.findOneAndUpdate({ username: friendUsername }, { $push: { friends: username } });
+			await Users.findOneAndUpdate({ username: username }, { $pull: { friendsRequests: friendUsername } });
+		} else {
+			throw new Error("Friend request does not exist");
+		}
 	}
 }

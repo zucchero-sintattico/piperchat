@@ -18,10 +18,10 @@ export class FriendsControllerImpl implements FriendsController {
 		const user = await this.userRepository.getUserByUsername(username);
 		return user.friends;
 	}
-	sendFriendRequest(username: string, friendUsername: string): Promise<void> {
-		throw new Error("Method not implemented.");
+	async sendFriendRequest(username: string, friendUsername: string): Promise<void> {
+		await this.userRepository.sendFriendRequest(username, friendUsername);
 	}
-	acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
-		throw new Error("Method not implemented.");
+	async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
+		await this.userRepository.acceptFriendRequest(username, friendUsername);
 	}
 }
