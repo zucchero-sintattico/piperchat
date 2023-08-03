@@ -13,10 +13,20 @@
 				width: 500px;
 				height: 600px;
 			}
+			#webcam {
+				width: 100px;
+				height: 50px;
+			}
+			#mic {
+				width: 100px;
+				height: 50px;
+			}
 		</style>
 	</head>
 	<body>
 		<h1>Client</h1>
+		<button id="webcam">Webcam: Enabled</button>
+		<button id="mic">Mic: Enabled</button>
 		<video id="video" width="500" height="600" autoplay></video>
 		<div id="videos"></div>
 		<script type="module">
@@ -26,39 +36,55 @@
 
 			const urlParams = new URLSearchParams(window.location.search);
 			const sessionId = urlParams.get("session") || "1";
-
-			const videoMap = {};
-			connect(
-				sessionId,
-				token,
-				(stream) => {
+			navigator.mediaDevices
+				.getUserMedia({
+					video: true,
+					audio: false,
+				})
+				.then((stream) => {
 					const video = document.getElementById("video");
 					video.srcObject = stream;
 					video.autoplay = true;
-					videos.appendChild(video);
-					// Added the username over the video
-					const usernameDiv = document.createElement("div");
-					usernameDiv.innerText = "Me";
-					videos.appendChild(usernameDiv);
-				},
-				(username, stream) => {
-					const videos = document.getElementById("videos");
-					// Create a new video element and add to videos
-					const video = document.createElement("video");
-					video.srcObject = stream;
-					video.autoplay = true;
-					videos.appendChild(video);
-					videoMap[username] = video;
-					// Added the username over the video
-					const usernameDiv = document.createElement("div");
-					usernameDiv.innerText = username;
-					videos.appendChild(usernameDiv);
-				},
-				(username) => {
-					const video = videoMap[username];
-					video.remove();
-				}
-			);
+
+					document.getElementById("webcam").onclick = () => {
+						stream.getVideoTracks()[0].enabled =
+							!stream.getVideoTracks()[0].enabled;
+						document.getElementById("webcam").innerText = `Webcam: ${
+							stream.getVideoTracks()[0].enabled ? "Enabled" : "Disabled"
+						}`;
+					};
+					document.getElementById("mic").onclick = () => {
+						stream.getAudioTracks()[0].enabled =
+							!stream.getAudioTracks()[0].enabled;
+						document.getElementById("mic").innerText = `Mic: ${
+							stream.getAudioTracks()[0].enabled ? "Enabled" : "Disabled"
+						}`;
+					};
+
+					const videoMap = {};
+					connect(
+						sessionId,
+						stream,
+						token,
+						(username, stream) => {
+							const videos = document.getElementById("videos");
+							// Create a new video element and add to videos
+							const video = document.createElement("video");
+							video.srcObject = stream;
+							video.autoplay = true;
+							videos.appendChild(video);
+							videoMap[username] = video;
+							// Added the username over the video
+							const usernameDiv = document.createElement("div");
+							usernameDiv.innerText = username;
+							videos.appendChild(usernameDiv);
+						},
+						(username) => {
+							const video = videoMap[username];
+							video.remove();
+						}
+					);
+				});
 		</script>
 	</body>
 </html>

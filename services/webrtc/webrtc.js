@@ -1,9 +1,9 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
-export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
+export const connect = (sessionId, stream, token, onStream, onUserLeave) => {
 	const constraints = {
 		video: true,
-		audio: true,
+		audio: false,
 	};
 	const socket = io("http://localhost:3000", {
 		transports: ["websocket"],
@@ -14,12 +14,6 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 
 	socket.on("connect", () => {
 		console.log("connected to the service");
-
-		navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-			stream.getTracks().forEach((track) => {
-				onMyStream(stream);
-			});
-		});
 
 		const peers = {};
 
@@ -55,11 +49,9 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 				console.log("Connection state change", event, "for", userId);
 			};
 			console.log("Creating offer");
-			// Create offer
-			await navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-				stream.getTracks().forEach((track) => {
-					peers[userId].addTrack(track, stream);
-				});
+
+			stream.getTracks().forEach((track) => {
+				peers[userId].addTrack(track, stream);
 			});
 
 			const offer = await peers[userId].createOffer();
@@ -104,11 +96,11 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 			peers[from].onconnectionstatechange = (event) => {
 				console.log("Connection state change", event, "for", from);
 			};
-			await navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-				stream.getTracks().forEach((track) => {
-					peers[from].addTrack(track, stream);
-				});
+
+			stream.getTracks().forEach((track) => {
+				peers[from].addTrack(track, stream);
 			});
+
 			console.log("Creating answer");
 			const answer = await peers[from].createAnswer();
 			await peers[from].setLocalDescription(answer);
@@ -123,9 +115,9 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 			console.log("Received ice-candidate", candidate + " from " + from);
 			await peers[from].addIceCandidate(candidate);
 		});
-		console.log("Joining room", roomId);
+		console.log("Joining room", sessionId);
 
-		socket.emit("join-room", roomId);
+		socket.emit("join-room", sessionId);
 	});
 
 	socket.on("disconnect", () => {
