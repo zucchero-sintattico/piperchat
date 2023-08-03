@@ -57,20 +57,24 @@ export class UserRepositoryImpl implements UserRepository {
 		if (user.friends.includes(friendUsername)) {
 			throw new Error("Already friends");
 		}
-		else if (user.friendsRequests.includes(friendUsername)) {
-			await Users.findOneAndUpdate({ username: friendUsername }, { $push: { friendsRequests: username } });
-			await Users.findOneAndUpdate({ username: username }, { $push: { pendingFriendsRequests: friendUsername } });
+		//if the friend Username doesent exist
+		else if (!(await Users.exists({ username: friendUsername }))) {
+			throw new Error("User not found");
+		}
+		else if (!user.friendsRequests.includes(username) && !user.pendingFriendsRequests.includes(friendUsername)) {
+			await Users.updateOne({ username: friendUsername }, { $push: { friendsRequests: username } });
+			await Users.updateOne({ username: username }, { $push: { pendingFriendsRequests: friendUsername } });
 		} else {
-			throw new Error("User not found or request already exists");
+			throw new Error("Rrequest already exists");
 		}
 	}
 
 	async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
 		const user = await this.getUserByUsername(username);
 		if (user.friendsRequests.includes(friendUsername)) {
-			await Users.findOneAndUpdate({ username: username }, { $push: { friends: friendUsername } });
-			await Users.findOneAndUpdate({ username: friendUsername }, { $push: { friends: username } });
-			await Users.findOneAndUpdate({ username: username }, { $pull: { friendsRequests: friendUsername } });
+			await Users.updateOne({ username: username }, { $push: { friends: friendUsername } });
+			await Users.updateOne({ username: friendUsername }, { $push: { friends: username } });
+			await Users.updateOne({ username: username }, { $pull: { friendsRequests: friendUsername } });
 		} else {
 			throw new Error("Friend request does not exist");
 		}
@@ -79,8 +83,8 @@ export class UserRepositoryImpl implements UserRepository {
 	async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
 		const user = await this.getUserByUsername(username);
 		if (user.pendingFriendsRequests.includes(friendUsername)) {
-			await Users.findOneAndUpdate({ username: friendUsername }, { $pull: { friendsRequests: user.username } });
-			await Users.findOneAndUpdate({ username: username }, { $pull: { pendingFriendsRequests: friendUsername } });
+			await Users.updateOne({ username: friendUsername }, { $pull: { friendsRequests: user.username } });
+			await Users.updateOne({ username: username }, { $pull: { pendingFriendsRequests: friendUsername } });
 		} else {
 			throw new Error("Friend request does not exist");
 		}

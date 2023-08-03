@@ -19,22 +19,12 @@ export class FriendsControllerImpl implements FriendsController {
 		return user.friends;
 	}
 	async sendFriendRequest(username: string, friendUsername: string): Promise<void> {
-		await this.userRepository.sendFriendRequest(username, friendUsername)
-			.catch((e) => {
-				throw e.message;
-			});
+		await this.userRepository.sendFriendRequest(username, friendUsername);
 	}
 	async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
-		await this.userRepository.acceptFriendRequest(username, friendUsername)
-			.catch((e) => {
-				throw e.message;
-			});
+		await this.userRepository.acceptFriendRequest(username, friendUsername);
 	}
 	async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
-		await this.userRepository.denyFriendRequest(username, friendUsername)
-			.catch((e) => {
-				throw e.message;
-			});
-
+		await this.userRepository.denyFriendRequest(username, friendUsername);
 	}
 }

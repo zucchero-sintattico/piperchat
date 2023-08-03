@@ -38,7 +38,7 @@ friendsRouter.route("/requests").get((req: Request, res: Response) => {
 		});
 });
 
-friendsRouter.route("/requests").post((req: Request, res: Response) => {
+friendsRouter.route("/requests").post(async (req: Request, res: Response) => {
 	if (!req.body.to) {
 		return res.status(400).json({ message: "Missing 'to' parameter in body" });
 	}
@@ -50,32 +50,29 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 	}
 
 	if (req.body.action === FriendRequestAction.send) {
-		friendsController
-			.sendFriendRequest(req.user.username, req.body.to)
-			.then(() => {
-				return res.status(200).json({ message: "Friend added" });
-			})
-			.catch((e) => {
-				return res.status(404).json({ message: "Error 404", error: e });
-			});
+		try {
+			await friendsController
+				.sendFriendRequest(req.user.username, req.body.to)
+			return res.status(200).json({ message: "Friend added" });
+		} catch (e: any) {
+			return res.status(404).json({ message: "Error 404", error: e.message });
+		}
 	} else if (req.body.action === FriendRequestAction.accept) {
-		friendsController
-			.acceptFriendRequest(req.user.username, req.body.to)
-			.then(() => {
-				return res.status(200).json({ message: "Friend request accepted" });
-			})
-			.catch((e) => {
-				return res.status(404).json({ message: "Error 404", error: e });
-			});
+		try {
+			await friendsController
+				.acceptFriendRequest(req.user.username, req.body.to)
+			return res.status(200).json({ message: "Friend request accepted" });
+		} catch (e: any) {
+			return res.status(404).json({ message: "Error 404", error: e.message });
+		}
 	} else if (req.body.action === FriendRequestAction.deny) {
-		friendsController
-			.denyFriendRequest(req.user.username, req.body.to)
-			.then(() => {
-				return res.status(200).json({ message: "Friend request denied" });
-			})
-			.catch((e) => {
-				return res.status(404).json({ message: "Error 404", error: e });
-			});
+		try {
+			await friendsController
+				.denyFriendRequest(req.user.username, req.body.to)
+			return res.status(200).json({ message: "Friend request denied" });
+		} catch (e: any) {
+			return res.status(404).json({ message: "Error 404", error: e.message });
+		}
 	}
 
 });
