@@ -35,9 +35,9 @@ export class SessionRepositoryImpl implements SessionRepository {
 		return await Sessions.findOne({ id: id }).orFail();
 	}
 
-	async createNewSession(id: string): Promise<Session> {
+	async createNewSession(allowedUsers: string[]): Promise<Session> {
 		const session = new Sessions({
-			id: id,
+			allowedUsers: allowedUsers,
 		});
 		await session.save();
 		return session;
@@ -64,5 +64,12 @@ export class SessionRepositoryImpl implements SessionRepository {
 	async getUsersInSession(sessionId: string): Promise<UserInSession[]> {
 		const session = await Sessions.findOne({ id: sessionId }).orFail();
 		return session.participants!;
+	}
+
+	async updateSessionAllowedUsers(
+		sessionId: string,
+		allowedUsers: string[]
+	): Promise<void> {
+		await Sessions.updateOne({ id: sessionId }, { allowedUsers: allowedUsers });
 	}
 }

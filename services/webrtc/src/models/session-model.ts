@@ -8,6 +8,7 @@ export interface Session {
 	id: string;
 	createdAt: Date;
 	participants: UserInSession[];
+	allowedUsers: string[];
 }
 
 const SessionSchema = new Schema({
@@ -37,6 +38,10 @@ const SessionSchema = new Schema({
 		],
 		required: true,
 		default: [],
+	},
+	allowedUsers: {
+		type: [String],
+		required: true,
 	},
 });
 

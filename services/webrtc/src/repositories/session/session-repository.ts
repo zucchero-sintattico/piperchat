@@ -11,11 +11,11 @@ export interface SessionRepository {
 
 	/**
 	 * Create a new session
-	 * @param id the id of the session
+	 * @param allowedUsers the usernames of the users allowed in the session
 	 * @returns the session
 	 * @throws {Error} if session already exists
 	 */
-	createNewSession(id: string): Promise<Session>;
+	createNewSession(allowedUsers: string[]): Promise<Session>;
 
 	/**
 	 * Add a new user to a session
@@ -52,4 +52,9 @@ export interface SessionRepository {
 		sessionId: string,
 		username: string
 	): Promise<string>;
+
+	updateSessionAllowedUsers(
+		sessionId: string,
+		allowedUsers: string[]
+	): Promise<void>;
 }

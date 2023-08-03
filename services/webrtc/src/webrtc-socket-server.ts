@@ -39,16 +39,26 @@ export class WebRTCSocketServer {
 
 			try {
 				const session = await this.sessionRepository.getSessionById(sessionId);
+				const isUserAllowedInSession = session.allowedUsers.includes(username);
+				if (!isUserAllowedInSession) {
+					console.log("User not allowed in session");
+					socket.disconnect();
+					return;
+				}
 			} catch (e) {
-				console.log("Session does not exist, creating new one");
-				await this.sessionRepository.createNewSession(sessionId);
+				console.log("Session does not exist");
+				socket.disconnect();
+				return;
 			}
 
-			const users = await this.sessionRepository.getUsersInSession(sessionId);
+			const usersAlreadyInSession =
+				await this.sessionRepository.getUsersInSession(sessionId);
 
-			const userInSession = users.find((user) => user.username === username);
-			if (userInSession) {
-				console.log("User already in session");
+			const isUserAlreadyInSession = usersAlreadyInSession.find(
+				(user) => user.username === username
+			);
+			if (isUserAlreadyInSession) {
+				console.log("User already in session, disconnecting");
 				socket.disconnect();
 				return;
 			}

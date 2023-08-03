@@ -1,6 +1,10 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
 export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
+	const constraints = {
+		video: true,
+		audio: true,
+	};
 	const socket = io("http://localhost:3000", {
 		transports: ["websocket"],
 		auth: {
@@ -11,13 +15,11 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 	socket.on("connect", () => {
 		console.log("connected to the service");
 
-		navigator.mediaDevices
-			.getUserMedia({ video: true, audio: false })
-			.then((stream) => {
-				stream.getTracks().forEach((track) => {
-					onMyStream(stream);
-				});
+		navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+			stream.getTracks().forEach((track) => {
+				onMyStream(stream);
 			});
+		});
 
 		const peers = {};
 
@@ -54,13 +56,11 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 			};
 			console.log("Creating offer");
 			// Create offer
-			await navigator.mediaDevices
-				.getUserMedia({ video: true, audio: false })
-				.then((stream) => {
-					stream.getTracks().forEach((track) => {
-						peers[userId].addTrack(track, stream);
-					});
+			await navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+				stream.getTracks().forEach((track) => {
+					peers[userId].addTrack(track, stream);
 				});
+			});
 
 			const offer = await peers[userId].createOffer();
 			await peers[userId].setLocalDescription(offer);
@@ -104,13 +104,11 @@ export const connect = (roomId, token, onMyStream, onStream, onUserLeave) => {
 			peers[from].onconnectionstatechange = (event) => {
 				console.log("Connection state change", event, "for", from);
 			};
-			await navigator.mediaDevices
-				.getUserMedia({ video: true, audio: false })
-				.then((stream) => {
-					stream.getTracks().forEach((track) => {
-						peers[from].addTrack(track, stream);
-					});
+			await navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+				stream.getTracks().forEach((track) => {
+					peers[from].addTrack(track, stream);
 				});
+			});
 			console.log("Creating answer");
 			const answer = await peers[from].createAnswer();
 			await peers[from].setLocalDescription(answer);
