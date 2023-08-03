@@ -24,4 +24,7 @@ export class FriendsControllerImpl implements FriendsController {
 	async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
 		await this.userRepository.acceptFriendRequest(username, friendUsername);
 	}
+	async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
+		await this.userRepository.denyFriendRequest(username, friendUsername);
+	}
 }

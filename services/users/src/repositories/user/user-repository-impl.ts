@@ -75,4 +75,15 @@ export class UserRepositoryImpl implements UserRepository {
 			throw new Error("Friend request does not exist");
 		}
 	}
+
+	async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
+		const user = await this.getUserByUsername(username);
+		if (user.pendingFriendsRequests.includes(friendUsername)) {
+			await Users.findOneAndUpdate({ username: friendUsername }, { $pull: { friendsRequests: user.username } });
+			await Users.findOneAndUpdate({ username: username }, { $pull: { pendingFriendsRequests: friendUsername } });
+		} else {
+			throw new Error("Friend request does not exist");
+		}
+
+	}
 }

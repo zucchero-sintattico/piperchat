@@ -34,6 +34,16 @@ export interface FriendsController {
 	 * @throws {FriendRequestNotPresent} If the friend request is not present.
 	 */
 	acceptFriendRequest(username: string, friendUsername: string): Promise<void>;
+
+	/**
+	 * Deny a friend request from a user.
+	 * @param username The username of the user.
+	 * @param friendUsername The username of the friend.
+	 * @throws {UserNotFound} If the user is not found.
+	 * @throws {UserNotFound} If the friend is not found.
+	 * @throws {FriendRequestNotPresent} If the friend request is not present.
+	 */
+	denyFriendRequest(username: string, friendUsername: string): Promise<void>;
 }
 
 export class FriendsControllerExceptions {

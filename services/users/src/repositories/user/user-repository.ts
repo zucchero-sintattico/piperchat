@@ -72,4 +72,11 @@ export interface UserRepository {
 	 * @param friendUsername
 	 */
 	acceptFriendRequest(username: string, friendUsername: string): Promise<void>;
+
+	/**
+	 * Deny a friend request from a user.
+	 * @param username
+	 * @param friendUsername
+	 */
+	denyFriendRequest(username: string, friendUsername: string): Promise<void>;
 }

@@ -41,9 +41,10 @@ export interface UserController {
 	 * @throws {UserNotFound} If the user is not found.
 	 */
 	getUserDescription(username: string): Promise<string>;
+
 }
 
 export class UserControllerExceptions {
-	static UserNotFound = class extends Error {};
-	static PhotoNotPresent = class extends Error {};
+	static UserNotFound = class extends Error { };
+	static PhotoNotPresent = class extends Error { };
 }

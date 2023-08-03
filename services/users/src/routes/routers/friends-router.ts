@@ -67,7 +67,17 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 			.catch((e) => {
 				return res.status(404).json({ message: "User not found", error: e });
 			});
+	} else if (req.body.action === FriendRequestAction.deny) {
+		friendsController
+			.denyFriendRequest(req.user.username, req.body.to)
+			.then(() => {
+				return res.status(200).json({ message: "Friend request denied" });
+			})
+			.catch((e) => {
+				return res.status(404).json({ message: "User not found", error: e });
+			});
 	}
+
 });
 
 
