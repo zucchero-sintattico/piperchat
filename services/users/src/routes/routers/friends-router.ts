@@ -56,7 +56,7 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 				return res.status(200).json({ message: "Friend added" });
 			})
 			.catch((e) => {
-				return res.status(404).json({ message: "User not found", error: e });
+				return res.status(404).json({ message: "Error 404", error: e });
 			});
 	} else if (req.body.action === FriendRequestAction.accept) {
 		friendsController
@@ -65,7 +65,7 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 				return res.status(200).json({ message: "Friend request accepted" });
 			})
 			.catch((e) => {
-				return res.status(404).json({ message: "User not found", error: e });
+				return res.status(404).json({ message: "Error 404", error: e });
 			});
 	} else if (req.body.action === FriendRequestAction.deny) {
 		friendsController
@@ -74,7 +74,7 @@ friendsRouter.route("/requests").post((req: Request, res: Response) => {
 				return res.status(200).json({ message: "Friend request denied" });
 			})
 			.catch((e) => {
-				return res.status(404).json({ message: "User not found", error: e });
+				return res.status(404).json({ message: "Error 404", error: e });
 			});
 	}
 

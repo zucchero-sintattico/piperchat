@@ -61,7 +61,7 @@ export class UserRepositoryImpl implements UserRepository {
 			await Users.findOneAndUpdate({ username: friendUsername }, { $push: { friendsRequests: username } });
 			await Users.findOneAndUpdate({ username: username }, { $push: { pendingFriendsRequests: friendUsername } });
 		} else {
-			throw new Error("Friend request already exists");
+			throw new Error("User not found or request already exists");
 		}
 	}
 
