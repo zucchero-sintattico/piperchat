@@ -26,7 +26,13 @@ beforeAll(async () => {
 	await ServiceEvents.initialize();
 	await server.start();
 	entityApi = new UserApi(supertest(server.server));
+
+	await entityApi.register("test0", "test0", "test0");
+
+	await entityApi.register("test1", "test1", "test1");
 });
+
+
 
 afterAll(async () => {
 	server.stop();
@@ -34,9 +40,43 @@ afterAll(async () => {
 	await RabbitMQ.close();
 });
 
-describe("/users", () => {
+describe("/friends", () => {
 	it("should return 200", async () => {
-		const response = await entityApi.getAllEntities();
+		await entityApi.login("test0", "test0");
+		const response = await entityApi.getAllFriends();
 		expect(response.status).toBe(200);
 	});
 });
+
+//sent friend request
+describe("/friends/requests", () => {
+	it("send frends requests", async () => {
+		await entityApi.login("test0", "test0");
+		const response = await entityApi.sendFriendRequest("test1");
+		expect(response.status).toBe(200);
+	});
+}
+);
+
+//accept friend request
+describe("/friends/requests", () => {
+	it("accept frends requests", async () => {
+		await entityApi.login("test1", "test1");
+		const response = await entityApi.acceptFriendRequest("test0");
+		expect(response.status).toBe(200);
+	});
+}
+);
+
+//check if the user is in the friends list
+describe("/friends", () => {
+	it("should return 200", async () => {
+		await entityApi.login("test0", "test0");
+		const response = await entityApi.getAllFriends();
+		expect(response.status).toBe(200);
+		console.log(response.body);
+		expect(response.body.friends).toContain("test1");
+	});
+}
+);
+
