@@ -58,13 +58,13 @@ channels:
     description: A server is created
     publish:
       message:
-        "$ref": "#/components/messages/Server"
+        "$ref": "#/components/messages/ServerAdvanced"
 
   server.updated:
     description: A server has been updated
     publish:
       message:
-        "$ref": "#/components/messages/Server"
+        "$ref": "#/components/messages/ServerAdvanced"
 
   server.deleted:
     description: A server has been deleted
@@ -88,13 +88,13 @@ channels:
     description: A channel is created
     publish:
       message:
-        "$ref": "#/components/messages/Channel"
+        "$ref": "#/components/messages/ChannelAdvanced"
 
   channel.updated:
     description: A channel has been updated
     publish:
       message:
-        "$ref": "#/components/messages/Channel"
+        "$ref": "#/components/messages/ChannelAdvanced"
 
   channel.deleted:
     description: A channel has been deleted
@@ -149,8 +149,12 @@ components:
       summary: A server
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ServerSchema"
-
+        "$ref": "#/components/schemas/ServerBasicSchema"
+    ServerAdvanced:
+      summary: A server
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/ServerAdvancedSchema"
     ServerUser:
       summary: A server user
       contentType: application/json
@@ -165,7 +169,12 @@ components:
       summary: A channel
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ChannelSchema"
+        "$ref": "#/components/schemas/ChannelBasicSchema"
+    ChannelAdvanced:
+      summary: A channel
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/ChannelAdvancedSchema"
     MessageChannel:
       summary: A message
       contentType: application/json
@@ -208,7 +217,7 @@ components:
           description: Unique identifier representing a specific user
           example: user1
 
-    ServerSchema:
+    ServerBasicSchema:
       type: object
       properties:
         serverId:
@@ -216,35 +225,55 @@ components:
           description: Unique identifier representing a specific server
           example: server1
 
-    ServerUserSchema:
+    ServerAdvancedSchema:
       allOf:
-        - "$ref": "#/components/schemas/ServerSchema"
+        - $ref: "#/components/schemas/ServerBasicSchema"
         - type: object
           properties:
-            userId:
+            name:
               type: string
-              description: Unique identifier representing a specific user
-              example: user1
+              description: Name of the server
+              example: My server
+            description:
+              type: string
+              description: Description of the server
+              example: My server description
 
-    ChannelSchema:
+    ServerUserSchema:
+      allOf:
+        - $ref: "#/components/schemas/ServerBasicSchema"
+        - type: object
+          properties:
+            serverId:
+              type: string
+              description: Unique identifier representing a specific server
+              example: server1
+
+    ChannelBasicSchema:
       type: object
       properties:
         channelId:
           type: string
           description: Unique identifier representing a specific channel
           example: channel1
-        type:
-          type: string
-          description: Type of the channel
-          example: message, multimedia
-        name:
-          type: string
-          description: Name of the channel
-          example: general
-        description:
-          type: string
-          description: Description of the channel
-          example: General discussion
+
+    ChannelAdvancedSchema:
+      allOf:
+        - $ref: "#/components/schemas/ChannelBasicSchema"
+        - type: object
+          properties:
+            type:
+              type: string
+              description: Type of the channel
+              example: message, multimedia
+            name:
+              type: string
+              description: Name of the channel
+              example: general
+            description:
+              type: string
+              description: Description of the channel
+              example: General discussion
 
     MessageSchema:
       type: object
