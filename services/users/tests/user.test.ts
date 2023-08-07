@@ -5,6 +5,7 @@ import { UserApi } from "./api/user-api";
 import { MongooseUtils } from "../src/utils/mongoose";
 import { RabbitMQ } from "../src/utils/rabbit-mq";
 import { ServiceEvents } from "../src/events/events";
+import e from "express";
 
 const server = new UsersServer(3000);
 
@@ -27,9 +28,6 @@ beforeAll(async () => {
 	await server.start();
 	entityApi = new UserApi(supertest(server.server));
 
-	await entityApi.register("test0", "test0", "test0");
-
-	await entityApi.register("test1", "test1", "test1");
 });
 
 
@@ -42,41 +40,49 @@ afterAll(async () => {
 
 describe("/friends", () => {
 	it("should return 200", async () => {
+		await entityApi.register("test0", "test0", "test0");
 		await entityApi.login("test0", "test0");
 		const response = await entityApi.getAllFriends();
 		expect(response.status).toBe(200);
+		await entityApi.deleteUser("test0");
 	});
 });
 
-//sent friend request
+//sent friend request 
 describe("/friends/requests", () => {
 	it("send frends requests", async () => {
+		await entityApi.register("test0", "test0", "test0");
+		await entityApi.register("test1", "test1", "test1");
 		await entityApi.login("test0", "test0");
 		const response = await entityApi.sendFriendRequest("test1");
 		expect(response.status).toBe(200);
+		await entityApi.deleteUser("test0");
+		await entityApi.login("test1", "test1");
+		await entityApi.deleteUser("test1");
 	});
 }
 );
 
-//accept friend request
-describe("/friends/requests", () => {
-	it("accept frends requests", async () => {
-		await entityApi.login("test1", "test1");
-		const response = await entityApi.acceptFriendRequest("test0");
-		expect(response.status).toBe(200);
-	});
-}
-);
+
+
 
 //check if the user is in the friends list
 describe("/friends", () => {
 	it("should return 200", async () => {
+		await entityApi.register("test0", "test0", "test0");
+		await entityApi.register("test1", "test1", "test1");
 		await entityApi.login("test0", "test0");
+		await entityApi.sendFriendRequest("test1");
+		await entityApi.login("test1", "test1");
+		await entityApi.acceptFriendRequest("test0");
 		const response = await entityApi.getAllFriends();
-		expect(response.status).toBe(200);
-		console.log(response.body);
-		expect(response.body.friends).toContain("test1");
+		expect(response.body.friends).toContain("test0");
+		await entityApi.deleteUser("test1");
+		await entityApi.login("test0", "test0");
+		await entityApi.deleteUser("test0");
 	});
 }
+
+
 );
 

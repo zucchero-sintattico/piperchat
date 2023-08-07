@@ -8,7 +8,7 @@ const userController: UserController = new UserControllerImpl();
 export const userRouter = Router();
 userRouter.use(jwtValidTokenRequired);
 
-userRouter.route(":username").delete((req: Request, res: Response) => {
+userRouter.route("/:username").delete((req: Request, res: Response) => {
 	userController
 		.deleteUser(req.params.username, req.user.username)
 		.then(() => {
