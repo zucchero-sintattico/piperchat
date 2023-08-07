@@ -42,9 +42,15 @@ export interface UserController {
 	 */
 	getUserDescription(username: string): Promise<string>;
 
+	/**
+	 * Delete a user.
+	 * @param username The username of the user.
+	 * @param author The username of the author.
+	 */
+	deleteUser(username: string, author: string): Promise<void>;
 }
 
 export class UserControllerExceptions {
-	static UserNotFound = class extends Error { };
-	static PhotoNotPresent = class extends Error { };
+	static UserNotFound = class extends Error {};
+	static PhotoNotPresent = class extends Error {};
 }

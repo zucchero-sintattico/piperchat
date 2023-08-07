@@ -1,19 +1,30 @@
+import { Users } from "../../models/user-model";
 import { UserController } from "./user-controller";
 
 export class UserControllerImpl implements UserController {
-	getUserStatus(username: string): Promise<string> {
+	async deleteUser(username: string, author: string): Promise<void> {
+		if (username !== author) {
+			throw new Error("Unauthorized");
+		}
+		await Users.deleteOne({ username: username });
+	}
+
+	async getUserStatus(username: string): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
-	setUserPhoto(username: string, photo: string): Promise<void> {
+	async setUserPhoto(username: string, photo: string): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
-	getUserPhoto(username: string): Promise<string> {
+	async getUserPhoto(username: string): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
-	setUserDescription(username: string, description: string): Promise<void> {
+	async setUserDescription(
+		username: string,
+		description: string
+	): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
-	getUserDescription(username: string): Promise<string> {
+	async getUserDescription(username: string): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
 }

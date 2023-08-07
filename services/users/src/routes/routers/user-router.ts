@@ -8,6 +8,17 @@ const userController: UserController = new UserControllerImpl();
 export const userRouter = Router();
 userRouter.use(jwtValidTokenRequired);
 
+userRouter.route(":username").delete((req: Request, res: Response) => {
+	userController
+		.deleteUser(req.params.username, req.user.username)
+		.then(() => {
+			return res.status(200).json({ message: "User deleted" });
+		})
+		.catch((e) => {
+			return res.status(404).json({ message: "User not found", error: e });
+		});
+});
+
 userRouter.route(":username/status").get((req: Request, res: Response) => {
 	userController
 		.getUserStatus(req.params.username)
