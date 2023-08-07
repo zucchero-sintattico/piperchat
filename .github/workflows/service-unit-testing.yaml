@@ -50,9 +50,6 @@ jobs:
                   - 5672:5672
           mongodb:
               image: mongo
-              env:
-                  MONGO_INITDB_ROOT_USERNAME: admin
-                  MONGO_INITDB_ROOT_PASSWORD: admin
               options: >-
                   --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
                   --health-interval 10s
@@ -71,8 +68,14 @@ jobs:
               uses: actions/setup-node@v3
               with:
                 node-version: '18.x'
-            - name: Run tests
+            - name: Install dependencies
               run: |
                 cd ${{ matrix.path }}
                 npm ci
+            - name: Run tests
+              run: |
+                cd ${{ matrix.path }}
                 npm test
+              env:
+                AMQP_URI: amqp://localhost:5672/
+                MONGO_URI: mongodb://localhost:27017/?authMechanism=DEFAULT&authSource=admin;
