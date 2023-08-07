@@ -102,17 +102,41 @@ channels:
       message:
         "$ref": "#/components/messages/Channel"
 
-  message.channel.newmessage:
+  message.channel.sent:
     description: A new message has been sent to a channel
     publish:
       message:
         "$ref": "#/components/messages/MessageChannel"
 
-  message.direct.newmessage:
+  message.direct.sent:
     description: A new message has been sent to a user
     publish:
       message:
         "$ref": "#/components/messages/MessageDirect"
+
+  session.created:
+    description: A new session has been created
+    publish:
+      message:
+        "$ref": "#/components/messages/Session"
+
+  session.terminated:
+    description: A session has been terminated
+    publish:
+      message:
+        "$ref": "#/components/messages/Session"
+
+  session.user.joined:
+    description: A user joined a session
+    publish:
+      message:
+        "$ref": "#/components/messages/SessionUser"
+
+  session.user.left:
+    description: A user left a session
+    publish:
+      message:
+        "$ref": "#/components/messages/SessionUser"
 
 components:
   messages:
@@ -131,24 +155,31 @@ components:
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/FriendRequest"
-
     Channel:
       summary: A channel
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/ChannelSchema"
-
     MessageChannel:
       summary: A message
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/MessageChannelSchema"
-
     MessageDirect:
       summary: A message
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/MessageDirectSchema"
+    Session:
+      summary: A session
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/SessionSchema"
+    SessionUser:
+      summary: A session user
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/SessionUserSchema"
 
   schemas:
     FriendRequest:
@@ -190,6 +221,14 @@ components:
           type: string
           description: Type of the channel
           example: message, multimedia
+        name:
+          type: string
+          description: Name of the channel
+          example: general
+        description:
+          type: string
+          description: Description of the channel
+          example: General discussion
 
     MessageSchema:
       type: object
@@ -198,10 +237,6 @@ components:
           type: string
           description: Unique identifier representing a specific message
           example: message1
-        content:
-          type: string
-          description: Content of the message
-          example: Hello world
         from:
           type: string
           description: Unique identifier representing a specific user
@@ -226,3 +261,21 @@ components:
               type: string
               description: Unique identifier representing a specific channel
               example: channel1
+
+    SessionSchema:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          description: Unique identifier representing a specific session
+          example: session1
+
+    SessionUserSchema:
+      allOf:
+        - "$ref": "#/components/schemas/SessionSchema"
+        - type: object
+          properties:
+            userId:
+              type: string
+              description: Unique identifier representing a specific user
+              example: user1
