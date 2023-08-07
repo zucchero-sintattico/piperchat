@@ -28,8 +28,3 @@ export const MultimediaChannelSchema = new Schema<MultimediaChannel>({
     required: false,
   },
 });
-
-export const MultimediaChannels = model<MultimediaChannel>(
-  "MultimediaChannel",
-  MultimediaChannelSchema
-);

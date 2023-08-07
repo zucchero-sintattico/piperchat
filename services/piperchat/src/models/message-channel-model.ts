@@ -3,6 +3,7 @@ import { Schema, model } from "mongoose";
 export interface MessageChannel {
   id: number;
   name: string;
+  description: string;
   createdAt: Date;
 }
 
@@ -17,14 +18,13 @@ export const MessageChannelSchema = new Schema<MessageChannel>({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   createdAt: {
     type: Date,
     required: true,
     default: Date.now,
   },
 });
-
-export const MessageChannels = model<MessageChannel>(
-  "MessageChannel",
-  MessageChannelSchema
-);
