@@ -47,6 +47,7 @@ jobs:
                 npm ci
             - name: Run tests
               run: |
+                cd ${{ matrix.path }}
                 npm test
               env:
                 AMQP_URI: amqp://rabbitmq:5672/
