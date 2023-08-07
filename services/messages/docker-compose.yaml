@@ -1,7 +1,7 @@
 services:
 
   messages-service:
-    build: .
+    build: ./services/messages
     expose:
       - "3000"
     depends_on:
@@ -14,13 +14,11 @@ services:
       - backend
       - frontend
     environment:
-      - AMQP_URI=${BROKER_URI}
+      - "AMQP_URI=${BROKER_URI}"
       - "MONGO_URI=mongodb://db-messages-service:27017/messages"
 
   db-messages-service:
     image: mongo
-    volumes:
-      - ./.docker/messages-service:/data/db
     expose:
       - "27017"
     healthcheck:

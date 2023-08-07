@@ -1,23 +1,23 @@
 services:
 
-  users-service:
-    build: ./services/users
+  webrtc-service:
+    build: ./services/webrtc
     expose:
       - "3000"
     depends_on:
-      db-users-service:
+      db-webrtc-service:
         condition: service_healthy
       broker:
         condition: service_healthy
     networks:
-      - users-network
+      - webrtc-network
       - backend
       - frontend
     environment:
       - "AMQP_URI=${BROKER_URI}"
-      - "MONGO_URI=mongodb://db-users-service:27017/users"
+      - "MONGO_URI=mongodb://db-webrtc-service:27017/webrtc"
 
-  db-users-service:
+  db-webrtc-service:
     image: mongo
     expose:
       - "27017"
@@ -26,7 +26,7 @@ services:
         host=`hostname --ip-address || echo '127.0.0.1'`;
         mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
     networks:
-      - users-network
+      - webrtc-network
 
 networks:
-  users-network:
+  webrtc-network:

@@ -11,10 +11,8 @@ config();
 
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000;
-const amqpUri = process.env.AMQP_URI || "amqp://localhost:5672/";
-const mongoUri =
-	process.env.MONGO_URI ||
-	"mongodb://db-users-service-username:db-users-service-password@localhost:27017/db-users-service-database?authSource=admin";
+const amqpUri = process.env.AMQP_URI || "amqp://localhost:5672";
+const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
 
 // Express app
 const app: UsersServer = new UsersServer(port);

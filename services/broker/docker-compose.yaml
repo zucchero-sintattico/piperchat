@@ -3,13 +3,14 @@ services:
 
   broker:
     image: rabbitmq:3-management-alpine
-    # expose ports not publish for internal use only
+    hostname: ${BROKER_HOSTNAME}
     expose:
       - "${BROKER_PORT}"
-    ports:
-      - "15672:15672"
-    volumes:
-      - .docker/rabbitmq/data/:/var/lib/rabbitmq/
+    # for development only
+    # ports:
+    #   - "15672:15672"
+    # volumes:
+    #   - .docker/broker/data/:/var/lib/broker/
     networks:
       - backend
     healthcheck:
