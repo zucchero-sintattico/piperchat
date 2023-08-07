@@ -1,8 +1,8 @@
 import { UserEventsRepository } from "../../events/repositories/user/user-events-repository";
-import { User, Users } from "../../models/user-model";
+import { User } from "../../models/user-model";
 import { UserRepository } from "../../repositories/user/user-repository";
 import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl";
-import { AuthController, UserControllerExceptions } from "./auth-controller";
+import { AuthController, AuthControllerExceptions } from "./auth-controller";
 import bcrypt from "bcrypt";
 import {
 	generateAccessToken,
@@ -27,7 +27,7 @@ export class AuthControllerImpl implements AuthController {
 		const user = await this.userRepository
 			.createUser(username, email, hashedPassword, description, photo)
 			.catch(() => {
-				throw new UserControllerExceptions.UserAlreadyExists();
+				throw new AuthControllerExceptions.UserAlreadyExists();
 			});
 		await this.userEventsRepository.publishUserCreated(user);
 		return user;
@@ -37,12 +37,12 @@ export class AuthControllerImpl implements AuthController {
 		const user = await this.userRepository
 			.getUserByUsername(username)
 			.catch(() => {
-				throw new UserControllerExceptions.InvalidUsernameOrPassword();
+				throw new AuthControllerExceptions.InvalidUsernameOrPassword();
 			});
 
 		const isPasswordValid = await bcrypt.compare(password, user.password);
 		if (!isPasswordValid) {
-			throw new UserControllerExceptions.InvalidUsernameOrPassword();
+			throw new AuthControllerExceptions.InvalidUsernameOrPassword();
 		}
 
 		const accessToken = generateAccessToken(user);
@@ -56,15 +56,15 @@ export class AuthControllerImpl implements AuthController {
 		const user = await this.userRepository
 			.getUserByUsername(username)
 			.catch(() => {
-				throw new UserControllerExceptions.UserNotFound();
+				throw new AuthControllerExceptions.UserNotFound();
 			});
 
 		if (!user.refreshToken) {
-			throw new UserControllerExceptions.RefreshTokenNotPresent();
+			throw new AuthControllerExceptions.RefreshTokenNotPresent();
 		}
 
 		verifyRefreshToken(user.refreshToken).catch(() => {
-			throw new UserControllerExceptions.InvalidRefreshToken();
+			throw new AuthControllerExceptions.InvalidRefreshToken();
 		});
 
 		return generateAccessToken(user);
@@ -72,7 +72,7 @@ export class AuthControllerImpl implements AuthController {
 
 	async logout(username: string): Promise<void> {
 		await this.userRepository.logout(username).catch(() => {
-			throw new UserControllerExceptions.UserNotFound();
+			throw new AuthControllerExceptions.UserNotFound();
 		});
 	}
 }

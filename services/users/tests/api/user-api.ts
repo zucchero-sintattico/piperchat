@@ -6,23 +6,54 @@ export class UserApi {
 		this.request = request;
 	}
 
-	async getAllEntities() {
-		return await this.request.get("/users");
+	private cookie: string = "";
+
+
+	// register a new user and save the access token
+	async register(username: string, email: string, password: string) {
+		const response = await this.request.post("/auth/register").send({
+			username: username,
+			email: email,
+			password: password,
+		});
 	}
 
-	async getEntityById(id: string) {
-		return await this.request.get(`/users/${id}`);
+	// login a user and save the access token
+	async login(username: string, password: string) {
+		const response = await this.request.post("/auth/login").send({
+			username: username,
+			password: password,
+		});
+		this.cookie = response.header["set-cookie"];
 	}
 
-	async createEntity(entity: any) {
-		return await this.request.post("/users").send(entity);
+	//delete a user
+	async deleteUser(username: string) {
+		return await this.request.delete("/user/" + username).set("Cookie", this.cookie);
 	}
 
-	async updateEntity(id: string, entity: any) {
-		return await this.request.put(`/users/${id}`).send(entity);
+	async getAllFriends() {
+		console.log("cookieeeee" + this.cookie);
+		return await this.request.get("/friends").set("Cookie", this.cookie);
 	}
 
-	async deleteEntity(id: string) {
-		return await this.request.delete(`/users/${id}`);
+
+	//send a friend request
+	async sendFriendRequest(username: string) {
+		return await this.request.post("/friends/requests").set("Cookie", this.cookie).send({
+			action: "send",
+			to: username,
+		});
 	}
+
+	//accept a friend request
+	async acceptFriendRequest(username: string) {
+		return await this.request.post("/friends/requests").set("Cookie", this.cookie).send({
+			action: "accept",
+			to: username,
+		});
+	}
+
+
+
 }

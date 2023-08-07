@@ -45,7 +45,7 @@ export interface AuthController {
 	refreshToken(username: string): Promise<string>;
 }
 
-export class UserControllerExceptions {
+export class AuthControllerExceptions {
 	static UserAlreadyExists = class extends Error {};
 	static UserNotFound = class extends Error {};
 	static RefreshTokenNotPresent = class extends Error {};
