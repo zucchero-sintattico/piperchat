@@ -27,6 +27,10 @@ export class UserApi {
 		this.cookie = response.header["set-cookie"];
 	}
 
+	//delete a user
+	async deleteUser(username: string) {
+		return await this.request.delete("/user/" + username).set("Cookie", this.cookie);
+	}
 
 	async getAllFriends() {
 		console.log("cookieeeee" + this.cookie);
@@ -49,5 +53,7 @@ export class UserApi {
 			to: username,
 		});
 	}
+
+
 
 }
