@@ -638,18 +638,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/channel"
+                type: string
                 example:
-                  - channelId: channel123
-                    name: channel1
-                    description: This is a message channel
-                    type: message
-                  - channelId: channel456
-                    name: channel2
-                    description: This is a multimedia channel
-                    type: multimedia
+                  - channel1
+                  - channel2
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
         "403":
@@ -909,7 +901,6 @@ components:
         description:
           type: string
           example: This channel is created for make new friends!
-
 
     messageChannel:
       allOf:
