@@ -76,7 +76,7 @@ export class WebRTCSocketServer {
 				username
 			);
 
-			socket.on("disconnect", () => {
+			socket.on("disconnect", async () => {
 				console.log("DISCONNECTING USER: ", username);
 				socket.to(sessionId).emit("user-disconnected", username);
 				this.sessionRepository.removeUserFromSession(sessionId, username);
@@ -84,6 +84,13 @@ export class WebRTCSocketServer {
 					sessionId,
 					username
 				);
+
+				const usersInSession = await this.sessionRepository.getUsersInSession(
+					sessionId
+				);
+				if (usersInSession.length === 0) {
+					this.sessionEventsRepository.publishSessionEndedEvent(sessionId);
+				}
 			});
 
 			socket.on("offer", async (offer, to) => {

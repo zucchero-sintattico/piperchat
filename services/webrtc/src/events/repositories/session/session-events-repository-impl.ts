@@ -31,4 +31,12 @@ export class SessionEventsRepositoryImpl
 			Buffer.from(JSON.stringify({ sessionId, username }))
 		);
 	}
+
+	async publishSessionEndedEvent(sessionId: string): Promise<void> {
+		this.getChannel()?.publish(
+			"session",
+			"session_ended",
+			Buffer.from(JSON.stringify({ sessionId }))
+		);
+	}
 }

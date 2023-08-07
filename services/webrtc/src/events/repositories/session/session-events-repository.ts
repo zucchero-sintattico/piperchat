@@ -18,4 +18,10 @@ export interface SessionEventsRepository {
 		sessionId: string,
 		username: string
 	): Promise<void>;
+
+	/**
+	 * Publish a session ended event
+	 * @param sessionId the id of the session
+	 */
+	publishSessionEndedEvent(sessionId: string): Promise<void>;
 }
