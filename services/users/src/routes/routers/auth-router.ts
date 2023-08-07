@@ -4,6 +4,7 @@ import {
 	AuthControllerExceptions,
 } from "../../controllers/auth/auth-controller";
 import { AuthControllerImpl } from "../../controllers/auth/auth-controller-impl";
+import { JWTAuthenticationMiddleware } from "../../utils/jwt";
 
 const authController: AuthController = new AuthControllerImpl();
 
@@ -26,7 +27,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
 		return res.status(200).json({ message: "Registered", createdUser: user });
 	} catch (e: any) {
 		if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
-			return res.status(400).json({ message: "User already exists" });
+			return res.status(409).json({ message: "User already exists" });
 		} else {
 			return res
 				.status(500)
@@ -57,43 +58,47 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 	}
 });
 
-authRouter.post("/logout", async (req: Request, res: Response) => {
-	try {
-		if (!req.user) {
-			return res.status(401).json({ message: "Unauthorized" });
+authRouter
+	.use(JWTAuthenticationMiddleware)
+	.post("/logout", async (req: Request, res: Response) => {
+		try {
+			if (!req.user) {
+				return res.status(401).json({ message: "Unauthorized" });
+			}
+			await authController.logout(req.user.username);
+			res.clearCookie("jwt");
+			return res.status(200).json({ message: "Logged out" });
+		} catch (e: any) {
+			if (e instanceof AuthControllerExceptions.UserNotFound) {
+				return res.status(404).json({ message: "User not found" });
+			} else {
+				return res
+					.status(500)
+					.json({ message: "Internal Server Error", error: e });
+			}
 		}
-		await authController.logout(req.user.username);
-		res.clearCookie("jwt");
-		return res.status(200).json({ message: "Logged out" });
-	} catch (e: any) {
-		if (e instanceof AuthControllerExceptions.UserNotFound) {
-			return res.status(404).json({ message: "User not found" });
-		} else {
-			return res
-				.status(500)
-				.json({ message: "Internal Server Error", error: e });
-		}
-	}
-});
+	});
 
-authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-	try {
-		const token = await authController.refreshToken(req.user.username);
-		return res
-			.status(200)
-			.cookie("jwt", token, { httpOnly: true })
-			.json({ message: "Refreshed token" });
-	} catch (e: any) {
-		if (e instanceof AuthControllerExceptions.UserNotFound) {
-			return res.status(404).json({ message: "User not found" });
-		} else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
-			return res.status(401).json({ message: "Invalid refresh token" });
-		} else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
-			return res.status(401).json({ message: "Refresh token not present" });
-		} else {
+authRouter
+	.use(JWTAuthenticationMiddleware)
+	.post("/refresh-token", async (req: Request, res: Response) => {
+		try {
+			const token = await authController.refreshToken(req.user.username);
 			return res
-				.status(500)
-				.json({ message: "Internal Server Error", error: e });
+				.status(200)
+				.cookie("jwt", token, { httpOnly: true })
+				.json({ message: "Refreshed token" });
+		} catch (e: any) {
+			if (e instanceof AuthControllerExceptions.UserNotFound) {
+				return res.status(404).json({ message: "User not found" });
+			} else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
+				return res.status(401).json({ message: "Invalid refresh token" });
+			} else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
+				return res.status(401).json({ message: "Refresh token not present" });
+			} else {
+				return res
+					.status(500)
+					.json({ message: "Internal Server Error", error: e });
+			}
 		}
-	}
-});
+	});

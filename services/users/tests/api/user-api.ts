@@ -10,7 +10,7 @@ export class UserApi {
 
 	// register a new user and save the access token
 	async register(username: string, email: string, password: string) {
-		const response = await this.request.post("/auth/register").send({
+		return await this.request.post("/auth/register").send({
 			username: username,
 			email: email,
 			password: password,
@@ -24,10 +24,12 @@ export class UserApi {
 			password: password,
 		});
 		this.cookie = response.header["set-cookie"];
+		return response;
 	}
 
-	async deleteUser(username: string) {
-		return await this.request.delete("/user/" + username).set("Cookie", this.cookie);
+	async logout() {
+		// this.cookie = "";
+		return await this.request.post("/auth/logout").set("Cookie", this.cookie);
 	}
 
 	async getAllFriends() {
