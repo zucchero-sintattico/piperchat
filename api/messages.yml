@@ -17,42 +17,152 @@ channels:
     publish:
       message:
         "$ref": "#/components/messages/User"
-  
+
   user.created:
     description: A user is registered to the system
     publish:
       message:
         "$ref": "#/components/messages/User"
-  
+
   user.token.refreshed:
     description: A user refreshed his token
     publish:
       message:
         "$ref": "#/components/messages/User"
 
+  user.friend.request.sent:
+    description: A user sent a friend request to another one
+    publish:
+      message:
+        "$ref": "#/components/messages/FriendRequest"
 
+  user.friend.request.accepted:
+    description: A user accepted a friend request from another one
+    publish:
+      message:
+        "$ref": "#/components/messages/FriendRequest"
 
+  user.connected:
+    description: A user is connected to the chat
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+
+  user.disconnected:
+    description: A user is disconnected from the chat
+    publish:
+      message:
+        "$ref": "#/components/messages/User"
+
+  server.created:
+    description: A server is created
+    publish:
+      message:
+        "$ref": "#/components/messages/Server"
+
+  server.updated:
+    description: A server has been updated
+    publish:
+      message:
+        "$ref": "#/components/messages/Server"
+
+  server.deleted:
+    description: A server has been deleted
+    publish:
+      message:
+        "$ref": "#/components/messages/Server"
+
+  server.user.joined:
+    description: A user joined a server
+    publish:
+      message:
+        "$ref": "#/components/messages/Server"
+
+  server.user.left:
+    description: A user left a server
+    publish:
+      message:
+        "$ref": "#/components/messages/Server"
+
+  channel.created:
+    description: A channel is created
+    publish:
+      message:
+        "$ref": "#/components/messages/Channel"
+
+  channel.updated:
+    description: A channel has been updated
+    publish:
+      message:
+        "$ref": "#/components/messages/Channel"
+
+  channel.deleted:
+    description: A channel has been deleted
+    publish:
+      message:
+        "$ref": "#/components/messages/Channel"
+
+  message.channel.newmessage:
+    description: A new message has been sent to a channel
+    publish:
+      message:
+        "$ref": "#/components/messages/MessageChannel"
+
+  message.direct.newmessage:
+    description: A new message has been sent to a user
+    publish:
+      message:
+        "$ref": "#/components/messages/MessageDirect"
 
 components:
   messages:
     User:
-      summary: The user who perform the action
+      summary: A user
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/UserSchema"
-
-    FriendRequest:
-      summary: A friend request from a user to another one
+    Server:
+      summary: A server
       contentType: application/json
       payload:
-        type: object
-        properties:
-          sender:
-            "$ref": "#/components/schemas/UserSchema"
-          recipient:
-            "$ref": "#/components/schemas/UserSchema"
+        "$ref": "#/components/schemas/ServerSchema"
+    FriendRequest:
+      summary: A friend request
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/FriendRequest"
+
+    Channel:
+      summary: A channel
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/ChannelSchema"
+
+    MessageChannel:
+      summary: A message
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/MessageChannelSchema"
+
+    MessageDirect:
+      summary: A message
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/MessageDirectSchema"
 
   schemas:
+    FriendRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+        to:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user2
+
     UserSchema:
       type: object
       properties:
@@ -60,3 +170,59 @@ components:
           type: string
           description: Unique identifier representing a specific user
           example: user1
+
+    ServerSchema:
+      type: object
+      properties:
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+
+    ChannelSchema:
+      type: object
+      properties:
+        channelId:
+          type: string
+          description: Unique identifier representing a specific channel
+          example: channel1
+        type:
+          type: string
+          description: Type of the channel
+          example: message, multimedia
+
+    MessageSchema:
+      type: object
+      properties:
+        messageId:
+          type: string
+          description: Unique identifier representing a specific message
+          example: message1
+        content:
+          type: string
+          description: Content of the message
+          example: Hello world
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    MessageDirectSchema:
+      allOf:
+        - "$ref": "#/components/schemas/MessageSchema"
+        - type: object
+          properties:
+            to:
+              type: string
+              description: Unique identifier representing a specific user
+              example: user2
+
+    MessageChannelSchema:
+      allOf:
+        - "$ref": "#/components/schemas/MessageSchema"
+        - type: object
+          properties:
+            channelId:
+              type: string
+              description: Unique identifier representing a specific channel
+              example: channel1
