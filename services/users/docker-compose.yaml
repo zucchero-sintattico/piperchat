@@ -1,46 +1,34 @@
-version: "1"
-
 services:
-  # Broker
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: "rabbitmq"
-    ports:
-      - 5672:5672
-      - 15672:15672
-    volumes:
-      - .docker/rabbitmq/data/:/var/lib/rabbitmq/
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
+
+  users-service:
+    build: .
+    expose:
+      - "3000"
+    depends_on:
+      db-users-service:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+    networks:
+      - users-network
+      - backend
+      - frontend
+    environment:
+      - AMQP_URI=${BROKER_URI}
+      - "MONGO_URI=mongodb://db-users-service:27017/users"
 
   db-users-service:
-    container_name: piperchat-db-users-service
     image: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=db-users-service-username
-      - MONGO_INITDB_ROOT_PASSWORD=db-users-service-password
-      - MONGO_INITDB_DATABASE=db-users-service-database
     volumes:
       - ./.docker/users-service:/data/db
-    ports:
-      - 27017:27017
+    expose:
+      - "27017"
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;
         mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
+    networks:
+      - users-network
 
-  mongo-express:
-    image: mongo-express:latest
-    restart: always
-    ports:
-      - 8081:8081
-    depends_on:
-      db-users-service:
-        condition: service_healthy
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: db-users-service-username
-      ME_CONFIG_MONGODB_ADMINPASSWORD: db-users-service-password
-      ME_CONFIG_MONGODB_SERVER: piperchat-db-users-service
+networks:
+  users-network:

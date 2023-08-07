@@ -1,0 +1,13 @@
+services:
+  gateway:
+    image: hello-world
+    ports:
+      - 80:80
+    volumes:
+      - ./:/etc/nginx/
+    depends_on:
+      - messages-service
+      - users-service
+
+networks:
+  frontend:

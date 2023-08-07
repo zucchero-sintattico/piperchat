@@ -1,0 +1,19 @@
+
+services:
+
+  broker:
+    image: rabbitmq:3-management-alpine
+    # expose ports not publish for internal use only
+    expose:
+      - "${BROKER_PORT}"
+    ports:
+      - "15672:15672"
+    volumes:
+      - .docker/rabbitmq/data/:/var/lib/rabbitmq/
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+
+networks:
+  backend:
