@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-08-07T08:41:50.460Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="byAAVtTmi83gpl_jnkwM" version="21.6.6" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2023-08-07T13:45:07.333Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="RVRHXvinLFfyv0-C0Xm1" version="21.6.6" type="github" pages="8">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
-    <mxGraphModel dx="2528" dy="1999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3164" dy="2250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -88,7 +88,7 @@
         <mxCell id="7wh-No2WTboaJmC7Gdfl-20" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="1210" y="495" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;&lt;br&gt;- SERVER.CREATED&lt;br&gt;- SERVER.UPDATED&lt;br&gt;- SERVER.DELETED&lt;br&gt;&lt;br&gt;- SERVER.USER_JOINED&lt;br&gt;- SERVER.USER_LEAVED&lt;br&gt;&lt;br&gt;- MESSAGE_CHANNEL.CREATED&lt;br&gt;- MESSAGE_CHANNEL.UPDATED&lt;br&gt;- MESSAGE_CHANNEL.DELETED&lt;br&gt;&lt;br&gt;- MULTIMEDIA_CHANNEL.CREATED&lt;br&gt;. MULTIMEDIA_CHANNEL.UDPATED&lt;br&gt;- MULTIMEDIA_CHANNEL.DELETED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+        <mxCell id="9NbjZctbXflYfwBN7HnV-1" value="Out-Events:&lt;br&gt;&lt;br&gt;- SERVER.CREATED&lt;br&gt;- SERVER.UPDATED&lt;br&gt;- SERVER.DELETED&lt;br&gt;&lt;br&gt;- SERVER.USER_JOINED&lt;br&gt;- SERVER.USER_LEAVED&lt;br&gt;&lt;br&gt;- CHANNEL.CREATED&lt;br&gt;- CHANNEL.UPDATED&lt;br&gt;- CHANNEL.DELETED&lt;br&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
           <mxGeometry x="210" y="-360" width="280" height="260" as="geometry" />
         </mxCell>
         <mxCell id="9NbjZctbXflYfwBN7HnV-2" value="Out-Events:&lt;br&gt;- USER.CREATED&lt;br&gt;&lt;br&gt;- USER.FRIEND_REQUEST_SENT&lt;br&gt;- USER.FRIEND_REQUEST_ACCEPTED&lt;br&gt;&lt;br&gt;- USER.LOGGED_IN&lt;br&gt;- USER.LOGGED_OUT&lt;br&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;- USER.TOKEN_REFRESHED" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
