@@ -29,6 +29,13 @@ beforeAll(async () => {
 
 });
 
+beforeEach(async () => {
+	let response = await entityApi.register("test0", "test0", "test0");
+	expect(response.status).toBe(200);
+	response = await entityApi.register("test1", "test1", "test1");
+	expect(response.status).toBe(200);
+});
+
 afterAll(async () => {
 	server.stop();
 	await MongooseUtils.close();
@@ -39,44 +46,65 @@ afterEach(async () => {
 	await MongooseUtils.clear();
 });
 
-describe("NewUser", () => {
+describe("User authentication", () => {
 	it("A new user should be able to register only once", async () => {
-		let response = await entityApi.register("test0", "test0", "test0");
-		expect(response.status).toBe(200);
-
-		response = await entityApi.register("test0", "test0", "test0");
+		const response = await entityApi.register("test0", "test0", "test0");
 		expect(response.status).toBe(409);
 	});
 
 	it("A user should be able to login after register", async () => {
-		await entityApi.register("test0", "test0", "test0");
 		const response = await entityApi.login("test0", "test0");
 		expect(response.status).toBe(200);
 		expect(response.header["set-cookie"]).toHaveLength(1);
 	});
 
 	it("A user should be able to logout", async () => {
-		await entityApi.register("test0", "test0", "test0");
 		await entityApi.login("test0", "test0");
 		const response = await entityApi.logout();
 		expect(response.status).toBe(200);
 		expect(response.header["set-cookie"][0]).toContain("jwt=; Path=/; Expires=");
 	});
+});
 
+describe("User info", () => {
+	it("A user should be able to get his description", async () => {
+		await entityApi.login("test0", "test0");
+		const response = await entityApi.getDescription("test0");
+		expect(response.status).toBe(200);
+		expect(response.body).toHaveProperty("description");
+	});
+
+	it("A user should be able to update his description", async () => {
+		await entityApi.login("test0", "test0");
+		const newDescription = "I'm an awesome user";
+		let response = await entityApi.updateDescription(newDescription);
+		expect(response.status).toBe(200);
+
+		response = await entityApi.getDescription("test0");
+		expect(response.body.description).toBe(newDescription);
+	});
+
+	it("A user should be able to get other description", async () => {
+		await entityApi.login("test0", "test0");
+		const newDescription = "I'm an awesome user";
+		let response = await entityApi.updateDescription(newDescription);
+		expect(response.status).toBe(200);
+
+		await entityApi.login("test1", "test1");
+		response = await entityApi.getDescription("test0");
+		expect(response.body.description).toBe(newDescription);
+	});
+});
+
+describe("Friend request", () => {
 	it("A new user should have empty friend list", async () => {
-		await entityApi.register("test0", "test0", "test0");
 		await entityApi.login("test0", "test0");
 		const response = await entityApi.getAllFriends();
 		expect(response.status).toBe(200);
 		expect(response.body.friends).toHaveLength(0);
 	});
-});
 
-describe("FriendRequest", () => {
 	it("Two users should become friends", async () => {
-		await entityApi.register("test0", "test0", "test0");
-		await entityApi.register("test1", "test1", "test1");
-
 		await entityApi.login("test0", "test0");
 		let response = await entityApi.sendFriendRequest("test1");
 		expect(response.status).toBe(200);
@@ -92,9 +120,6 @@ describe("FriendRequest", () => {
 	});
 
 	it("A user should be able to rejct a friend request", async () => {
-		await entityApi.register("test0", "test0", "test0");
-		await entityApi.register("test1", "test1", "test1");
-
 		await entityApi.login("test0", "test0");
 		await entityApi.sendFriendRequest("test1");
 

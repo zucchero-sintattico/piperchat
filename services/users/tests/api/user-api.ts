@@ -28,8 +28,21 @@ export class UserApi {
 	}
 
 	async logout() {
-		// this.cookie = "";
-		return await this.request.post("/auth/logout").set("Cookie", this.cookie);
+		const response = await this.request.post("/auth/logout").set("Cookie", this.cookie);
+		this.cookie = "";
+		return response;
+	}
+
+	async getDescription(username: string) {
+		return await this.request.get(`/users/${username}/description`).set("Cookie", this.cookie);
+	}
+
+	async updateDescription(description: string) {
+		return await this.request.put("/profile/description")
+			.set("Cookie", this.cookie)
+			.set("Content-Type", "application/json").send({
+				description: description,
+			});
 	}
 
 	async getAllFriends() {

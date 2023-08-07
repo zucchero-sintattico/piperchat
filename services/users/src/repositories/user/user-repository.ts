@@ -14,7 +14,7 @@ export interface UserRepository {
 	 * @param username The username of the user.
 	 * @param photo The photo of the user.
 	 */
-	setUserPhoto(username: string, photo: string): Promise<void>;
+	updateUserPhoto(username: string, photo: Buffer): Promise<void>;
 
 	/**
 	 * Get the user's description.
@@ -26,11 +26,10 @@ export interface UserRepository {
 
 	/**
 	 * Update the user's description.
-	 * @param username The username of the user.
 	 * @param description The description of the user.
 	 * @throws {UserNotFound} If the user is not found.
 	 */
-	setUserDescription(username: string, description: string): Promise<void>;
+	updateUserDescription(username: string, description: string): Promise<void>;
 
 	/**
 	 * Create a new user.

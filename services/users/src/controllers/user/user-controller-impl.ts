@@ -4,15 +4,8 @@ import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl
 import { UserController, UserStatusInfo } from "./user-controller";
 
 export class UserControllerImpl implements UserController {
-	private userRepository: UserRepository = new UserRepositoryImpl();
 
-	async deleteUser(username: string, author: string): Promise<void> {
-		if (username !== author) {
-			throw new Error("Unauthorized");
-		}
-		await this.userRepository.deleteUser(username);
-		await Users.deleteOne({ username: username });
-	}
+	private userRepository: UserRepository = new UserRepositoryImpl();
 
 	async getUserStatus(username: string): Promise<UserStatusInfo> {
 		const user = await this.userRepository.getUserByUsername(username);
@@ -22,22 +15,19 @@ export class UserControllerImpl implements UserController {
 		} as UserStatusInfo;
 	}
 
-	async setUserPhoto(username: string, photo: string): Promise<void> {
-		await this.userRepository.setUserPhoto(username, photo);
+	async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
+		await this.userRepository.updateUserPhoto(username, photo);
+	}
+
+	async updateUserDescription(username: string, description: string): Promise<void> {
+		await this.userRepository.updateUserDescription(username, description);
 	}
 
 	async getUserPhoto(username: string): Promise<Buffer> {
 		return await this.userRepository.getUserPhoto(username);
 	}
 
-	async setUserDescription(
-		username: string,
-		description: string
-	): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
 	async getUserDescription(username: string): Promise<string> {
-		throw new Error("Method not implemented.");
+		return await this.userRepository.getUserDescription(username);
 	}
 }

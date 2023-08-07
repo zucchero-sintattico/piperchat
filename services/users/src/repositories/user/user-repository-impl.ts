@@ -1,20 +1,10 @@
 import { UserRepository } from "./user-repository";
 import { Users, User } from "../../models/user-model";
-import e from "express";
 
 export class UserRepositoryImpl implements UserRepository {
+
 	async getUserDescription(username: string): Promise<string> {
 		return (await Users.findOne({ username: username }).orFail()).description;
-	}
-
-	async setUserDescription(
-		username: string,
-		description: string
-	): Promise<void> {
-		await Users.findOneAndUpdate(
-			{ username: username },
-			{ description: description }
-		).orFail();
 	}
 
 	async getUserPhoto(username: string): Promise<Buffer> {
@@ -22,11 +12,22 @@ export class UserRepositoryImpl implements UserRepository {
 			.profilePicture;
 	}
 
-	async setUserPhoto(username: string, photo: string): Promise<void> {
+	async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
 		await Users.findOneAndUpdate(
 			{ username: username },
-			{ photo: photo }
+			{ profilePicture: photo }
 		).orFail();
+	}
+
+	async updateUserDescription(username: string, description: string): Promise<void> {
+		await Users.findOneAndUpdate(
+			{ username: username },
+			{ description: description }
+		).orFail();
+	}
+
+	async setUserPhoto(username: string, photo: string): Promise<void> {
+
 	}
 	async getUserByUsername(username: string): Promise<User> {
 		return await Users.findOne({ username: username }).orFail();

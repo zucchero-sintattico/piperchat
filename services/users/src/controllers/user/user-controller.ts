@@ -17,9 +17,15 @@ export interface UserController {
 	 * Set the photo of a user.
 	 * @param username The username of the user.
 	 * @param photo The photo of the user.
-	 * @throws {UserNotFound} If the user is not found.
 	 */
-	setUserPhoto(username: string, photo: string): Promise<void>;
+	updateUserPhoto(username: string, photo: Buffer): Promise<void>;
+
+	/**
+	 * Set the user's description.
+	 * @param username The username of the user.
+	 * @param description The description of the user.
+	 */
+	updateUserDescription(username: string, description: string): Promise<void>;
 
 	/**
 	 * Get the photo of a user.
@@ -31,30 +37,15 @@ export interface UserController {
 	getUserPhoto(username: string): Promise<Buffer>;
 
 	/**
-	 * Set the user's description.
-	 * @param username The username of the user.
-	 * @param description The description of the user.
-	 * @throws {UserNotFound} If the user is not found.
-	 */
-	setUserDescription(username: string, description: string): Promise<void>;
-
-	/**
 	 * Get the user's description.
 	 * @param username The username of the user.
 	 * @returns The description of the user.
 	 * @throws {UserNotFound} If the user is not found.
 	 */
 	getUserDescription(username: string): Promise<string>;
-
-	/**
-	 * Delete a user.
-	 * @param username The username of the user.
-	 * @param author The username of the author.
-	 */
-	deleteUser(username: string, author: string): Promise<void>;
 }
 
 export class UserControllerExceptions {
-	static UserNotFound = class extends Error {};
-	static PhotoNotPresent = class extends Error {};
+	static UserNotFound = class extends Error { };
+	static PhotoNotPresent = class extends Error { };
 }
