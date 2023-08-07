@@ -76,13 +76,13 @@ channels:
     description: A user joined a server
     publish:
       message:
-        "$ref": "#/components/messages/Server"
+        "$ref": "#/components/messages/ServerUser"
 
   server.user.left:
     description: A user left a server
     publish:
       message:
-        "$ref": "#/components/messages/Server"
+        "$ref": "#/components/messages/ServerUser"
 
   channel.created:
     description: A channel is created
@@ -150,6 +150,12 @@ components:
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/ServerSchema"
+
+    ServerUser:
+      summary: A server user
+      contentType: application/json
+      payload:
+        "$ref": "#/components/schemas/ServerUserSchema"
     FriendRequest:
       summary: A friend request
       contentType: application/json
@@ -209,6 +215,16 @@ components:
           type: string
           description: Unique identifier representing a specific server
           example: server1
+
+    ServerUserSchema:
+      allOf:
+        - "$ref": "#/components/schemas/ServerSchema"
+        - type: object
+          properties:
+            userId:
+              type: string
+              description: Unique identifier representing a specific user
+              example: user1
 
     ChannelSchema:
       type: object
