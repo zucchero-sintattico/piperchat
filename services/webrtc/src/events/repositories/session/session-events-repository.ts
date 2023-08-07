@@ -20,6 +20,16 @@ export interface SessionEventsRepository {
 	): Promise<void>;
 
 	/**
+	 * Publish a session created event
+	 * @param sessionId the id of the session
+	 * @param allowedUsers the users allowed to join the session
+	 */
+	publishSessionCreatedEvent(
+		sessionId: string,
+		allowedUsers: string[]
+	): Promise<void>;
+
+	/**
 	 * Publish a session ended event
 	 * @param sessionId the id of the session
 	 */

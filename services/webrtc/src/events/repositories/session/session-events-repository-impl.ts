@@ -39,4 +39,15 @@ export class SessionEventsRepositoryImpl
 			Buffer.from(JSON.stringify({ sessionId }))
 		);
 	}
+
+	async publishSessionCreatedEvent(
+		sessionId: string,
+		allowedUsers: string[]
+	): Promise<void> {
+		this.getChannel()?.publish(
+			"session",
+			"session_created",
+			Buffer.from(JSON.stringify({ sessionId, allowedUsers }))
+		);
+	}
 }
