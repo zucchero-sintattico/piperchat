@@ -1,12 +1,21 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { User } from "../models/user-model";
 
+/**
+ * JWT Token Info
+ * @param username Username of the user
+ * @param email Email of the user
+ */
 type UserJWTInfo = {
-	id: string;
 	username: string;
 	email: string;
 };
 
+/**
+ * Augment Express Request
+ * @param user User info embedded in the JWT Token
+ */
 declare global {
 	namespace Express {
 		interface Request {
@@ -15,32 +24,64 @@ declare global {
 	}
 }
 
-export const generateAccessToken = (user: any) => {
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "access";
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "refresh";
+
+/**
+ * Generate a JWT Access Token for the user
+ * @param user User to generate the token
+ * @param expiresIn Expiration time, default 1 day
+ * @returns JWT Access Token
+ */
+export const generateAccessToken = (user: User, expiresIn: string = "1d") => {
 	return jwt.sign(
-		{ username: user.username, email: user.email, id: user._id } as UserJWTInfo,
-		process.env.ACCESS_TOKEN_SECRET || "access",
-		{ expiresIn: "1d" }
+		{ username: user.username, email: user.email } as UserJWTInfo,
+		ACCESS_TOKEN_SECRET,
+		{ expiresIn: expiresIn }
 	);
 };
 
+/**
+ * Generate a JWT Refresh Token for the user
+ * @param user User to generate the token
+ * @param expiresIn Expiration time, default 1 week
+ * @returns JWT Refresh Token
+ */
+export const generateRefreshToken = (user: User, expiresIn: string = "1w") => {
+	return jwt.sign(
+		{ username: user.username, email: user.email } as UserJWTInfo,
+		REFRESH_TOKEN_SECRET,
+		{ expiresIn: expiresIn }
+	);
+};
+
+/**
+ * Verify a JWT Access Token
+ * @param token JWT Access Token
+ * @returns Decoded JWT Access Token
+ * @throws Error if the token is invalid
+ * @throws Error if the token is expired
+ */
 export const verifyAccessToken = async (token: string) => {
-	return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "access");
+	return jwt.verify(token, ACCESS_TOKEN_SECRET);
 };
 
-export const generateRefreshToken = (user: any) => {
-	return jwt.sign(
-		{ username: user.username, email: user.email, id: user._id } as UserJWTInfo,
-		process.env.REFRESH_TOKEN_SECRET || "refresh",
-		{ expiresIn: "1d" }
-	);
-};
-
+/**
+ * Verify a JWT Refresh Token
+ * @param token JWT Refresh Token
+ * @returns Decoded JWT Refresh Token
+ * @throws Error if the token is invalid
+ * @throws Error if the token is expired
+ */
 export const verifyRefreshToken = async (token: string) => {
-	return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET || "refresh");
+	return jwt.verify(token, REFRESH_TOKEN_SECRET);
 };
 
-export const jwtValidTokenRequired = (req: Request, res: any, next: any) => {
-	console.log("[JWT-Middleware] - Checking if JWT Token is valid");
+export const JWTAuthenticationMiddleware = (
+	req: Request,
+	res: Response,
+	next: any
+) => {
 	const accessToken = req.cookies.jwt;
 	if (!accessToken) {
 		return res
@@ -48,44 +89,14 @@ export const jwtValidTokenRequired = (req: Request, res: any, next: any) => {
 			.json({ message: "JWT Token Missing - Unauthorized" });
 	}
 	try {
-		const decoded = jwt.verify(
+		req.user = jwt.verify(
 			accessToken,
 			process.env.ACCESS_TOKEN_SECRET || "access"
-		) as any;
-		console.log("Decoded JWT Token:", decoded);
-		req.user = {
-			id: decoded.id,
-			username: decoded.username,
-			email: decoded.email,
-		};
+		) as UserJWTInfo;
 		next();
 	} catch (e) {
 		return res
 			.status(401)
 			.json({ message: "JWT Token Invalid - Unauthorized", error: e });
-	}
-};
-
-export const jwtInvalidTokenRequired = (req: Request, res: any, next: any) => {
-	console.log("[JWT-Middleware] - Checking if JWT Token is invalid");
-	const accessToken = req.cookies.jwt;
-	if (!accessToken) {
-		return res
-			.status(401)
-			.json({ message: "JWT Token Missing - Unauthorized" });
-	}
-	try {
-		jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET || "access");
-		return res
-			.status(401)
-			.json({ message: "JWT Token Valid Yet - Unauthorized" });
-	} catch (e) {
-		const user = jwt.decode(accessToken) as any;
-		req.user = {
-			id: user.id,
-			username: user.username,
-			email: user.email,
-		};
-		next();
 	}
 };
