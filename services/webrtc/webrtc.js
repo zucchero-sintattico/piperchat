@@ -23,15 +23,14 @@ export const connect = (sessionId, stream, token, onStream, onUserLeave) => {
 			peers[userId] = new RTCPeerConnection({
 				iceServers: [
 					{
-						urls: "stun:stun.l.google.com:19302",
+						urls: "stun:localhost:3478",
 					},
 				],
-				// use google turn server
 				turnServers: [
 					{
-						urls: "turn:turn.anyfirewall.com:443?transport=tcp",
-						username: "webrtc",
-						credential: "webrtc",
+						urls: "turn:localhost:5349",
+						username: "coturn",
+						credential: "coturn-password",
 					},
 				],
 			});
@@ -69,15 +68,14 @@ export const connect = (sessionId, stream, token, onStream, onUserLeave) => {
 			peers[from] = new RTCPeerConnection({
 				iceServers: [
 					{
-						urls: "stun:stun.l.google.com:19302",
+						urls: "stun:localhost:3478",
 					},
 				],
-				// use google turn server
 				turnServers: [
 					{
-						urls: "turn:turn.anyfirewall.com:443?transport=tcp",
-						username: "webrtc",
-						credential: "webrtc",
+						urls: "turn:localhost:5349",
+						username: "coturn",
+						credential: "coturn-password",
 					},
 				],
 			});

@@ -44,3 +44,14 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: db-users-service-username
       ME_CONFIG_MONGODB_ADMINPASSWORD: db-users-service-password
       ME_CONFIG_MONGODB_SERVER: piperchat-db-users-service
+
+  coturn:
+    image: flaviostutz/coturn
+    ports:
+      - 3478:3478
+      - 3478:3478/udp
+      - 5349:5349
+      - 5349:5349/udp
+    environment:
+      - TURN_USERNAME=coturn
+      - TURN_PASSWORD=coturn-password
