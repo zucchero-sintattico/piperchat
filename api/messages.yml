@@ -146,7 +146,7 @@ components:
       payload:
         "$ref": "#/components/schemas/UserSchema"
     Server:
-      summary: A server
+      summary: A basic server (no additional data)
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/ServerBasicSchema"
@@ -156,7 +156,7 @@ components:
       payload:
         "$ref": "#/components/schemas/ServerAdvancedSchema"
     ServerUser:
-      summary: A server user
+      summary: A server-user pair
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/ServerUserSchema"
@@ -166,7 +166,7 @@ components:
       payload:
         "$ref": "#/components/schemas/FriendRequest"
     Channel:
-      summary: A channel
+      summary: A basic channel (no additional data)
       contentType: application/json
       payload:
         "$ref": "#/components/schemas/ChannelBasicSchema"
