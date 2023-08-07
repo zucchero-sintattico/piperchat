@@ -8,7 +8,6 @@ export class UserApi {
 
 	private cookie: string = "";
 
-
 	// register a new user and save the access token
 	async register(username: string, email: string, password: string) {
 		const response = await this.request.post("/auth/register").send({
@@ -27,18 +26,14 @@ export class UserApi {
 		this.cookie = response.header["set-cookie"];
 	}
 
-	//delete a user
 	async deleteUser(username: string) {
 		return await this.request.delete("/user/" + username).set("Cookie", this.cookie);
 	}
 
 	async getAllFriends() {
-		console.log("cookieeeee" + this.cookie);
 		return await this.request.get("/friends").set("Cookie", this.cookie);
 	}
 
-
-	//send a friend request
 	async sendFriendRequest(username: string) {
 		return await this.request.post("/friends/requests").set("Cookie", this.cookie).send({
 			action: "send",
@@ -46,7 +41,6 @@ export class UserApi {
 		});
 	}
 
-	//accept a friend request
 	async acceptFriendRequest(username: string) {
 		return await this.request.post("/friends/requests").set("Cookie", this.cookie).send({
 			action: "accept",
@@ -54,6 +48,11 @@ export class UserApi {
 		});
 	}
 
-
+	async denyFriendRequest(username: string) {
+		return await this.request.post("/friends/requests").set("Cookie", this.cookie).send({
+			action: "deny",
+			to: username,
+		});
+	}
 
 }
