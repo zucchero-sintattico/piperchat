@@ -79,12 +79,17 @@ export interface ServerController {
   /**
    * Leave a server
    * @param id
-   * @param username
+   * @param usernameOfWhoLeaves the user who leaves the server
+   * @param username the user who make the request
    * @returns the left server
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not in the server
    */
-  leaveServer(id: number, username: string): Promise<Server>;
+  leaveServer(
+    id: number,
+    usernameOfWhoLeaves: string,
+    username: string
+  ): Promise<Server>;
 }
 
 export class ServerControllerExceptions {
@@ -92,4 +97,5 @@ export class ServerControllerExceptions {
   static ServerNotFound = class extends Error {};
   static UserNotAuthorized = class extends Error {};
   static UserAlreadyJoined = class extends Error {};
+  static OwnerCannotLeave = class extends Error {};
 }

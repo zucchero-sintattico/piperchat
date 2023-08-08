@@ -9,48 +9,21 @@ import { ServerControllerExceptions } from "../server/server-controller";
 import { ServerRepository } from "../../repositories/server/server-repository";
 import { ServerRepositoryImpl } from "../../repositories/server/server-repository-impl";
 import { Server } from "../../models/server-model";
+import { Checker } from "../checker";
 
 export class MessageChannelControllerImpl implements MessageChannelController {
   private messageChannelRepository: MessageChannelRepository =
     new MessageChannelRepositoryImpl();
   private serverRepository: ServerRepository = new ServerRepositoryImpl();
 
-  private checkIfUserIsInTheServer(server: Server, username: string) {
-    if (!server.participants.includes(username)) {
-      throw new ServerControllerExceptions.UserNotAuthorized();
-    }
-  }
-
-  private async checkIfServerExists(serverId: number) {
-    try {
-      var server = await this.serverRepository.getServerById(serverId);
-    } catch (e) {
-      throw new ServerControllerExceptions.ServerNotFound();
-    }
-    return server;
-  }
-
-  private async checkIfChannelAlreadyExists(serverId: number, name: string) {
-    const channels = await this.messageChannelRepository.getMessageChannels(
-      serverId
-    );
-    if (channels.find((channel) => channel.name == name)) {
-      throw new MessageChannelControllerExceptions.MessageChannelAlreadyExists();
-    }
-  }
-
-  private checkIfUserIsTheOwner(server: Server, username: string) {
-    if (server.owner != username) {
-      throw new ServerControllerExceptions.UserNotAuthorized();
-    }
-  }
+  private checker = new Checker();
 
   async getChannels(
     serverId: number,
     username: string
   ): Promise<MessageChannel[]> {
-    const server = await this.checkIfServerExists(serverId);
-    this.checkIfUserIsInTheServer(server, username);
+    const server = await this.checker.checkIfServerExists(serverId);
+    this.checker.checkIfUserIsInTheServer(server, username);
     return await this.messageChannelRepository.getMessageChannels(serverId);
   }
 
@@ -59,8 +32,8 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     channelId: number,
     username: string
   ): Promise<MessageChannel> {
-    const server = await this.checkIfServerExists(serverId);
-    this.checkIfUserIsInTheServer(server, username);
+    const server = await this.checker.checkIfServerExists(serverId);
+    this.checker.checkIfUserIsInTheServer(server, username);
     try {
       return await this.messageChannelRepository.getChannelById(
         serverId,
@@ -77,10 +50,10 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     name: string,
     description?: string | undefined
   ): Promise<MessageChannel> {
-    const server = await this.checkIfServerExists(serverId);
-    this.checkIfUserIsTheOwner(server, username);
+    const server = await this.checker.checkIfServerExists(serverId);
+    this.checker.checkIfUserIsTheOwner(server, username);
     // check if message channel already exists
-    await this.checkIfChannelAlreadyExists(serverId, name);
+    await this.checker.checkIfChannelAlreadyExists(serverId, name);
     return await this.messageChannelRepository.createMessageChannel(
       serverId,
       name,
@@ -95,10 +68,10 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     name?: string | undefined,
     description?: string | undefined
   ): Promise<MessageChannel> {
-    const server = await this.checkIfServerExists(serverId);
-    this.checkIfUserIsTheOwner(server, username);
+    const server = await this.checker.checkIfServerExists(serverId);
+    this.checker.checkIfUserIsTheOwner(server, username);
     if (name) {
-      await this.checkIfChannelAlreadyExists(serverId, name);
+      await this.checker.checkIfChannelAlreadyExists(serverId, name);
     }
     try {
       return await this.messageChannelRepository.updateMessageChannel(
@@ -117,8 +90,8 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     channelId: number,
     username: string
   ): Promise<MessageChannel> {
-    const server = await this.checkIfServerExists(serverId);
-    this.checkIfUserIsTheOwner(server, username);
+    const server = await this.checker.checkIfServerExists(serverId);
+    this.checker.checkIfUserIsTheOwner(server, username);
     try {
       return await this.messageChannelRepository.deleteMessageChannel(
         serverId,

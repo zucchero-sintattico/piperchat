@@ -40,8 +40,10 @@ export class ServerRepositoryImpl implements ServerRepository {
   }
 
   async removeServerParticipant(id: number, participant: string) {
-    const server = await Servers.findOne({ id }).orFail();
-    server.participants = server.participants.filter((p) => p !== participant);
+    const server = await Servers.findByIdAndUpdate(
+      { id },
+      { $pull: { participants: participant } }
+    ).orFail();
     return await server.save();
   }
 }
