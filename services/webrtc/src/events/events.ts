@@ -1,5 +1,7 @@
-import { SessionRepository } from "../repositories/session-repository";
+import { SessionRepository } from "../repositories/session/session-repository";
+import { SessionRepositoryImpl } from "../repositories/session/session-repository-impl";
 import { RabbitMQ } from "../../../commons/utils/rabbit-mq";
+
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -8,7 +10,8 @@ import { RabbitMQ } from "../../../commons/utils/rabbit-mq";
  */
 export class ServiceEvents {
 	private static broker: RabbitMQ;
-	private static entityRepository: SessionRepository = new SessionRepository();
+	private static sessionRepository: SessionRepository =
+		new SessionRepositoryImpl();
 
 	static async initialize() {
 		this.broker = RabbitMQ.getInstance();

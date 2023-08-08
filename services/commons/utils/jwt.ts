@@ -72,10 +72,22 @@ export const generateRefreshToken = (
  * @throws Error if the token is invalid
  * @throws Error if the token is expired
  */
-export const verifyAccessToken = async (token: string) => {
-	return jwt.verify(token, ACCESS_TOKEN_SECRET);
+export const verifyAccessToken = (token: string): UserJWTInfo => {
+	return jwt.verify(token, ACCESS_TOKEN_SECRET) as UserJWTInfo;
 };
 
+export const decodeAccessToken = (token: string): UserJWTInfo => {
+	return jwt.decode(token) as UserJWTInfo;
+};
+
+export const isAccessTokenValid = (token: string): boolean => {
+	try {
+		jwt.verify(token, ACCESS_TOKEN_SECRET);
+		return true;
+	} catch (e) {
+		return false;
+	}
+};
 /**
  * Verify a JWT Refresh Token
  * @param token JWT Refresh Token
@@ -83,7 +95,7 @@ export const verifyAccessToken = async (token: string) => {
  * @throws Error if the token is invalid
  * @throws Error if the token is expired
  */
-export const verifyRefreshToken = async (token: string) => {
+export const verifyRefreshToken = (token: string) => {
 	return jwt.verify(token, REFRESH_TOKEN_SECRET);
 };
 

@@ -1,5 +1,8 @@
 import { Router } from "express";
+import { infraServiceMiddleware } from "../../../commons/utils/infra-service-middleware";
+import { sessionRouter } from "./routers/sessionRouter";
 
-const serviceRouter = Router();
+export const serviceRouter = Router();
+serviceRouter.use(infraServiceMiddleware);
 
-export { serviceRouter };
+serviceRouter.use("/session", sessionRouter);
