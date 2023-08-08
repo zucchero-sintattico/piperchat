@@ -1,5 +1,5 @@
-import { RabbitMQ } from "../../commons/rabbit-mq";
-import { MongooseUtils } from "../../commons/mongoose";
+import { RabbitMQ } from "../../commons/utils/rabbit-mq";
+import { MongooseUtils } from "../../commons/utils/mongoose";
 import { ServiceEvents } from "./events/events";
 import { UsersServer } from "./server";
 

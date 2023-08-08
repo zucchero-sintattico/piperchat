@@ -6,9 +6,10 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"composite": true
 	},
-	"include": ["**/*"],
+	"include": ["utils/**/*"],
 	"exclude": [
 		"node_modules",
 		"dist",
