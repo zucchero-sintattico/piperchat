@@ -3,8 +3,9 @@ import { Schema, model } from "mongoose";
 export interface MultimediaChannel {
   id: number;
   name: string;
+  description: string;
   createdAt: Date;
-  activeSession: string;
+  activeSession?: string;
 }
 
 export const MultimediaChannelSchema = new Schema<MultimediaChannel>({
@@ -17,6 +18,11 @@ export const MultimediaChannelSchema = new Schema<MultimediaChannel>({
   name: {
     type: String,
     required: true,
+  },
+  description: {
+    type: String,
+    required: false,
+    default: "",
   },
   createdAt: {
     type: Date,

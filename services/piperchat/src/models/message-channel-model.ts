@@ -21,6 +21,7 @@ export const MessageChannelSchema = new Schema<MessageChannel>({
   description: {
     type: String,
     required: false,
+    default: "",
   },
   createdAt: {
     type: Date,
