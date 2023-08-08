@@ -17,10 +17,18 @@ export class ServerControllerImpl implements ServerController {
     return await this.serverRepository.createServer(name, description, owner);
   }
   async getServers(username: string): Promise<Server[]> {
-    return await this.serverRepository.getServers(username);
+    try {
+      return await this.serverRepository.getServers(username);
+    } catch (e) {
+      throw new ServerControllerExceptions.UserNotFound();
+    }
   }
   async getServer(id: number): Promise<Server> {
-    return await this.serverRepository.getServerById(id);
+    try {
+      return await this.serverRepository.getServerById(id);
+    } catch (e) {
+      throw new ServerControllerExceptions.ServerNotFound();
+    }
   }
   async updateServer(
     id: number,
