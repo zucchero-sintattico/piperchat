@@ -1,13 +1,17 @@
 services:
   gateway:
-    image: hello-world
+    image: nginx:alpine
     ports:
-      - 80:80
+      - "80:80"
     volumes:
-      - ./:/etc/nginx/
+      - ./services/gateway/conf.d:/etc/nginx/
     depends_on:
       - messages-service
+      - monitoring-service
+      - notifications-service
+      - piperchat-service
       - users-service
+      - webrtc-service
 
 networks:
   frontend:
