@@ -4,7 +4,10 @@ import {
 	AuthControllerExceptions,
 } from "../../controllers/auth/auth-controller";
 import { AuthControllerImpl } from "../../controllers/auth/auth-controller-impl";
-import { JWTAuthenticationMiddleware } from "../../utils/jwt";
+import {
+	JWTAuthenticationMiddleware,
+	JWTRefreshTokenMiddleware,
+} from "../../utils/jwt";
 
 const authController: AuthController = new AuthControllerImpl();
 
@@ -80,7 +83,7 @@ authRouter
 	});
 
 authRouter
-	.use(JWTAuthenticationMiddleware)
+	.use(JWTRefreshTokenMiddleware)
 	.post("/refresh-token", async (req: Request, res: Response) => {
 		try {
 			const token = await authController.refreshToken(req.user.username);
