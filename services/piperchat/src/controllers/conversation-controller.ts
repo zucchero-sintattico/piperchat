@@ -18,7 +18,9 @@ export class ConversationsController {
 
   async getConversationFromUsername(req: Request, res: Response) {
     res.json(
-      await this.conversationRepository.getMessagesForUser(req.user.username)
+      await this.conversationRepository.getConversationsByUsername(
+        req.user.username
+      )
     );
   }
 

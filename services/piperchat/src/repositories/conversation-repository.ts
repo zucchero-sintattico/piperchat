@@ -11,10 +11,8 @@ export class ConversationsRepository {
     );
   }
 
-  async getMessagesForUser(username: String) {
-    return await Conversations.find({ participants: username }).select(
-      "messages"
-    );
+  async getConversationsByUsername(username: String) {
+    return await Conversations.find({ participants: username });
   }
 
   async createConversation(participants: String[]) {

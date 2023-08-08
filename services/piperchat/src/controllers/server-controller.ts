@@ -67,7 +67,7 @@ export class ServerController {
   async addChannel(req: Request, res: Response) {
     const { name } = req.params;
     const { channel } = req.body;
-    res.json(await this.serverRepository.createChannel(name, channel));
+    res.json(await this.serverRepository.addChannelToServer(name, channel));
   }
 
   async removeChannel(req: Request, res: Response) {

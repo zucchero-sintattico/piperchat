@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { entityRouter } from "./message-router";
+import { messageRouter } from "./message-router";
 
 const serviceRouter = Router();
 
 // Register all routers
-serviceRouter.use("", entityRouter);
+serviceRouter.use(messageRouter);
 
 export { serviceRouter };
