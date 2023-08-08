@@ -9,31 +9,28 @@ export const profileRouter = Router();
 profileRouter.use(JWTAuthenticationMiddleware);
 
 profileRouter.put("/photo", async (req: Request, res: Response) => {
-    if (!req.body.photo) {
-        return res.status(400).json({ message: "Missing 'photo' in body" });
-    }
-    try {
-        await profileController.updateUserPhoto(
-            req.params.username,
-            req.body.photo
-        );
-        return res.status(200).json({ message: "Photo set" });
-    } catch (e: any) {
-        return res.status(400).json({ message: "Bad request", error: e });
-    }
+	if (!req.body.photo) {
+		return res.status(400).json({ message: "Missing 'photo' in body" });
+	}
+	try {
+		await profileController.updateUserPhoto(req.user.username, req.body.photo);
+		return res.status(200).json({ message: "Photo set" });
+	} catch (e: any) {
+		return res.status(400).json({ message: "Bad request", error: e });
+	}
 });
 
 profileRouter.put("/description", async (req: Request, res: Response) => {
-    if (!req.body.description) {
-        return res.status(400).json({ message: "Missing 'description' in body" });
-    }
-    try {
-        await profileController.updateUserDescription(
-            req.user.username,
-            req.body.description
-        );
-        return res.status(200).json({ message: "Description set" });
-    } catch (e: any) {
-        return res.status(404).json({ message: "Bad request", error: e });
-    }
+	if (!req.body.description) {
+		return res.status(400).json({ message: "Missing 'description' in body" });
+	}
+	try {
+		await profileController.updateUserDescription(
+			req.user.username,
+			req.body.description
+		);
+		return res.status(200).json({ message: "Description set" });
+	} catch (e: any) {
+		return res.status(404).json({ message: "Bad request", error: e });
+	}
 });
