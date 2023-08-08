@@ -63,9 +63,11 @@ export class AuthControllerImpl implements AuthController {
 			throw new AuthControllerExceptions.RefreshTokenNotPresent();
 		}
 
-		verifyRefreshToken(user.refreshToken).catch(() => {
+		try {
+			verifyRefreshToken(user.refreshToken);
+		} catch (e) {
 			throw new AuthControllerExceptions.InvalidRefreshToken();
-		});
+		}
 
 		return generateAccessToken(user);
 	}
