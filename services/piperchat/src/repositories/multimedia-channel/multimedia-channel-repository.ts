@@ -14,7 +14,8 @@ export interface MultimediaChannelRepository {
   /**
    * Creates a new multimedia channel for a given server.
    * @param serverId
-   * @param multimediaChannel
+   * @param name
+   * @param description
    * @returns The created multimedia channel.
    * @throws If the server could not be found.
    * @throws If the multimedia channel could not be created.
@@ -22,7 +23,8 @@ export interface MultimediaChannelRepository {
    */
   createMultimediaChannel(
     serverId: number,
-    multimediaChannel: MultimediaChannel
+    name: string,
+    description?: string
   ): Promise<MultimediaChannel>;
 
   /**
@@ -43,7 +45,8 @@ export interface MultimediaChannelRepository {
    * Updates a multimedia channel by its id.
    * @param serverId
    * @param channelId
-   * @param multimediaChannel
+   * @param name
+   * @param description
    * @returns The updated multimedia channel.
    * @throws If the server could not be found.
    * @throws If the multimedia channel could not be found.
@@ -53,7 +56,8 @@ export interface MultimediaChannelRepository {
   updateMultimediaChannel(
     serverId: number,
     channelId: number,
-    multimediaChannel: MultimediaChannel
+    name?: string,
+    description?: string
   ): Promise<MultimediaChannel>;
 
   /**

@@ -5,24 +5,18 @@ import {
 import { MessageChannel } from "../../models/message-channel-model";
 import { MessageChannelRepository } from "../../repositories/message-channel/message-channel-repository";
 import { MessageChannelRepositoryImpl } from "../../repositories/message-channel/message-channel-repository-impl";
-import { ServerControllerExceptions } from "../server/server-controller";
-import { ServerRepository } from "../../repositories/server/server-repository";
-import { ServerRepositoryImpl } from "../../repositories/server/server-repository-impl";
-import { Server } from "../../models/server-model";
 import { Checker } from "../checker";
 
 export class MessageChannelControllerImpl implements MessageChannelController {
   private messageChannelRepository: MessageChannelRepository =
     new MessageChannelRepositoryImpl();
-  private serverRepository: ServerRepository = new ServerRepositoryImpl();
-
   private checker = new Checker();
 
   async getChannels(
     serverId: number,
     username: string
   ): Promise<MessageChannel[]> {
-    const server = await this.checker.checkIfServerExists(serverId);
+    const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsInTheServer(server, username);
     return await this.messageChannelRepository.getMessageChannels(serverId);
   }
@@ -32,7 +26,7 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     channelId: number,
     username: string
   ): Promise<MessageChannel> {
-    const server = await this.checker.checkIfServerExists(serverId);
+    const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsInTheServer(server, username);
     try {
       return await this.messageChannelRepository.getChannelById(
@@ -50,9 +44,8 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     name: string,
     description?: string | undefined
   ): Promise<MessageChannel> {
-    const server = await this.checker.checkIfServerExists(serverId);
+    const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
-    // check if message channel already exists
     await this.checker.checkIfChannelAlreadyExists(serverId, name);
     return await this.messageChannelRepository.createMessageChannel(
       serverId,
@@ -68,7 +61,7 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     name?: string | undefined,
     description?: string | undefined
   ): Promise<MessageChannel> {
-    const server = await this.checker.checkIfServerExists(serverId);
+    const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     if (name) {
       await this.checker.checkIfChannelAlreadyExists(serverId, name);
@@ -89,11 +82,11 @@ export class MessageChannelControllerImpl implements MessageChannelController {
     serverId: number,
     channelId: number,
     username: string
-  ): Promise<MessageChannel> {
-    const server = await this.checker.checkIfServerExists(serverId);
+  ): Promise<void> {
+    const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     try {
-      return await this.messageChannelRepository.deleteMessageChannel(
+      await this.messageChannelRepository.deleteMessageChannel(
         serverId,
         channelId
       );

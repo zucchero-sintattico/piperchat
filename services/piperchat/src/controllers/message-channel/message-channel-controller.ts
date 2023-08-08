@@ -79,7 +79,7 @@ export interface MessageChannelController {
     serverId: number,
     channelId: number,
     username: string
-  ): Promise<MessageChannel>;
+  ): Promise<void>;
 }
 
 export class MessageChannelControllerExceptions {

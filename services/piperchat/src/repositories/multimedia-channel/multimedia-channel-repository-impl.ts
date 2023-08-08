@@ -10,11 +10,20 @@ export class MultimediaChannelRepositoryImpl
   }
   async createMultimediaChannel(
     serverId: number,
-    multimediaChannel: MultimediaChannel
+    name: string,
+    description?: string | undefined
   ) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    server.multimediaChannels.push(multimediaChannel);
-    return await server.save();
+    return await Servers.findOneAndUpdate(
+      { id: serverId },
+      {
+        $push: {
+          multimediaChannels: {
+            name: name,
+            description: description,
+          },
+        },
+      }
+    ).orFail();
   }
 
   async getChannelById(serverId: number, channelId: number) {
@@ -29,27 +38,37 @@ export class MultimediaChannelRepositoryImpl
   async updateMultimediaChannel(
     serverId: number,
     channelId: number,
-    multimediaChannel: MultimediaChannel
+    name?: string,
+    description?: string | undefined
   ) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    const channel = server.multimediaChannels.find((c) => c.id === channelId);
-    if (!channel) {
-      throw new Error("Channel not found");
-    }
-    channel.name = multimediaChannel.name;
-    channel.description = multimediaChannel.description;
-    return await server.save();
+    return await Servers.findByIdAndUpdate(
+      serverId,
+      {
+        $set: {
+          "multimediaChannels.$[channel].name": name,
+          "multimediaChannels.$[channel].description": description,
+        },
+      },
+      {
+        arrayFilters: [{ "channel.id": channelId }],
+        new: true,
+      }
+    ).orFail();
   }
 
   async deleteMultimediaChannel(serverId: number, channelId: number) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    const channel = server.multimediaChannels.find((c) => c.id === channelId);
-    if (!channel) {
-      throw new Error("Channel not found");
-    }
-    server.multimediaChannels = server.multimediaChannels.filter(
-      (c) => c.id !== channelId
-    );
-    return await server.save();
+    return await Servers.findByIdAndUpdate(
+      serverId,
+      {
+        $pull: {
+          multimediaChannels: {
+            id: channelId,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    ).orFail();
   }
 }

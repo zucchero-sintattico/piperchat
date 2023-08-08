@@ -5,6 +5,9 @@ import { ServerRepositoryImpl } from "../repositories/server/server-repository-i
 import { MessageChannelControllerExceptions } from "./message-channel/message-channel-controller";
 import { ServerControllerExceptions } from "./server/server-controller";
 
+/**
+ * This class is used to check if some conditions are met before executing some actions.
+ */
 export class Checker {
   private messageChannelRepository: MessageChannelRepository =
     new MessageChannelRepositoryImpl();
@@ -15,7 +18,7 @@ export class Checker {
     }
   }
 
-  public async checkIfServerExists(serverId: number) {
+  public async getServerIfExists(serverId: number) {
     try {
       var server = await this.serverRepository.getServerById(serverId);
     } catch (e) {

@@ -590,24 +590,14 @@ paths:
         "404":
           description: Server not found
     delete:
-      summary: Leave or kick from the server
-      description: The user leave or the owner kick a user from the server
+      summary: Leave from the server
+      description: The user leave from the server
       tags:
         - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
-      requestBody:
-        description: The server owner can kick a user from the server
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user:
-                  type: string
-                  example: user1
       responses:
         "200":
           description: Ok
@@ -621,6 +611,31 @@ paths:
           description: Server not found
         "422":
           description: "Unprocessable entity: the user is the owner of the server"
+
+  /servers/{serverId}/partecipants/{userId}:
+    delete:
+      summary: Remove user from server
+      description: The owner remove a user from the server
+      tags:
+        - "servers"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/username"
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: Bad request
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server or user not found
+        "422":
+          description: Unprocessable entity
 
   /servers/{serverId}/channels:
     get:
