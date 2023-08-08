@@ -8,10 +8,13 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*"],
-	"references": [
-		{
-			"path": "../commons/tsconfig.json"
-		}
-	]
+	"include": ["**/*"],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"package.json",
+		"package-lock.json",
+		"tsconfig.json"
+	],
+	"references": []
 }

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user-model";
 
 /**
  * JWT Token Info
@@ -8,6 +7,11 @@ import { User } from "../models/user-model";
  * @param email Email of the user
  */
 type UserJWTInfo = {
+	username: string;
+	email: string;
+};
+
+type UserInfo = {
 	username: string;
 	email: string;
 };
@@ -33,7 +37,10 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "refresh";
  * @param expiresIn Expiration time, default 1 day
  * @returns JWT Access Token
  */
-export const generateAccessToken = (user: User, expiresIn: string = "1d") => {
+export const generateAccessToken = (
+	user: UserInfo,
+	expiresIn: string = "1d"
+) => {
 	return jwt.sign(
 		{ username: user.username, email: user.email } as UserJWTInfo,
 		ACCESS_TOKEN_SECRET,
@@ -47,7 +54,10 @@ export const generateAccessToken = (user: User, expiresIn: string = "1d") => {
  * @param expiresIn Expiration time, default 1 week
  * @returns JWT Refresh Token
  */
-export const generateRefreshToken = (user: User, expiresIn: string = "1w") => {
+export const generateRefreshToken = (
+	user: UserInfo,
+	expiresIn: string = "1w"
+) => {
 	return jwt.sign(
 		{ username: user.username, email: user.email } as UserJWTInfo,
 		REFRESH_TOKEN_SECRET,

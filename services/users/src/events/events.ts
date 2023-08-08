@@ -1,6 +1,6 @@
 import { UserRepository } from "../repositories/user/user-repository";
 import { UserRepositoryImpl } from "../repositories/user/user-repository-impl";
-import { RabbitMQ } from "../utils/rabbit-mq";
+import { RabbitMQ } from "../../../commons/rabbit-mq";
 
 /**
  * Service events

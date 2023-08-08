@@ -8,7 +8,7 @@ import {
 	generateAccessToken,
 	generateRefreshToken,
 	verifyRefreshToken,
-} from "../../utils/jwt";
+} from "../../../../commons/jwt";
 import { UserEventsRepositoryImpl } from "../../events/repositories/user/user-events-repository-impl";
 
 export class AuthControllerImpl implements AuthController {

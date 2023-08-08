@@ -1,4 +1,4 @@
-import { BasicEventsRepository } from "../../../utils/basic-events-repository";
+import { BasicEventsRepository } from "../../../../../commons/basic-events-repository";
 import { UserEventsRepository } from "./user-events-repository";
 
 export class UserEventsRepositoryImpl
