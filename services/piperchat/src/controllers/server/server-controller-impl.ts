@@ -62,6 +62,21 @@ export class ServerControllerImpl implements ServerController {
       throw new ServerControllerExceptions.ServerNotFound();
     }
   }
+
+  async getServerParticipants(id: number, username: string): Promise<string[]> {
+    try {
+      await this.serverRepository.getServerById(id);
+    } catch (e) {
+      throw new ServerControllerExceptions.ServerNotFound();
+    }
+    // check if user is in server
+    const participants = await this.serverRepository.getServerParticipants(id);
+    if (!participants.includes(username)) {
+      throw new ServerControllerExceptions.UserNotAuthorized();
+    }
+    return participants;
+  }
+
   async joinServer(id: number, username: string): Promise<Server> {
     try {
       await this.serverRepository.getServerById(id);

@@ -57,6 +57,16 @@ export interface ServerController {
   deleteServer(id: number, username: string): Promise<Server>;
 
   /**
+   * Get all participants of a server
+   * @param id
+   * @returns the participants of the server
+   * @throws {ServerNotFound} if the server does not exist
+   * @throws {UserNotAuthorized} if the user is not in the server
+   *
+   */
+  getServerParticipants(id: number, username: string): Promise<string[]>;
+
+  /**
    * Join a server
    * @param id
    * @param username
