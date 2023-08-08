@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 export interface MessageChannel {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   createdAt: Date;
 }
 

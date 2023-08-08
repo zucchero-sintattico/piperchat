@@ -8,10 +8,22 @@ export class MessageChannelRepositoryImpl implements MessageChannelRepository {
     return server.messageChannels;
   }
 
-  async createMessageChannel(serverId: number, messageChannel: MessageChannel) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    server.messageChannels.push(messageChannel);
-    return await server.save();
+  async createMessageChannel(
+    serverId: number,
+    name: string,
+    description?: string | undefined
+  ) {
+    return await Servers.findOneAndUpdate(
+      { id: serverId },
+      {
+        $push: {
+          messageChannels: {
+            name: name,
+            description: description,
+          },
+        },
+      }
+    ).orFail();
   }
 
   async getChannelById(serverId: number, channelId: number) {
@@ -26,27 +38,37 @@ export class MessageChannelRepositoryImpl implements MessageChannelRepository {
   async updateMessageChannel(
     serverId: number,
     channelId: number,
-    messageChannel: MessageChannel
+    name?: string | undefined,
+    description?: string | undefined
   ) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    const channel = server.messageChannels.find((c) => c.id === channelId);
-    if (!channel) {
-      throw new Error("Channel not found");
-    }
-    channel.name = messageChannel.name;
-    channel.description = messageChannel.description;
-    return await server.save();
+    return await Servers.findByIdAndUpdate(
+      serverId,
+      {
+        $set: {
+          "messageChannels.$[channel].name": name,
+          "messageChannels.$[channel].description": description,
+        },
+      },
+      {
+        arrayFilters: [{ "channel.id": channelId }],
+        new: true,
+      }
+    ).orFail();
   }
 
   async deleteMessageChannel(serverId: number, channelId: number) {
-    const server = await Servers.findOne({ id: serverId }).orFail();
-    const channel = server.messageChannels.find((c) => c.id === channelId);
-    if (!channel) {
-      throw new Error("Channel not found");
-    }
-    server.messageChannels = server.messageChannels.filter(
-      (c) => c.id !== channelId
-    );
-    return await server.save();
+    return await Servers.findByIdAndUpdate(
+      serverId,
+      {
+        $pull: {
+          messageChannels: {
+            id: channelId,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    ).orFail();
   }
 }

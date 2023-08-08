@@ -21,7 +21,8 @@ export interface MessageChannelRepository {
    */
   createMessageChannel(
     serverId: number,
-    messageChannel: MessageChannel
+    name: string,
+    description?: string
   ): Promise<MessageChannel>;
 
   /**
@@ -49,7 +50,8 @@ export interface MessageChannelRepository {
   updateMessageChannel(
     serverId: number,
     channelId: number,
-    messageChannel: MessageChannel
+    name?: string,
+    description?: string
   ): Promise<MessageChannel>;
 
   /**
