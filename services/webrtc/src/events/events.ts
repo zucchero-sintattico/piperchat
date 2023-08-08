@@ -1,6 +1,5 @@
 import { SessionRepository } from "../repositories/session-repository";
-import { RabbitMQ } from "../utils/rabbit-mq";
-
+import { RabbitMQ } from "../../../commons/utils/rabbit-mq";
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
