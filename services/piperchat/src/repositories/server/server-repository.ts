@@ -2,12 +2,18 @@ import { Server } from "../../models/server-model";
 export interface ServerRepository {
   /**
    * Creates a new server.
-   * @param server
+   * @param name
+   * @param description
+   * @param owner
    * @returns The created server.
    * @throws If the server could not be created.
    *
    */
-  createServer(server: Server): Promise<Server>;
+  createServer(
+    name: string,
+    description: string,
+    owner: string
+  ): Promise<Server>;
 
   /**
    * Gets a server by its id.
@@ -19,21 +25,27 @@ export interface ServerRepository {
 
   /**
    * Gets all servers.
+   * @param username
    * @returns All servers id.
    * @throws If no servers could be found.
    */
-  getServers(): Promise<Server[]>;
+  getServers(username: string): Promise<Server[]>;
 
   /**
    * Updates a server by its id.
    * @param id
-   * @param server
+   * @param name
+   * @param description
    * @returns The updated server.
    * @throws If the server could not be found.
    * @throws If the server could not be updated.
    *
    */
-  updateServerById(id: number, server: Server): Promise<Server>;
+  updateServerById(
+    id: number,
+    name?: string,
+    description?: string
+  ): Promise<Server>;
 
   /**
    * Deletes a server by its id.

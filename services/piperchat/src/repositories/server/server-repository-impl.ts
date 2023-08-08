@@ -2,21 +2,26 @@ import { Servers, Server } from "../../models/server-model";
 import { ServerRepository } from "./server-repository";
 
 export class ServerRepositoryImpl implements ServerRepository {
-  async createServer(server: Server) {
-    return await Servers.create(server);
+  async createServer(name: string, description: string, owner: string) {
+    return await Servers.create({ name, description, owner });
   }
 
   async getServerById(id: number) {
     return await Servers.findOne({ id }).orFail();
   }
 
-  async getServers() {
-    var servers = await Servers.find();
-    return servers.map((server) => server.id);
+  async getServers(username: string) {
+    // get servers where username is participant
+    return await Servers.find({
+      participants: { $elemMatch: { $eq: username } },
+    }).orFail();
   }
 
-  async updateServerById(id: number, server: Server) {
-    return await Servers.findOneAndUpdate({ id }, server).orFail();
+  async updateServerById(id: number, name?: string, description?: string) {
+    return await Servers.findOneAndUpdate(
+      { id },
+      { name, description }
+    ).orFail();
   }
 
   async deleteServerById(id: number) {
