@@ -8,6 +8,107 @@ import { ServerControllerImpl } from "../../controllers/server/server-controller
 const serverController: ServerController = new ServerControllerImpl();
 export const serverRouter = Router();
 
+serverRouter.delete(
+  "/:serverId/partecipants/:username",
+  async (req: Request, res: Response) => {
+    try {
+      await serverController.kickUserFromTheServer(
+        Number(req.params.serverId),
+        req.params.username,
+        req.body.username
+      );
+      res.status(200).json({ message: "User kicked successfully" });
+    } catch (e) {
+      if (e instanceof ServerControllerExceptions.ServerNotFound) {
+        return res.status(404).json({ message: "User not found", error: e });
+      }
+      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        return res.status(403).json({
+          message: "You don't have permissions to access this resource",
+          error: e,
+        });
+      }
+      if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
+        return res.status(422).json({
+          message: "Unprocessable entity: the user is the owner of the server",
+          error: e,
+        });
+      }
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: e });
+    }
+  }
+);
+
+serverRouter
+  .get("/:serverId/partecipants", async (req: Request, res: Response) => {
+    try {
+      const partecipants = await serverController.getServerParticipants(
+        Number(req.params.serverId),
+        req.body.username
+      );
+      res.status(200).json({ partecipants: partecipants });
+    } catch (e) {
+      if (e instanceof ServerControllerExceptions.ServerNotFound) {
+        return res.status(404).json({ message: "User not found", error: e });
+      }
+      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        return res.status(403).json({
+          message: "You don't have permissions to access this resource",
+          error: e,
+        });
+      }
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: e });
+    }
+  })
+  .post("/:serverId/partecipants", async (req: Request, res: Response) => {
+    try {
+      await serverController.joinServer(
+        Number(req.params.serverId),
+        req.body.username
+      );
+      res.status(200).json({ message: "Server joined successfully" });
+    } catch (e) {
+      if (e instanceof ServerControllerExceptions.ServerNotFound) {
+        return res.status(404).json({ message: "User not found", error: e });
+      }
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: e });
+    }
+  })
+  .delete("/:serverId/partecipants", async (req: Request, res: Response) => {
+    try {
+      await serverController.leaveServer(
+        Number(req.params.serverId),
+        req.body.username
+      );
+      res.status(200).json({ message: "Server left successfully" });
+    } catch (e) {
+      if (e instanceof ServerControllerExceptions.ServerNotFound) {
+        return res.status(404).json({ message: "User not found", error: e });
+      }
+      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        return res.status(403).json({
+          message: "You don't have permissions to access this resource",
+          error: e,
+        });
+      }
+      if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
+        return res.status(422).json({
+          message: "Unprocessable entity: the user is the owner of the server",
+          error: e,
+        });
+      }
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: e });
+    }
+  });
+
 serverRouter
   .get("/:serverId", async (req: Request, res: Response) => {
     try {

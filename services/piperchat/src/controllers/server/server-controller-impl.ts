@@ -40,6 +40,7 @@ export class ServerControllerImpl implements ServerController {
   ): Promise<Server> {
     // check if user is owner
     const server = await this.checker.getServerIfExists(id);
+    this.checker.checkIfUserIsTheOwner(server, username);
     try {
       return await this.serverRepository.updateServerById(
         id,
@@ -91,9 +92,16 @@ export class ServerControllerImpl implements ServerController {
     }
   }
 
-  async kickUserFromTheServer(id: number, username: string): Promise<Server> {
+  async kickUserFromTheServer(
+    id: number,
+    username: string,
+    admin: string
+  ): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
-    this.checker.checkIfUserIsTheOwner(server, username);
+    this.checker.checkIfUserIsTheOwner(server, admin);
+    if (server.owner === username) {
+      throw new ServerControllerExceptions.OwnerCannotLeave();
+    }
     try {
       return await this.serverRepository.removeServerParticipant(id, username);
     } catch (e) {

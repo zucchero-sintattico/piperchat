@@ -90,9 +90,14 @@ export interface ServerController {
    * Kick a user from a server
    * @param id
    * @param username the user who make the request
+   * @param admin the user to kick
    *
    */
-  kickUserFromTheServer(id: number, username: string): Promise<Server>;
+  kickUserFromTheServer(
+    id: number,
+    username: string,
+    admin: string
+  ): Promise<Server>;
 }
 
 export class ServerControllerExceptions {
