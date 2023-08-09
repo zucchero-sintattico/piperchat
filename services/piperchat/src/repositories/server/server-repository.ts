@@ -21,7 +21,7 @@ export interface ServerRepository {
    * @returns The server with the given id.
    * @throws If the server could not be found.
    */
-  getServerById(id: number): Promise<Server>;
+  getServerById(serverId: string): Promise<Server>;
 
   /**
    * Gets all servers.
@@ -42,7 +42,7 @@ export interface ServerRepository {
    *
    */
   updateServerById(
-    id: number,
+    id: string,
     name?: string,
     description?: string
   ): Promise<Server>;
@@ -54,7 +54,7 @@ export interface ServerRepository {
    * @throws If the server could not be found.
    * @throws If the server could not be deleted.
    */
-  deleteServerById(id: number): Promise<Server>;
+  deleteServerById(id: string): Promise<Server>;
 
   /**
    * Gets all participants of a server.
@@ -63,7 +63,7 @@ export interface ServerRepository {
    * @throws If the server could not be found.
    *
    */
-  getServerParticipants(id: number): Promise<string[]>;
+  getServerParticipants(id: string): Promise<string[]>;
 
   /**
    * Adds a participant to a server.
@@ -73,7 +73,7 @@ export interface ServerRepository {
    * @throws If the server could not be found.
    * @throws If the server could not be updated.
    */
-  addServerParticipant(id: number, participant: string): Promise<Server>;
+  addServerParticipant(id: string, participant: string): Promise<Server>;
 
   /**
    * Removes a participant from a server.
@@ -83,5 +83,5 @@ export interface ServerRepository {
    * @throws If the server could not be found.
    * @throws If the server could not be updated.
    */
-  removeServerParticipant(id: number, participant: string): Promise<Server>;
+  removeServerParticipant(id: string, participant: string): Promise<Server>;
 }

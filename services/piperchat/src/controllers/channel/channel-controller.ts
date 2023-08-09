@@ -9,7 +9,7 @@ export interface ChannelController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not in the server
    */
-  getChannels(serverId: number, username: string): Promise<Channel[]>;
+  getChannels(serverId: string, username: string): Promise<Channel[]>;
 
   /**
    * Get achannel by id
@@ -22,8 +22,8 @@ export interface ChannelController {
    * @throws {ChannelNotFound} if the channel does not exist
    */
   getChannelById(
-    serverId: number,
-    channelId: number,
+    serverId: string,
+    channelId: string,
     username: string
   ): Promise<Channel>;
 
@@ -39,7 +39,7 @@ export interface ChannelController {
    * @throws {ChannelAlreadyExists} if the channel already exists
    */
   createChannel(
-    serverId: number,
+    serverId: string,
     username: string,
     name: string,
     channelType: string,
@@ -60,8 +60,8 @@ export interface ChannelController {
    * @throws {ChannelAlreadyExists} if the channel already exists
    */
   updateChannel(
-    serverId: number,
-    channelId: number,
+    serverId: string,
+    channelId: string,
     username: string,
     name?: string,
     description?: string
@@ -77,8 +77,8 @@ export interface ChannelController {
    * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
   deleteChannel(
-    serverId: number,
-    channelId: number,
+    serverId: string,
+    channelId: string,
     username: string
   ): Promise<void>;
 }

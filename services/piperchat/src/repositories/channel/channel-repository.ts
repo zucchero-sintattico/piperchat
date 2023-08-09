@@ -8,7 +8,7 @@ export interface ChannelRepository {
    * @throws If the channels could not be found.
    * @throws If the channels could not be returned.
    */
-  getChannels(serverId: number): Promise<Channel[]>;
+  getChannels(serverId: string): Promise<Channel[]>;
 
   /**
    * Creates a new channel for a given server.
@@ -21,7 +21,7 @@ export interface ChannelRepository {
    * @throws If the channel could not be returned.
    */
   createChannel(
-    serverId: number,
+    serverId: string,
     name: string,
     channelType: string,
     description?: string
@@ -36,7 +36,7 @@ export interface ChannelRepository {
    * @throws If the channel could not be found.
    * @throws If the channel could not be returned.
    */
-  getChannelById(serverId: number, channelId: number): Promise<Channel>;
+  getChannelById(serverId: string, channelId: string): Promise<Channel>;
 
   /**
    * Updates a channel by its id.
@@ -50,8 +50,8 @@ export interface ChannelRepository {
    * @throws If the channel could not be returned.
    */
   updateChannel(
-    serverId: number,
-    channelId: number,
+    serverId: string,
+    channelId: string,
     name?: string,
     description?: string
   ): Promise<void>;
@@ -64,5 +64,5 @@ export interface ChannelRepository {
    * @throws If the channel could not be found.
    * @throws If the channel could not be deleted.
    */
-  deleteChannel(serverId: number, channelId: number): Promise<void>;
+  deleteChannel(serverId: string, channelId: string): Promise<void>;
 }

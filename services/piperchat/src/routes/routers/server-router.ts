@@ -13,7 +13,7 @@ serverRouter.delete(
   async (req: Request, res: Response) => {
     try {
       await serverController.kickUserFromTheServer(
-        Number(req.params.serverId),
+        req.params.serverId,
         req.params.username,
         req.body.username
       );
@@ -45,7 +45,7 @@ serverRouter
   .get("/:serverId/partecipants", async (req: Request, res: Response) => {
     try {
       const partecipants = await serverController.getServerParticipants(
-        Number(req.params.serverId),
+        req.params.serverId,
         req.body.username
       );
       res.status(200).json({ partecipants: partecipants });
@@ -66,10 +66,7 @@ serverRouter
   })
   .post("/:serverId/partecipants", async (req: Request, res: Response) => {
     try {
-      await serverController.joinServer(
-        Number(req.params.serverId),
-        req.body.username
-      );
+      await serverController.joinServer(req.params.serverId, req.body.username);
       res.status(200).json({ message: "Server joined successfully" });
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
@@ -83,7 +80,7 @@ serverRouter
   .delete("/:serverId/partecipants", async (req: Request, res: Response) => {
     try {
       await serverController.leaveServer(
-        Number(req.params.serverId),
+        req.params.serverId,
         req.body.username
       );
       res.status(200).json({ message: "Server left successfully" });
@@ -112,9 +109,7 @@ serverRouter
 serverRouter
   .get("/:serverId", async (req: Request, res: Response) => {
     try {
-      const server = await serverController.getServer(
-        Number(req.params.serverId)
-      );
+      const server = await serverController.getServer(req.params.serverId);
       res.status(200).json({ server: server });
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
@@ -131,7 +126,7 @@ serverRouter
     }
     try {
       await serverController.updateServer(
-        Number(req.params.serverId),
+        req.params.serverId,
         req.body.username,
         req.body.name,
         req.body.description
@@ -155,7 +150,7 @@ serverRouter
   .delete("/:serverId", async (req: Request, res: Response) => {
     try {
       await serverController.deleteServer(
-        Number(req.params.serverId),
+        req.params.serverId,
         req.body.username
       );
       res.status(200).json({ message: "Server deleted successfully" });

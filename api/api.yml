@@ -633,11 +633,11 @@ paths:
                 items:
                   "$ref": "#/components/schemas/basicChannel"
                 example:
-                  - channelId: 123
+                  - channelId: channel123
                     name: Beautiful Channel
                     description: This channel is created for make new friends!
                     channelType: message
-                  - channelId: 456
+                  - channelId: channel456
                     name: Beautiful vocal channel
                     description: This channel is created for make new friends!
                     channelType: multimedia
@@ -830,8 +830,8 @@ paths:
                 type: object
                 properties:
                   sessionId:
-                    type: number
-                    example: 123
+                    type: string
+                    example: session123
         "400":
           description: This is not a multimedia channel
         "401":
@@ -859,8 +859,8 @@ components:
       type: object
       properties:
         serverId:
-          type: number
-          example: 123
+          type: string
+          example: server123
         name:
           type: string
           example: Beautiful Server
@@ -872,8 +872,8 @@ components:
       type: object
       properties:
         channelId:
-          type: number
-          example: 123
+          type: string
+          example: channel123
         name:
           type: string
           example: Beautiful Channel
@@ -910,8 +910,8 @@ components:
       type: object
       properties:
         messageId:
-          type: number
-          example: 123
+          type: string
+          example: message123
         sender:
           type: string
           example: user1
@@ -935,8 +935,8 @@ components:
       required: true
       description: serverId of the server that you want to interact with
       schema:
-        type: number
-      example: 123
+        type: string
+      example: server123
 
     channelId:
       name: channelId
@@ -944,5 +944,5 @@ components:
       required: true
       description: channelID of the message channel that you want to interact with
       schema:
-        type: number
-      example: 123
+        type: string
+      example: channel123

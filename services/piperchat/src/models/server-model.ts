@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { Channel, ChannelSchema } from "./channel-model";
 
 export interface Server {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   owner: string;
@@ -12,12 +12,6 @@ export interface Server {
 }
 
 export const ServerSchema = new Schema<Server>({
-  id: {
-    type: Number,
-    required: true,
-    unique: true,
-    auto: true,
-  },
   name: {
     type: String,
     required: true,

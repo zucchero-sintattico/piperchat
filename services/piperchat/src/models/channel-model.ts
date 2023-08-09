@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export interface Channel {
-  id: number;
+  _id: string;
   name: string;
   createdAt: Date;
   channelType: string;
@@ -9,12 +9,6 @@ export interface Channel {
 }
 
 export const ChannelSchema = new Schema<Channel>({
-  id: {
-    type: Number,
-    required: true,
-    unique: true,
-    auto: true,
-  },
   name: {
     type: String,
     required: true,

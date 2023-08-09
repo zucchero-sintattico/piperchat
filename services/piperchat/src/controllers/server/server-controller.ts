@@ -15,7 +15,7 @@ export interface ServerController {
    * @returns the server
    * @throws {ServerNotFound} if the server does not exist
    */
-  getServer(id: number): Promise<Server>;
+  getServer(id: string): Promise<Server>;
 
   /**
    * Create a server
@@ -41,7 +41,7 @@ export interface ServerController {
    * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
   updateServer(
-    id: number,
+    id: string,
     username: string,
     name?: string,
     description?: string
@@ -54,7 +54,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
-  deleteServer(id: number, username: string): Promise<Server>;
+  deleteServer(id: string, username: string): Promise<Server>;
 
   /**
    * Get all participants of a server
@@ -64,7 +64,7 @@ export interface ServerController {
    * @throws {UserNotAuthorized} if the user is not in the server
    *
    */
-  getServerParticipants(id: number, username: string): Promise<string[]>;
+  getServerParticipants(id: string, username: string): Promise<string[]>;
 
   /**
    * Join a server
@@ -74,7 +74,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserAlreadyJoined} if the user is already in the server
    */
-  joinServer(id: number, username: string): Promise<Server>;
+  joinServer(id: string, username: string): Promise<Server>;
 
   /**
    * Leave a server
@@ -84,7 +84,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not in the server
    */
-  leaveServer(id: number, username: string): Promise<Server>;
+  leaveServer(id: string, username: string): Promise<Server>;
 
   /**
    * Kick a user from a server
@@ -94,7 +94,7 @@ export interface ServerController {
    *
    */
   kickUserFromTheServer(
-    id: number,
+    id: string,
     username: string,
     admin: string
   ): Promise<Server>;

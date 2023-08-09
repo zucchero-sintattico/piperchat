@@ -25,7 +25,7 @@ export class ServerControllerImpl implements ServerController {
       throw new ServerControllerExceptions.UserNotFound();
     }
   }
-  async getServer(id: number): Promise<Server> {
+  async getServer(id: string): Promise<Server> {
     try {
       return await this.serverRepository.getServerById(id);
     } catch (e) {
@@ -33,7 +33,7 @@ export class ServerControllerImpl implements ServerController {
     }
   }
   async updateServer(
-    id: number,
+    id: string,
     username: string,
     name?: string | undefined,
     description?: string | undefined
@@ -51,7 +51,7 @@ export class ServerControllerImpl implements ServerController {
       throw new ServerControllerExceptions.ServerNotFound();
     }
   }
-  async deleteServer(id: number, username: string): Promise<Server> {
+  async deleteServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
     // check if user is owner
     this.checker.checkIfUserIsTheOwner(server, username);
@@ -62,7 +62,7 @@ export class ServerControllerImpl implements ServerController {
     }
   }
 
-  async getServerParticipants(id: number, username: string): Promise<string[]> {
+  async getServerParticipants(id: string, username: string): Promise<string[]> {
     const server = await this.checker.getServerIfExists(id);
     // check if user is in server
     this.checker.checkIfUserIsInTheServer(server, username);
@@ -70,7 +70,7 @@ export class ServerControllerImpl implements ServerController {
     return participants;
   }
 
-  async joinServer(id: number, username: string): Promise<Server> {
+  async joinServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
     this.checker.checkIfUserIsTheOwner(server, username);
     try {
@@ -79,7 +79,7 @@ export class ServerControllerImpl implements ServerController {
       throw new ServerControllerExceptions.UserAlreadyJoined();
     }
   }
-  async leaveServer(id: number, username: string): Promise<Server> {
+  async leaveServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
     this.checker.checkIfUserIsInTheServer(server, username);
     if (server.owner === username) {
@@ -93,7 +93,7 @@ export class ServerControllerImpl implements ServerController {
   }
 
   async kickUserFromTheServer(
-    id: number,
+    id: string,
     username: string,
     admin: string
   ): Promise<Server> {

@@ -10,13 +10,13 @@ export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
   private checker = new Checker();
 
-  async getChannels(serverId: number, username: string) {
+  async getChannels(serverId: string, username: string) {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsInTheServer(server, username);
     return await this.channelRepository.getChannels(serverId);
   }
 
-  async getChannelById(serverId: number, channelId: number, username: string) {
+  async getChannelById(serverId: string, channelId: string, username: string) {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsInTheServer(server, username);
     try {
@@ -27,7 +27,7 @@ export class ChannelControllerImpl implements ChannelController {
   }
 
   async createChannel(
-    serverId: number,
+    serverId: string,
     username: string,
     name: string,
     channelType: string,
@@ -45,8 +45,8 @@ export class ChannelControllerImpl implements ChannelController {
   }
 
   async updateChannel(
-    serverId: number,
-    channelId: number,
+    serverId: string,
+    channelId: string,
     username: string,
     name?: string | undefined,
     description?: string | undefined
@@ -68,7 +68,7 @@ export class ChannelControllerImpl implements ChannelController {
     }
   }
 
-  async deleteChannel(serverId: number, channelId: number, username: string) {
+  async deleteChannel(serverId: string, channelId: string, username: string) {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     try {

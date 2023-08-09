@@ -9,7 +9,7 @@ export const channelRouter = Router();
 channelRouter.get("/", async (req: Request, res: Response) => {
   try {
     const channels = await channelController.getChannels(
-      Number(req.params.serverId),
+      req.params.serverId,
       req.body.username
     );
     res.status(200).json(channels);
@@ -38,7 +38,7 @@ channelRouter.post("/", async (req: Request, res: Response) => {
   }
   try {
     await channelController.createChannel(
-      Number(req.params.serverId),
+      req.params.serverId,
       req.body.username,
       req.body.name,
       req.body.channelType,
