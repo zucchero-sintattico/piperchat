@@ -1,24 +1,25 @@
-import { MessageChannelRepository } from "./message-channel-repository";
+import { ChannelRepository } from "./channel-repository";
 import { Servers } from "../../models/server-model";
-import { MessageChannel } from "../../models/message-channel-model";
 
-export class MessageChannelRepositoryImpl implements MessageChannelRepository {
-  async getMessageChannels(serverId: number) {
+export class ChannelRepositoryImpl implements ChannelRepository {
+  async getChannels(serverId: number) {
     const server = await Servers.findOne({ id: serverId }).orFail();
-    return server.messageChannels;
+    return server.channels;
   }
 
-  async createMessageChannel(
+  async createChannel(
     serverId: number,
     name: string,
+    channelType: string,
     description?: string | undefined
   ) {
-    return await Servers.findOneAndUpdate(
+    await Servers.findOneAndUpdate(
       { id: serverId },
       {
         $push: {
-          messageChannels: {
+          channels: {
             name: name,
+            channelType: channelType,
             description: description,
           },
         },
@@ -28,25 +29,25 @@ export class MessageChannelRepositoryImpl implements MessageChannelRepository {
 
   async getChannelById(serverId: number, channelId: number) {
     const server = await Servers.findOne({ id: serverId }).orFail();
-    const channel = server.messageChannels.find((c) => c.id === channelId);
+    const channel = server.channels.find((c) => c.id === channelId);
     if (!channel) {
       throw new Error("Channel not found");
     }
     return channel;
   }
 
-  async updateMessageChannel(
+  async updateChannel(
     serverId: number,
     channelId: number,
     name?: string | undefined,
     description?: string | undefined
   ) {
-    return await Servers.findByIdAndUpdate(
+    await Servers.findByIdAndUpdate(
       serverId,
       {
         $set: {
-          "messageChannels.$[channel].name": name,
-          "messageChannels.$[channel].description": description,
+          "channels.$[channel].name": name,
+          "channels.$[channel].description": description,
         },
       },
       {
@@ -56,8 +57,8 @@ export class MessageChannelRepositoryImpl implements MessageChannelRepository {
     ).orFail();
   }
 
-  async deleteMessageChannel(serverId: number, channelId: number) {
-    return await Servers.findByIdAndUpdate(
+  async deleteChannel(serverId: number, channelId: number) {
+    await Servers.findByIdAndUpdate(
       serverId,
       {
         $pull: {

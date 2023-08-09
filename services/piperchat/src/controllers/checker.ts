@@ -1,15 +1,15 @@
 import { Server } from "../models/server-model";
-import { MessageChannelRepository } from "../repositories/message-channel/message-channel-repository";
-import { MessageChannelRepositoryImpl } from "../repositories/message-channel/message-channel-repository-impl";
+import { ChannelRepository } from "../repositories/channel/channel-repository";
+import { MessageChannelRepositoryImpl } from "../repositories/channel/channel-repository-impl";
 import { ServerRepositoryImpl } from "../repositories/server/server-repository-impl";
-import { MessageChannelControllerExceptions } from "./message-channel/message-channel-controller";
+import { MessageChannelControllerExceptions } from "./channel/channel-controller";
 import { ServerControllerExceptions } from "./server/server-controller";
 
 /**
  * This class is used to check if some conditions are met before executing some actions.
  */
 export class Checker {
-  private messageChannelRepository: MessageChannelRepository =
+  private messageChannelRepository: ChannelRepository =
     new MessageChannelRepositoryImpl();
   private serverRepository: ServerRepositoryImpl = new ServerRepositoryImpl();
   public checkIfUserIsInTheServer(server: Server, username: string) {
@@ -28,9 +28,7 @@ export class Checker {
   }
 
   public async checkIfChannelAlreadyExists(serverId: number, name: string) {
-    const channels = await this.messageChannelRepository.getMessageChannels(
-      serverId
-    );
+    const channels = await this.messageChannelRepository.getChannels(serverId);
     if (channels.find((channel) => channel.name == name)) {
       throw new MessageChannelControllerExceptions.MessageChannelAlreadyExists();
     }

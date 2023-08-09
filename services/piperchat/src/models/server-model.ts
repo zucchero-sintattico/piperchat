@@ -1,9 +1,5 @@
 import { Schema, model } from "mongoose";
-import { MessageChannel, MessageChannelSchema } from "./message-channel-model";
-import {
-  MultimediaChannel,
-  MultimediaChannelSchema,
-} from "./multimedia-channel-model";
+import { Channel, ChannelSchema } from "./channel-model";
 
 export interface Server {
   id: number;
@@ -12,8 +8,7 @@ export interface Server {
   owner: string;
   participants: string[];
   createdAt: Date;
-  messageChannels: MessageChannel[];
-  multimediaChannels: MultimediaChannel[];
+  channels: Channel[];
 }
 
 export const ServerSchema = new Schema<Server>({
@@ -43,14 +38,9 @@ export const ServerSchema = new Schema<Server>({
     required: true,
     default: Date.now,
   },
-  messageChannels: {
-    type: [MessageChannelSchema],
-    required: false,
-    default: [],
-  },
-  multimediaChannels: {
-    type: [MultimediaChannelSchema],
-    required: false,
+  channels: {
+    type: [ChannelSchema],
+    required: true,
     default: [],
   },
 });

@@ -1,14 +1,14 @@
 import { Schema, model } from "mongoose";
 
-export interface MultimediaChannel {
+export interface Channel {
   id: number;
   name: string;
-  description: string;
   createdAt: Date;
-  activeSession?: string;
+  channelType: string;
+  description?: string;
 }
 
-export const MultimediaChannelSchema = new Schema<MultimediaChannel>({
+export const ChannelSchema = new Schema<Channel>({
   id: {
     type: Number,
     required: true,
@@ -19,18 +19,18 @@ export const MultimediaChannelSchema = new Schema<MultimediaChannel>({
     type: String,
     required: true,
   },
-  description: {
+  channelType: {
     type: String,
-    required: false,
-    default: "",
+    required: true,
   },
   createdAt: {
     type: Date,
     required: true,
     default: Date.now,
   },
-  activeSession: {
+  description: {
     type: String,
     required: false,
+    default: "",
   },
 });
