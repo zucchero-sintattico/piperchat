@@ -14,12 +14,6 @@ export class RabbitMQ {
 		}
 	}
 
-	static async close() {
-		if (RabbitMQ.instance) {
-			await RabbitMQ.instance.connection?.close();
-		}
-	}
-
 	static getInstance() {
 		if (!RabbitMQ.instance) {
 			throw new Error("RabbitMQ not initialized");

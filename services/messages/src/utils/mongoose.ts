@@ -8,8 +8,4 @@ export class MongooseUtils {
 			console.error(err);
 		}
 	}
-
-	static async close() {
-		await mongoose.disconnect();
-	}
 }

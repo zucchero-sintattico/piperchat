@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { messageRouter } from "./message-router";
+import { DirectRouter } from "./message-router";
 
 const serviceRouter = Router();
 
 // Register all routers
-serviceRouter.use(messageRouter);
+serviceRouter.use("/users", DirectRouter);
 
 export { serviceRouter };
