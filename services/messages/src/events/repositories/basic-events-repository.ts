@@ -1,4 +1,4 @@
-import { RabbitMQ } from "../../utils/rabbit-mq";
+import { RabbitMQ } from "@/utils/rabbit-mq";
 
 export class BasicEventsRepository {
 	private broker: RabbitMQ | undefined;

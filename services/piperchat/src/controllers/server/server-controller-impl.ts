@@ -1,4 +1,4 @@
-import { Server } from "../../models/server-model";
+import { Server } from "@/models/server-model";
 import { ServerController } from "./server-controller";
 
 export class ServerControllerImpl implements ServerController {

@@ -4,7 +4,13 @@ import { ServiceEvents } from "@events/events";
 import { UsersServer } from "./server";
 import mongoose from "mongoose";
 
-const start = async (configuration: any) => {
+interface MicroserviceConfiguration {
+	port: number;
+	amqpUri: string;
+	mongoUri: string;
+}
+
+const start = async (configuration: MicroserviceConfiguration) => {
 	// Initialize mongoose
 	await MongooseUtils.initialize(mongoose, configuration.mongoUri);
 

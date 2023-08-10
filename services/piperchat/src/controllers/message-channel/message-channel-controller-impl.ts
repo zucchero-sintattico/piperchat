@@ -1,5 +1,5 @@
 import { MessageChannelController } from "./message-channel-controller";
-import { MessageChannel } from "../../models/message-channel-model";
+import { MessageChannel } from "@/models/message-channel-model";
 
 export class MessageChannelControllerImpl implements MessageChannelController {
 	createMessageChannel(

@@ -1,4 +1,4 @@
-import { Server } from "../../models/server-model";
+import { Server } from "@/models/server-model";
 
 export interface ServerController {
 	/**

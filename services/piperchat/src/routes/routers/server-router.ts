@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { ServerController } from "../../controllers/server/server-controller";
-import { ServerControllerImpl } from "../../controllers/server/server-controller-impl";
+import { ServerController } from "@/controllers/server/server-controller";
+import { ServerControllerImpl } from "@/controllers/server/server-controller-impl";
 
 const serverController: ServerController = new ServerControllerImpl();
 export const serverRouter = Router();
