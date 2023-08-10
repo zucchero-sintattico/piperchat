@@ -14,6 +14,12 @@ export class RabbitMQ {
 		}
 	}
 
+	static async disconnect() {
+		if (RabbitMQ.instance) {
+			await RabbitMQ.instance.connection?.close();
+		}
+	}
+
 	static getInstance() {
 		if (!RabbitMQ.instance) {
 			throw new Error("RabbitMQ not initialized");
@@ -29,7 +35,6 @@ export class RabbitMQ {
 		try {
 			this.connection = await amqp.connect(this.connectionUri);
 			this.channel = await this.connection.createChannel();
-			console.log("Connected to RabbitMQ");
 		} catch (err) {
 			console.error(err);
 		}
