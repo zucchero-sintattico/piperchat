@@ -1,4 +1,5 @@
 import { Channel } from "../../models/channel-model";
+import { Server } from "../../models/server-model";
 
 export interface ChannelController {
   /**
@@ -44,7 +45,7 @@ export interface ChannelController {
     name: string,
     channelType: string,
     description?: string
-  ): Promise<void>;
+  ): Promise<Channel>;
 
   /**
    * Update achannel
@@ -65,7 +66,7 @@ export interface ChannelController {
     username: string,
     name?: string,
     description?: string
-  ): Promise<void>;
+  ): Promise<Channel>;
 
   /**
    * Delete achannel

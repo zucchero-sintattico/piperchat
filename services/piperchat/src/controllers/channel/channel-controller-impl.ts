@@ -5,6 +5,7 @@ import {
 import { ChannelRepository } from "../../repositories/channel/channel-repository";
 import { ChannelRepositoryImpl } from "../../repositories/channel/channel-repository-impl";
 import { Checker } from "../checker";
+import { Channel } from "../../models/channel-model";
 
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
@@ -36,7 +37,7 @@ export class ChannelControllerImpl implements ChannelController {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     await this.checker.checkIfChannelAlreadyExists(serverId, name);
-    await this.channelRepository.createChannel(
+    return await this.channelRepository.createChannel(
       serverId,
       name,
       channelType,
@@ -50,14 +51,14 @@ export class ChannelControllerImpl implements ChannelController {
     username: string,
     name?: string | undefined,
     description?: string | undefined
-  ) {
+  ): Promise<Channel> {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     if (name) {
       await this.checker.checkIfChannelAlreadyExists(serverId, name);
     }
     try {
-      await this.channelRepository.updateChannel(
+      return await this.channelRepository.updateChannel(
         serverId,
         channelId,
         name,

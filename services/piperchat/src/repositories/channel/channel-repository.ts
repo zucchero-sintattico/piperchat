@@ -1,4 +1,5 @@
 import { Channel } from "../../models/channel-model";
+import { Server } from "../../models/server-model";
 export interface ChannelRepository {
   /**
    * Returns all  channels for a given server.
@@ -25,7 +26,7 @@ export interface ChannelRepository {
     name: string,
     channelType: string,
     description?: string
-  ): Promise<void>;
+  ): Promise<Channel>;
 
   /**
    * Gets a channel by its id.
@@ -54,7 +55,7 @@ export interface ChannelRepository {
     channelId: string,
     name?: string,
     description?: string
-  ): Promise<void>;
+  ): Promise<Channel>;
 
   /**
    * Deletes a channel by its id.
