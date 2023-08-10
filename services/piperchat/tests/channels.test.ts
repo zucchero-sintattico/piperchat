@@ -34,12 +34,8 @@ afterAll(async () => {
 describe("ChannelsCrudOps", () => {
   describe("Get", () => {
     it("A user should be able to get a channel if he is in the server", async () => {
-      let server = await serverController.createServer(
-        "server1",
-        "server1",
-        "user1"
-      );
-      const channel = await channelController.createChannel(
+      let server = await createServer("server1", "user1");
+      const channel = await createChannel(
         server._id,
         "user1",
         "channel1",
@@ -49,8 +45,8 @@ describe("ChannelsCrudOps", () => {
       expect(channel.name).toBe("channel1");
       expect(channel.channelType).toBe("text");
       expect(channel.description).toBe("channel1");
-      server = await serverController.getServer(server._id);
-      expect(server.channels.length).toBe(1);
+      const channels = await channelController.getChannels(server._id, "user1");
+      expect(channels.length).toBe(1);
     });
 
     it("A user should not be able to get a channel if he is not in the server", async () => {
