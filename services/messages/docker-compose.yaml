@@ -16,6 +16,12 @@ services:
     environment:
       - "AMQP_URI=${BROKER_URI}"
       - "MONGO_URI=mongodb://db-messages-service:27017/messages"
+    labels:
+      - |
+        traefik.http.routers.piperchat-service.rule=
+        (Method(`GET`, `POST`) && Path(`/users/{username:[^/]+}/messages`)) ||
+        (Method(`GET`, `POST`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}/messages`))
+
 
   db-messages-service:
     image: mongo
