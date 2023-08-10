@@ -1,8 +1,8 @@
 import supertest from "supertest";
 import { UsersServer } from "../src/server";
 import { UserApi } from "./api/user-api";
-import { MongooseUtils } from "commons";
-import { RabbitMQ } from "commons";
+import { MongooseUtils } from "@commons/mongoose-utils";
+import { RabbitMQ } from "@commons/rabbit-mq";
 import { ServiceEvents } from "../src/events/events";
 import mongoose from "mongoose";
 

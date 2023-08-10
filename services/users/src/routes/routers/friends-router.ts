@@ -4,7 +4,7 @@ import {
 	FriendsControllerExceptions,
 } from "../../controllers/friends/friends-controller";
 import { FriendsControllerImpl } from "../../controllers/friends/friends-controller-impl";
-import { JWTAuthenticationMiddleware } from "commons";
+import { JWTAuthenticationMiddleware } from "@commons/jwt";
 
 const friendsController: FriendsController = new FriendsControllerImpl();
 

@@ -7,7 +7,7 @@ import { AuthControllerImpl } from "../../controllers/auth/auth-controller-impl"
 import {
 	JWTAuthenticationMiddleware,
 	JWTRefreshTokenMiddleware,
-} from "commons";
+} from "@commons/jwt";
 
 const authController: AuthController = new AuthControllerImpl();
 

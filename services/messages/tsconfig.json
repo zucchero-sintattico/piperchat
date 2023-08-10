@@ -1,12 +1,17 @@
 {
+	"extends": "../tsconfig.common.json",
 	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
-		"outDir": "dist",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
-	},
-	"include": ["src/**/*"]
+		"rootDir": ".",
+		"baseUrl": ".",
+		"outDir": "./dist",
+		"paths": {
+			"@/*": ["src/*"],
+			"@controllers/*": ["src/controllers/*"],
+			"@events/*": ["src/events/*"],
+			"@models/*": ["src/models/*"],
+			"@repositories/*": ["src/repositories/*"],
+			"@routes/*": ["src/routes/*"],
+			"@commons/*": ["node_modules/commons/dist/src/*"]
+		}
+	}
 }

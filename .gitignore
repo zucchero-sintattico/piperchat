@@ -5,4 +5,3 @@ dist/
 .env
 piperchat.code-workspace
 .idea/
-*-lock.json

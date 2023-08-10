@@ -4,7 +4,7 @@ import {
 	UserControllerExceptions,
 } from "../../controllers/user/user-controller";
 import { UserControllerImpl } from "../../controllers/user/user-controller-impl";
-import { JWTAuthenticationMiddleware } from "commons";
+import { JWTAuthenticationMiddleware } from "@commons/jwt";
 
 const userController: UserController = new UserControllerImpl();
 

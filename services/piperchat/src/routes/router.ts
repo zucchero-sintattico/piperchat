@@ -2,10 +2,10 @@ import { Router } from "express";
 import { serverRouter } from "./routers/server-router";
 import { messageChannelRouter } from "./routers/message-channel-router";
 import { multimediaChannelRouter } from "./routers/multimedia-channel-router";
-import { jwtValidTokenRequired } from "../utils/jwt";
+import { JWTAuthenticationMiddleware } from "@commons/jwt";
 
 const serviceRouter = Router();
-serviceRouter.use(jwtValidTokenRequired);
+serviceRouter.use(JWTAuthenticationMiddleware);
 
 // Register all routers
 serviceRouter.use("/server", serverRouter);

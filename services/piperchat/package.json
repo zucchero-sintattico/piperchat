@@ -2,11 +2,10 @@
   "name": "piperchat",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b -v && tsc-alias -p tsconfig.json",
     "dev": "nodemon --exec ts-node src/app.ts",
-    "start": "tsc && node dist/app.js",
+    "start": "npm run build && node dist/src/app.js",
     "test": "cross-env NODE_ENV=test jest --verbose --testTimeout=60000 --detectOpenHandles"
   },
   "keywords": [],
@@ -14,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.10.3",
+    "commons": "file:../commons",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -34,6 +34,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.7",
     "typescript": "^5.0.2"
   }
 }

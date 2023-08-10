@@ -2,7 +2,6 @@
   "name": "users",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
   "scripts": {
     "build": "tsc -b -v && tsc-alias -p tsconfig.json",
     "dev": "nodemon --exec ts-node src/app.ts",

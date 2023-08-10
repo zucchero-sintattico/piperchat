@@ -1,7 +1,7 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
-import { jwtValidTokenRequired } from "./utils/jwt";
+import { JWTAuthenticationMiddleware } from "@commons/jwt";
 import cookieParser from "cookie-parser";
 
 export class PiperchatServer {
@@ -20,7 +20,7 @@ export class PiperchatServer {
 	private setupMiddleware() {
 		this.app.use(cookieParser());
 		this.app.use(express.json());
-		this.app.use(jwtValidTokenRequired);
+		this.app.use(JWTAuthenticationMiddleware);
 	}
 
 	private setupRouter() {

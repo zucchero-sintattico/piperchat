@@ -1,10 +1,11 @@
 import express from "express";
 import { serviceRouter } from "./routes/router";
 import { config } from "dotenv";
-import { RabbitMQ } from "./utils/rabbit-mq";
-import { MongooseUtils } from "./utils/mongoose";
+import { RabbitMQ } from "@commons/rabbit-mq";
+import { MongooseUtils } from "@commons/mongoose-utils";
 import { ServiceEvents } from "./events/events";
 import { PiperchatServer } from "./server";
+import mongoose from "mongoose";
 
 // Load environment variables
 config();
@@ -20,7 +21,7 @@ const app: PiperchatServer = new PiperchatServer(port);
 // Start function
 const start = async () => {
 	// Initialize mongoose
-	await MongooseUtils.initialize(mongoUri);
+	await MongooseUtils.initialize(mongoose, mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(amqpUri);
