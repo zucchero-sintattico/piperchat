@@ -3,5 +3,5 @@ module.exports = {
 	testEnvironment: "node",
 	coveragePathIgnorePatterns: ["/node_modules/"],
 	testTimeout: 60000,
-	testMatch: ["**/tests/**/*.test.ts"],
+	testMatch: ["**/test/**/*.test.ts"],
 };

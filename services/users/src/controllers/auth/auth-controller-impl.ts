@@ -1,14 +1,17 @@
-import { UserEventsRepository } from "../../events/repositories/user/user-events-repository";
-import { User } from "../../models/user-model";
-import { UserRepository } from "../../repositories/user/user-repository";
-import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl";
-import { AuthController, AuthControllerExceptions } from "./auth-controller";
+import { UserEventsRepository } from "@events/repositories/user/user-events-repository";
+import { User } from "@models/user-model";
+import { UserRepository } from "@repositories/user/user-repository";
+import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
+import {
+	AuthController,
+	AuthControllerExceptions,
+} from "@controllers/auth/auth-controller";
 import bcrypt from "bcrypt";
 import {
 	generateAccessToken,
 	generateRefreshToken,
 	verifyRefreshToken,
-} from "../../../../commons/utils/jwt";
+} from "commons";
 import { UserEventsRepositoryImpl } from "../../events/repositories/user/user-events-repository-impl";
 
 export class AuthControllerImpl implements AuthController {

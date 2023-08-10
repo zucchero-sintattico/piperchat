@@ -1,6 +1,6 @@
 import { UserRepository } from "../repositories/user/user-repository";
 import { UserRepositoryImpl } from "../repositories/user/user-repository-impl";
-import { RabbitMQ } from "../../../commons/utils/rabbit-mq";
+import { RabbitMQ } from "commons";
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -54,7 +54,7 @@ export class ServiceEvents {
 			return;
 		}
 		await channel?.bindQueue(queue.queue, exchange, "");
-		channel?.consume(queue.queue, async (message) => {
+		channel?.consume(queue.queue, async (message: any): Promise<void> => {
 			if (!message) {
 				return;
 			}

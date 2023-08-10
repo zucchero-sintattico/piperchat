@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { JWTAuthenticationMiddleware } from "../../../../commons/utils/jwt";
+import { JWTAuthenticationMiddleware } from "commons";
 import { ProfileControllerImpl } from "../../controllers/profile/profile-controller-impl";
 import { ProfileController } from "../../controllers/profile/profile-controller";
 

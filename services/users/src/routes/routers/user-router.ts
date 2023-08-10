@@ -4,7 +4,7 @@ import {
 	UserControllerExceptions,
 } from "../../controllers/user/user-controller";
 import { UserControllerImpl } from "../../controllers/user/user-controller-impl";
-import { JWTAuthenticationMiddleware } from "../../../../commons/utils/jwt";
+import { JWTAuthenticationMiddleware } from "commons";
 
 const userController: UserController = new UserControllerImpl();
 
@@ -13,7 +13,7 @@ usersRouter.use(JWTAuthenticationMiddleware);
 
 usersRouter.get("/:username/status", async (req: Request, res: Response) => {
 	try {
-		const status = await userController.getUserStatus(req.params.username);
+		const status = await userController.getUserStatus(req.params["username"]!);
 		return res.status(200).json({ status: status });
 	} catch (e: any) {
 		if (e instanceof UserControllerExceptions.UserNotFound) {
@@ -26,7 +26,7 @@ usersRouter.get("/:username/status", async (req: Request, res: Response) => {
 
 usersRouter.get("/:username/photo", async (req: Request, res: Response) => {
 	try {
-		const photo = await userController.getUserPhoto(req.params.username);
+		const photo = await userController.getUserPhoto(req.params["username"]!);
 		return res.status(200).json({ photo: photo });
 	} catch (e: any) {
 		if (e instanceof UserControllerExceptions.UserNotFound) {
@@ -42,7 +42,7 @@ usersRouter.get(
 	async (req: Request, res: Response) => {
 		try {
 			const description = await userController.getUserDescription(
-				req.params.username
+				req.params["username"]!
 			);
 			return res.status(200).json({ description: description });
 		} catch (e: any) {

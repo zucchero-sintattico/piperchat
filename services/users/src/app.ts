@@ -1,11 +1,12 @@
-import { RabbitMQ } from "../../commons/utils/rabbit-mq";
-import { MongooseUtils } from "../../commons/utils/mongoose";
+import { MongooseUtils } from "@commons/mongoose-utils";
 import { ServiceEvents } from "./events/events";
 import { UsersServer } from "./server";
+import mongoose from "mongoose";
+import { RabbitMQ } from "commons";
 
 const start = async (configuration: any) => {
 	// Initialize mongoose
-	await MongooseUtils.initialize(configuration.mongoUri);
+	await MongooseUtils.initialize(mongoose, configuration.mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(configuration.amqpUri);
@@ -23,9 +24,9 @@ const start = async (configuration: any) => {
 
 // Connections info
 const configuration = {
-	port: Number.parseInt(process.env.PORT!) || 3000,
-	amqpUri: process.env.AMQP_URI || "amqp://localhost:5672",
-	mongoUri: process.env.MONGO_URI || "mongodb://localhost:27017",
+	port: Number.parseInt(process.env["PORT"]!) || 3000,
+	amqpUri: process.env["AMQP_URI"] || "amqp://localhost:5672",
+	mongoUri: process.env["MONGO_URI"] || "mongodb://localhost:27017",
 };
 
 // Start the service

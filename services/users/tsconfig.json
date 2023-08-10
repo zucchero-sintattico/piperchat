@@ -1,17 +1,46 @@
 {
 	"compilerOptions": {
-		"target": "es6",
+		// JS Version
+		"target": "ES6",
 		"module": "commonjs",
-		"outDir": "dist",
+		"moduleResolution": "node",
+		// Compile options
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		// Type options
 		"strict": true,
+		// Module resolution
 		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
-	},
-	"include": ["src/**/*"],
-	"references": [
-		{
-			"path": "../commons/tsconfig.json"
+
+		"rootDir": ".",
+		"baseUrl": ".",
+		"outDir": "./dist",
+		"paths": {
+			// Project-specific paths
+			"@controllers/*": ["src/controllers/*"],
+			"@events/*": ["src/events/*"],
+			"@models/*": ["src/models/*"],
+			"@repositories/*": ["src/repositories/*"],
+			"@routes/*": ["src/routes/*"],
+			// Commons paths
+			"@commons/*": ["node_modules/commons/dist/*"]
 		}
-	]
+	},
+	"include": ["src/**/*"]
 }
+
+// "noImplicitAny": true,
+// "strictNullChecks": true,
+// "strictFunctionTypes": true,
+// "strictBindCallApply": true,
+// "strictPropertyInitialization": true,
+// "noUncheckedIndexedAccess": true,
+// "noImplicitOverride": true,
+// "noPropertyAccessFromIndexSignature": true,
+// "noImplicitThis": true,
+// "alwaysStrict": true,
+// "noUnusedLocals": true,
+// "noUnusedParameters": true,
+// "noImplicitReturns": true,
+// "noFallthroughCasesInSwitch": true,
