@@ -9,10 +9,10 @@ export class DirectControllerImpl implements DirectController {
 
     private directRepository: DirectRepository = new DirectRepositoryImpl();
 
-
-    getDirectMessages(username1: string, username2: string): Promise<Message[]> {
-        return this.directRepository.getDirectMessages(username1, username2);
+    async getDirectMessagesPaginated(username1: string, username2: string, from: number, limit: number): Promise<Message[]> {
+        return this.directRepository.getDirectMessagesPaginated(username1, username2, from, limit);
     }
+
 
     sendDirectMessage(username1: string, username2: string, message: string): Promise<void> {
         return this.directRepository.sendDirectMessage(username1, username2, message);

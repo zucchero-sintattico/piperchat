@@ -17,7 +17,7 @@ export const MessageSchema = new Schema({
   id: String,
   sender: { type: String, required: true },
   content: { type: String, required: true },
-  timestamp: { type: Date, required: true },
+  timestamp: { type: Date, required: true, default: Date.now },
 });
 
 export const DirectSchema = new Schema({

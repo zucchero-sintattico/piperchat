@@ -4,12 +4,14 @@ import { Direct, Message } from "../../models/chat-model";
 export interface DirectController {
 
     /**
-     * Get all direct messages between two users
+     * Get direct messages between two users using as pagination the "from" and "limit" query params
      * @param username1
      * @param username2
-     * @returns {Message<Direct[]>}
+     * @param from
+     * @param limit
+     * @returns {Promise<Direct[]>}
      */
-    getDirectMessages(username1: string, username2: string): Promise<Message[]>;
+    getDirectMessagesPaginated(username1: string, username2: string, from: number, limit: number): Promise<Message[]>;
 
     /**
      * Send a direct message from one user to another
