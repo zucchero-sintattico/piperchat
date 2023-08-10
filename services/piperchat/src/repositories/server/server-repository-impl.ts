@@ -3,12 +3,14 @@ import { ServerRepository } from "./server-repository";
 
 export class ServerRepositoryImpl implements ServerRepository {
   async createServer(name: string, description: string, owner: string) {
-    return await Servers.create({
-      name,
-      description,
-      owner,
+    const server = await Servers.create({
+      name: name,
+      description: description,
+      owner: owner,
       participants: [owner],
     });
+    await server.save();
+    return server;
   }
 
   async getServerById(serverId: string) {
@@ -23,24 +25,32 @@ export class ServerRepositoryImpl implements ServerRepository {
   }
 
   async updateServerById(id: string, name?: string, description?: string) {
-    return await Servers.findOneAndUpdate(
-      { id },
-      { name, description }
+    const server = await Servers.findOneAndUpdate(
+      { _id: id },
+      // replace name and description
+      { $set: { name: name, description: description } },
+      { new: true }
     ).orFail();
+
+    return await server.save();
   }
 
   async deleteServerById(id: string) {
-    return await Servers.findOneAndDelete({ id }).orFail();
+    return await Servers.findOneAndDelete({ _id: id }, { new: true }).orFail();
   }
 
   async getServerParticipants(id: string) {
-    const server = await Servers.findOne({ id }).orFail();
+    const server = await Servers.findOne({ _id: id }).orFail();
     return server.participants;
   }
 
   async addServerParticipant(id: string, participant: string) {
-    const server = await Servers.findOne({ id }).orFail();
-    server.participants.push(participant);
+    const server = await Servers.findOneAndUpdate(
+      { _id: id },
+      { $push: { participants: participant } },
+      { new: true }
+    ).orFail();
+
     return await server.save();
   }
 

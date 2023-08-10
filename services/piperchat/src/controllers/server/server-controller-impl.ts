@@ -66,18 +66,18 @@ export class ServerControllerImpl implements ServerController {
     const server = await this.checker.getServerIfExists(id);
     // check if user is in server
     this.checker.checkIfUserIsInTheServer(server, username);
-    const participants = await this.serverRepository.getServerParticipants(id);
+    const participants = await this.serverRepository.getServerParticipants(
+      server._id
+    );
     return participants;
   }
 
   async joinServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
-    this.checker.checkIfUserIsTheOwner(server, username);
-    try {
-      return await this.serverRepository.addServerParticipant(id, username);
-    } catch (e) {
-      throw new ServerControllerExceptions.UserAlreadyJoined();
-    }
+    return await this.serverRepository.addServerParticipant(
+      server._id,
+      username
+    );
   }
   async leaveServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id);
