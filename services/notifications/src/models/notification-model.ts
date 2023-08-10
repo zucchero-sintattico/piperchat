@@ -19,3 +19,5 @@ const NotificationSchema = new Schema({
 const NotificationEntity = model("Entity", NotificationSchema);
 
 export { NotificationEntity };
+
+
