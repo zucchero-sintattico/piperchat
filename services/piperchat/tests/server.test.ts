@@ -119,7 +119,6 @@ describe("ServersCrudOps", () => {
 
 describe("ServerParticipantsCrudOps", () => {
   describe("Get", () => {
-    // A user should not be able to get the participants of a server if it's not in the server
     it("A user should not be able to get the participants of a server if it's not in the server", async () => {
       const server = await createServer("server1", "server1", "user1");
       await expect(
@@ -127,7 +126,6 @@ describe("ServerParticipantsCrudOps", () => {
       ).rejects.toThrow(ServerControllerExceptions.UserNotAuthorized);
     });
 
-    // A user should be able to get the participants of a server if it's in the server
     it("A user should be able to get the participants of a server if it's in the server", async () => {
       const server = await createServer("server1", "server1", "user1");
       const participants = await controller.getServerParticipants(
@@ -139,14 +137,12 @@ describe("ServerParticipantsCrudOps", () => {
   });
 
   describe("Add", () => {
-    // A user should not be able to add a participant if it's not the owner
     it("A user should not be able to enter a server if it doesn't exists", async () => {
       await expect(controller.joinServer("user1", "server1")).rejects.toThrow(
         ServerControllerExceptions.ServerNotFound
       );
     });
 
-    // A user can join a server if it exists
     it("A user should be able to enter a server if it exists", async () => {
       const server = await createServer("server1", "server1", "user1");
       await controller.joinServer(server._id, "user2");
@@ -155,6 +151,53 @@ describe("ServerParticipantsCrudOps", () => {
         "user2"
       );
       expect(participants.length).toBe(2);
+    });
+  });
+
+  describe("Remove", () => {
+    it("A user should not be able to remove a participant if it's not the owner", async () => {
+      const server = await createServer("server1", "server1", "user1");
+      await controller.joinServer(server._id, "user2");
+      await expect(
+        controller.kickUserFromTheServer(server._id, "user1", "user2")
+      ).rejects.toThrow(ServerControllerExceptions.UserNotAuthorized);
+    });
+
+    it("A user should be able to remove a participant if it's the owner", async () => {
+      const server = await createServer("server1", "server1", "user1");
+      await controller.joinServer(server._id, "user2");
+      await controller.kickUserFromTheServer(server._id, "user2", "user1");
+      const participants = await controller.getServerParticipants(
+        server._id,
+        "user1"
+      );
+      expect(participants.length).toBe(1);
+    });
+
+    it("A user should not be able to leave a server if it's not in the server", async () => {
+      const server = await createServer("server1", "server1", "user1");
+      await controller.joinServer(server._id, "user2");
+      await expect(controller.leaveServer(server._id, "user3")).rejects.toThrow(
+        ServerControllerExceptions.UserNotAuthorized
+      );
+    });
+
+    it("A user should be able to leave a server if it's in the server", async () => {
+      const server = await createServer("server1", "server1", "user1");
+      await controller.joinServer(server._id, "user2");
+      await controller.leaveServer(server._id, "user2");
+      const participants = await controller.getServerParticipants(
+        server._id,
+        "user1"
+      );
+      expect(participants.length).toBe(1);
+    });
+
+    it("A user should not be able to remove the owner of the server", async () => {
+      const server = await createServer("server1", "server1", "user1");
+      await expect(controller.leaveServer(server._id, "user1")).rejects.toThrow(
+        ServerControllerExceptions.OwnerCannotLeave
+      );
     });
   });
 });
