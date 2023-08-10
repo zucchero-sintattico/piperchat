@@ -1,23 +1,24 @@
-import { Schema, model } from "mongoose";
+import { ClientProxy } from "./client-proxy";
 
-const NotificationSchema = new Schema({
-	from: String,
-	to: {
-		type: String,
-		required: true,
-	},
-	messageId: {
-		type: String,
-		required: true,
-	},
-	notitificationType: {
-		type: String,
-		required: true,
-	},
-});
+class NotifiableUsers {
 
-const NotificationEntity = model("Entity", NotificationSchema);
+	private users: Map<string, ClientProxy>;
 
-export { NotificationEntity };
+	constructor() {
+		this.users = new Map<string, ClientProxy>();
+	}
 
+	public addUser(username: string, clientProxy: ClientProxy): void {
+		this.users.set(username, clientProxy);
+	}
 
+	public removeUser(username: string): void {
+		this.users.delete(username);
+	}
+
+	public notify(username: string, data: any): void {
+		this.users.get(username)?.send(data);
+	}
+}
+
+export const notifiableUsers = new NotifiableUsers();

@@ -1,20 +1,21 @@
 import { Request, Router, Response } from "express";
 import { NotificationController, NotificationControllerImpl } from "../../controllers/notification-controller";
-import { ClientProxy } from "../../controllers/client-proxy";
-import { jwtValidTokenRequired } from "../../utils/jwt";
+import { ClientProxy } from "../../models/client-proxy";
 
 const notificationController: NotificationController = new NotificationControllerImpl();
 
 export const notificationRouter = Router();
 
-notificationRouter.use(function fakeToken(req: Request, res: Response, next: any) {
+const fakeMiddleware = (req: Request, res: Response, next: any) => {
 	req.user = {
 		id: "1",
 		username: "user1",
 		email: ""
 	}
 	next();
-});
+}
+
+notificationRouter.use(fakeMiddleware);
 
 notificationRouter.get("/", async (req: Request, res: Response) => {
 	const headers = {

@@ -5,11 +5,10 @@ import { jwtValidTokenRequired } from "../../utils/jwt";
 const userStatusController: UserStatusController = new UserStatusControllerImpl();
 
 export const userStatusRouter = Router();
-userStatusRouter.use(jwtValidTokenRequired);
 
-userStatusRouter.get("/", async (req: Request, res: Response) => {
+userStatusRouter.get("/:username/status", async (req: Request, res: Response) => {
     try {
-        const user = await userStatusController.getStatus(req.user.username);
+        const user = await userStatusController.getStatus(req.params.username);
         if (user?.status === "online") {
             res.status(200).json({ status: "online" });
         } else {
