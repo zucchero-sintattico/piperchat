@@ -18,6 +18,7 @@
 		"outDir": "./dist",
 		"paths": {
 			// Project-specific paths
+			"@/*": ["src/*"],
 			"@controllers/*": ["src/controllers/*"],
 			"@events/*": ["src/events/*"],
 			"@models/*": ["src/models/*"],

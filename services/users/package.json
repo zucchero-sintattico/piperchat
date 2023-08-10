@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "tsc -b -v && tsc-alias -p tsconfig.json",
     "dev": "nodemon --exec ts-node src/app.ts",
     "start": "npm run build && node dist/src/app.js",
     "test": "cross-env NODE_ENV=test jest --verbose --testTimeout=60000 --detectOpenHandles"

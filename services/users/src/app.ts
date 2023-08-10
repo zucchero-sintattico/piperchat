@@ -1,8 +1,8 @@
 import { MongooseUtils } from "@commons/mongoose-utils";
-import { ServiceEvents } from "./events/events";
-import { UsersServer } from "./server";
+import { RabbitMQ } from "@commons/rabbit-mq";
+import { ServiceEvents } from "@events/events";
+import { UsersServer } from "@/server";
 import mongoose from "mongoose";
-import { RabbitMQ } from "commons";
 
 const start = async (configuration: any) => {
 	// Initialize mongoose
