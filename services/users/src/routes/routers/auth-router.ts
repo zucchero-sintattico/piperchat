@@ -2,8 +2,8 @@ import { Request, Router, Response } from "express";
 import {
 	AuthController,
 	AuthControllerExceptions,
-} from "../../controllers/auth/auth-controller";
-import { AuthControllerImpl } from "../../controllers/auth/auth-controller-impl";
+} from "@controllers/auth/auth-controller";
+import { AuthControllerImpl } from "@controllers/auth/auth-controller-impl";
 import {
 	JWTAuthenticationMiddleware,
 	JWTRefreshTokenMiddleware,

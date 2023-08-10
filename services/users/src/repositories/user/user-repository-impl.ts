@@ -1,5 +1,5 @@
 import { UserRepository } from "./user-repository";
-import { Users, User } from "../../models/user-model";
+import { Users, User } from "@models/user-model";
 
 export class UserRepositoryImpl implements UserRepository {
 

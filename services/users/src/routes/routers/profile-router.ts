@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { JWTAuthenticationMiddleware } from "@commons/jwt";
-import { ProfileControllerImpl } from "../../controllers/profile/profile-controller-impl";
-import { ProfileController } from "../../controllers/profile/profile-controller";
+import { ProfileControllerImpl } from "@controllers/profile/profile-controller-impl";
+import { ProfileController } from "@controllers/profile/profile-controller";
 
 const profileController: ProfileController = new ProfileControllerImpl();
 

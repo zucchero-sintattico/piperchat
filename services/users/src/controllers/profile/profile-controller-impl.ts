@@ -1,6 +1,6 @@
 import { ProfileController } from "./profile-controller";
-import { UserRepository } from "../../repositories/user/user-repository";
-import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl";
+import { UserRepository } from "@repositories/user/user-repository";
+import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
 
 export class ProfileControllerImpl implements ProfileController {
 	private userRepository: UserRepository = new UserRepositoryImpl();

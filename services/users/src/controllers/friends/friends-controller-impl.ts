@@ -1,5 +1,5 @@
 import { FriendsController } from "./friends-controller";
-import { UserRepositoryImpl } from "../../repositories/user/user-repository-impl";
+import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
 
 export class FriendsControllerImpl implements FriendsController {
 	private userRepository = new UserRepositoryImpl();

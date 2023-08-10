@@ -12,7 +12,7 @@ import {
 	generateRefreshToken,
 	verifyRefreshToken,
 } from "@commons/jwt";
-import { UserEventsRepositoryImpl } from "../../events/repositories/user/user-events-repository-impl";
+import { UserEventsRepositoryImpl } from "@events/repositories/user/user-events-repository-impl";
 
 export class AuthControllerImpl implements AuthController {
 	private userRepository: UserRepository = new UserRepositoryImpl();

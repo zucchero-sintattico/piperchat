@@ -5,7 +5,6 @@
 		"baseUrl": ".",
 		"outDir": "./dist",
 		"paths": {
-			"@/*": ["src/*"],
 			"@controllers/*": ["src/controllers/*"],
 			"@events/*": ["src/events/*"],
 			"@models/*": ["src/models/*"],

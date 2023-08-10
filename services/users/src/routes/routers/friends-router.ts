@@ -2,8 +2,8 @@ import { Request, Response, Router } from "express";
 import {
 	FriendsController,
 	FriendsControllerExceptions,
-} from "../../controllers/friends/friends-controller";
-import { FriendsControllerImpl } from "../../controllers/friends/friends-controller-impl";
+} from "@controllers/friends/friends-controller";
+import { FriendsControllerImpl } from "@controllers/friends/friends-controller-impl";
 import { JWTAuthenticationMiddleware } from "@commons/jwt";
 
 const friendsController: FriendsController = new FriendsControllerImpl();
