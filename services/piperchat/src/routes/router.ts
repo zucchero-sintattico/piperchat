@@ -1,15 +1,13 @@
 import { Router } from "express";
 import { serverRouter } from "./routers/server-router";
-import { messageChannelRouter } from "./routers/message-channel-router";
-import { multimediaChannelRouter } from "./routers/multimedia-channel-router";
+import { channelRouter } from "./routers/channel-router";
 import { jwtValidTokenRequired } from "../utils/jwt";
 
 const serviceRouter = Router();
 serviceRouter.use(jwtValidTokenRequired);
 
 // Register all routers
-serviceRouter.use("/server", serverRouter);
-serviceRouter.use("/message-channel", messageChannelRouter);
-serviceRouter.use("/multimedia-channel", multimediaChannelRouter);
+serviceRouter.use("/servers/:serverId/channels", channelRouter);
+serviceRouter.use("/servers", serverRouter);
 
 export { serviceRouter };
