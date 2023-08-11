@@ -76,6 +76,8 @@ export interface ChannelController {
    * @returns the deletedchannel
    * @throws {ChannelNotFound} if the channel does not exist
    * @throws {UserNotAuthorized} if the user is not the owner of the server
+   * @throws {ServerNotFound} if the server does not exist
+   * @throws {ChannelNotFound} if the channel does not exist
    */
   deleteChannel(
     serverId: string,

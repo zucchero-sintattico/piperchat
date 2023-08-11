@@ -38,7 +38,7 @@ export class ChannelControllerImpl implements ChannelController {
     this.checker.checkIfUserIsTheOwner(server, username);
     await this.checker.checkIfChannelAlreadyExists(serverId, name);
     return await this.channelRepository.createChannel(
-      serverId,
+      serverId.toString(),
       name,
       channelType,
       description
@@ -59,8 +59,8 @@ export class ChannelControllerImpl implements ChannelController {
     }
     try {
       return await this.channelRepository.updateChannel(
-        serverId,
-        channelId,
+        serverId.toString(),
+        channelId.toString(),
         name,
         description
       );

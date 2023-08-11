@@ -1,6 +1,7 @@
 import { ChannelRepository } from "./channel-repository";
-import { Servers } from "../../models/server-model";
+import { Server, Servers } from "../../models/server-model";
 import { Channel } from "../../models/channel-model";
+import mongoose from "mongoose";
 
 export class ChannelRepositoryImpl implements ChannelRepository {
   async getChannels(serverId: string) {
@@ -27,7 +28,6 @@ export class ChannelRepositoryImpl implements ChannelRepository {
       },
       { new: true }
     ).orFail();
-    await server.save();
     return server.channels[server.channels.length - 1];
   }
 
@@ -46,24 +46,25 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     name?: string | undefined,
     description?: string | undefined
   ) {
+    // find and update channel by _id
     const server = await Servers.findOneAndUpdate(
-      { _id: serverId },
+      { _id: serverId, "channels._id": channelId },
       {
         $set: {
-          "channels.$[channel].name": name,
-          "channels.$[channel].description": description,
+          "channels.$.name": name,
+          "channels.$.description": description,
         },
       },
-      {
-        arrayFilters: [{ "channel.id": channelId }],
-        new: true,
-      }
+      { new: true }
     ).orFail();
-    const channelUpdated = server.channels.find((c) => c._id === channelId);
-    if (!channelUpdated) {
+
+    // const server = await Servers.findOne({ _id: serverId }).orFail();
+    const channels = server.channels;
+    const channel = channels.find((chan) => chan._id.toString() === channelId);
+    if (!channel) {
       throw new Error("Channel not found");
     }
-    return channelUpdated;
+    return channel;
   }
 
   async deleteChannel(serverId: string, channelId: string) {
