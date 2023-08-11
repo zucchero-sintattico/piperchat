@@ -50,11 +50,10 @@ export interface ServerController {
   /**
    * Delete a server
    * @param id
-   * @returns the deleted server
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
-  deleteServer(id: string, username: string): Promise<Server>;
+  deleteServer(id: string, username: string): Promise<void>;
 
   /**
    * Get all participants of a server

@@ -50,11 +50,10 @@ export interface ServerRepository {
   /**
    * Deletes a server by its id.
    * @param id
-   * @returns The deleted server.
    * @throws If the server could not be found.
    * @throws If the server could not be deleted.
    */
-  deleteServerById(id: string): Promise<Server>;
+  deleteServerById(id: string): Promise<void>;
 
   /**
    * Gets all participants of a server.

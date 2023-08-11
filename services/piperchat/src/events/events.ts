@@ -1,4 +1,3 @@
-import { EntityRepository } from "../repositories/entity-repository";
 import { RabbitMQ } from "../utils/rabbit-mq";
 
 /**
@@ -8,27 +7,31 @@ import { RabbitMQ } from "../utils/rabbit-mq";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-	private static broker: RabbitMQ;
-	private static entityRepository: EntityRepository = new EntityRepository();
+  private static broker: RabbitMQ;
 
-	static async initialize() {
-		this.broker = RabbitMQ.getInstance();
-		await this.declareQueue();
-		await this.setupListeners();
-	}
+  static async initialize() {
+    this.broker = RabbitMQ.getInstance();
+    await this.declareQueue();
+    await this.setupListeners();
+  }
 
-	static async declareQueue() {
-		// Declare queue
-		/*
-		this.broker.getChannel()?.assertQueue("entity.entity.created", {
-			durable: true,
-		});
-		*/
-	}
+  static async declareQueue() {
+    // Declare queue
+    const channel = this.broker.getChannel();
 
-	static async setupListeners() {
-		// Setup listeners
-		/*
+    // Declare the exchange
+    await channel?.assertExchange("servers", "fanout", {
+      durable: true,
+    });
+
+    await channel?.assertExchange("channels", "fanout", {
+      durable: true,
+    });
+  }
+
+  static async setupListeners() {
+    // Setup listeners
+    /*
 		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
 			if (msg) {
 				console.log("Entity created", msg.content.toString());
@@ -37,5 +40,5 @@ export class ServiceEvents {
 			}
 		});
 		*/
-	}
+  }
 }

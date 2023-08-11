@@ -36,7 +36,7 @@ export class ServerRepositoryImpl implements ServerRepository {
   }
 
   async deleteServerById(id: string) {
-    return await Servers.findOneAndDelete({ _id: id }, { new: true }).orFail();
+    await Servers.findOneAndDelete({ _id: id }, { new: true }).orFail();
   }
 
   async getServerParticipants(id: string) {

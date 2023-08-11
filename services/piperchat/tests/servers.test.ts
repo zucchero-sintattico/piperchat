@@ -1,4 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
+import { RabbitMQ } from "../src/utils/rabbit-mq";
 import {
   ServerController,
   ServerControllerExceptions,
@@ -10,6 +11,7 @@ let controller: ServerController;
 
 beforeAll(async () => {
   await mongoose.connect("mongodb://localhost:27017/");
+  await RabbitMQ.initialize("amqp://localhost");
 });
 
 beforeEach(async () => {
@@ -136,7 +138,7 @@ describe("ServerParticipantsCrudOps", () => {
     });
   });
 
-  describe("Add", () => {
+  describe("Create", () => {
     it("A user should not be able to enter a server if it doesn't exists", async () => {
       await expect(controller.joinServer("user1", "server1")).rejects.toThrow(
         ServerControllerExceptions.ServerNotFound

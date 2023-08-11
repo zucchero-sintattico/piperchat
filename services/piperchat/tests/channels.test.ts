@@ -1,4 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
+import { RabbitMQ } from "../src/utils/rabbit-mq";
 import {
   ChannelController,
   ChannelControllerExceptions,
@@ -16,6 +17,8 @@ let channelController: ChannelController;
 
 beforeAll(async () => {
   await mongoose.connect("mongodb://localhost:27017/");
+
+  await RabbitMQ.initialize("amqp://localhost");
 });
 
 beforeEach(async () => {
