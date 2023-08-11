@@ -1,5 +1,6 @@
 #!/bin/bash
 cd commons
+npm ci
 npm run build
 cd ..
 for d in */ ; do

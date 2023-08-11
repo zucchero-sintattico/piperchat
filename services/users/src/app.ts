@@ -17,7 +17,6 @@ const start = async (configuration: MicroserviceConfiguration) => {
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(configuration.amqpUri);
 
-	// Initialize service events listeners
 	await ServiceEvents.initialize();
 
 	const app: UsersServer = new UsersServer(configuration.port);
