@@ -70,7 +70,9 @@ jobs:
           node-version: "18.x"
       - name: Install commons
         run: |
+          cd services
           ./refreshCommonsInServices.sh
+          cd ..
       - name: Install dependencies
         run: |
           cd ${{ matrix.path }}
