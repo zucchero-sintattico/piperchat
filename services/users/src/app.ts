@@ -20,7 +20,6 @@ const start = async (configuration: MicroserviceConfiguration) => {
 	// Initialize service events listeners
 	await ServiceEvents.initialize();
 
-	// Express app
 	const app: UsersServer = new UsersServer(configuration.port);
 
 	app.start(() => {
