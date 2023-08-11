@@ -222,6 +222,19 @@ describe("ChannelsCrudOps", () => {
         channelController.deleteChannel(server._id, channel._id, "user2")
       ).rejects.toThrow(ServerControllerExceptions.UserNotAuthorized);
     });
+
+    it("A user should not be able to delete a channel if the server does not exist", async () => {
+      await expect(
+        channelController.deleteChannel("123", "123", "user1")
+      ).rejects.toThrow(ServerControllerExceptions.ServerNotFound);
+    });
+
+    it("A user should not be able to delete a channel if the channel does not exist", async () => {
+      let server = await createServer("server1", "user1");
+      await expect(
+        channelController.deleteChannel(server._id, "123", "user1")
+      ).rejects.toThrow(ChannelControllerExceptions.ChannelNotFound);
+    });
   });
 });
 
