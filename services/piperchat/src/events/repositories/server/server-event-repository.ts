@@ -1,13 +1,13 @@
 export interface ServerEventRepository {
-  publishServerCreated(entity: any): Promise<void>;
+  publishServerCreated(payload: any): Promise<void>;
 
-  publishServerUpdated(entity: any): Promise<void>;
+  publishServerUpdated(payload: any): Promise<void>;
 
-  publishServerDeleted(entity: any): Promise<void>;
+  publishServerDeleted(payload: any): Promise<void>;
 
-  publishUserJoined(entity: any): Promise<void>;
+  publishUserJoined(payload: any): Promise<void>;
 
-  publishUserLeft(entity: any): Promise<void>;
+  publishUserLeft(payload: any): Promise<void>;
 
-  publishUserKicked(entity: any): Promise<void>;
+  publishUserKicked(payload: any): Promise<void>;
 }
