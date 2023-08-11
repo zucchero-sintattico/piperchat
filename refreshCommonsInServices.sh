@@ -1,4 +1,5 @@
 #!/bin/bash
+cd services
 cd commons
 npm ci
 npm run build
