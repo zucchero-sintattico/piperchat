@@ -1,48 +1,44 @@
 import { Schema, model } from "mongoose";
 
 export interface Message {
-  id: string;
+  _id: string;
   sender: string;
   content: string;
   timestamp: Date;
 }
 
 export interface Direct {
-  id: string;
+  _id: string;
   partecipants: [string];
   messages: [Message];
 }
 
 export interface MessageChannel {
-  id: string;
+  _id: string;
   messages: [Message];
 }
 
 export interface Server {
-  id: string;
+  _id: string;
   partecipants: [string];
 }
 
 export const MessageSchema = new Schema({
-  id: String,
   sender: { type: String, required: true },
   content: { type: String, required: true },
   timestamp: { type: Date, required: true, default: Date.now },
 });
 
 export const DirectSchema = new Schema({
-  id: String,
   partecipants: { type: [String], required: true, minlength: 2, maxlength: 2 },
   messages: { type: [MessageSchema], required: true, default: [] },
 });
 
 export const MessageChannelSchema = new Schema({
-  id: String,
   messages: { type: [MessageSchema], required: true, default: [] },
 });
 
 export const ServerSchema = new Schema({
-  id: String,
   partecipants: { type: [String], required: true, minlength: 1 },
 });
 
