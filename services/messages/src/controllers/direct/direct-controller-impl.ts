@@ -1,7 +1,7 @@
 import { DirectController } from "./direct-controller";
 
 import { DirectRepository } from "../../repositories/direct/direct-repository";
-import { Direct, Message } from "../../models/chat-model";
+import { Direct, Message } from "../../models/messages-model";
 import { DirectRepositoryImpl } from "../../repositories/direct/direct-repository-impl";
 
 export class DirectControllerImpl implements DirectController {

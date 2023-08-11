@@ -1,6 +1,6 @@
 import mongoose, { Mongoose } from "mongoose";
 import { DirectControllerImpl } from "../src/controllers/direct/direct-controller-impl";
-import { Directs } from "../src/models/chat-model";
+import { Directs } from "../src/models/messages-model";
 
 let directController = new DirectControllerImpl();
 

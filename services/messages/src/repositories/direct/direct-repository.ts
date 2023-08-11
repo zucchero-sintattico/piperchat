@@ -1,4 +1,4 @@
-import { Direct, Message } from "../../models/chat-model";
+import { Direct, Message } from "../../models/messages-model";
 
 export interface DirectRepository {
 

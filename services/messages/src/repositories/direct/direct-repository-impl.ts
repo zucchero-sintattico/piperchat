@@ -1,5 +1,5 @@
 import { DirectRepository } from "./direct-repository";
-import { Directs, Message } from "../../models/chat-model";
+import { Directs, Message } from "../../models/messages-model";
 
 export class DirectRepositoryImpl implements DirectRepository {
 

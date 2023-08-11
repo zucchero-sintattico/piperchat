@@ -13,6 +13,16 @@ export interface Direct {
   messages: [Message];
 }
 
+export interface MessageChannel {
+  id: string;
+  messages: [Message];
+}
+
+export interface Server {
+  id: string;
+  partecipants: [string];
+}
+
 export const MessageSchema = new Schema({
   id: String,
   sender: { type: String, required: true },
@@ -26,4 +36,16 @@ export const DirectSchema = new Schema({
   messages: { type: [MessageSchema], required: true, default: [] },
 });
 
+export const MessageChannelSchema = new Schema({
+  id: String,
+  messages: { type: [MessageSchema], required: true, default: [] },
+});
+
+export const ServerSchema = new Schema({
+  id: String,
+  partecipants: { type: [String], required: true, minlength: 1 },
+});
+
 export const Directs = model<Message>("Directs", DirectSchema);
+export const MessageChannels = model<MessageChannel>("MessageChannels", MessageChannelSchema);
+export const Servers = model<Server>("Servers", ServerSchema);
