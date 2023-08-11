@@ -1,6 +1,5 @@
-import { UserStatusRepository, UserStatusRepositoryImpl } from "../repositories/user-status-repository";
 import { RabbitMQ } from "../utils/rabbit-mq";
-
+import { NotificationRepository, NotificationRepositoryImpl, Message } from "../repositories/notification-repository";
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -9,7 +8,6 @@ import { RabbitMQ } from "../utils/rabbit-mq";
  */
 export class ServiceEvents {
 	private static broker: RabbitMQ;
-	private static entityRepository: UserStatusRepository = new UserStatusRepositoryImpl();
 
 	static async initialize() {
 		this.broker = RabbitMQ.getInstance();
@@ -18,24 +16,53 @@ export class ServiceEvents {
 	}
 
 	static async declareQueue() {
-		// Declare queue
-		/*
-		this.broker.getChannel()?.assertQueue("entity.entity.created", {
+		const channel = this.broker.getChannel();
+
+		// Declare the exchange
+		await channel?.assertExchange("messages", "fanout", {
 			durable: true,
 		});
-		*/
 	}
 
 	static async setupListeners() {
-		// Setup listeners
-		/*
-		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
-			if (msg) {
-				console.log("Entity created", msg.content.toString());
-				this.broker.getChannel()?.ack(msg);
-				this.entityRepository.createEntity(JSON.parse(msg.content.toString()));
+		const notificationRepository: NotificationRepository = new NotificationRepositoryImpl();
+		this.subscribeToExchange("messages", async (event, data) => {
+			switch (event) {
+				case "message.direct.sent":
+					try {
+						notificationRepository.onNewMessage(data);
+					} catch (error) {
+						console.error(error);
+					}
+					break;
 			}
 		});
-		*/
+	}
+
+	private static async subscribeToExchange(
+		exchange: string,
+		callback: (event: string, data: any) => void
+	) {
+		const channel = this.broker.getChannel();
+		const queue = await channel?.assertQueue("", {
+			exclusive: true,
+		});
+		if (!queue) {
+			return;
+		}
+		await channel?.bindQueue(queue.queue, exchange, "");
+		channel?.consume(queue.queue, async (message: any): Promise<void> => {
+			if (!message) {
+				return;
+			}
+
+			const content = message.content.toString();
+			try {
+				const data = JSON.parse(content);
+				callback(message.fields.routingKey, data);
+			} catch (error) {
+				console.error(error);
+			}
+		});
 	}
 }

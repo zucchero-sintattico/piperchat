@@ -16,7 +16,7 @@ class NotifiableUsers {
 		this.users.delete(username);
 	}
 
-	public notify(username: string, data: any): void {
+	public sendIfPresent(username: string, data: any): void {
 		this.users.get(username)?.send(data);
 	}
 }

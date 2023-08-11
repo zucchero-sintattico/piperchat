@@ -13,7 +13,7 @@ serviceRouter.get("/", (req, res) => {
 });
 
 serviceRouter.get("/send", (req, res) => {
-    notifiableUsers.notify("user1", { message: "Hello from the server" });
+    notifiableUsers.sendIfPresent("user1", { message: "Hello from the server" });
     res.status(200).json({ message: "Message sent" });
 });
 
