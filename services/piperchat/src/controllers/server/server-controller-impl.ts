@@ -1,7 +1,7 @@
 import { Server } from "../../models/server-model";
 import { ServerRepository } from "../../repositories/server/server-repository";
 import { ServerRepositoryImpl } from "../../repositories/server/server-repository-impl";
-import { ServerEventRepository } from "../../events/repositories/server/server-events-repository";
+import { ServerEventRepository } from "../../events/repositories/server/server-event-repository";
 import { ServerEventRepositoryImpl } from "../../events/repositories/server/server-event-repository-impl";
 import { Checker } from "../checker";
 import {
@@ -25,7 +25,7 @@ export class ServerControllerImpl implements ServerController {
       description,
       owner
     );
-    this.serverEventRepository.publishServerCreated({
+    await this.serverEventRepository.publishServerCreated({
       _id: server._id,
       name: server.name,
       description: server.description,
@@ -61,7 +61,7 @@ export class ServerControllerImpl implements ServerController {
         name,
         description
       );
-      this.serverEventRepository.publishServerUpdated({
+      await this.serverEventRepository.publishServerUpdated({
         serverId: serverUpdated._id,
         name: serverUpdated.name,
         description: serverUpdated.description,
@@ -77,7 +77,7 @@ export class ServerControllerImpl implements ServerController {
     this.checker.checkIfUserIsTheOwner(server, username);
     try {
       await this.serverRepository.deleteServerById(id);
-      this.serverEventRepository.publishServerDeleted({
+      await this.serverEventRepository.publishServerDeleted({
         serverId: server._id,
       });
     } catch (e) {
@@ -101,7 +101,7 @@ export class ServerControllerImpl implements ServerController {
       server._id,
       username
     );
-    this.serverEventRepository.publishUserJoined({
+    await this.serverEventRepository.publishUserJoined({
       serverId: serverUpdated._id,
       username: username,
     });
@@ -118,7 +118,7 @@ export class ServerControllerImpl implements ServerController {
         id,
         username
       );
-      this.serverEventRepository.publishUserLeft({
+      await this.serverEventRepository.publishUserLeft({
         serverId: serverUpdated._id,
         username: username,
       });
@@ -143,7 +143,7 @@ export class ServerControllerImpl implements ServerController {
         id,
         username
       );
-      this.serverEventRepository.publishUserKicked({
+      await this.serverEventRepository.publishUserKicked({
         serverId: serverUpdated._id,
         username: username,
       });

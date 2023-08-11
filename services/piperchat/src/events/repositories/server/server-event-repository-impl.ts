@@ -1,5 +1,5 @@
 import { RabbitMQ } from "../../../utils/rabbit-mq";
-import { ServerEventRepository } from "./server-events-repository";
+import { ServerEventRepository } from "./server-event-repository";
 
 /**
  * Entity events repository
@@ -15,68 +15,68 @@ export class ServerEventRepositoryImpl implements ServerEventRepository {
     return this.broker?.getChannel();
   }
 
-  async publishServerCreated(server: any) {
+  async publishServerCreated(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.created",
-        Buffer.from(JSON.stringify(server))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }
 
-  async publishServerUpdated(server: any) {
+  async publishServerUpdated(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.updated",
-        Buffer.from(JSON.stringify(server))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }
 
-  async publishServerDeleted(server: any) {
+  async publishServerDeleted(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.deleted",
-        Buffer.from(JSON.stringify(server))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }
 
-  async publishUserJoined(user: any) {
+  async publishUserJoined(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.user.joined",
-        Buffer.from(JSON.stringify(user))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }
 
-  async publishUserLeft(user: any) {
+  async publishUserLeft(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.user.left",
-        Buffer.from(JSON.stringify(user))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }
 
-  async publishUserKicked(user: any) {
+  async publishUserKicked(payload: any) {
     const channel = this.getChannel();
     if (channel) {
       channel.publish(
         "servers",
         "server.user.kicked",
-        Buffer.from(JSON.stringify(user))
+        Buffer.from(JSON.stringify(payload))
       );
     }
   }

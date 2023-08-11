@@ -258,6 +258,10 @@ components:
     ChannelBasicSchema:
       type: object
       properties:
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
         channelId:
           type: string
           description: Unique identifier representing a specific channel
@@ -268,14 +272,14 @@ components:
         - $ref: "#/components/schemas/ChannelBasicSchema"
         - type: object
           properties:
-            type:
-              type: string
-              description: Type of the channel
-              example: message, multimedia
             name:
               type: string
               description: Name of the channel
               example: general
+            type:
+              type: string
+              description: Type of the channel
+              example: message, multimedia
             description:
               type: string
               description: Description of the channel

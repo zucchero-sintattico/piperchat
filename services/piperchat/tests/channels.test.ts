@@ -1,5 +1,6 @@
 import mongoose, { Mongoose } from "mongoose";
 import { RabbitMQ } from "../src/utils/rabbit-mq";
+import { ServiceEvents } from "../src/events/events";
 import {
   ChannelController,
   ChannelControllerExceptions,
@@ -19,6 +20,8 @@ beforeAll(async () => {
   await mongoose.connect("mongodb://localhost:27017/");
 
   await RabbitMQ.initialize("amqp://localhost");
+
+  await ServiceEvents.initialize();
 });
 
 beforeEach(async () => {
@@ -32,6 +35,7 @@ afterEach(async () => {
 
 afterAll(async () => {
   await mongoose.connection.close();
+  await RabbitMQ.disconnect();
 });
 
 describe("ChannelsCrudOps", () => {

@@ -19,18 +19,18 @@ const app: PiperchatServer = new PiperchatServer(port);
 
 // Start function
 const start = async () => {
-	// Initialize mongoose
-	await MongooseUtils.initialize(mongoUri);
+  // Initialize mongoose
+  await MongooseUtils.initialize(mongoUri);
 
-	// Initialize RabbitMQ
-	await RabbitMQ.initialize(amqpUri);
+  // Initialize RabbitMQ
+  await RabbitMQ.initialize(amqpUri);
 
-	// Initialize service events listeners
-	await ServiceEvents.initialize();
+  // Initialize service events listeners
+  await ServiceEvents.initialize();
 
-	app.start(() => {
-		console.log(`Started on port: ${port}`);
-	});
+  app.start(() => {
+    console.log(`Started on port: ${port}`);
+  });
 };
 
 // Start the service

@@ -4,11 +4,15 @@ import {
 } from "./channel-controller";
 import { ChannelRepository } from "../../repositories/channel/channel-repository";
 import { ChannelRepositoryImpl } from "../../repositories/channel/channel-repository-impl";
+import { ChannelEventRepository } from "../../events/repositories/channel/channel-event-repository";
+import { ChannelEventRepositoryImpl } from "../../events/repositories/channel/channel-event-repository-impl";
 import { Checker } from "../checker";
 import { Channel } from "../../models/channel-model";
 
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
+  private channelEventRepository: ChannelEventRepository =
+    new ChannelEventRepositoryImpl();
   private checker = new Checker();
 
   async getChannels(serverId: string, username: string) {
@@ -37,12 +41,20 @@ export class ChannelControllerImpl implements ChannelController {
     const server = await this.checker.getServerIfExists(serverId);
     this.checker.checkIfUserIsTheOwner(server, username);
     await this.checker.checkIfChannelAlreadyExists(serverId, name);
-    return await this.channelRepository.createChannel(
+    const channel = await this.channelRepository.createChannel(
       serverId.toString(),
       name,
       channelType,
       description
     );
+    await this.channelEventRepository.publishChannelCreated({
+      serverId: serverId.toString(),
+      channelId: channel._id.toString(),
+      name: channel.name,
+      channelType: channel.channelType,
+      description: channel.description,
+    });
+    return channel;
   }
 
   async updateChannel(
@@ -58,12 +70,20 @@ export class ChannelControllerImpl implements ChannelController {
       await this.checker.checkIfChannelAlreadyExists(serverId, name);
     }
     try {
-      return await this.channelRepository.updateChannel(
+      const channelUpdated = await this.channelRepository.updateChannel(
         serverId.toString(),
         channelId.toString(),
         name,
         description
       );
+      await this.channelEventRepository.publishChannelUpdated({
+        serverId: serverId.toString(),
+        channelId: channelUpdated._id.toString(),
+        name: channelUpdated.name,
+        channelType: channelUpdated.channelType,
+        description: channelUpdated.description,
+      });
+      return channelUpdated;
     } catch (e) {
       throw new ChannelControllerExceptions.ChannelNotFound();
     }
@@ -74,6 +94,10 @@ export class ChannelControllerImpl implements ChannelController {
     this.checker.checkIfUserIsTheOwner(server, username);
     try {
       await this.channelRepository.deleteChannel(serverId, channelId);
+      await this.channelEventRepository.publishChannelDeleted({
+        serverId: serverId.toString(),
+        channelId: channelId.toString(),
+      });
     } catch (e) {
       throw new ChannelControllerExceptions.ChannelNotFound();
     }
