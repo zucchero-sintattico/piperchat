@@ -5,6 +5,11 @@ on:
     branches-ignore:
       - 'main'
       - 'develop'
+    paths:
+      - 'services/messages/**'
+      - 'services/notifications/**'
+      - 'services/piperchat/**'
+      - 'services/users/**'
 
 env:
     TESTING_PATH: "services"
