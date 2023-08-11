@@ -3,79 +3,82 @@ run-name: Microservices testing started by ${{ github.actor }}
 on:
   push:
     branches-ignore:
-      - 'main'
-      - 'develop'
+      - "main"
+      - "develop"
 
 env:
-    TESTING_PATH: "services"
+  TESTING_PATH: "services"
 
 jobs:
-    get-changes:
-        name: Get microservices to test
-        # get the list of files changed
-        runs-on: ubuntu-latest
-        outputs:
-            microservices: ${{ steps.get-microservices.outputs.microservices }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                fetch-depth: 0
-            - name: Get changed microservices
-              id: get-microservices
-              run: |
-                # based on modified files, get the list of microservices to test
-                # matching with the path defined in env.TESTING_PATH
-                folders=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '^${{ env.TESTING_PATH }}/' | cut -d'/' -f1-2 | sort | uniq | sed -e 's/^/"/' -e 's/$/"/' | paste -sd "," -)
+  get-changes:
+    name: Get microservices to test
+    # get the list of files changed
+    runs-on: ubuntu-latest
+    outputs:
+      microservices: ${{ steps.get-microservices.outputs.microservices }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get changed microservices
+        id: get-microservices
+        run: |
+          # based on modified files, get the list of microservices to test
+          # matching with the path defined in env.TESTING_PATH
+          folders=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '^${{ env.TESTING_PATH }}/' | cut -d'/' -f1-2 | sort | uniq | sed -e 's/^/"/' -e 's/$/"/' | paste -sd "," -)
 
-                echo "microservices=[$folders]" >> $GITHUB_OUTPUT
-            - name: Print microservices to test
-              run: |
-                echo ${{ steps.get-microservices.outputs.microservices }}
-    
-    test-microservice:
-        name: Testing ${{ matrix.path }} microservice
-        runs-on: ubuntu-latest
-        needs: get-changes
-        if: ${{ needs.get-changes.outputs.microservices != '[]' }}
-        services:
-          rabbitmq:
-              image: rabbitmq:3
-              options: >-
-                  --health-cmd "rabbitmq-diagnostics -q ping"
-                  --health-interval 10s
-                  --health-timeout 10s
-                  --health-retries 10
-              ports:
-                  - 5672:5672
-          mongodb:
-              image: mongo
-              options: >-
-                  --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
-                  --health-interval 10s
-                  --health-timeout 10s
-                  --health-retries 10
-              ports:
-                  - 27017:27017
-        strategy:
-            fail-fast: false
-            matrix: 
-                path: ${{ fromJson(needs.get-changes.outputs.microservices) }}
-        steps:
-            - name: Checkout repo
-              uses: actions/checkout@v3
-            - name: setup node
-              uses: actions/setup-node@v3
-              with:
-                node-version: '18.x'
-            - name: Install dependencies
-              run: |
-                cd ${{ matrix.path }}
-                npm ci
-            - name: Run tests
-              run: |
-                cd ${{ matrix.path }}
-                npm test
-              env:
-                AMQP_URI: amqp://localhost:5672/
-                MONGO_URI: mongodb://localhost:27017/?authMechanism=DEFAULT&authSource=admin;
+          echo "microservices=[$folders]" >> $GITHUB_OUTPUT
+      - name: Print microservices to test
+        run: |
+          echo ${{ steps.get-microservices.outputs.microservices }}
+
+  test-microservice:
+    name: Testing ${{ matrix.path }} microservice
+    runs-on: ubuntu-latest
+    needs: get-changes
+    if: ${{ needs.get-changes.outputs.microservices != '[]' }}
+    services:
+      rabbitmq:
+        image: rabbitmq:3
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 10
+        ports:
+          - 5672:5672
+      mongodb:
+        image: mongo
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 10
+        ports:
+          - 27017:27017
+    strategy:
+      fail-fast: false
+      matrix:
+        path: ${{ fromJson(needs.get-changes.outputs.microservices) }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install commons
+        run: |
+          ./refreshCommonsInServices.sh
+      - name: Install dependencies
+        run: |
+          cd ${{ matrix.path }}
+          npm ci
+      - name: Run tests
+        run: |
+          cd ${{ matrix.path }}
+          npm test
+        env:
+          AMQP_URI: amqp://localhost:5672/
+          MONGO_URI: mongodb://localhost:27017/?authMechanism=DEFAULT&authSource=admin;

@@ -6,6 +6,8 @@ module.exports = {
 	coveragePathIgnorePatterns: ["/node_modules/"],
 	testTimeout: 60000,
 	testMatch: ["**/test/**/*.test.ts"],
-	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+		prefix: "<rootDir>/",
+	}),
 	modulePaths: ["<rootDir>"],
 };
