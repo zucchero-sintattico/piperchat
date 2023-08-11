@@ -88,8 +88,8 @@ export interface ServerController {
   /**
    * Kick a user from a server
    * @param id
-   * @param username the user who make the request
-   * @param admin the user to kick
+   * @param username the user to kick
+   * @param admin the user who make the request
    *
    */
   kickUserFromTheServer(

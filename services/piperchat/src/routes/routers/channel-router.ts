@@ -10,7 +10,7 @@ channelRouter.get("/", async (req: Request, res: Response) => {
   try {
     const channels = await channelController.getChannels(
       req.params.serverId,
-      req.body.username
+      req.user.username
     );
     res.status(200).json(channels);
   } catch (e) {
@@ -39,7 +39,7 @@ channelRouter.post("/", async (req: Request, res: Response) => {
   try {
     await channelController.createChannel(
       req.params.serverId,
-      req.body.username,
+      req.user.username,
       req.body.name,
       req.body.channelType,
       req.body.description

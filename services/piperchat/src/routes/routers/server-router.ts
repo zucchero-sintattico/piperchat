@@ -15,7 +15,7 @@ serverRouter.delete(
       await serverController.kickUserFromTheServer(
         req.params.serverId,
         req.params.username,
-        req.body.username
+        req.user.username
       );
       res.status(200).json({ message: "User kicked successfully" });
     } catch (e) {
@@ -46,7 +46,7 @@ serverRouter
     try {
       const partecipants = await serverController.getServerParticipants(
         req.params.serverId,
-        req.body.username
+        req.user.username
       );
       res.status(200).json({ partecipants: partecipants });
     } catch (e) {
@@ -66,7 +66,7 @@ serverRouter
   })
   .post("/:serverId/partecipants", async (req: Request, res: Response) => {
     try {
-      await serverController.joinServer(req.params.serverId, req.body.username);
+      await serverController.joinServer(req.params.serverId, req.user.username);
       res.status(200).json({ message: "Server joined successfully" });
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
@@ -81,7 +81,7 @@ serverRouter
     try {
       await serverController.leaveServer(
         req.params.serverId,
-        req.body.username
+        req.user.username
       );
       res.status(200).json({ message: "Server left successfully" });
     } catch (e) {
@@ -127,7 +127,7 @@ serverRouter
     try {
       await serverController.updateServer(
         req.params.serverId,
-        req.body.username,
+        req.user.username,
         req.body.name,
         req.body.description
       );
@@ -151,7 +151,7 @@ serverRouter
     try {
       await serverController.deleteServer(
         req.params.serverId,
-        req.body.username
+        req.user.username
       );
       res.status(200).json({ message: "Server deleted successfully" });
     } catch (e) {
@@ -173,7 +173,7 @@ serverRouter
 serverRouter
   .get("/", async (req: Request, res: Response) => {
     try {
-      const servers = await serverController.getServers(req.body.username);
+      const servers = await serverController.getServers(req.user.username);
       res.status(200).json({ servers: servers });
     } catch (e) {
       if (e instanceof ServerControllerExceptions.UserNotFound) {
@@ -192,7 +192,7 @@ serverRouter
       await serverController.createServer(
         req.body.name,
         req.body.description,
-        req.body.username
+        req.user.username
       );
     } catch (e) {
       return res
