@@ -1,13 +1,19 @@
-import express from "express";
-import { serviceRouter } from "./routes/router";
-import { config } from "dotenv";
-import { RabbitMQ } from "./utils/rabbit-mq";
-import { MongooseUtils } from "./utils/mongoose";
-import { ServiceEvents } from "./events/events";
-import { MessagesServer } from "./server";
+// import express from "express";
+// import { serviceRouter } from "./routes/router";
+// import { config } from "dotenv";
+// import { RabbitMQ } from "./utils/rabbit-mq";
+// import { MongooseUtils } from "./utils/mongoose";
+// import { ServiceEvents } from "./events/events";
+// import { MessagesServer } from "./server";
+import moment from "moment";
+import { request } from "express";
+
+console.log(moment.duration(1, "days").asMilliseconds())
+
+// console.log(request)
 
 // Load environment variables
-config();
+// config();
 
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000;
@@ -18,23 +24,23 @@ const mongoUri =
 
 
 // Express app
-const app: MessagesServer = new MessagesServer(port);
+// const app: MessagesServer = new MessagesServer(port);
 
-// Start function
-const start = async () => {
-	// Initialize mongoose
-	await MongooseUtils.initialize(mongoUri);
+// // Start function
+// const start = async () => {
+// 	// Initialize mongoose
+// 	await MongooseUtils.initialize(mongoUri);
 
-	// Initialize RabbitMQ
-	await RabbitMQ.initialize(amqpUri);
+// 	// Initialize RabbitMQ
+// 	await RabbitMQ.initialize(amqpUri);
 
-	// Initialize service events listeners
-	await ServiceEvents.initialize();
+// 	// Initialize service events listeners
+// 	await ServiceEvents.initialize();
 
-	app.start(() => {
-		console.log(`Started on port: ${port}`);
-	});
-};
+// 	app.start(() => {
+// 		console.log(`Started on port: ${port}`);
+// 	});
+// };
 
 // Start the service
-start();
+// start();
