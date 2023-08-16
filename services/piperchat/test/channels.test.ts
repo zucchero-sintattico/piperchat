@@ -1,5 +1,5 @@
-import mongoose, { Mongoose } from "mongoose";
-import { RabbitMQ } from "@piperchat/commons";
+import mongoose from "mongoose";
+import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
 import { ServiceEvents } from "../src/events/events";
 import {
   ChannelController,
@@ -17,10 +17,8 @@ let serverController: ServerController;
 let channelController: ChannelController;
 
 beforeAll(async () => {
-  await mongoose.connect("mongodb://localhost:27017/");
-
-  await RabbitMQ.initialize("amqp://localhost");
-
+  await MongooseUtils.initialize(mongoose, "mongodb://localhost:27017/");
+  await RabbitMQ.initialize("amqp://localhost:5672");
   await ServiceEvents.initialize();
 });
 
@@ -34,7 +32,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  await MongooseUtils.close(mongoose);
   await RabbitMQ.disconnect();
 });
 

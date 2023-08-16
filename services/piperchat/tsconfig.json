@@ -4,5 +4,7 @@
 		"rootDir": "./",
 		"baseUrl": "./",
 		"outDir": "./dist",
-	}
+	},
+	"include": [ "./src/**/*" ],
+	"references": [{ "path": "../commons" }]
 }

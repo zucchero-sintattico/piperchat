@@ -1,7 +1,8 @@
 services:
 
   piperchat-service:
-    build: ./services/piperchat
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/piperchat", "start"]
     expose:
       - "3000"
     depends_on:
