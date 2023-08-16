@@ -1,4 +1,4 @@
-import { RabbitMQ } from "../../../utils/rabbit-mq";
+import { RabbitMQ } from "@piperchat/commons";
 import { ServerEventRepository } from "./server-event-repository";
 
 /**

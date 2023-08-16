@@ -1,5 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
-import { RabbitMQ } from "../src/utils/rabbit-mq";
+import { RabbitMQ } from "@piperchat/commons";
 import { ServiceEvents } from "../src/events/events";
 import {
   ChannelController,
