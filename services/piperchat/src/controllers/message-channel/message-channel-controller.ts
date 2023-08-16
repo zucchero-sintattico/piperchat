@@ -1,4 +1,4 @@
-import { MessageChannel } from "@/models/message-channel-model";
+import { MessageChannel } from "@models/message-channel-model";
 
 export interface MessageChannelController {
 	/**

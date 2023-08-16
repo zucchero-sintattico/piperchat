@@ -1,11 +1,12 @@
 {
-	"extends": "../tsconfig.common.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		// Module resolution
 		"rootDir": ".",
 		"baseUrl": ".",
 		// Output
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"composite": true
 	},
-	"include": ["src/**/*"]
+	"include": [ "src/**/*" ]
 }

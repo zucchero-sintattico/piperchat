@@ -2,7 +2,7 @@ import { Router } from "express";
 import { serverRouter } from "./routers/server-router";
 import { messageChannelRouter } from "./routers/message-channel-router";
 import { multimediaChannelRouter } from "./routers/multimedia-channel-router";
-import { JWTAuthenticationMiddleware } from "@commons/jwt";
+import { JWTAuthenticationMiddleware } from "@piperchat/commons";
 
 const serviceRouter = Router();
 serviceRouter.use(JWTAuthenticationMiddleware);

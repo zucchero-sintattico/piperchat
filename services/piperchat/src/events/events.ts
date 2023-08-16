@@ -1,4 +1,4 @@
-import { RabbitMQ } from "@commons/rabbit-mq";
+import { RabbitMQ } from "@piperchat/commons";
 
 /**
  * Service events

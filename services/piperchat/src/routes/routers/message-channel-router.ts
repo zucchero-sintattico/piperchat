@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { MessageChannelController } from "@/controllers/message-channel/message-channel-controller";
-import { MessageChannelControllerImpl } from "@/controllers/message-channel/message-channel-controller-impl";
+import { MessageChannelController } from "@controllers/message-channel/message-channel-controller";
+import { MessageChannelControllerImpl } from "@controllers/message-channel/message-channel-controller-impl";
 
 export const messageChannelRouter = Router();
 const messageChannelController: MessageChannelController =

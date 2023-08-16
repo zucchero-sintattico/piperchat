@@ -1,18 +1,12 @@
-import express from "express";
-import { serviceRouter } from "./routes/router";
-import { config } from "dotenv";
-import { RabbitMQ } from "@commons/rabbit-mq";
-import { MongooseUtils } from "@commons/mongoose-utils";
+import { RabbitMQ } from "@piperchat/commons";
+import { MongooseUtils } from "@piperchat/commons";
 import { ServiceEvents } from "./events/events";
 import { PiperchatServer } from "./server";
 import mongoose from "mongoose";
 
-// Load environment variables
-config();
-
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000;
-const amqpUri = process.env.AMQP_URI || "amqp://localhost";
+const amqpUri = process.env.AMQP_URI || "amqp://localhost:5672";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017";
 
 // Express app

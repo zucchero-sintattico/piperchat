@@ -29,7 +29,7 @@ serverRouter.get("/all", async (req: Request, res: Response) => {
 
 serverRouter.post("/create", async (req: Request, res: Response) => {
 	serverController
-		.createServer(req.body.name, req.body.description, req.user.username)
+		.createServer(req.body.name, req.body.description, "user"/*req.user.username*/)
 		.then((server) => {
 			res.status(200).json(server);
 		})

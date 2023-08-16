@@ -1,7 +1,7 @@
 import http from "http";
 import express from "express";
-import { serviceRouter } from "./routes/router";
-import { JWTAuthenticationMiddleware } from "@commons/jwt";
+import { serviceRouter } from "@routes/router";
+import { JWTAuthenticationMiddleware } from "@piperchat/commons";
 import cookieParser from "cookie-parser";
 
 export class PiperchatServer {

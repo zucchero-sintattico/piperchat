@@ -1,4 +1,4 @@
-import { MultimediaChannel } from "@/models/multimedia-channel-model";
+import { MultimediaChannel } from "@models/multimedia-channel-model";
 
 export interface MultimediaChannelController {
 	/**

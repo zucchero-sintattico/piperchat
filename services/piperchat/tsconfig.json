@@ -1,17 +1,8 @@
 {
-	"extends": "../tsconfig.common.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"rootDir": ".",
-		"baseUrl": ".",
+		"rootDir": "./",
+		"baseUrl": "./",
 		"outDir": "./dist",
-		"paths": {
-			"@/*": ["src/*"],
-			"@controllers/*": ["src/controllers/*"],
-			"@events/*": ["src/events/*"],
-			"@models/*": ["src/models/*"],
-			"@repositories/*": ["src/repositories/*"],
-			"@routes/*": ["src/routes/*"],
-			"@commons/*": ["node_modules/commons/dist/src/*"]
-		}
 	}
 }

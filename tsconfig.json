@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		// JS Version
+		"module": "commonjs",
+		"target": "es6",
+		// Compile options
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		// Module options
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		// Type checking
+		"strict": true,
+		"baseUrl": "./",
+		"paths": {
+			"@/*": [ "src/*" ],
+			"@controllers/*": [ "src/controllers/*" ],
+			"@events/*": [ "src/events/*" ],
+			"@models/*": [ "src/models/*" ],
+			"@repositories/*": [ "src/repositories/*" ],
+			"@routes/*": [ "src/routes/*" ],
+		}
+	}
+}

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@piperchat/commons": "^1.0.0",
     "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
@@ -17,6 +18,7 @@
     "mongoose": "^7.4.3"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.17",
@@ -24,6 +26,8 @@
     "@types/node": "^20.5.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
   },
   "workspaces": [
