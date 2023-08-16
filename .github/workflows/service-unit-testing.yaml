@@ -3,8 +3,13 @@ run-name: Microservices testing started by ${{ github.actor }}
 on:
   push:
     branches-ignore:
-      - "main"
-      - "develop"
+      - 'main'
+      - 'develop'
+    paths:
+      - 'services/messages/**'
+      - 'services/notifications/**'
+      - 'services/piperchat/**'
+      - 'services/users/**'
 
 env:
   TESTING_PATH: "services"

@@ -445,10 +445,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-                example:
-                  - server1
-                  - server2
+                  "$ref": "#/components/schemas/server"
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
     post:
@@ -480,27 +477,6 @@ paths:
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
 
-  /servers/{serverId}:
-    get:
-      summary: Get server information
-      description: Get information about a server
-      tags:
-        - "servers"
-      security:
-        - bearerAuth: []
-      parameters:
-        - "$ref": "#/components/parameters/serverId"
-      responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/server"
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
-          description: Server not found
     put:
       summary: Modify server
       description: The owner modify server information
@@ -590,24 +566,14 @@ paths:
         "404":
           description: Server not found
     delete:
-      summary: Leave or kick from the server
-      description: The user leave or the owner kick a user from the server
+      summary: Leave from the server
+      description: The user leave from the server
       tags:
         - "servers"
       security:
         - bearerAuth: []
       parameters:
         - "$ref": "#/components/parameters/serverId"
-      requestBody:
-        description: The server owner can kick a user from the server
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user:
-                  type: string
-                  example: user1
       responses:
         "200":
           description: Ok
@@ -621,6 +587,31 @@ paths:
           description: Server not found
         "422":
           description: "Unprocessable entity: the user is the owner of the server"
+
+  /servers/{serverId}/partecipants/{userId}:
+    delete:
+      summary: Remove user from server
+      description: The owner remove a user from the server
+      tags:
+        - "servers"
+      security:
+        - bearerAuth: []
+      parameters:
+        - "$ref": "#/components/parameters/serverId"
+        - "$ref": "#/components/parameters/username"
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: Bad request
+        "401":
+          "$ref": "#/components/responses/UnauthorizedError"
+        "403":
+          "$ref": "#/components/responses/ForbiddenError"
+        "404":
+          description: Server or user not found
+        "422":
+          description: Unprocessable entity
 
   /servers/{serverId}/channels:
     get:
@@ -640,16 +631,16 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/channel"
+                  "$ref": "#/components/schemas/basicChannel"
                 example:
                   - channelId: channel123
-                    name: channel1
-                    description: This is a message channel
-                    type: message
+                    name: Beautiful Channel
+                    description: This channel is created for make new friends!
+                    channelType: message
                   - channelId: channel456
-                    name: channel2
-                    description: This is a multimedia channel
-                    type: multimedia
+                    name: Beautiful vocal channel
+                    description: This channel is created for make new friends!
+                    channelType: multimedia
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
         "403":
@@ -697,29 +688,6 @@ paths:
           description: Server not found
 
   /servers/{serverId}/channels/{channelId}:
-    get:
-      summary: Get channel information
-      description: Get information about channel
-      tags:
-        - "channels"
-      security:
-        - bearerAuth: []
-      parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
-      responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/channel"
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
-          description: Server or Channel not found
     put:
       summary: Modify a channel
       description: The owner modify channel information
@@ -808,7 +776,7 @@ paths:
                 items:
                   "$ref": "#/components/schemas/message"
                 example:
-                  - messageId: message123
+                  - messageId: 123
                     sender: user1
                     content: Hello World!
         "400":
@@ -890,6 +858,9 @@ components:
     server:
       type: object
       properties:
+        serverId:
+          type: string
+          example: server123
         name:
           type: string
           example: Beautiful Server
@@ -909,7 +880,6 @@ components:
         description:
           type: string
           example: This channel is created for make new friends!
-
 
     messageChannel:
       allOf:
@@ -966,7 +936,7 @@ components:
       description: serverId of the server that you want to interact with
       schema:
         type: string
-      example: server1
+      example: server123
 
     channelId:
       name: channelId

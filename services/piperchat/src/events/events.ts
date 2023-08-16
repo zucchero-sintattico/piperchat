@@ -1,3 +1,4 @@
+import { ServerRepositoryImpl } from "../repositories/server/server-repository-impl";
 import { RabbitMQ } from "@piperchat/commons";
 
 /**
@@ -7,34 +8,78 @@ import { RabbitMQ } from "@piperchat/commons";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-	private static broker: RabbitMQ;
-	// private static entityRepository: EntityRepository = new EntityRepository();
+  private static broker: RabbitMQ;
 
-	static async initialize() {
-		this.broker = RabbitMQ.getInstance();
-		await this.declareQueue();
-		await this.setupListeners();
-	}
+  static async initialize() {
+    this.broker = RabbitMQ.getInstance();
+    await this.declareQueue();
+    await this.setupListeners();
+  }
 
-	static async declareQueue() {
-		// Declare queue
-		/*
-		this.broker.getChannel()?.assertQueue("entity.entity.created", {
-			durable: true,
-		});
-		*/
-	}
+  static async declareQueue() {
+    // Declare queue
+    const channel = this.broker.getChannel();
 
-	static async setupListeners() {
-		// Setup listeners
-		/*
-		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
-			if (msg) {
-				console.log("Entity created", msg.content.toString());
-				this.broker.getChannel()?.ack(msg);
-				this.entityRepository.createEntity(JSON.parse(msg.content.toString()));
-			}
-		});
-		*/
-	}
+    // Declare the exchange
+    await channel?.assertExchange("servers", "fanout", {
+      durable: true,
+    });
+
+    await channel?.assertExchange("channels", "fanout", {
+      durable: true,
+    });
+  }
+
+  static async setupListeners() {
+    const serversRepository = new ServerRepositoryImpl();
+    this.subscribeToExchange("servers", async (event, data) => {
+      switch (event) {
+        case "":
+          try {
+          } catch (error) {
+            console.error(error);
+          }
+          break;
+      }
+    });
+
+    this.subscribeToExchange("channels", async (event, data) => {
+      // TODO: Handle events
+      switch (event) {
+        case "":
+          try {
+          } catch (error) {
+            console.error(error);
+          }
+          break;
+      }
+    });
+  }
+
+  private static async subscribeToExchange(
+    exchange: string,
+    callback: (event: string, data: any) => void
+  ) {
+    const channel = this.broker.getChannel();
+    const queue = await channel?.assertQueue("", {
+      exclusive: true,
+    });
+    if (!queue) {
+      return;
+    }
+    await channel?.bindQueue(queue.queue, exchange, "");
+    channel?.consume(queue.queue, async (message: any): Promise<void> => {
+      if (!message) {
+        return;
+      }
+
+      const content = message.content.toString();
+      try {
+        const data = JSON.parse(content);
+        callback(message.fields.routingKey, data);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
 }

@@ -2,7 +2,6 @@ import { RabbitMQ } from "@piperchat/commons";
 import { MongooseUtils } from "@piperchat/commons";
 import { ServiceEvents } from "./events/events";
 import { PiperchatServer } from "./server";
-import mongoose from "mongoose";
 
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000;
@@ -14,18 +13,18 @@ const app: PiperchatServer = new PiperchatServer(port);
 
 // Start function
 const start = async () => {
-	// Initialize mongoose
-	await MongooseUtils.initialize(mongoose, mongoUri);
+  // Initialize mongoose
+  await MongooseUtils.initialize(mongoUri);
 
-	// Initialize RabbitMQ
-	await RabbitMQ.initialize(amqpUri);
+  // Initialize RabbitMQ
+  await RabbitMQ.initialize(amqpUri);
 
-	// Initialize service events listeners
-	await ServiceEvents.initialize();
+  // Initialize service events listeners
+  await ServiceEvents.initialize();
 
-	app.start(() => {
-		console.log(`Started on port: ${port}`);
-	});
+  app.start(() => {
+    console.log(`Started on port: ${port}`);
+  });
 };
 
 // Start the service
