@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker build . --tag piperchat
+
 docker compose \
     --project-name piperchat \
     --project-directory . \
