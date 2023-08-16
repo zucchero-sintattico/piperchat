@@ -1,6 +1,6 @@
-import { Message, Server, MessageChannel } from "../../models/messages-model";
+import { Message, MessageChannel } from "../../models/messages-model";
 
-export interface ChannelRepository {
+export interface ChannelController {
 
     /**
      * Get all the channels in a server

@@ -1,5 +1,5 @@
-import { DirectRepository } from "../../repositories/direct/direct-repository";
-import { Direct, Message } from "../../models/messages-model";
+
+import { Message } from "../../models/messages-model";
 
 export interface DirectController {
 
