@@ -1,39 +1,39 @@
 import { ChannelRepository } from '../../repositories/channel/channel-repository';
 import { ChannelRepositoryImpl } from '../../repositories/channel/channel-repository-impl';
-import { ChannelController } from './channel-controller';
+import { ChannelController, ChannelControllerExceptions } from './channel-controller';
 import { MessageChannel, Message } from '../../models/messages-model';
 
 export class ChannelControllerImpl implements ChannelController {
 
     private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
 
-    getChannels(serverId: string): Promise<MessageChannel[]> {
-        return this.channelRepository.getChannels(serverId);
+    async getChannels(serverId: string): Promise<MessageChannel[]> {
+        return await this.channelRepository.getChannels(serverId);
     }
 
-    createChannel(serverId: string, name: string, channelType: string, description: string): Promise<MessageChannel> {
-        return this.channelRepository.createChannel(serverId, name, channelType, description);
+    async createChannel(serverId: string, channelId: string): Promise<void> {
+        try {
+            await this.channelRepository.createChannel(serverId, channelId);
+        }
+        catch (e) {
+            throw new ChannelControllerExceptions.ServerNotFound();
+        }
     }
 
-    deleteChannel(channelId: string, serverId: string): Promise<void> {
-
-        return this.channelRepository.deleteChannel(channelId, serverId);
+    async deleteChannel(channelId: string, serverId: string): Promise<void> {
+        await this.channelRepository.deleteChannel(channelId, serverId);
     }
 
-    getChannel(channelId: string, serverId: string): Promise<MessageChannel> {
+    async getChannel(channelId: string, serverId: string): Promise<MessageChannel> {
         return this.channelRepository.getChannel(channelId, serverId);
     }
 
-    modifyChannel(channelId: string, serverId: string, name: string, description: string): Promise<void> {
-        return this.channelRepository.modifyChannel(channelId, serverId, name, description);
+    async getMessages(channelId: string, serverId: string): Promise<Message[]> {
+        return await this.channelRepository.getMessages(channelId, serverId);
     }
 
-    getMessages(channelId: string, serverId: string): Promise<Message[]> {
-        return this.channelRepository.getMessages(channelId, serverId);
-    }
-
-    sendMessage(channelId: string, serverId: string, sender: string, message: string): Promise<void> {
-        return this.channelRepository.sendMessage(channelId, serverId, sender, message);
+    async sendMessage(channelId: string, serverId: string, sender: string, message: string): Promise<void> {
+        await this.channelRepository.sendMessage(channelId, serverId, sender, message);
     }
 
 

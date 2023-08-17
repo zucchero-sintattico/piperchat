@@ -14,8 +14,8 @@ export class DirectControllerImpl implements DirectController {
     }
 
 
-    sendDirectMessage(username1: string, username2: string, message: string): Promise<void> {
-        return this.directRepository.sendDirectMessage(username1, username2, message);
+    async sendDirectMessage(username1: string, username2: string, message: string): Promise<void> {
+        await this.directRepository.sendDirectMessage(username1, username2, message);
     }
 
 }

@@ -1,36 +1,73 @@
 import { ChannelRepository } from "./channel-repository";
-import { Message, Server, MessageChannel } from "../../models/messages-model";
+import { Servers, MessageChannel, Message } from "../../models/messages-model";
 
 export class ChannelRepositoryImpl implements ChannelRepository {
 
-    //For all the methods in this class, launch an error of not implemented
-
     async getChannels(serverId: string): Promise<MessageChannel[]> {
-        throw new Error("Method not implemented.");
+        const server = await Servers.findOne({ id: serverId }).orFail();
+        return server.messagesChannels;
     }
 
-    async createChannel(serverId: string, name: string, channelType: string, description: string): Promise<MessageChannel> {
-        throw new Error("Method not implemented.");
+    async createChannel(serverId: string, channelId: string): Promise<void> {
+        await Servers.findOneAndUpdate(
+            { id: serverId },
+            {
+                $push: {
+                    messagesChannels: {
+                        id: channelId,
+                        messages: [],
+                    },
+                },
+            },
+            { new: true }
+        ).orFail();
+
     }
 
     async deleteChannel(channelId: string, serverId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        await Servers.findByIdAndUpdate(
+            serverId,
+            {
+                $pull: {
+                    channels: {
+                        id: channelId,
+                    },
+                },
+            },
+            {
+                new: true,
+            }
+        ).orFail();
     }
 
     async getChannel(channelId: string, serverId: string): Promise<MessageChannel> {
-        throw new Error("Method not implemented.");
+        const server = await Servers.findOne({ id: serverId }).orFail();
+        const channel = server.messagesChannels.find((channel) => channel.id === channelId);
+        if (!channel) {
+            throw new Error("Channel not found");
+        }
+        return channel;
     }
 
-    async modifyChannel(channelId: string, serverId: string, name: string, description: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
 
     async getMessages(channelId: string, serverId: string): Promise<Message[]> {
-        throw new Error("Method not implemented.");
+        const channel = await this.getChannel(channelId, serverId);
+        return channel.messages;
     }
 
     async sendMessage(channelId: string, serverId: string, sender: string, content: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        await Servers.findOneAndUpdate(
+            { id: serverId, "messagesChannels.id": channelId },
+            {
+                $push: {
+                    "messagesChannels.$.messages": {
+                        sender,
+                        content,
+                    },
+                },
+            },
+            { new: true }
+        ).orFail();
     }
 
 }

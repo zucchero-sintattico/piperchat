@@ -13,12 +13,10 @@ export interface ChannelRepository {
     /**
      * Create a new channel
      * @param serverId
-     * @param name
-     * @param channelType
-     * @param descripition
-     * @returns {Promise<MessageChannel>}
+     * @param channelId
+     * @returns {Promise<void>}
      */
-    createChannel(serverId: string, name: string, channelType: string, description: string): Promise<MessageChannel>;
+    createChannel(serverId: string, channelId: string): Promise<void>;
 
 
     /**
@@ -37,14 +35,6 @@ export interface ChannelRepository {
      */
     getChannel(channelId: string, serverId: string): Promise<MessageChannel>;
 
-    /**
-     * Modify channel information
-     * @param channelId
-     * @param serverId
-     * @param name
-     * @param description
-     */
-    modifyChannel(channelId: string, serverId: string, name: string, description: string): Promise<void>;
 
     /**
      * Get all the messages in a channel
