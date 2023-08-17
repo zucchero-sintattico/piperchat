@@ -2,10 +2,13 @@ import { ChannelRepository } from '../../repositories/channel/channel-repository
 import { ChannelRepositoryImpl } from '../../repositories/channel/channel-repository-impl';
 import { ChannelController, ChannelControllerExceptions } from './channel-controller';
 import { MessageChannel, Message } from '../../models/messages-model';
+import { ServerRepository } from '../../repositories/server/server-repository';
+import { ServerRepositoryImpl } from '../../repositories/server/server-repository-impl';
 
 export class ChannelControllerImpl implements ChannelController {
 
     private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
+    private serverRepository: ServerRepository = new ServerRepositoryImpl();
 
     async getChannels(serverId: string): Promise<MessageChannel[]> {
         return await this.channelRepository.getChannels(serverId);
@@ -28,12 +31,27 @@ export class ChannelControllerImpl implements ChannelController {
         return this.channelRepository.getChannel(channelId, serverId);
     }
 
-    async getMessages(channelId: string, serverId: string): Promise<Message[]> {
-        return await this.channelRepository.getMessages(channelId, serverId);
+    async getMessages(channelId: string, serverId: string, username: string): Promise<Message[]> {
+        await this.checkIfUserIsInTheServer(serverId, username);
+        try {
+            return await this.channelRepository.getMessages(channelId, serverId);
+        } catch (e) {
+            throw new ChannelControllerExceptions.ChannelNotFound();
+        }
     }
 
     async sendMessage(channelId: string, serverId: string, sender: string, message: string): Promise<void> {
+        await this.checkIfUserIsInTheServer(serverId, sender);
         await this.channelRepository.sendMessage(channelId, serverId, sender, message);
+    }
+
+    async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<boolean> {
+        const partecipants = await this.serverRepository.getServerPartecipants(serverId);
+        if (partecipants.includes(userId)) return true;
+        else {
+            console.log("User not authorized");
+            throw new ChannelControllerExceptions.UserNotAuthorized();
+        }
     }
 
 

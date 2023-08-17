@@ -39,9 +39,14 @@ export interface ChannelController {
      * Get all the messages in a channel
      * @param channelId
      * @param serverId
+     * @param username
      * @returns {Promise<Message[]>}
+     * @throws ChannelNotFound if the channel does not exist
+     * @throws UserNotAuthorized if the user is not authorized to access the channel
+     * @throws ServerNotFound if the server does not exist
+     * 
      */
-    getMessages(channelId: string, serverId: string): Promise<Message[]>;
+    getMessages(channelId: string, serverId: string, username: string): Promise<Message[]>;
 
     /**
      * Send a message in a channel
@@ -50,6 +55,9 @@ export interface ChannelController {
      * @param sender
      * @param content
      * @returns {Promise<void>}
+     * @throws ChannelNotFound if the channel does not exist
+     * @throws UserNotAuthorized if the user is not authorized to access the channel
+     * @throws ServerNotFound if the server does not exist
      */
     sendMessage(channelId: string, serverId: string, sender: string, content: string): Promise<void>;
 

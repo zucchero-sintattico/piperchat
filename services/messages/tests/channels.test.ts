@@ -48,21 +48,31 @@ describe("chat tests", () => {
         await serverRepository.addServer("serverId", "owner");
         await channelController.createChannel("serverId", "channelType");
         const channelId = (await channelController.getChannels("serverId"))[0].id;
-        await channelController.sendMessage(channelId, "serverId", "sender", "message");
-        const messages = await channelController.getMessages("channelType", "serverId");
+        await channelController.sendMessage(channelId, "serverId", "owner", "message");
+        const messages = await channelController.getMessages("channelType", "serverId", "owner");
         expect(messages.length).toBe(1);
     });
     it("send a lot of messages from different users", async () => {
         await serverRepository.addServer("serverId", "owner");
         await channelController.createChannel("serverId", "channelType");
         const channelId = (await channelController.getChannels("serverId"))[0].id;
-        await channelController.sendMessage(channelId, "serverId", "sender", "message");
-        await channelController.sendMessage(channelId, "serverId", "sender2", "message2");
-        await channelController.sendMessage(channelId, "serverId", "sender3", "message3");
-        await channelController.sendMessage(channelId, "serverId", "sender4", "message4");
-        const messages = await channelController.getMessages("channelType", "serverId");
+        await channelController.sendMessage(channelId, "serverId", "owner", "message");
+        await channelController.sendMessage(channelId, "serverId", "owner", "message2");
+        await channelController.sendMessage(channelId, "serverId", "owner", "message3");
+        await channelController.sendMessage(channelId, "serverId", "owner", "message4");
+        const messages = await channelController.getMessages("channelType", "serverId", "owner");
         expect(messages.length).toBe(4);
     });
+
+    it("should not send a message if the user is not in the server", async () => {
+        await serverRepository.addServer("serverId", "owner");
+        await channelController.createChannel("serverId", "channelType");
+
+        const channelId = (await channelController.getChannels("serverId"))[0].id;
+        await expect(channelController.sendMessage(channelId, "serverId", "user", "message")).rejects.toThrow(new ChannelControllerExceptions.UserNotAuthorized());
+    });
+
+
 
 });
 
