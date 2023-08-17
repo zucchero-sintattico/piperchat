@@ -72,6 +72,14 @@ describe("chat tests", () => {
         await expect(channelController.sendMessage(channelId, "serverId", "user", "message")).rejects.toThrow(new ChannelControllerExceptions.UserNotAuthorized());
     });
 
+    it("should not send a message if the channel does not exist", async () => {
+        await serverRepository.addServer("serverId", "owner");
+        await channelController.createChannel("serverId", "channelType");
+
+        await expect(channelController.sendMessage("channelId", "serverId", "owner", "message")).rejects.toThrow(new ChannelControllerExceptions.ChannelNotFound());
+    });
+
+
 
 
 });

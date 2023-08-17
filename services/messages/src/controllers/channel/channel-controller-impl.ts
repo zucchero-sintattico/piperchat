@@ -42,8 +42,19 @@ export class ChannelControllerImpl implements ChannelController {
 
     async sendMessage(channelId: string, serverId: string, sender: string, message: string): Promise<void> {
         await this.checkIfUserIsInTheServer(serverId, sender);
+        await this.checkIfChannelExists(channelId, serverId);
         await this.channelRepository.sendMessage(channelId, serverId, sender, message);
     }
+
+    //check if the channel exists
+    async checkIfChannelExists(channelId: string, serverId: string): Promise<boolean> {
+        const channels = await this.channelRepository.getChannels(serverId);
+        if (channels.find(channel => channel.id === channelId)) return true;
+        else {
+            throw new ChannelControllerExceptions.ChannelNotFound();
+        }
+    }
+
 
     async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<boolean> {
         const partecipants = await this.serverRepository.getServerPartecipants(serverId);
