@@ -36,17 +36,17 @@ export interface ChannelController {
     getChannel(channelId: string, serverId: string): Promise<MessageChannel>;
 
     /**
-     * Get all the messages in a channel
+     * Get paginated messages in a channel
      * @param channelId
      * @param serverId
-     * @param username
+     * @param from
+     * @param limit
      * @returns {Promise<Message[]>}
      * @throws ChannelNotFound if the channel does not exist
      * @throws UserNotAuthorized if the user is not authorized to access the channel
      * @throws ServerNotFound if the server does not exist
-     * 
      */
-    getMessages(channelId: string, serverId: string, username: string): Promise<Message[]>;
+    getChannelMessagesPaginated(channelId: string, serverId: string, from: number, limit: number): Promise<Message[]>;
 
     /**
      * Send a message in a channel

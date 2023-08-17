@@ -31,13 +31,9 @@ export class ChannelControllerImpl implements ChannelController {
         return this.channelRepository.getChannel(channelId, serverId);
     }
 
-    async getMessages(channelId: string, serverId: string, username: string): Promise<Message[]> {
-        await this.checkIfUserIsInTheServer(serverId, username);
-        try {
-            return await this.channelRepository.getMessages(channelId, serverId);
-        } catch (e) {
-            throw new ChannelControllerExceptions.ChannelNotFound();
-        }
+    async getChannelMessagesPaginated(channelId: string, serverId: string, from: number, limit: number): Promise<Message[]> {
+        await this.checkIfChannelExists(channelId, serverId);
+        return await this.channelRepository.getChannelMessagesPaginated(channelId, serverId, from, limit);
     }
 
     async sendMessage(channelId: string, serverId: string, sender: string, message: string): Promise<void> {
@@ -46,7 +42,7 @@ export class ChannelControllerImpl implements ChannelController {
         await this.channelRepository.sendMessage(channelId, serverId, sender, message);
     }
 
-    //check if the channel exists
+
     async checkIfChannelExists(channelId: string, serverId: string): Promise<boolean> {
         const channels = await this.channelRepository.getChannels(serverId);
         if (channels.find(channel => channel.id === channelId)) return true;
@@ -56,11 +52,12 @@ export class ChannelControllerImpl implements ChannelController {
     }
 
 
+
+
     async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<boolean> {
         const partecipants = await this.serverRepository.getServerPartecipants(serverId);
         if (partecipants.includes(userId)) return true;
         else {
-            console.log("User not authorized");
             throw new ChannelControllerExceptions.UserNotAuthorized();
         }
     }

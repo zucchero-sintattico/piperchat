@@ -37,12 +37,14 @@ export interface ChannelRepository {
 
 
     /**
-     * Get all the messages in a channel
+     * Get paginated messages in a channel
      * @param channelId
      * @param serverId
+     * @param from
+     * @param limit
      * @returns {Promise<Message[]>}
      */
-    getMessages(channelId: string, serverId: string): Promise<Message[]>;
+    getChannelMessagesPaginated(channelId: string, serverId: string, from: number, limit: number): Promise<Message[]>;
 
     /**
      * Send a message in a channel

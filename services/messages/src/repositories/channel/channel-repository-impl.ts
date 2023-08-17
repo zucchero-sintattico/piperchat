@@ -50,13 +50,15 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     }
 
 
-    async getMessages(channelId: string, serverId: string): Promise<Message[]> {
-        const channel = await this.getChannel(channelId, serverId);
+    async getChannelMessagesPaginated(channelId: string, serverId: string, from: number, limit: number): Promise<Message[]> {
+        const server = await Servers.findOne({ id: serverId }).orFail();
+        const channel = server.messagesChannels.find((channel) => channel.id === channelId);
         if (!channel) {
             throw new Error("Channel not found");
         }
-        return channel.messages;
+        return channel.messages.slice(from, from + limit);
     }
+
 
     async sendMessage(channelId: string, serverId: string, sender: string, content: string): Promise<void> {
         await Servers.findOneAndUpdate(

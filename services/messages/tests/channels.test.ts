@@ -49,7 +49,7 @@ describe("chat tests", () => {
         await channelController.createChannel("serverId", "channelType");
         const channelId = (await channelController.getChannels("serverId"))[0].id;
         await channelController.sendMessage(channelId, "serverId", "owner", "message");
-        const messages = await channelController.getMessages("channelType", "serverId", "owner");
+        const messages = await channelController.getChannelMessagesPaginated(channelId, "serverId", 0, 10);
         expect(messages.length).toBe(1);
     });
     it("send a lot of messages from different users", async () => {
@@ -60,7 +60,7 @@ describe("chat tests", () => {
         await channelController.sendMessage(channelId, "serverId", "owner", "message2");
         await channelController.sendMessage(channelId, "serverId", "owner", "message3");
         await channelController.sendMessage(channelId, "serverId", "owner", "message4");
-        const messages = await channelController.getMessages("channelType", "serverId", "owner");
+        const messages = await channelController.getChannelMessagesPaginated(channelId, "serverId", 0, 10);
         expect(messages.length).toBe(4);
     });
 
