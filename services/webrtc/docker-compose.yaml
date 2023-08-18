@@ -1,5 +1,6 @@
-services:
+version: "1"
 
+services:
   webrtc-service:
     build: ./services/webrtc
     expose:
@@ -9,13 +10,15 @@ services:
         condition: service_healthy
       broker:
         condition: service_healthy
+      coturn:
+        condition: service_started
     networks:
       - webrtc-network
       - backend
       - frontend
     environment:
       - "AMQP_URI=${BROKER_URI}"
-      - "MONGO_URI=mongodb://db-webrtc-service:27017/webrtc"
+      - "MONGO_UTI=mongodb://db-webrtc-service:27017"
 
   db-webrtc-service:
     image: mongo
@@ -27,6 +30,17 @@ services:
         mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
     networks:
       - webrtc-network
+
+  coturn:
+    image: flaviostutz/coturn
+    ports:
+      - 3478:3478
+      - 3478:3478/udp
+      - 5349:5349
+      - 5349:5349/udp
+    environment:
+      - TURN_USERNAME=coturn
+      - TURN_PASSWORD=coturn-password
 
 networks:
   webrtc-network:

@@ -1,8 +1,8 @@
 import supertest from "supertest";
 import { UsersServer } from "../src/server";
 import { UserApi } from "./api/user-api";
-import { MongooseUtils } from "../src/utils/mongoose";
-import { RabbitMQ } from "../src/utils/rabbit-mq";
+import { MongooseUtils } from "../../commons/utils/mongoose";
+import { RabbitMQ } from "../../commons/utils/rabbit-mq";
 import { ServiceEvents } from "../src/events/events";
 
 let server: UsersServer;
@@ -26,7 +26,6 @@ beforeAll(async () => {
 	await ServiceEvents.initialize();
 	await server.start();
 	entityApi = new UserApi(supertest(server.server));
-
 });
 
 beforeEach(async () => {
@@ -62,7 +61,9 @@ describe("User authentication", () => {
 		await entityApi.login("test0", "test0");
 		const response = await entityApi.logout();
 		expect(response.status).toBe(200);
-		expect(response.header["set-cookie"][0]).toContain("jwt=; Path=/; Expires=");
+		expect(response.header["set-cookie"][0]).toContain(
+			"jwt=; Path=/; Expires="
+		);
 	});
 });
 
@@ -119,7 +120,7 @@ describe("Friend request", () => {
 		expect(response.body.friends).toContain("test1");
 	});
 
-	it("A user should be able to rejct a friend request", async () => {
+	it("A user should be able to reject a friend request", async () => {
 		await entityApi.login("test0", "test0");
 		await entityApi.sendFriendRequest("test1");
 

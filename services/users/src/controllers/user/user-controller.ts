@@ -14,20 +14,6 @@ export interface UserController {
 	getUserStatus(username: string): Promise<UserStatusInfo>;
 
 	/**
-	 * Set the photo of a user.
-	 * @param username The username of the user.
-	 * @param photo The photo of the user.
-	 */
-	updateUserPhoto(username: string, photo: Buffer): Promise<void>;
-
-	/**
-	 * Set the user's description.
-	 * @param username The username of the user.
-	 * @param description The description of the user.
-	 */
-	updateUserDescription(username: string, description: string): Promise<void>;
-
-	/**
 	 * Get the photo of a user.
 	 * @param username The username of the user.
 	 * @returns The photo of the user.
@@ -46,6 +32,6 @@ export interface UserController {
 }
 
 export class UserControllerExceptions {
-	static UserNotFound = class extends Error { };
-	static PhotoNotPresent = class extends Error { };
+	static UserNotFound = class extends Error {};
+	static PhotoNotPresent = class extends Error {};
 }

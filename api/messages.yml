@@ -84,6 +84,12 @@ channels:
       message:
         "$ref": "#/components/messages/ServerUser"
 
+  server.user.kicked:
+    description: A user has been kicked from a server
+    publish:
+      message:
+        "$ref": "#/components/messages/ServerUser"
+
   channel.created:
     description: A channel is created
     publish:
@@ -238,20 +244,28 @@ components:
               type: string
               description: Description of the server
               example: My server description
+            owner:
+              type: string
+              description: Unique identifier representing a specific user
+              example: user1
 
     ServerUserSchema:
       allOf:
         - $ref: "#/components/schemas/ServerBasicSchema"
         - type: object
           properties:
-            serverId:
+            username:
               type: string
-              description: Unique identifier representing a specific server
-              example: server1
+              description: Unique identifier representing a specific user
+              example: user1
 
     ChannelBasicSchema:
       type: object
       properties:
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
         channelId:
           type: string
           description: Unique identifier representing a specific channel
@@ -262,14 +276,14 @@ components:
         - $ref: "#/components/schemas/ChannelBasicSchema"
         - type: object
           properties:
-            type:
-              type: string
-              description: Type of the channel
-              example: message, multimedia
             name:
               type: string
               description: Name of the channel
               example: general
+            type:
+              type: string
+              description: Type of the channel
+              example: message, multimedia
             description:
               type: string
               description: Description of the channel

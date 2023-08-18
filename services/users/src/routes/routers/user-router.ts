@@ -4,7 +4,7 @@ import {
 	UserControllerExceptions,
 } from "../../controllers/user/user-controller";
 import { UserControllerImpl } from "../../controllers/user/user-controller-impl";
-import { JWTAuthenticationMiddleware } from "../../utils/jwt";
+import { JWTAuthenticationMiddleware } from "../../../../commons/utils/jwt";
 
 const userController: UserController = new UserControllerImpl();
 
@@ -37,22 +37,6 @@ usersRouter.get("/:username/photo", async (req: Request, res: Response) => {
 	}
 });
 
-usersRouter.put("/profile/photo", async (req: Request, res: Response) => {
-	if (!req.body.photo) {
-		return res.status(400).json({ message: "Missing 'photo' in body" });
-	}
-	try {
-		await userController.updateUserPhoto(req.params.username, req.body.photo);
-		return res.status(200).json({ message: "Photo set" });
-	} catch (e: any) {
-		if (e instanceof UserControllerExceptions.UserNotFound) {
-			return res.status(404).json({ message: "User not found", error: e });
-		} else {
-			return res.status(500).json({ message: "Internal server error" });
-		}
-	}
-});
-
 usersRouter.get(
 	"/:username/description",
 	async (req: Request, res: Response) => {
@@ -69,24 +53,4 @@ usersRouter.get(
 			}
 		}
 	}
-);
-
-usersRouter.put("/profile/description", async (req: Request, res: Response) => {
-	if (!req.body.description) {
-		return res.status(400).json({ message: "Missing 'description' in body" });
-	}
-	try {
-		await userController.updateUserDescription(
-			req.user.username,
-			req.body.description
-		);
-		return res.status(200).json({ message: "Description set" });
-	} catch (e: any) {
-		if (e instanceof UserControllerExceptions.UserNotFound) {
-			return res.status(404).json({ message: "User not found", error: e });
-		} else {
-			return res.status(500).json({ message: "Internal server error" });
-		}
-	}
-}
 );

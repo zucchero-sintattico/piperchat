@@ -1,26 +1,50 @@
 import { Schema, model } from "mongoose";
 
+export interface UserInSession {
+	username: string;
+	socketId: string;
+}
+export interface Session {
+	id: string;
+	createdAt: Date;
+	participants: UserInSession[];
+	allowedUsers: string[];
+}
+
 const SessionSchema = new Schema({
+	id: {
+		type: String,
+		required: true,
+		unique: true,
+		auto: true,
+	},
 	createdAt: {
 		type: Date,
+		required: true,
 		default: Date.now,
 	},
-	users: {
-		type: Array,
+	participants: {
+		type: [
+			{
+				username: {
+					type: String,
+					required: true,
+				},
+				socketId: {
+					type: String,
+					required: true,
+				},
+			},
+		],
 		required: true,
-		fields: {
-			userId: {
-				type: String,
-				required: true,
-			},
-			sdp: {
-				type: String,
-				required: true,
-			},
-		},
+		default: [],
+	},
+	allowedUsers: {
+		type: [String],
+		required: true,
 	},
 });
 
-const Session = model("Session", SessionSchema);
+const Sessions = model("Session", SessionSchema);
 
-export { Session };
+export { Sessions };

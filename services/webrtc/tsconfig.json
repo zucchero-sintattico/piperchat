@@ -8,5 +8,10 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*"],
+	"references": [
+		{
+			"path": "../commons/tsconfig.json"
+		}
+	]
 }

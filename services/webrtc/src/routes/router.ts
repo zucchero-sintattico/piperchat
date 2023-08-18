@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { entityRouter } from "./entity-router";
+import { infraServiceMiddleware } from "../../../commons/utils/infra-service-middleware";
+import { sessionRouter } from "./routers/sessionRouter";
 
-const serviceRouter = Router();
+export const serviceRouter = Router();
+serviceRouter.use(infraServiceMiddleware);
 
-// Register all routers
-serviceRouter.use("/entity", entityRouter);
-
-export { serviceRouter };
+serviceRouter.use("/session", sessionRouter);
