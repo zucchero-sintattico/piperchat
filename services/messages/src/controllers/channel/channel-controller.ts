@@ -62,6 +62,8 @@ export interface ChannelController {
     sendMessage(channelId: string, serverId: string, sender: string, content: string): Promise<void>;
 
 
+
+
 }
 
 export class ChannelControllerExceptions {

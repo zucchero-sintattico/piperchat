@@ -26,7 +26,8 @@ export class DirectRepositoryImpl implements DirectRepository {
     }
 
     async sendDirectMessage(username1: string, username2: string, message: string): Promise<void> {
-        //if not exists create direct
+
+
         const direct = await Directs.findOne({
             $or: [
                 { partecipants: [username1, username2] },
