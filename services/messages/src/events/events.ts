@@ -1,8 +1,5 @@
-import { MessageRepository } from "../repositories/message-repository";
-import { ConversationsRepository } from "../repositories/conversation-repository";
-import { ServersRepository } from "../repositories/server-repository";
 import { RabbitMQ } from "../utils/rabbit-mq";
-
+import { ServerRepositoryImpl } from "../repositories/server/server-repository-impl";
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -11,10 +8,6 @@ import { RabbitMQ } from "../utils/rabbit-mq";
  */
 export class ServiceEvents {
   private static broker: RabbitMQ;
-  private static messageRepository: MessageRepository = new MessageRepository();
-  private static conversationRepository: ConversationsRepository =
-    new ConversationsRepository();
-  private static serverRepository: ServersRepository = new ServersRepository();
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance();
@@ -26,19 +19,15 @@ export class ServiceEvents {
     const channel = this.broker.getChannel();
 
     // Declare the exchange
-    await channel?.assertExchange("message", "fanout", {
+    await channel?.assertExchange("messages", "fanout", {
       durable: true,
     });
   }
 
   static async setupListeners() {
-    this.subscribeToExchange("message", async (event, data) => {
+    this.subscribeToExchange("messages", async (event, data) => {
       switch (event) {
-        case "message.created":
-          await this.messageRepository.createMessage(data.sender, data.content);
-          break;
-
-        default:
+        case "":
           break;
       }
     });
