@@ -1,13 +1,7 @@
-import express from "express";
-import { serviceRouter } from "./routes/router";
-import { config } from "dotenv";
-import { RabbitMQ } from "./utils/rabbit-mq";
-import { MongooseUtils } from "./utils/mongoose";
-import { ServiceEvents } from "./events/events";
+import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
+import mongoose from "mongoose";
+import { ServiceEvents } from "@events/events";
 import { NotificationsServer } from "./server";
-
-// Load environment variables
-config();
 
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000;
@@ -20,7 +14,7 @@ const app: NotificationsServer = new NotificationsServer(port);
 // Start function
 const start = async () => {
 	// Initialize mongoose
-	await MongooseUtils.initialize(mongoUri);
+	await MongooseUtils.initialize(mongoose, mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(amqpUri);

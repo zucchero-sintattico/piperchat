@@ -2,39 +2,15 @@
   "name": "notifications",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/src/app.js",
   "scripts": {
-    "build": "tsc -b -v && tsc-alias -p tsconfig.json",
-    "dev": "nodemon --exec ts-node src/app.ts",
-    "start": "npm run build && node dist/src/app.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --testTimeout=60000 --detectOpenHandles"
+    "build": "tsc --build -v && tsc-alias",
+    "start": "node .",
+    "start:build": "npm run build && npm run start",
+    "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts",
+    "test": "jest --verbose --testTimeout=5000 --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "amqplib": "^0.10.3",
-    "commons": "file:../commons",
-    "cookie-parser": "^1.4.6",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.0.2"
-  },
-  "devDependencies": {
-    "@types/amqplib": "^0.10.1",
-    "@types/cookie-parser": "^1.4.3",
-    "@types/express": "^4.17.17",
-    "@types/jest": "^29.5.0",
-    "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^18.15.5",
-    "@types/supertest": "^2.0.12",
-    "cross-env": "^7.0.3",
-    "jest": "^29.5.0",
-    "nodemon": "^2.0.21",
-    "supertest": "^6.3.3",
-    "ts-jest": "^29.0.5",
-    "ts-node": "^10.9.1",
-    "tsc-alias": "^1.8.7",
-    "typescript": "^5.0.2"
-  }
+  "license": "ISC"
 }

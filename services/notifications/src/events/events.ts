@@ -1,5 +1,5 @@
-import { EntityRepository } from "../repositories/entity-repository";
-import { RabbitMQ } from "../utils/rabbit-mq";
+import { EntityRepository } from "@repositories/entity-repository";
+import { RabbitMQ } from "@piperchat/commons";
 
 /**
  * Service events

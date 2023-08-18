@@ -1,7 +1,8 @@
 services:
 
   notifications-service:
-    build: ./services/notifications
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/notifications", "start"]
     expose:
       - "3000"
     depends_on:

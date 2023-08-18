@@ -1,4 +1,4 @@
-import { NotificationEntity } from "../models/notification-model";
+import { NotificationEntity } from "@models/notification-model";
 
 /**
  * The repository of a generic entity.
