@@ -1,5 +1,5 @@
-import { MonitoringRepository } from "../repositories/monitoring-repository";
-import { RabbitMQ } from "../utils/rabbit-mq";
+import { MonitoringRepository } from "@repositories/monitoring-repository";
+import { RabbitMQ } from "@piperchat/commons";
 
 /**
  * Service events

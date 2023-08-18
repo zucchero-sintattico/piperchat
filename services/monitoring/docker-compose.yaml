@@ -1,7 +1,8 @@
 services:
 
   monitoring-service:
-    build: ./services/monitoring
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/monitoring", "start"]
     expose:
       - "3000"
     depends_on:

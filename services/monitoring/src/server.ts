@@ -1,7 +1,6 @@
 import http from "http";
 import express from "express";
 import { serviceRouter } from "./routes/router";
-import { jwtValidTokenRequired } from "./utils/jwt";
 import cookieParser from "cookie-parser";
 
 export class MonitoringServer {

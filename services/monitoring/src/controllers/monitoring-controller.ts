@@ -1,7 +1,7 @@
-import { MessageMonitorEntity, UserMonitorEntity } from "../models/monitoring-model";
+import { MessageMonitorEntity, UserMonitorEntity } from "@models/monitoring-model";
 import { Request, Response } from "express";
-import { MessageEventsRepository } from "../events/repositories/ monitoring-events-repository";
-import { MonitoringRepository } from "../repositories/monitoring-repository";
+import { MessageEventsRepository } from "@events/repositories/ monitoring-events-repository";
+import { MonitoringRepository } from "@repositories/monitoring-repository";
 
 /**
  * The controller of a generic entity.

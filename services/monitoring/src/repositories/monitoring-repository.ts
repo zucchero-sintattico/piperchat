@@ -1,4 +1,4 @@
-import { MessageMonitorEntity, UserMonitorEntity } from "../models/monitoring-model";
+import { MessageMonitorEntity, UserMonitorEntity } from "@models/monitoring-model";
 
 /**
  * The repository of a generic entity.
