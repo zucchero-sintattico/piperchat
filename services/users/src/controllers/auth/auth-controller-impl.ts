@@ -11,7 +11,7 @@ import {
 	generateAccessToken,
 	generateRefreshToken,
 	verifyRefreshToken,
-} from "@commons/jwt";
+} from "@piperchat/commons";
 import { UserEventsRepositoryImpl } from "@events/repositories/user/user-events-repository-impl";
 
 export class AuthControllerImpl implements AuthController {

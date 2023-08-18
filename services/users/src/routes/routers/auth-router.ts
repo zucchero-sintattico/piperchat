@@ -7,7 +7,7 @@ import { AuthControllerImpl } from "@controllers/auth/auth-controller-impl";
 import {
 	JWTAuthenticationMiddleware,
 	JWTRefreshTokenMiddleware,
-} from "@commons/jwt";
+} from "@piperchat/commons";
 
 const authController: AuthController = new AuthControllerImpl();
 

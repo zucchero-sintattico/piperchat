@@ -1,9 +1,8 @@
 import supertest from "supertest";
-import { UsersServer } from "../src/server";
+import { UsersServer } from "@/server";
 import { UserApi } from "./api/user-api";
-import { MongooseUtils } from "@commons/mongoose-utils";
-import { RabbitMQ } from "@commons/rabbit-mq";
-import { ServiceEvents } from "../src/events/events";
+import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
+import { ServiceEvents } from "@events/events";
 import mongoose from "mongoose";
 
 let server: UsersServer;
@@ -39,7 +38,7 @@ beforeEach(async () => {
 afterAll(async () => {
 	server.stop();
 	await MongooseUtils.close(mongoose);
-	await RabbitMQ.close();
+	await RabbitMQ.disconnect();
 });
 
 afterEach(async () => {

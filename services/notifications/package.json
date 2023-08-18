@@ -1,5 +1,5 @@
 {
-  "name": "notifications",
+  "name": "@piperchat/notifications",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/app.js",

@@ -4,7 +4,7 @@ import {
 	FriendsControllerExceptions,
 } from "@controllers/friends/friends-controller";
 import { FriendsControllerImpl } from "@controllers/friends/friends-controller-impl";
-import { JWTAuthenticationMiddleware } from "@commons/jwt";
+import { JWTAuthenticationMiddleware } from "@piperchat/commons";
 
 const friendsController: FriendsController = new FriendsControllerImpl();
 

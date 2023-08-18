@@ -1,5 +1,5 @@
 {
-  "name": "monitoring",
+  "name": "@piperchat/monitoring",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/app.js",

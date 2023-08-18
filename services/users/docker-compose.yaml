@@ -1,7 +1,8 @@
 services:
 
   users-service:
-    build: ./services/users
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/users", "start"]
     expose:
       - "3000"
     depends_on:

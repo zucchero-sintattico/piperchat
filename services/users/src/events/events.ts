@@ -1,6 +1,6 @@
-import { UserRepository } from "../repositories/user/user-repository";
-import { UserRepositoryImpl } from "../repositories/user/user-repository-impl";
-import { RabbitMQ } from "@commons/rabbit-mq";
+import { UserRepository } from "@repositories/user/user-repository";
+import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
+import { RabbitMQ } from "@piperchat/commons";
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
