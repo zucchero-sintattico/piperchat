@@ -1,10 +1,10 @@
 import { Server, Socket } from "socket.io";
-import { decodeAccessToken, isAccessTokenValid } from "../../commons/utils/jwt";
+import { decodeAccessToken, isAccessTokenValid } from "@piperchat/commons";
 import http from "http";
-import { SessionRepository } from "./repositories/session/session-repository";
-import { SessionRepositoryImpl } from "./repositories/session/session-repository-impl";
-import { SessionEventsRepository } from "./events/repositories/session/session-events-repository";
-import { SessionEventsRepositoryImpl } from "./events/repositories/session/session-events-repository-impl";
+import { SessionRepository } from "@repositories/session/session-repository";
+import { SessionRepositoryImpl } from "@repositories/session/session-repository-impl";
+import { SessionEventsRepository } from "@events/repositories/session/session-events-repository";
+import { SessionEventsRepositoryImpl } from "@events/repositories/session/session-events-repository-impl";
 
 export class WebRTCSocketServer {
 	private sessionRepository: SessionRepository = new SessionRepositoryImpl();

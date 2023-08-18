@@ -1,6 +1,6 @@
-import { Session } from "@/models/session-model";
-import { SessionRepository } from "@/repositories/session/session-repository";
-import { SessionRepositoryImpl } from "@/repositories/session/session-repository-impl";
+import { Session } from "@models/session-model";
+import { SessionRepository } from "@repositories/session/session-repository";
+import { SessionRepositoryImpl } from "@repositories/session/session-repository-impl";
 import { SessionController } from "./session-controller";
 
 export class SessionControllerImpl implements SessionController {

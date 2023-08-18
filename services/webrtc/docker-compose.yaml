@@ -2,7 +2,8 @@ version: "1"
 
 services:
   webrtc-service:
-    build: ./services/webrtc
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/piperchat", "start"]
     expose:
       - "3000"
     depends_on:

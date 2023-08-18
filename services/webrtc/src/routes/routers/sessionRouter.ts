@@ -2,8 +2,8 @@ import { Request, Response, Router } from "express";
 import {
 	SessionController,
 	SessionControllerExceptions,
-} from "@/controllers/session/session-controller";
-import { SessionControllerImpl } from "@/controllers/session/session-controller-impl";
+} from "@controllers/session/session-controller";
+import { SessionControllerImpl } from "@controllers/session/session-controller-impl";
 
 export const sessionRouter = Router();
 const sessionController: SessionController = new SessionControllerImpl();

@@ -1,12 +1,12 @@
-import { RabbitMQ } from "../../commons/utils/rabbit-mq";
-import { MongooseUtils } from "../../commons/utils/mongoose";
-import { ServiceEvents } from "./events/events";
+import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
+import mongoose from "mongoose";
+import { ServiceEvents } from "@events/events";
 import { WebRTCServer } from "./server";
 
 // Start function
 const start = async (configuration: any) => {
 	// Initialize mongoose
-	await MongooseUtils.initialize(configuration.mongoUri);
+	await MongooseUtils.initialize(mongoose, configuration.mongoUri);
 
 	// Initialize RabbitMQ
 	await RabbitMQ.initialize(configuration.amqpUri);

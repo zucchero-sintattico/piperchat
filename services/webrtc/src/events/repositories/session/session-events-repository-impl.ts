@@ -1,4 +1,4 @@
-import { BasicEventsRepository } from "../../../../../commons/utils/basic-events-repository";
+import { BasicEventsRepository } from "@piperchat/commons";
 import { SessionEventsRepository } from "./session-events-repository";
 
 export class SessionEventsRepositoryImpl

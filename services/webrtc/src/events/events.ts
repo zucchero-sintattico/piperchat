@@ -1,6 +1,6 @@
-import { SessionRepository } from "../repositories/session/session-repository";
-import { SessionRepositoryImpl } from "../repositories/session/session-repository-impl";
-import { RabbitMQ } from "../../../commons/utils/rabbit-mq";
+import { SessionRepository } from "@repositories/session/session-repository";
+import { SessionRepositoryImpl } from "@repositories/session/session-repository-impl";
+import { RabbitMQ } from "@piperchat/commons";
 
 /**
  * Service events

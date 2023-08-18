@@ -1,4 +1,4 @@
-import { Session, Sessions, UserInSession } from "@/models/session-model";
+import { Session, Sessions, UserInSession } from "@models/session-model";
 import { SessionRepository } from "./session-repository";
 
 export class SessionRepositoryImpl implements SessionRepository {
