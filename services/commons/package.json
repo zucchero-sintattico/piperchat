@@ -4,7 +4,8 @@
   "main": "dist/src/index.js",
   "devDependencies": {},
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build -v && tsc-alias",
+    "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts"
   },
   "keywords": [],
   "author": "",

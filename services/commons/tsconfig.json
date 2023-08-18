@@ -1,12 +1,10 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		// Module resolution
-		"rootDir": ".",
-		"baseUrl": ".",
-		// Output
+		"rootDir": "./",
+		"baseUrl": "./",
 		"outDir": "./dist",
 		"composite": true
 	},
-	"include": [ "src/**/*" ]
+	"include": [ "./src/**/*" ]
 }
