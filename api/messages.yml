@@ -244,6 +244,10 @@ components:
               type: string
               description: Description of the server
               example: My server description
+            owner:
+              type: string
+              description: Unique identifier representing a specific user
+              example: user1
 
     ServerUserSchema:
       allOf:

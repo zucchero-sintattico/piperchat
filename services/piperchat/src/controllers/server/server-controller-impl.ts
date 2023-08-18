@@ -29,6 +29,7 @@ export class ServerControllerImpl implements ServerController {
       _id: server._id,
       name: server.name,
       description: server.description,
+      owner: server.owner,
     });
     return server;
   }
