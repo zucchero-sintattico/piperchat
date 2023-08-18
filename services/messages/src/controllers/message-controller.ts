@@ -1,7 +1,7 @@
-import { Messages } from "../models/chat-model";
+import { Messages } from "@models/chat-model";
 import { Request, Response } from "express";
-import { MessageEventsRepository } from "../events/repositories/message-events-repository";
-import { MessageRepository } from "../repositories/message-repository";
+import { MessageEventsRepository } from "@events/repositories/message-events-repository";
+import { MessageRepository } from "@repositories/message-repository";
 
 /**
  * The controller of a generic entity.

@@ -1,5 +1,5 @@
-import { Channels } from "../models/chat-model";
-import { Servers } from "../models/chat-model";
+import { Channels } from "@models/chat-model";
+import { Servers } from "@models/chat-model";
 export class ChannelRepository {
   async getAllChannels() {
     const QUERY_LIMIT = 1000;

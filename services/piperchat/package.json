@@ -2,9 +2,10 @@
   "name": "@piperchat/piperchat",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/src/app.js",
   "scripts": {
     "build": "tsc --build -v && tsc-alias",
-    "start": "node dist/src/app.js",
+    "start": "node .",
     "start:build": "npm run build && npm run start",
     "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts",
     "test": "jest --verbose --testTimeout=5000 --detectOpenHandles"

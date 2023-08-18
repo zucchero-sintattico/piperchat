@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ChannelRepository } from "../repositories/channel-repository";
+import { ChannelRepository } from "@repositories/channel-repository";
 export class ChannelController {
   // The repository is a private property of the controller.
   private channelRepository: ChannelRepository = new ChannelRepository();

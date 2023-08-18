@@ -1,4 +1,4 @@
-import { Servers } from "../models/chat-model";
+import { Servers } from "@models/chat-model";
 
 export class ServersRepository {
   async getServerById(id: String) {

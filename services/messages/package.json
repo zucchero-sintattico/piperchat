@@ -2,19 +2,15 @@
   "name": "@piperchat/messages",
   "version": "1.0.0",
   "description": "",
-  "main": "jest.config.js",
-  "directories": {
-    "test": "tests"
-  },
+  "main": "dist/src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build",
-    "dev": "ts-node-dev --respawn src/app.ts"
+    "build": "tsc --build -v && tsc-alias",
+    "start": "node .",
+    "start:build": "npm run build && npm run start",
+    "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts",
+    "test": "jest --verbose --testTimeout=5000 --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.18.2"
-  }
+  "license": "ISC"
 }

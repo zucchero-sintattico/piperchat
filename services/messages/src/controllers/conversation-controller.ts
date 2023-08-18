@@ -1,6 +1,6 @@
-import { Conversations } from "../models/chat-model";
+import { Conversations } from "@models/chat-model";
 import { Request, Response } from "express";
-import { ConversationsRepository } from "../repositories/conversation-repository";
+import { ConversationsRepository } from "@repositories/conversation-repository";
 
 /**
  * The controller of a generic entity.

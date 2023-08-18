@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { MessageController } from "../controllers/message-controller";
-import { ConversationsController } from "../controllers/conversation-controller";
+import { MessageController } from "@controllers/message-controller";
+import { ConversationsController } from "@controllers/conversation-controller";
 
 const messageController = new MessageController();
 const conversationsController = new ConversationsController();

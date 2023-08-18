@@ -1,7 +1,8 @@
 services:
 
   messages-service:
-    build: ./services/messages
+    image: piperchat
+    command: ["npm", "run", "--workspace", "./services/messages", "start"]
     expose:
       - "3000"
     depends_on:
