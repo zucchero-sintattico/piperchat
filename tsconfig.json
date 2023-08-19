@@ -1,28 +1,27 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
 
-		"module": "commonjs",
-		"target": "es6",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
 
-		"declaration": true,
-		"declarationMap": true,
-		"sourceMap": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
 
-		"esModuleInterop": true,
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-
-		"strict": true,
-		"baseUrl": "./",
-		"paths": {
-			"@/*": [ "src/*" ],
-			"@controllers/*": [ "src/controllers/*" ],
-			"@events/*": [ "src/events/*" ],
-			"@models/*": [ "src/models/*" ],
-			"@repositories/*": [ "src/repositories/*" ],
-			"@routes/*": [ "src/routes/*" ]
-		}
-	}
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@events/*": ["src/events/*"],
+      "@models/*": ["src/models/*"],
+      "@repositories/*": ["src/repositories/*"],
+      "@routes/*": ["src/routes/*"]
+    }
+  }
 }

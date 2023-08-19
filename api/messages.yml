@@ -10,139 +10,139 @@ channels:
     description: A user logged in
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   user.logged.out:
     description: A user logged out
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   user.created:
     description: A user is registered to the system
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   user.token.refreshed:
     description: A user refreshed his token
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   user.friend.request.sent:
     description: A user sent a friend request to another one
     publish:
       message:
-        "$ref": "#/components/messages/FriendRequest"
+        '$ref': '#/components/messages/FriendRequest'
 
   user.friend.request.accepted:
     description: A user accepted a friend request from another one
     publish:
       message:
-        "$ref": "#/components/messages/FriendRequest"
+        '$ref': '#/components/messages/FriendRequest'
 
   user.connected:
     description: A user is connected to the chat
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   user.disconnected:
     description: A user is disconnected from the chat
     publish:
       message:
-        "$ref": "#/components/messages/User"
+        '$ref': '#/components/messages/User'
 
   server.created:
     description: A server is created
     publish:
       message:
-        "$ref": "#/components/messages/ServerAdvanced"
+        '$ref': '#/components/messages/ServerAdvanced'
 
   server.updated:
     description: A server has been updated
     publish:
       message:
-        "$ref": "#/components/messages/ServerAdvanced"
+        '$ref': '#/components/messages/ServerAdvanced'
 
   server.deleted:
     description: A server has been deleted
     publish:
       message:
-        "$ref": "#/components/messages/Server"
+        '$ref': '#/components/messages/Server'
 
   server.user.joined:
     description: A user joined a server
     publish:
       message:
-        "$ref": "#/components/messages/ServerUser"
+        '$ref': '#/components/messages/ServerUser'
 
   server.user.left:
     description: A user left a server
     publish:
       message:
-        "$ref": "#/components/messages/ServerUser"
+        '$ref': '#/components/messages/ServerUser'
 
   server.user.kicked:
     description: A user has been kicked from a server
     publish:
       message:
-        "$ref": "#/components/messages/ServerUser"
+        '$ref': '#/components/messages/ServerUser'
 
   channel.created:
     description: A channel is created
     publish:
       message:
-        "$ref": "#/components/messages/ChannelAdvanced"
+        '$ref': '#/components/messages/ChannelAdvanced'
 
   channel.updated:
     description: A channel has been updated
     publish:
       message:
-        "$ref": "#/components/messages/ChannelAdvanced"
+        '$ref': '#/components/messages/ChannelAdvanced'
 
   channel.deleted:
     description: A channel has been deleted
     publish:
       message:
-        "$ref": "#/components/messages/Channel"
+        '$ref': '#/components/messages/Channel'
 
   message.channel.sent:
     description: A new message has been sent to a channel
     publish:
       message:
-        "$ref": "#/components/messages/MessageChannel"
+        '$ref': '#/components/messages/MessageChannel'
 
   message.direct.sent:
     description: A new message has been sent to a user
     publish:
       message:
-        "$ref": "#/components/messages/MessageDirect"
+        '$ref': '#/components/messages/MessageDirect'
 
   session.created:
     description: A new session has been created
     publish:
       message:
-        "$ref": "#/components/messages/Session"
+        '$ref': '#/components/messages/Session'
 
   session.terminated:
     description: A session has been terminated
     publish:
       message:
-        "$ref": "#/components/messages/Session"
+        '$ref': '#/components/messages/Session'
 
   session.user.joined:
     description: A user joined a session
     publish:
       message:
-        "$ref": "#/components/messages/SessionUser"
+        '$ref': '#/components/messages/SessionUser'
 
   session.user.left:
     description: A user left a session
     publish:
       message:
-        "$ref": "#/components/messages/SessionUser"
+        '$ref': '#/components/messages/SessionUser'
 
 components:
   messages:
@@ -150,57 +150,57 @@ components:
       summary: A user
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/UserSchema"
+        '$ref': '#/components/schemas/UserSchema'
     Server:
       summary: A basic server (no additional data)
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ServerBasicSchema"
+        '$ref': '#/components/schemas/ServerBasicSchema'
     ServerAdvanced:
       summary: A server
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ServerAdvancedSchema"
+        '$ref': '#/components/schemas/ServerAdvancedSchema'
     ServerUser:
       summary: A server-user pair
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ServerUserSchema"
+        '$ref': '#/components/schemas/ServerUserSchema'
     FriendRequest:
       summary: A friend request
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/FriendRequest"
+        '$ref': '#/components/schemas/FriendRequest'
     Channel:
       summary: A basic channel (no additional data)
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ChannelBasicSchema"
+        '$ref': '#/components/schemas/ChannelBasicSchema'
     ChannelAdvanced:
       summary: A channel
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/ChannelAdvancedSchema"
+        '$ref': '#/components/schemas/ChannelAdvancedSchema'
     MessageChannel:
       summary: A message
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/MessageChannelSchema"
+        '$ref': '#/components/schemas/MessageChannelSchema'
     MessageDirect:
       summary: A message
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/MessageDirectSchema"
+        '$ref': '#/components/schemas/MessageDirectSchema'
     Session:
       summary: A session
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/SessionSchema"
+        '$ref': '#/components/schemas/SessionSchema'
     SessionUser:
       summary: A session user
       contentType: application/json
       payload:
-        "$ref": "#/components/schemas/SessionUserSchema"
+        '$ref': '#/components/schemas/SessionUserSchema'
 
   schemas:
     FriendRequest:
@@ -233,7 +233,7 @@ components:
 
     ServerAdvancedSchema:
       allOf:
-        - $ref: "#/components/schemas/ServerBasicSchema"
+        - $ref: '#/components/schemas/ServerBasicSchema'
         - type: object
           properties:
             name:
@@ -251,7 +251,7 @@ components:
 
     ServerUserSchema:
       allOf:
-        - $ref: "#/components/schemas/ServerBasicSchema"
+        - $ref: '#/components/schemas/ServerBasicSchema'
         - type: object
           properties:
             username:
@@ -273,7 +273,7 @@ components:
 
     ChannelAdvancedSchema:
       allOf:
-        - $ref: "#/components/schemas/ChannelBasicSchema"
+        - $ref: '#/components/schemas/ChannelBasicSchema'
         - type: object
           properties:
             name:
@@ -303,7 +303,7 @@ components:
 
     MessageDirectSchema:
       allOf:
-        - "$ref": "#/components/schemas/MessageSchema"
+        - '$ref': '#/components/schemas/MessageSchema'
         - type: object
           properties:
             to:
@@ -313,7 +313,7 @@ components:
 
     MessageChannelSchema:
       allOf:
-        - "$ref": "#/components/schemas/MessageSchema"
+        - '$ref': '#/components/schemas/MessageSchema'
         - type: object
           properties:
             channelId:
@@ -331,7 +331,7 @@ components:
 
     SessionUserSchema:
       allOf:
-        - "$ref": "#/components/schemas/SessionSchema"
+        - '$ref': '#/components/schemas/SessionSchema'
         - type: object
           properties:
             userId:

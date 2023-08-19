@@ -1,40 +1,40 @@
-import http from "http";
-import express from "express";
-import { serviceRouter } from "./routes/router";
-import cookieParser from "cookie-parser";
+import http from 'http'
+import express from 'express'
+import { serviceRouter } from './routes/router'
+import cookieParser from 'cookie-parser'
 
 export class MonitoringServer {
-	private port: number;
-	private app: express.Application;
-	public server: http.Server;
+  private port: number
+  private app: express.Application
+  public server: http.Server
 
-	constructor(port: number) {
-		this.port = port;
-		this.app = express();
-		this.server = http.createServer(this.app);
-		this.setupMiddleware();
-		this.setupRouter();
-	}
+  constructor(port: number) {
+    this.port = port
+    this.app = express()
+    this.server = http.createServer(this.app)
+    this.setupMiddleware()
+    this.setupRouter()
+  }
 
-	private setupMiddleware() {
-		this.app.use(express.json());
-		this.app.use(cookieParser());
-	}
+  private setupMiddleware() {
+    this.app.use(express.json())
+    this.app.use(cookieParser())
+  }
 
-	private setupRouter() {
-		this.app.use("/", serviceRouter);
-	}
+  private setupRouter() {
+    this.app.use('/', serviceRouter)
+  }
 
-	async start(onStarted: () => void = () => {}) {
-		return new Promise<void>((resolve, reject) => {
-			this.server.listen(this.port, () => {
-				onStarted();
-				resolve();
-			});
-		});
-	}
+  async start(onStarted: () => void = () => {}) {
+    return new Promise<void>((resolve, reject) => {
+      this.server.listen(this.port, () => {
+        onStarted()
+        resolve()
+      })
+    })
+  }
 
-	stop() {
-		this.server.close();
-	}
+  stop() {
+    this.server.close()
+  }
 }

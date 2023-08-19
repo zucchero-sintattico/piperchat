@@ -1,5 +1,5 @@
-import { MonitoringRepository } from "@repositories/monitoring-repository";
-import { RabbitMQ } from "@piperchat/commons";
+import { MonitoringRepository } from '@repositories/monitoring-repository'
+import { RabbitMQ } from '@piperchat/commons'
 
 /**
  * Service events
@@ -8,70 +8,71 @@ import { RabbitMQ } from "@piperchat/commons";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-	private static broker: RabbitMQ;
-	private static monitoringRepository: MonitoringRepository = new MonitoringRepository();
+  private static broker: RabbitMQ
+  private static monitoringRepository: MonitoringRepository = new MonitoringRepository()
 
-	static async initialize() {
-		this.broker = RabbitMQ.getInstance();
-		await this.declareQueue();
-		await this.setupListeners();
-	}
+  static async initialize() {
+    this.broker = RabbitMQ.getInstance()
+    await this.declareQueue()
+    await this.setupListeners()
+  }
 
-	static async declareQueue() {
-		const channel = this.broker.getChannel();
+  static async declareQueue() {
+    const channel = this.broker.getChannel()
 
-		// Declare the exchange
-		await channel?.assertExchange("user", "fanout", {
-			durable: true,
-		});
-	}
+    // Declare the exchange
+    await channel?.assertExchange('user', 'fanout', {
+      durable: true,
+    })
+  }
 
-	static async setupListeners() {
-		// One for every service exchanges
-		
-		this.subscribeToExchange("user", async (event, data) => {
-			switch (event) {
-				case "user.created":
-					await this.monitoringRepository.createUserEvent({
-						username: data.username,
-						event: "created",
-					});
-					break;
-				case "user.updated":
-					await this.monitoringRepository.createUserEvent({
-						username: data.username,
-						event: "updated",
-					});
-					break;
-				case "user.deleted":
-					await this.monitoringRepository.createUserEvent({
-						username: data.username,
-						event: "deleted",
-					});
-					break;
-			}});
-	}
+  static async setupListeners() {
+    // One for every service exchanges
 
-	private static async subscribeToExchange(
-		exchange: string,
-		callback: (event: string, data: any) => void
-	) {
-		const channel = this.broker.getChannel();
-		const queue = await channel?.assertQueue("", {
-			exclusive: true,
-		});
-		if (!queue) {
-			return;
-		}
-		await channel?.bindQueue(queue.queue, exchange, "");
-		channel?.consume(queue.queue, async (message) => {
-			if (!message) {
-				return;
-			}
+    this.subscribeToExchange('user', async (event, data) => {
+      switch (event) {
+        case 'user.created':
+          await this.monitoringRepository.createUserEvent({
+            username: data.username,
+            event: 'created',
+          })
+          break
+        case 'user.updated':
+          await this.monitoringRepository.createUserEvent({
+            username: data.username,
+            event: 'updated',
+          })
+          break
+        case 'user.deleted':
+          await this.monitoringRepository.createUserEvent({
+            username: data.username,
+            event: 'deleted',
+          })
+          break
+      }
+    })
+  }
 
-			const content = message.content.toString();
-			const data = JSON.parse(content);
-			callback(message.fields.routingKey, data);
-		});
-	}
+  private static async subscribeToExchange(
+    exchange: string,
+    callback: (event: string, data: any) => void
+  ) {
+    const channel = this.broker.getChannel()
+    const queue = await channel?.assertQueue('', {
+      exclusive: true,
+    })
+    if (!queue) {
+      return
+    }
+    await channel?.bindQueue(queue.queue, exchange, '')
+    channel?.consume(queue.queue, async (message) => {
+      if (!message) {
+        return
+      }
+
+      const content = message.content.toString()
+      const data = JSON.parse(content)
+      callback(message.fields.routingKey, data)
+    })
+  }
 }

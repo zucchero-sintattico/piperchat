@@ -1,4 +1,4 @@
-import { BasicEventsRepository } from "./basic-events-repository";
+import { BasicEventsRepository } from './basic-events-repository'
 
 /**
  * Entity events repository

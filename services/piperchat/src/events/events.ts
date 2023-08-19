@@ -1,5 +1,5 @@
-import { ServerRepositoryImpl } from "@repositories/server/server-repository-impl";
-import { RabbitMQ } from "@piperchat/commons";
+import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
+import { RabbitMQ } from '@piperchat/commons'
 
 /**
  * Service events
@@ -8,78 +8,78 @@ import { RabbitMQ } from "@piperchat/commons";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-  private static broker: RabbitMQ;
+  private static broker: RabbitMQ
 
   static async initialize() {
-    this.broker = RabbitMQ.getInstance();
-    await this.declareQueue();
-    await this.setupListeners();
+    this.broker = RabbitMQ.getInstance()
+    await this.declareQueue()
+    await this.setupListeners()
   }
 
   static async declareQueue() {
     // Declare queue
-    const channel = this.broker.getChannel();
+    const channel = this.broker.getChannel()
 
     // Declare the exchange
-    await channel?.assertExchange("servers", "fanout", {
+    await channel?.assertExchange('servers', 'fanout', {
       durable: true,
-    });
+    })
 
-    await channel?.assertExchange("channels", "fanout", {
+    await channel?.assertExchange('channels', 'fanout', {
       durable: true,
-    });
+    })
   }
 
   static async setupListeners() {
-    const serversRepository = new ServerRepositoryImpl();
-    this.subscribeToExchange("servers", async (event, data) => {
+    const serversRepository = new ServerRepositoryImpl()
+    this.subscribeToExchange('servers', async (event, data) => {
       switch (event) {
-        case "":
+        case '':
           try {
           } catch (error) {
-            console.error(error);
+            console.error(error)
           }
-          break;
+          break
       }
-    });
+    })
 
-    this.subscribeToExchange("channels", async (event, data) => {
+    this.subscribeToExchange('channels', async (event, data) => {
       // TODO: Handle events
       switch (event) {
-        case "":
+        case '':
           try {
           } catch (error) {
-            console.error(error);
+            console.error(error)
           }
-          break;
+          break
       }
-    });
+    })
   }
 
   private static async subscribeToExchange(
     exchange: string,
     callback: (event: string, data: any) => void
   ) {
-    const channel = this.broker.getChannel();
-    const queue = await channel?.assertQueue("", {
+    const channel = this.broker.getChannel()
+    const queue = await channel?.assertQueue('', {
       exclusive: true,
-    });
+    })
     if (!queue) {
-      return;
+      return
     }
-    await channel?.bindQueue(queue.queue, exchange, "");
+    await channel?.bindQueue(queue.queue, exchange, '')
     channel?.consume(queue.queue, async (message: any): Promise<void> => {
       if (!message) {
-        return;
+        return
       }
 
-      const content = message.content.toString();
+      const content = message.content.toString()
       try {
-        const data = JSON.parse(content);
-        callback(message.fields.routingKey, data);
+        const data = JSON.parse(content)
+        callback(message.fields.routingKey, data)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    });
+    })
   }
 }

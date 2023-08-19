@@ -1,9 +1,8 @@
 services:
-
   db-service:
     image: mongo
     ports:
-      - "27017:27017"
+      - '27017:27017'
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;
@@ -12,18 +11,18 @@ services:
   broker:
     image: rabbitmq:3-management-alpine
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
 
   mongo-express:
     image: mongo-express:latest
     restart: always
     ports:
-      - "8081:8081"
+      - '8081:8081'
     environment:
-      ME_CONFIG_MONGODB_SERVER: "db-service"
+      ME_CONFIG_MONGODB_SERVER: 'db-service'
     depends_on:
       db-service:
         condition: service_healthy

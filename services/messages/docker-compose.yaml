@@ -1,10 +1,9 @@
 services:
-
   messages-service:
     image: piperchat
-    command: ["npm", "run", "--workspace", "./services/messages", "start"]
+    command: ['npm', 'run', '--workspace', './services/messages', 'start']
     expose:
-      - "3000"
+      - '3000'
     depends_on:
       db-messages-service:
         condition: service_healthy
@@ -15,13 +14,13 @@ services:
       - backend
       - frontend
     environment:
-      - "AMQP_URI=${BROKER_URI}"
-      - "MONGO_URI=mongodb://db-messages-service:27017/messages"
+      - 'AMQP_URI=${BROKER_URI}'
+      - 'MONGO_URI=mongodb://db-messages-service:27017/messages'
 
   db-messages-service:
     image: mongo
     expose:
-      - "27017"
+      - '27017'
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;

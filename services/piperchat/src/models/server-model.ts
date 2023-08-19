@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose";
-import { Channel, ChannelSchema } from "./channel-model";
+import { Schema, model } from 'mongoose'
+import { Channel, ChannelSchema } from './channel-model'
 
 export interface Server {
-  _id: string;
-  name: string;
-  description: string;
-  owner: string;
-  participants: string[];
-  createdAt: Date;
-  channels: Channel[];
+  _id: string
+  name: string
+  description: string
+  owner: string
+  participants: string[]
+  createdAt: Date
+  channels: Channel[]
 }
 
 export const ServerSchema = new Schema<Server>({
@@ -37,6 +37,6 @@ export const ServerSchema = new Schema<Server>({
     required: true,
     default: [],
   },
-});
+})
 
-export const Servers = model<Server>("Server", ServerSchema);
+export const Servers = model<Server>('Server', ServerSchema)

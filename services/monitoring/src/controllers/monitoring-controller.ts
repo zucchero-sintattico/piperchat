@@ -1,7 +1,7 @@
-import { MessageMonitorEntity, UserMonitorEntity } from "@models/monitoring-model";
-import { Request, Response } from "express";
-import { MessageEventsRepository } from "@events/repositories/ monitoring-events-repository";
-import { MonitoringRepository } from "@repositories/monitoring-repository";
+import { MessageMonitorEntity, UserMonitorEntity } from '@models/monitoring-model'
+import { Request, Response } from 'express'
+import { MessageEventsRepository } from '@events/repositories/ monitoring-events-repository'
+import { MonitoringRepository } from '@repositories/monitoring-repository'
 
 /**
  * The controller of a generic entity.
@@ -9,41 +9,40 @@ import { MonitoringRepository } from "@repositories/monitoring-repository";
  * It is also responsible for publishing events to the message broker.
  */
 export class EntityController {
-	// The repository is a private property of the controller.
-	private entityRepository: MonitoringRepository = new MonitoringRepository();
+  // The repository is a private property of the controller.
+  private entityRepository: MonitoringRepository = new MonitoringRepository()
 
-	// The events repository is a private property of the controller.
-	private entityEventsRepository: MessageEventsRepository =
-		new MessageEventsRepository();
+  // The events repository is a private property of the controller.
+  private entityEventsRepository: MessageEventsRepository = new MessageEventsRepository()
 
-	async getEntities(req: Request, res: Response) {
-		/* const entities = await this.entityRepository.getEntities();
+  async getEntities(req: Request, res: Response) {
+    /* const entities = await this.entityRepository.getEntities();
 		res.json(entities); */
-	}
+  }
 
-	async getEntityById(req: Request, res: Response) {
-		/* const entity = await this.entityRepository.getEntityById(req.params.id);
+  async getEntityById(req: Request, res: Response) {
+    /* const entity = await this.entityRepository.getEntityById(req.params.id);
 		res.json(entity); */
-	}
+  }
 
-	async createEntity(req: Request, res: Response) {
-		/* const entity = await this.entityRepository.createEntity(req.body);
+  async createEntity(req: Request, res: Response) {
+    /* const entity = await this.entityRepository.createEntity(req.body);
 		res.json(entity);
 		this.entityEventsRepository.publishEntityCreated(entity); */
-	}
+  }
 
-	async updateEntity(req: Request, res: Response) {
-		/* const entity = await this.entityRepository.updateEntity(
+  async updateEntity(req: Request, res: Response) {
+    /* const entity = await this.entityRepository.updateEntity(
 			req.params.id,
 			req.body
 		);
 		res.json(entity);
 		this.entityEventsRepository.publishEntityUpdated(entity); */
-	}
+  }
 
-	async deleteEntity(req: Request, res: Response) {
-		/* const entity = await this.entityRepository.deleteEntity(req.params.id);
+  async deleteEntity(req: Request, res: Response) {
+    /* const entity = await this.entityRepository.deleteEntity(req.params.id);
 		res.json(entity);
 		this.entityEventsRepository.publishEntityDeleted(entity); */
-	}
+  }
 }

@@ -1,4 +1,4 @@
-import { Server } from "@/models/server-model";
+import { Server } from '@/models/server-model'
 
 export interface ServerController {
   /**
@@ -7,7 +7,7 @@ export interface ServerController {
    * @returns the servers of the user
    * @throws {UserNotFound} if the user does not exist
    */
-  getServers(username: string): Promise<Server[]>;
+  getServers(username: string): Promise<Server[]>
 
   /**
    * Get a server by id
@@ -15,7 +15,7 @@ export interface ServerController {
    * @returns the server
    * @throws {ServerNotFound} if the server does not exist
    */
-  getServer(id: string): Promise<Server>;
+  getServer(id: string): Promise<Server>
 
   /**
    * Create a server
@@ -24,11 +24,7 @@ export interface ServerController {
    * @param owner
    * @returns the created server
    */
-  createServer(
-    name: string,
-    description: string,
-    owner: string
-  ): Promise<Server>;
+  createServer(name: string, description: string, owner: string): Promise<Server>
 
   /**
    * Update a server
@@ -45,7 +41,7 @@ export interface ServerController {
     username: string,
     name?: string,
     description?: string
-  ): Promise<Server>;
+  ): Promise<Server>
 
   /**
    * Delete a server
@@ -53,7 +49,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
-  deleteServer(id: string, username: string): Promise<void>;
+  deleteServer(id: string, username: string): Promise<void>
 
   /**
    * Get all participants of a server
@@ -63,7 +59,7 @@ export interface ServerController {
    * @throws {UserNotAuthorized} if the user is not in the server
    *
    */
-  getServerParticipants(id: string, username: string): Promise<string[]>;
+  getServerParticipants(id: string, username: string): Promise<string[]>
 
   /**
    * Join a server
@@ -73,7 +69,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserAlreadyJoined} if the user is already in the server
    */
-  joinServer(id: string, username: string): Promise<Server>;
+  joinServer(id: string, username: string): Promise<Server>
 
   /**
    * Leave a server
@@ -83,7 +79,7 @@ export interface ServerController {
    * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not in the server
    */
-  leaveServer(id: string, username: string): Promise<Server>;
+  leaveServer(id: string, username: string): Promise<Server>
 
   /**
    * Kick a user from a server
@@ -92,17 +88,13 @@ export interface ServerController {
    * @param admin the user who make the request
    *
    */
-  kickUserFromTheServer(
-    id: string,
-    username: string,
-    admin: string
-  ): Promise<Server>;
+  kickUserFromTheServer(id: string, username: string, admin: string): Promise<Server>
 }
 
 export class ServerControllerExceptions {
-  static UserNotFound = class extends Error {};
-  static ServerNotFound = class extends Error {};
-  static UserNotAuthorized = class extends Error {};
-  static UserAlreadyJoined = class extends Error {};
-  static OwnerCannotLeave = class extends Error {};
+  static UserNotFound = class extends Error {}
+  static ServerNotFound = class extends Error {}
+  static UserNotAuthorized = class extends Error {}
+  static UserAlreadyJoined = class extends Error {}
+  static OwnerCannotLeave = class extends Error {}
 }

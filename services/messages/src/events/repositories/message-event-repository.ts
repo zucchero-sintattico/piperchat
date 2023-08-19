@@ -3,7 +3,7 @@
  * It is responsible for publishing events to the message broker.
  */
 export interface MessageEventRepository {
-  publishNewMessageOnChannel(payload: any): Promise<void>;
+  publishNewMessageOnChannel(payload: any): Promise<void>
 
-  publishNewMessageOnDirect(payload: any): Promise<void>;
+  publishNewMessageOnDirect(payload: any): Promise<void>
 }

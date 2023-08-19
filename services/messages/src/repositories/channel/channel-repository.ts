@@ -1,4 +1,4 @@
-import { Message, MessageChannel } from "@models/messages-model";
+import { Message, MessageChannel } from '@models/messages-model'
 
 export interface ChannelRepository {
   /**
@@ -6,7 +6,7 @@ export interface ChannelRepository {
    * @param serverId
    * @returns {Promise<MessageChannel[]>}
    */
-  getChannels(serverId: string): Promise<MessageChannel[]>;
+  getChannels(serverId: string): Promise<MessageChannel[]>
 
   /**
    * Create a new channel
@@ -14,7 +14,7 @@ export interface ChannelRepository {
    * @param channelId
    * @returns {Promise<void>}
    */
-  createChannel(serverId: string, channelId: string): Promise<void>;
+  createChannel(serverId: string, channelId: string): Promise<void>
 
   /**
    * Delete a channel
@@ -22,7 +22,7 @@ export interface ChannelRepository {
    * @param serverId
    * @returns {Promise<void>}
    */
-  deleteChannel(channelId: string, serverId: string): Promise<void>;
+  deleteChannel(channelId: string, serverId: string): Promise<void>
 
   /**
    * Get channel information
@@ -30,7 +30,7 @@ export interface ChannelRepository {
    * @param serverId
    * @returns {Promise<MessageChannel>}
    */
-  getChannel(channelId: string, serverId: string): Promise<MessageChannel>;
+  getChannel(channelId: string, serverId: string): Promise<MessageChannel>
 
   /**
    * Get paginated messages in a channel
@@ -45,7 +45,7 @@ export interface ChannelRepository {
     serverId: string,
     from: number,
     limit: number
-  ): Promise<Message[]>;
+  ): Promise<Message[]>
 
   /**
    * Send a message in a channel
@@ -60,5 +60,5 @@ export interface ChannelRepository {
     serverId: string,
     sender: string,
     content: string
-  ): Promise<void>;
+  ): Promise<void>
 }

@@ -1,12 +1,12 @@
-import { RabbitMQ } from "@piperchat/commons";
+import { RabbitMQ } from '@piperchat/commons'
 
 export class BasicEventRepository {
-  private broker: RabbitMQ | undefined;
+  private broker: RabbitMQ | undefined
 
   protected getChannel() {
     if (!this.broker) {
-      this.broker = RabbitMQ.getInstance();
+      this.broker = RabbitMQ.getInstance()
     }
-    return this.broker.getChannel();
+    return this.broker.getChannel()
   }
 }

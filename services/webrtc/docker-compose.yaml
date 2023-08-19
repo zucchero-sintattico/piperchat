@@ -1,11 +1,11 @@
-version: "1"
+version: '1'
 
 services:
   webrtc-service:
     image: piperchat
-    command: ["npm", "run", "--workspace", "./services/piperchat", "start"]
+    command: ['npm', 'run', '--workspace', './services/piperchat', 'start']
     expose:
-      - "3000"
+      - '3000'
     depends_on:
       db-webrtc-service:
         condition: service_healthy
@@ -18,13 +18,13 @@ services:
       - backend
       - frontend
     environment:
-      - "AMQP_URI=${BROKER_URI}"
-      - "MONGO_UTI=mongodb://db-webrtc-service:27017"
+      - 'AMQP_URI=${BROKER_URI}'
+      - 'MONGO_UTI=mongodb://db-webrtc-service:27017'
 
   db-webrtc-service:
     image: mongo
     expose:
-      - "27017"
+      - '27017'
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;

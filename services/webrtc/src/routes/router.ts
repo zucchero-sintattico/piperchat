@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { infraServiceMiddleware } from "@piperchat/commons";
-import { sessionRouter } from "./routers/sessionRouter";
+import { Router } from 'express'
+import { infraServiceMiddleware } from '@piperchat/commons'
+import { sessionRouter } from './routers/sessionRouter'
 
-export const serviceRouter = Router();
-serviceRouter.use(infraServiceMiddleware);
+export const serviceRouter = Router()
+serviceRouter.use(infraServiceMiddleware)
 
-serviceRouter.use("/session", sessionRouter);
+serviceRouter.use('/session', sessionRouter)

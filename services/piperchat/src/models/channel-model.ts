@@ -1,11 +1,11 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose'
 
 export interface Channel {
-  _id: string;
-  name: string;
-  createdAt: Date;
-  channelType: string;
-  description?: string;
+  _id: string
+  name: string
+  createdAt: Date
+  channelType: string
+  description?: string
 }
 
 export const ChannelSchema = new Schema<Channel>({
@@ -25,6 +25,6 @@ export const ChannelSchema = new Schema<Channel>({
   description: {
     type: String,
     required: false,
-    default: "",
+    default: '',
   },
-});
+})

@@ -1,6 +1,6 @@
-import { UserRepository } from "@repositories/user/user-repository";
-import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
-import { RabbitMQ } from "@piperchat/commons";
+import { UserRepository } from '@repositories/user/user-repository'
+import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
+import { RabbitMQ } from '@piperchat/commons'
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -8,60 +8,60 @@ import { RabbitMQ } from "@piperchat/commons";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-	private static broker: RabbitMQ;
-	private static userRepository: UserRepository = new UserRepositoryImpl();
+  private static broker: RabbitMQ
+  private static userRepository: UserRepository = new UserRepositoryImpl()
 
-	static async initialize() {
-		this.broker = RabbitMQ.getInstance();
-		await this.declareQueue();
-		await this.setupListeners();
-	}
+  static async initialize() {
+    this.broker = RabbitMQ.getInstance()
+    await this.declareQueue()
+    await this.setupListeners()
+  }
 
-	static async declareQueue() {
-		const channel = this.broker.getChannel();
+  static async declareQueue() {
+    const channel = this.broker.getChannel()
 
-		// Declare the exchange
-		await channel?.assertExchange("user", "fanout", {
-			durable: true,
-		});
-	}
+    // Declare the exchange
+    await channel?.assertExchange('user', 'fanout', {
+      durable: true,
+    })
+  }
 
-	static async setupListeners() {
-		this.subscribeToExchange("user", async (event, data) => {
-			switch (event) {
-				case "user.created":
-					console.log("User created", data);
-					break;
-				case "user.updated":
-					console.log("User updated", data);
-					break;
-				case "user.deleted":
-					console.log("User deleted", data);
-					break;
-			}
-		});
-	}
+  static async setupListeners() {
+    this.subscribeToExchange('user', async (event, data) => {
+      switch (event) {
+        case 'user.created':
+          console.log('User created', data)
+          break
+        case 'user.updated':
+          console.log('User updated', data)
+          break
+        case 'user.deleted':
+          console.log('User deleted', data)
+          break
+      }
+    })
+  }
 
-	private static async subscribeToExchange(
-		exchange: string,
-		callback: (event: string, data: any) => void
-	) {
-		const channel = this.broker.getChannel();
-		const queue = await channel?.assertQueue("", {
-			exclusive: true,
-		});
-		if (!queue) {
-			return;
-		}
-		await channel?.bindQueue(queue.queue, exchange, "");
-		channel?.consume(queue.queue, async (message: any): Promise<void> => {
-			if (!message) {
-				return;
-			}
+  private static async subscribeToExchange(
+    exchange: string,
+    callback: (event: string, data: any) => void
+  ) {
+    const channel = this.broker.getChannel()
+    const queue = await channel?.assertQueue('', {
+      exclusive: true,
+    })
+    if (!queue) {
+      return
+    }
+    await channel?.bindQueue(queue.queue, exchange, '')
+    channel?.consume(queue.queue, async (message: any): Promise<void> => {
+      if (!message) {
+        return
+      }
 
-			const content = message.content.toString();
-			const data = JSON.parse(content);
-			callback(message.fields.routingKey, data);
-		});
-	}
+      const content = message.content.toString()
+      const data = JSON.parse(content)
+      callback(message.fields.routingKey, data)
+    })
+  }
 }

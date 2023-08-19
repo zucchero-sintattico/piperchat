@@ -1,83 +1,78 @@
-import { UserEventsRepository } from "@events/repositories/user/user-events-repository";
-import { User } from "@models/user-model";
-import { UserRepository } from "@repositories/user/user-repository";
-import { UserRepositoryImpl } from "@repositories/user/user-repository-impl";
+import { UserEventsRepository } from '@events/repositories/user/user-events-repository'
+import { User } from '@models/user-model'
+import { UserRepository } from '@repositories/user/user-repository'
+import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
-	AuthController,
-	AuthControllerExceptions,
-} from "@controllers/auth/auth-controller";
-import bcrypt from "bcrypt";
+  AuthController,
+  AuthControllerExceptions,
+} from '@controllers/auth/auth-controller'
+import bcrypt from 'bcrypt'
 import {
-	generateAccessToken,
-	generateRefreshToken,
-	verifyRefreshToken,
-} from "@piperchat/commons";
-import { UserEventsRepositoryImpl } from "@events/repositories/user/user-events-repository-impl";
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '@piperchat/commons'
+import { UserEventsRepositoryImpl } from '@events/repositories/user/user-events-repository-impl'
 
 export class AuthControllerImpl implements AuthController {
-	private userRepository: UserRepository = new UserRepositoryImpl();
-	private userEventsRepository: UserEventsRepository =
-		new UserEventsRepositoryImpl();
+  private userRepository: UserRepository = new UserRepositoryImpl()
+  private userEventsRepository: UserEventsRepository = new UserEventsRepositoryImpl()
 
-	async register(
-		username: string,
-		email: string,
-		password: string,
-		description: string | null,
-		photo: Buffer | null
-	): Promise<User> {
-		const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt());
-		const user = await this.userRepository
-			.createUser(username, email, hashedPassword, description, photo)
-			.catch(() => {
-				throw new AuthControllerExceptions.UserAlreadyExists();
-			});
-		await this.userEventsRepository.publishUserCreated(user);
-		return user;
-	}
+  async register(
+    username: string,
+    email: string,
+    password: string,
+    description: string | null,
+    photo: Buffer | null
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
+    const user = await this.userRepository
+      .createUser(username, email, hashedPassword, description, photo)
+      .catch(() => {
+        throw new AuthControllerExceptions.UserAlreadyExists()
+      })
+    await this.userEventsRepository.publishUserCreated(user)
+    return user
+  }
 
-	async login(username: string, password: string): Promise<string> {
-		const user = await this.userRepository
-			.getUserByUsername(username)
-			.catch(() => {
-				throw new AuthControllerExceptions.InvalidUsernameOrPassword();
-			});
+  async login(username: string, password: string): Promise<string> {
+    const user = await this.userRepository.getUserByUsername(username).catch(() => {
+      throw new AuthControllerExceptions.InvalidUsernameOrPassword()
+    })
 
-		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) {
-			throw new AuthControllerExceptions.InvalidUsernameOrPassword();
-		}
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    if (!isPasswordValid) {
+      throw new AuthControllerExceptions.InvalidUsernameOrPassword()
+    }
 
-		const accessToken = generateAccessToken(user);
-		const refreshToken = generateRefreshToken(user);
+    const accessToken = generateAccessToken(user)
+    const refreshToken = generateRefreshToken(user)
 
-		await this.userRepository.login(user.username, refreshToken);
-		return accessToken;
-	}
+    await this.userRepository.login(user.username, refreshToken)
+    return accessToken
+  }
 
-	async refreshToken(username: string): Promise<string> {
-		const user = await this.userRepository
-			.getUserByUsername(username)
-			.catch(() => {
-				throw new AuthControllerExceptions.UserNotFound();
-			});
+  async refreshToken(username: string): Promise<string> {
+    const user = await this.userRepository.getUserByUsername(username).catch(() => {
+      throw new AuthControllerExceptions.UserNotFound()
+    })
 
-		if (!user.refreshToken) {
-			throw new AuthControllerExceptions.RefreshTokenNotPresent();
-		}
+    if (!user.refreshToken) {
+      throw new AuthControllerExceptions.RefreshTokenNotPresent()
+    }
 
-		try {
-			verifyRefreshToken(user.refreshToken);
-		} catch (e) {
-			throw new AuthControllerExceptions.InvalidRefreshToken();
-		}
+    try {
+      verifyRefreshToken(user.refreshToken)
+    } catch (e) {
+      throw new AuthControllerExceptions.InvalidRefreshToken()
+    }
 
-		return generateAccessToken(user);
-	}
+    return generateAccessToken(user)
+  }
 
-	async logout(username: string): Promise<void> {
-		await this.userRepository.logout(username).catch(() => {
-			throw new AuthControllerExceptions.UserNotFound();
-		});
-	}
+  async logout(username: string): Promise<void> {
+    await this.userRepository.logout(username).catch(() => {
+      throw new AuthControllerExceptions.UserNotFound()
+    })
+  }
 }

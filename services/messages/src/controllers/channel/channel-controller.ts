@@ -1,4 +1,4 @@
-import { Message, MessageChannel } from "@models/messages-model";
+import { Message, MessageChannel } from '@models/messages-model'
 
 export interface ChannelController {
   /**
@@ -6,7 +6,7 @@ export interface ChannelController {
    * @param serverId
    * @returns {Promise<MessageChannel[]>}
    */
-  getChannels(serverId: string): Promise<MessageChannel[]>;
+  getChannels(serverId: string): Promise<MessageChannel[]>
 
   /**
    * Create a new channel
@@ -14,7 +14,7 @@ export interface ChannelController {
    * @param channelId
    * @returns {Promise<void>}
    */
-  createChannel(serverId: string, channelId: string): Promise<void>;
+  createChannel(serverId: string, channelId: string): Promise<void>
 
   /**
    * Delete a channel
@@ -22,7 +22,7 @@ export interface ChannelController {
    * @param serverId
    * @returns {Promise<void>}
    */
-  deleteChannel(channelId: string, serverId: string): Promise<void>;
+  deleteChannel(channelId: string, serverId: string): Promise<void>
 
   /**
    * Get channel information
@@ -30,7 +30,7 @@ export interface ChannelController {
    * @param serverId
    * @returns {Promise<MessageChannel>}
    */
-  getChannel(channelId: string, serverId: string): Promise<MessageChannel>;
+  getChannel(channelId: string, serverId: string): Promise<MessageChannel>
 
   /**
    * Get paginated messages in a channel
@@ -48,7 +48,7 @@ export interface ChannelController {
     serverId: string,
     from: number,
     limit: number
-  ): Promise<Message[]>;
+  ): Promise<Message[]>
 
   /**
    * Send a message in a channel
@@ -66,12 +66,12 @@ export interface ChannelController {
     serverId: string,
     sender: string,
     content: string
-  ): Promise<void>;
+  ): Promise<void>
 }
 
 export class ChannelControllerExceptions {
-  static ServerNotFound = class extends Error {};
-  static UserNotAuthorized = class extends Error {};
-  static ChannelAlreadyExists = class extends Error {};
-  static ChannelNotFound = class extends Error {};
+  static ServerNotFound = class extends Error {}
+  static UserNotAuthorized = class extends Error {}
+  static ChannelAlreadyExists = class extends Error {}
+  static ChannelNotFound = class extends Error {}
 }

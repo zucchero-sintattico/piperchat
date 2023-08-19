@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 
 /**
  * JWT Token Info
@@ -6,29 +6,29 @@ import jwt from "jsonwebtoken";
  * @param email Email of the user
  */
 type UserJWTInfo = {
-	username: string;
-	email: string;
-};
+  username: string
+  email: string
+}
 
 type UserInfo = {
-	username: string;
-	email: string;
-};
+  username: string
+  email: string
+}
 
 /**
  * Augment Express Request
  * @param user User info embedded in the JWT Token
  */
 declare global {
-	namespace Express {
-		interface Request {
-			user: UserJWTInfo;
-		}
-	}
+  namespace Express {
+    interface Request {
+      user: UserJWTInfo
+    }
+  }
 }
 
-const ACCESS_TOKEN_SECRET = process.env["ACCESS_TOKEN_SECRET"] || "access";
-const REFRESH_TOKEN_SECRET = process.env["REFRESH_TOKEN_SECRET"] || "refresh";
+const ACCESS_TOKEN_SECRET = process.env['ACCESS_TOKEN_SECRET'] || 'access'
+const REFRESH_TOKEN_SECRET = process.env['REFRESH_TOKEN_SECRET'] || 'refresh'
 
 /**
  * Generate a JWT Access Token for the user
@@ -36,16 +36,13 @@ const REFRESH_TOKEN_SECRET = process.env["REFRESH_TOKEN_SECRET"] || "refresh";
  * @param expiresIn Expiration time, default 1 day
  * @returns JWT Access Token
  */
-export const generateAccessToken = (
-	user: UserInfo,
-	expiresIn: string = "1d"
-) => {
-	return jwt.sign(
-		{ username: user.username, email: user.email } as UserJWTInfo,
-		ACCESS_TOKEN_SECRET,
-		{ expiresIn: expiresIn }
-	);
-};
+export const generateAccessToken = (user: UserInfo, expiresIn: string = '1d') => {
+  return jwt.sign(
+    { username: user.username, email: user.email } as UserJWTInfo,
+    ACCESS_TOKEN_SECRET,
+    { expiresIn: expiresIn }
+  )
+}
 
 /**
  * Generate a JWT Refresh Token for the user
@@ -53,16 +50,13 @@ export const generateAccessToken = (
  * @param expiresIn Expiration time, default 1 week
  * @returns JWT Refresh Token
  */
-export const generateRefreshToken = (
-	user: UserInfo,
-	expiresIn: string = "1w"
-) => {
-	return jwt.sign(
-		{ username: user.username, email: user.email } as UserJWTInfo,
-		REFRESH_TOKEN_SECRET,
-		{ expiresIn: expiresIn }
-	);
-};
+export const generateRefreshToken = (user: UserInfo, expiresIn: string = '1w') => {
+  return jwt.sign(
+    { username: user.username, email: user.email } as UserJWTInfo,
+    REFRESH_TOKEN_SECRET,
+    { expiresIn: expiresIn }
+  )
+}
 
 /**
  * Verify a JWT Access Token
@@ -72,21 +66,21 @@ export const generateRefreshToken = (
  * @throws Error if the token is expired
  */
 export const verifyAccessToken = (token: string): UserJWTInfo => {
-	return jwt.verify(token, ACCESS_TOKEN_SECRET) as UserJWTInfo;
-};
+  return jwt.verify(token, ACCESS_TOKEN_SECRET) as UserJWTInfo
+}
 
 export const decodeAccessToken = (token: string): UserJWTInfo => {
-	return jwt.decode(token) as UserJWTInfo;
-};
+  return jwt.decode(token) as UserJWTInfo
+}
 
 export const isAccessTokenValid = (token: string): boolean => {
-	try {
-		jwt.verify(token, ACCESS_TOKEN_SECRET);
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
+  try {
+    jwt.verify(token, ACCESS_TOKEN_SECRET)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 /**
  * Verify a JWT Refresh Token
  * @param token JWT Refresh Token
@@ -95,8 +89,8 @@ export const isAccessTokenValid = (token: string): boolean => {
  * @throws Error if the token is expired
  */
 export const verifyRefreshToken = (token: string) => {
-	return jwt.verify(token, REFRESH_TOKEN_SECRET);
-};
+  return jwt.verify(token, REFRESH_TOKEN_SECRET)
+}
 
 /**
  * Middleware to check if the JWT Access Token is present and valid
@@ -107,26 +101,20 @@ export const verifyRefreshToken = (token: string) => {
  * @returns 401 if the JWT Access Token is invalid
  * @returns 401 if the JWT Access Token is expired
  */
-export const JWTAuthenticationMiddleware = (
-	req: any,
-	res: any,
-	next: any
-): void => {
-	const accessToken = req.cookies.jwt;
-	if (!accessToken) {
-		res.status(401).json({ message: "JWT Token Missing - Unauthorized" });
-		return;
-	}
-	try {
-		req.user = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo;
-		next();
-	} catch (e) {
-		res
-			.status(401)
-			.json({ message: "JWT Token Invalid - Unauthorized", error: e });
-		return;
-	}
-};
+export const JWTAuthenticationMiddleware = (req: any, res: any, next: any): void => {
+  const accessToken = req.cookies.jwt
+  if (!accessToken) {
+    res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
+    return
+  }
+  try {
+    req.user = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
+    next()
+  } catch (e) {
+    res.status(401).json({ message: 'JWT Token Invalid - Unauthorized', error: e })
+    return
+  }
+}
 
 /**
  * Middleware to check if the JWT Access Token is present and expired
@@ -137,24 +125,19 @@ export const JWTAuthenticationMiddleware = (
  * @returns 401 if the JWT Access Token is missing
  * @returns 400 if the JWT Access Token is valid
  */
-export const JWTRefreshTokenMiddleware = (
-	req: any,
-	res: any,
-	next: any
-): void => {
-	const accessToken = req.cookies.jwt;
-	if (!accessToken) {
-		res.status(401).json({ message: "JWT Token Missing - Unauthorized" });
-		return;
-	}
-	try {
-		jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo;
-		res.status(400).json({
-			message:
-				"In order to refresh the token, you must have an expired Access Token",
-		});
-	} catch (e) {
-		next();
-	}
-	return;
-};
+export const JWTRefreshTokenMiddleware = (req: any, res: any, next: any): void => {
+  const accessToken = req.cookies.jwt
+  if (!accessToken) {
+    res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
+    return
+  }
+  try {
+    jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
+    res.status(400).json({
+      message: 'In order to refresh the token, you must have an expired Access Token',
+    })
+  } catch (e) {
+    next()
+  }
+  return
+}

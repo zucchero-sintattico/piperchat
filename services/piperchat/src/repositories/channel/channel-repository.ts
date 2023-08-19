@@ -1,4 +1,4 @@
-import { Channel } from "@models/channel-model";
+import { Channel } from '@models/channel-model'
 export interface ChannelRepository {
   /**
    * Returns all  channels for a given server.
@@ -8,7 +8,7 @@ export interface ChannelRepository {
    * @throws If the channels could not be found.
    * @throws If the channels could not be returned.
    */
-  getChannels(serverId: string): Promise<Channel[]>;
+  getChannels(serverId: string): Promise<Channel[]>
 
   /**
    * Creates a new channel for a given server.
@@ -25,7 +25,7 @@ export interface ChannelRepository {
     name: string,
     channelType: string,
     description?: string
-  ): Promise<Channel>;
+  ): Promise<Channel>
 
   /**
    * Gets a channel by its id.
@@ -36,7 +36,7 @@ export interface ChannelRepository {
    * @throws If the channel could not be found.
    * @throws If the channel could not be returned.
    */
-  getChannelById(serverId: string, channelId: string): Promise<Channel>;
+  getChannelById(serverId: string, channelId: string): Promise<Channel>
 
   /**
    * Updates a channel by its id.
@@ -54,7 +54,7 @@ export interface ChannelRepository {
     channelId: string,
     name?: string,
     description?: string
-  ): Promise<Channel>;
+  ): Promise<Channel>
 
   /**
    * Deletes a channel by its id.
@@ -64,5 +64,5 @@ export interface ChannelRepository {
    * @throws If the channel could not be found.
    * @throws If the channel could not be deleted.
    */
-  deleteChannel(serverId: string, channelId: string): Promise<void>;
+  deleteChannel(serverId: string, channelId: string): Promise<void>
 }

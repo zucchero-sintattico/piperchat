@@ -1,6 +1,6 @@
-import { SessionRepository } from "@repositories/session/session-repository";
-import { SessionRepositoryImpl } from "@repositories/session/session-repository-impl";
-import { RabbitMQ } from "@piperchat/commons";
+import { SessionRepository } from '@repositories/session/session-repository'
+import { SessionRepositoryImpl } from '@repositories/session/session-repository-impl'
+import { RabbitMQ } from '@piperchat/commons'
 
 /**
  * Service events
@@ -9,28 +9,27 @@ import { RabbitMQ } from "@piperchat/commons";
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-	private static broker: RabbitMQ;
-	private static sessionRepository: SessionRepository =
-		new SessionRepositoryImpl();
+  private static broker: RabbitMQ
+  private static sessionRepository: SessionRepository = new SessionRepositoryImpl()
 
-	static async initialize() {
-		this.broker = RabbitMQ.getInstance();
-		await this.declareQueue();
-		await this.setupListeners();
-	}
+  static async initialize() {
+    this.broker = RabbitMQ.getInstance()
+    await this.declareQueue()
+    await this.setupListeners()
+  }
 
-	static async declareQueue() {
-		// Declare queue
-		/*
+  static async declareQueue() {
+    // Declare queue
+    /*
 		this.broker.getChannel()?.assertQueue("entity.entity.created", {
 			durable: true,
 		});
 		*/
-	}
+  }
 
-	static async setupListeners() {
-		// Setup listeners
-		/*
+  static async setupListeners() {
+    // Setup listeners
+    /*
 		this.broker.getChannel()?.consume("entity.entity.created", (msg) => {
 			if (msg) {
 				console.log("Entity created", msg.content.toString());
@@ -39,5 +38,5 @@ export class ServiceEvents {
 			}
 		});
 		*/
-	}
+  }
 }

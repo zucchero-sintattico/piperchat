@@ -1,7 +1,7 @@
-openapi: "3.0.3"
+openapi: '3.0.3'
 info:
   title: Piperchat API
-  version: "1.0"
+  version: '1.0'
   description: |
     Piperchat design API description
 
@@ -29,7 +29,7 @@ paths:
       summary: Login a user
       description: Login the user using his username and password
       tags:
-        - "auth"
+        - 'auth'
       requestBody:
         content:
           application/json:
@@ -47,9 +47,9 @@ paths:
                 - username
                 - password
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
+        '401':
           description: Unauthorized
 
   /auth/register:
@@ -57,7 +57,7 @@ paths:
       summary: Register a new user
       description: Register a new user with some information
       tags:
-        - "auth"
+        - 'auth'
       requestBody:
         content:
           application/json:
@@ -75,7 +75,7 @@ paths:
                   example:
                 description:
                   type: string
-                  example: "Here to make new friends"
+                  example: 'Here to make new friends'
                 photo:
                   type: string
                   format: base64
@@ -84,11 +84,11 @@ paths:
                 - password
                 - email
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "409":
+        '409':
           description: Username or mail already exists # this is a security issue, we should not tell the user that the username already exists
 
   /auth/logout:
@@ -96,35 +96,35 @@ paths:
       summary: Logout a user
       description: Logout the user
       tags:
-        - "auth"
+        - 'auth'
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /auth/refresh-token:
     post:
       summary: Refresh token
       description: Refresh the user authentication token
       tags:
-        - "auth"
+        - 'auth'
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /profile/photo:
     put:
       summary: Change photo
       description: Change user profile photo
       tags:
-        - "profile"
+        - 'profile'
       security:
         - bearerAuth: []
       requestBody:
@@ -139,19 +139,19 @@ paths:
               required:
                 - photo
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /profile/description:
     put:
       summary: Change description
       description: Change user profile description
       tags:
-        - "profile"
+        - 'profile'
       security:
         - bearerAuth: []
       requestBody:
@@ -162,29 +162,29 @@ paths:
               properties:
                 description:
                   type: string
-                  example: "Here to make new friends"
+                  example: 'Here to make new friends'
               required:
                 - description
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /users/{username}/status:
     get:
       summary: Get online status
       description: Get the online status of a user
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/username"
+        - $ref: '#/components/parameters/username'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -193,11 +193,11 @@ paths:
                 properties:
                   online:
                     type: boolean
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: User not found
 
   /users/{username}/photo:
@@ -205,13 +205,13 @@ paths:
       summary: Get photo
       description: Get the photo of a user
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/username"
+        - $ref: '#/components/parameters/username'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -221,11 +221,11 @@ paths:
                   photo:
                     type: string
                     format: base64
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: User not found
 
   /users/{username}/description:
@@ -233,13 +233,13 @@ paths:
       summary: Get description
       description: Get the description of a user
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/username"
+        - $ref: '#/components/parameters/username'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -248,12 +248,12 @@ paths:
                 properties:
                   description:
                     type: string
-                    example: "Here to make new friends"
-        "400":
+                    example: 'Here to make new friends'
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: User not found
 
   /users/{username}/messages:
@@ -261,11 +261,11 @@ paths:
       summary: Get messages list
       description: Get the list of messages in a conversation with another user
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/username"
+        - '$ref': '#/components/parameters/username'
         - in: query
           name: from
           required: false
@@ -281,54 +281,54 @@ paths:
             type: number
           example: 10
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/message"
+                  '$ref': '#/components/schemas/message'
                 example:
                   - messageId: message123
                     sender: user1
                     content: Hello World!
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
     post:
       summary: Send a message
       description: Send a message to another user
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/username"
+        - '$ref': '#/components/parameters/username'
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/message"
+              '$ref': '#/components/schemas/message'
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /users/{username}/session:
     get:
       summary: Get session for a call
       description: Get the session of a user to perform a call
       tags:
-        - "users"
+        - 'users'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/username"
+        - '$ref': '#/components/parameters/username'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -338,11 +338,11 @@ paths:
                   session:
                     type: string
                     example: session123
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: User not found
 
   /friends:
@@ -350,11 +350,11 @@ paths:
       summary: Get friends list
       description: Get the list of friends of the user
       tags:
-        - "friends"
+        - 'friends'
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -365,19 +365,19 @@ paths:
                 example:
                   - user1
                   - user2
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
   /friends/requests:
     get:
       summary: Get friend requests list
       description: Get the list of friend requests of the user
       tags:
-        - "friends"
+        - 'friends'
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -388,13 +388,13 @@ paths:
                 example:
                   - user3
                   - user4
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
     post:
       summary: Manage friend request
       description: Manage a friend request in order to send, accept or deny it
       tags:
-        - "friends"
+        - 'friends'
       security:
         - bearerAuth: []
       requestBody:
@@ -416,13 +416,13 @@ paths:
                 - action
                 - otherUser
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: User not found
 
   /servers:
@@ -430,25 +430,25 @@ paths:
       summary: Get servers list
       description: Get the list of servers in which the user is joined
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/server"
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+                  '$ref': '#/components/schemas/server'
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
     post:
       summary: Create server
       description: Create a new server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       requestBody:
@@ -466,55 +466,55 @@ paths:
               required:
                 - name
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
 
     put:
       summary: Modify server
       description: The owner modify server information
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/server"
+              '$ref': '#/components/schemas/server'
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
     delete:
       summary: Delete server
       description: The owner delete the server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
 
   /servers/{serverId}/partecipants:
@@ -522,13 +522,13 @@ paths:
       summary: Get partecipants list of a specific server
       description: Get the list of partecipants of the server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -539,74 +539,74 @@ paths:
                 example:
                   - user1
                   - user2
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
     post:
       summary: Request to join the server
       description: The user request to join the server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
           description: Server not found
     delete:
       summary: Leave from the server
       description: The user leave from the server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
-          description: "Bad request: the user not found in the server"
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '400':
+          description: 'Bad request: the user not found in the server'
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
-        "422":
-          description: "Unprocessable entity: the user is the owner of the server"
+        '422':
+          description: 'Unprocessable entity: the user is the owner of the server'
 
   /servers/{serverId}/partecipants/{userId}:
     delete:
       summary: Remove user from server
       description: The owner remove a user from the server
       tags:
-        - "servers"
+        - 'servers'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/username"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/username'
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or user not found
-        "422":
+        '422':
           description: Unprocessable entity
 
   /servers/{serverId}/channels:
@@ -614,20 +614,20 @@ paths:
       summary: Get channels list
       description: Get the list of message and multimedia channels in a server
       tags:
-        - "channels"
+        - 'channels'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/basicChannel"
+                  '$ref': '#/components/schemas/basicChannel'
                 example:
                   - channelId: channel123
                     name: Beautiful Channel
@@ -637,21 +637,21 @@ paths:
                     name: Beautiful vocal channel
                     description: This channel is created for make new friends!
                     channelType: multimedia
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
     post:
       summary: Create a new channel
       description: The server owner create a new channel
       tags:
-        - "channels"
+        - 'channels'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
+        - '$ref': '#/components/parameters/serverId'
       requestBody:
         content:
           application/json:
@@ -672,15 +672,15 @@ paths:
                 - channelType
                 - name
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server not found
 
   /servers/{serverId}/channels/{channelId}:
@@ -688,12 +688,12 @@ paths:
       summary: Modify a channel
       description: The owner modify channel information
       tags:
-        - "channels"
+        - 'channels'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
       requestBody:
         content:
           application/json:
@@ -707,34 +707,34 @@ paths:
                   type: string
                   example: This channel is created for make new friends! 2.0
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or Channel not found
     delete:
       summary: Delete a channel
       description: The owner delete a channel
       tags:
-        - "channels"
+        - 'channels'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
       responses:
-        "200":
+        '200':
           description: Ok
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or Channel not found
 
   /servers/{serverId}/channels/{channelId}/messages:
@@ -742,12 +742,12 @@ paths:
       summary: Get messages list
       description: Get the list of messages in a channel
       tags:
-        - "message-channel"
+        - 'message-channel'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
         - in: query
           name: from
           required: false
@@ -763,47 +763,47 @@ paths:
             type: number
           example: 10
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/message"
+                  '$ref': '#/components/schemas/message'
                 example:
                   - messageId: 123
                     sender: user1
                     content: Hello World!
-        "400":
+        '400':
           description: This is not a message channel
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or Channel not found
     post:
       tags:
-        - "message-channel"
+        - 'message-channel'
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/message"
+              '$ref': '#/components/schemas/message'
       responses:
-        "200":
+        '200':
           description: Ok
-        "400":
+        '400':
           description: Bad request
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or Channel not found
 
   /servers/{serverId}/channels/{channelId}/session:
@@ -811,14 +811,14 @@ paths:
       summary: Get session
       description: Get the session of the multimedia channel to join
       tags:
-        - "multimedia-channel"
+        - 'multimedia-channel'
       security:
         - bearerAuth: []
       parameters:
-        - "$ref": "#/components/parameters/serverId"
-        - "$ref": "#/components/parameters/channelId"
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -828,13 +828,13 @@ paths:
                   sessionId:
                     type: string
                     example: session123
-        "400":
+        '400':
           description: This is not a multimedia channel
-        "401":
-          "$ref": "#/components/responses/UnauthorizedError"
-        "403":
-          "$ref": "#/components/responses/ForbiddenError"
-        "404":
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
           description: Server or Channel not found
 
 components:
@@ -879,7 +879,7 @@ components:
 
     messageChannel:
       allOf:
-        - "$ref": "#/components/schemas/basicChannel"
+        - '$ref': '#/components/schemas/basicChannel'
         - type: object
           properties:
             channelType:
@@ -889,7 +889,7 @@ components:
 
     multimediaChannel:
       allOf:
-        - "$ref": "#/components/schemas/basicChannel"
+        - '$ref': '#/components/schemas/basicChannel'
         - type: object
           properties:
             channelType:
@@ -899,8 +899,8 @@ components:
 
     channel:
       oneOf:
-        - "$ref": "#/components/schemas/messageChannel"
-        - "$ref": "#/components/schemas/multimediaChannel"
+        - '$ref': '#/components/schemas/messageChannel'
+        - '$ref': '#/components/schemas/multimediaChannel'
 
     message:
       type: object

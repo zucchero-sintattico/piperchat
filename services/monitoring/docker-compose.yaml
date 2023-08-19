@@ -1,10 +1,9 @@
 services:
-
   monitoring-service:
     image: piperchat
-    command: ["npm", "run", "--workspace", "./services/monitoring", "start"]
+    command: ['npm', 'run', '--workspace', './services/monitoring', 'start']
     expose:
-      - "3000"
+      - '3000'
     depends_on:
       db-monitoring-service:
         condition: service_healthy
@@ -15,13 +14,13 @@ services:
       - backend
       - frontend
     environment:
-      - "AMQP_URI=${BROKER_URI}"
-      - "MONGO_URI=mongodb://db-monitoring-service:27017/monitoring"
+      - 'AMQP_URI=${BROKER_URI}'
+      - 'MONGO_URI=mongodb://db-monitoring-service:27017/monitoring'
 
   db-monitoring-service:
     image: mongo
     expose:
-      - "27017"
+      - '27017'
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;
