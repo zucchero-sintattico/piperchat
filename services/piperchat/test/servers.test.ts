@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
-import { ServiceEvents } from "../src/events/events";
+import { ServiceEvents } from "@events/events";
 import {
   ServerController,
   ServerControllerExceptions,
-} from "../src/controllers/server/server-controller";
-import { ServerControllerImpl } from "../src/controllers/server/server-controller-impl";
-import { Servers } from "../src/models/server-model";
+} from "@controllers/server/server-controller";
+import { ServerControllerImpl } from "@controllers/server/server-controller-impl";
+import { Servers } from "@models/server-model";
 
 let controller: ServerController;
 

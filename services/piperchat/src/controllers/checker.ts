@@ -1,7 +1,7 @@
-import { Server } from "../models/server-model";
-import { ChannelRepository } from "../repositories/channel/channel-repository";
-import { ChannelRepositoryImpl } from "../repositories/channel/channel-repository-impl";
-import { ServerRepositoryImpl } from "../repositories/server/server-repository-impl";
+import { Server } from "@models/server-model";
+import { ChannelRepository } from "@repositories/channel/channel-repository";
+import { ChannelRepositoryImpl } from "@repositories/channel/channel-repository-impl";
+import { ServerRepositoryImpl } from "@repositories/server/server-repository-impl";
 import { ChannelControllerExceptions } from "./channel/channel-controller";
 import { ServerControllerExceptions } from "./server/server-controller";
 

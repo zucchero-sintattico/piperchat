@@ -1,5 +1,4 @@
-import { Channel } from "../../models/channel-model";
-import { Server } from "../../models/server-model";
+import { Channel } from "@models/channel-model";
 export interface ChannelRepository {
   /**
    * Returns all  channels for a given server.

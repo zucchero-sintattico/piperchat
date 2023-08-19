@@ -1,7 +1,5 @@
 import { ChannelRepository } from "./channel-repository";
-import { Server, Servers } from "../../models/server-model";
-import { Channel } from "../../models/channel-model";
-import mongoose from "mongoose";
+import { Server, Servers } from "@models/server-model";
 
 export class ChannelRepositoryImpl implements ChannelRepository {
   async getChannels(serverId: string) {

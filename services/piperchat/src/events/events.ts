@@ -1,4 +1,4 @@
-import { ServerRepositoryImpl } from "../repositories/server/server-repository-impl";
+import { ServerRepositoryImpl } from "@repositories/server/server-repository-impl";
 import { RabbitMQ } from "@piperchat/commons";
 
 /**

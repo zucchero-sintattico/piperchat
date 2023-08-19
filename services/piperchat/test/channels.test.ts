@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 import { RabbitMQ, MongooseUtils } from "@piperchat/commons";
-import { ServiceEvents } from "../src/events/events";
+import { ServiceEvents } from "@events/events";
 import {
   ChannelController,
   ChannelControllerExceptions,
-} from "../src/controllers/channel/channel-controller";
-import { ChannelControllerImpl } from "../src/controllers/channel/channel-controller-impl";
-import { Servers } from "../src/models/server-model";
+} from "@controllers/channel/channel-controller";
+import { ChannelControllerImpl } from "@controllers/channel/channel-controller-impl";
+import { Servers } from "@models/server-model";
 import {
   ServerController,
   ServerControllerExceptions,
-} from "../src/controllers/server/server-controller";
-import { ServerControllerImpl } from "../src/controllers/server/server-controller-impl";
+} from "@controllers/server/server-controller";
+import { ServerControllerImpl } from "@controllers/server/server-controller-impl";
 
 let serverController: ServerController;
 let channelController: ChannelController;

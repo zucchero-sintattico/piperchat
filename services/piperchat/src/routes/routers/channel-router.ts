@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
-import { ChannelController } from "../../controllers/channel/channel-controller";
-import { ChannelControllerImpl } from "../../controllers/channel/channel-controller-impl";
-import { ServerControllerExceptions } from "../../controllers/server/server-controller";
+import { ChannelController } from "@controllers/channel/channel-controller";
+import { ChannelControllerImpl } from "@controllers/channel/channel-controller-impl";
+import { ServerControllerExceptions } from "@controllers/server/server-controller";
 
 const channelController: ChannelController = new ChannelControllerImpl();
 export const channelRouter = Router();

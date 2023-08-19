@@ -2,12 +2,12 @@ import {
   ChannelController,
   ChannelControllerExceptions,
 } from "./channel-controller";
-import { ChannelRepository } from "../../repositories/channel/channel-repository";
-import { ChannelRepositoryImpl } from "../../repositories/channel/channel-repository-impl";
-import { ChannelEventRepository } from "../../events/repositories/channel/channel-event-repository";
-import { ChannelEventRepositoryImpl } from "../../events/repositories/channel/channel-event-repository-impl";
-import { Checker } from "../checker";
-import { Channel } from "../../models/channel-model";
+import { ChannelRepository } from "@repositories/channel/channel-repository";
+import { ChannelRepositoryImpl } from "@repositories/channel/channel-repository-impl";
+import { ChannelEventRepository } from "@events/repositories/channel/channel-event-repository";
+import { ChannelEventRepositoryImpl } from "@events/repositories/channel/channel-event-repository-impl";
+import { Checker } from "@controllers/checker";
+import { Channel } from "@/models/channel-model";
 
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl();
