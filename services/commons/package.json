@@ -5,8 +5,7 @@
   "devDependencies": {},
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc --build -v && tsc-alias",
-    "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts"
+    "build": "tsc --build -v && tsc-alias"
   },
   "keywords": [],
   "author": "",

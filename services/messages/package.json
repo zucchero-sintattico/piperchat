@@ -7,7 +7,7 @@
     "build": "tsc --build -v && tsc-alias",
     "start": "node .",
     "start:build": "npm run build && npm run start",
-    "dev": "ts-node-dev --respawn tsconfig-paths/register src/app.ts",
+    "dev": "ts-node-dev --respawn -r tsconfig-paths/register src/app.ts",
     "test": "jest --verbose --testTimeout=5000 --detectOpenHandles"
   },
   "keywords": [],
