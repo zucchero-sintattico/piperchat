@@ -43,12 +43,10 @@ jobs:
                 node-version: '18.x'
             - name: Install dependencies
               run: |
-                cd ${{ matrix.path }}
                 npm ci
             - name: Run tests
               run: |
-                cd ${{ matrix.path }}
-                npm test
+                npm run --workspace=${{ matrix.path }} test --if-present
               env:
                 AMQP_URI: amqp://localhost:5672/
                 MONGO_URI: mongodb://localhost:27017/?authMechanism=DEFAULT&authSource=admin;
