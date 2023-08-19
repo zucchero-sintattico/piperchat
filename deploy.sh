@@ -1,5 +1,7 @@
 #!/bin/bash
 
+find . -iname "dist" -exec rm -rf {} +
+
 docker build . --tag piperchat
 
 docker compose \
