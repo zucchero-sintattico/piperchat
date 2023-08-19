@@ -1,7 +1,7 @@
 FROM node:alpine
 WORKDIR /app
 COPY package*.json .
-RUN [ "npm", "install" ]
 COPY ./services/ ./services/
 COPY ./tsconfig.json ./tsconfig.json
+RUN [ "npm", "install" ]
 RUN [ "npm", "run", "--workspace", "services/", "build", "--if-present" ]
