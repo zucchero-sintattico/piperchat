@@ -295,8 +295,6 @@ paths:
                     content: Hello World!
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        "404":
-          description: User not found
     post:
       summary: Send a message
       description: Send a message to another user
