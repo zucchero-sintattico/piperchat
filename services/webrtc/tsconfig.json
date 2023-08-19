@@ -5,6 +5,7 @@
 		"baseUrl": "./",
 		"outDir": "./dist",
 	},
-	"include": [ "./src/**/*" ],
+	// include tests to avoid create another tsconfig.json
+	"include": [ "./src/**/*", "./tests/**/*" ],
 	"references": [{ "path": "../commons" }]
 }

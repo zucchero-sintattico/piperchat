@@ -6,4 +6,5 @@ module.exports = {
   testEnvironment: 'node',
   // follow tsconfig.json compilerOptions paths
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  testMatch: ['<rootDir>/test/**/*.test.ts'],
 };
