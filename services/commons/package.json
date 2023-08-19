@@ -5,7 +5,9 @@
   "devDependencies": {},
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc --build -v && tsc-alias"
+    "build": "tsc --build -v && tsc-alias",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
   },
   "keywords": [],
   "author": "",
