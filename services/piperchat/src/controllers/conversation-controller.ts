@@ -1,4 +1,3 @@
-import { Conversations } from "@models/chat-model";
 import { Request, Response } from "express";
 import { ConversationsRepository } from "@repositories/conversation-repository";
 

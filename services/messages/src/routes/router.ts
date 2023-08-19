@@ -1,9 +1,21 @@
 import { Router } from "express";
-import { entityRouter } from "./message-router";
+import { DirectRouter } from "./message-router";
+import { ChannelRouter } from "./channels-router";
 
 const serviceRouter = Router();
+const channelRouter = Router();
 
 // Register all routers
-serviceRouter.use("", entityRouter);
+serviceRouter.use("/users", DirectRouter);
+channelRouter.use("/servers", ChannelRouter);
 
 export { serviceRouter };
+export { channelRouter };
+
+
+
+
+
+
+
+

@@ -22,9 +22,10 @@ export class ChannelController {
     res.json(await this.channelRepository.getAllChannels());
   }
 
-  async getChannelById(req: Request, res: Response) {
-    const { id } = req.params;
-    res.json(await this.channelRepository.getChannelById(id));
+  async getChannelByUsername(req: Request, res: Response) {
+    res.json(
+      await this.channelRepository.getChannelsByUsername(req.user.username)
+    );
   }
 
   async updateChannel(req: Request, res: Response) {

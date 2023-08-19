@@ -1,5 +1,4 @@
 import { Conversations } from "@models/chat-model";
-import { Messages } from "@models/chat-model";
 
 /**
  * The repository of the conversation entity.

@@ -1,4 +1,3 @@
-import { RabbitMQ } from "@piperchat/commons";
 import { BasicEventsRepository } from "./basic-events-repository";
 
 /**

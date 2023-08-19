@@ -1,4 +1,3 @@
-import { Servers } from "@models/chat-model";
 import { Request, Response } from "express";
 import { ServersRepository } from "@repositories/server-repository";
 
@@ -7,7 +6,7 @@ import { ServersRepository } from "@repositories/server-repository";
  * It is responsible for handling the requests and responses from Express.
  * It is also responsible for publishing events to the message broker.
  */
-export class MessageController {
+export class ServerController {
   // The repository is a private property of the controller.
   private serverRepository: ServersRepository = new ServersRepository();
 
@@ -15,6 +14,12 @@ export class MessageController {
   async getServerById(req: Request, res: Response) {
     const { id } = req.params;
     const servers = await this.serverRepository.getServerById(id);
+    res.json(servers);
+  }
+
+  async getServerByUsername(req: Request, res: Response) {
+    const { username } = req.params;
+    const servers = await this.serverRepository.getServersByUsername(username);
     res.json(servers);
   }
 

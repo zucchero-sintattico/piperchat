@@ -1,23 +1,28 @@
 import { Router } from "express";
-import { MessageController } from "@controllers/message-controller";
-import { ConversationsController } from "@controllers/conversation-controller";
+import { DirectController } from "@controllers/direct/direct-controller";
+import { DirectControllerImpl } from "@controllers/direct/direct-controller-impl";
+import { JWTAuthenticationMiddleware } from "@piperchat/commons";
 
-const messageController = new MessageController();
-const conversationsController = new ConversationsController();
-/**
- * The router of a generic entity.
- */
-const messageRouter = Router();
+const directController: DirectController = new DirectControllerImpl();
+const directRouter = Router();
+directRouter.use(JWTAuthenticationMiddleware);
 
-// TODO: ServerRoutes, ChannelRoutes, MessageRoutes, ConversationRoutes
+directRouter.get("/:username/messages", async (req, res) => {
+    const username1 = req.user.username;
+    const username2 = req.params.username;
+    const from = parseInt(req.query.from as string);
+    const limit = parseInt(req.query.limit as string);
+    const messages = await directController.getDirectMessagesPaginated(username1, username2, from, limit);
+    res.status(200).json(messages);
+});
 
-messageRouter
-  .route("/messages")
-  .get(messageController.getAllMessages.bind(messageController))
-  .post(messageController.createMessage.bind(messageController));
 
-messageRouter
-  .route("/messages/:username")
-  .get(messageController.getMessageFromSender.bind(messageController));
+directRouter.post("/:username/messages", async (req, res) => {
+    const username1 = req.user.username;
+    const username2 = req.params.username;
+    const message = req.body.message;
+    await directController.sendDirectMessage(username1, username2, message);
+    res.status(200).json({ message: "Message sent" });
+});
 
-export { messageRouter as entityRouter };
+export { directRouter as DirectRouter };

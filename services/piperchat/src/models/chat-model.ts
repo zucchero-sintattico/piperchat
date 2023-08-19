@@ -22,7 +22,6 @@ const ChannelSchema = new Schema({
   type: { type: String, required: true, default: "text" },
   description: String,
   creator: { type: String, required: true },
-  members: { type: [String], required: true },
   messages: { type: [MessageSchema], required: true, default: [] },
 });
 
