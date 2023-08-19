@@ -316,8 +316,6 @@ paths:
           description: Bad request
         "401":
           "$ref": "#/components/responses/UnauthorizedError"
-        "404":
-          description: User not found
 
   /users/{username}/session:
     get:
