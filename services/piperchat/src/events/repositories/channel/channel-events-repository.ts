@@ -1,4 +1,4 @@
-export interface ChannelEventRepository {
+export interface ChannelEventsRepository {
   publishChannelCreated(payload: any): Promise<void>
 
   publishChannelUpdated(payload: any): Promise<void>

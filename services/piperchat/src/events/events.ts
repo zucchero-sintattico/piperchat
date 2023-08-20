@@ -1,6 +1,6 @@
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { RabbitMQ } from '@piperchat/commons'
-
+import { ServiceEventsRepository } from '@piperchat/commons'
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -9,11 +9,18 @@ import { RabbitMQ } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
+  private static serviceEventsRepository: ServiceEventsRepository =
+    new ServiceEventsRepository()
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
     await this.declareQueue()
     await this.setupListeners()
+    await this.serviceEventsRepository.publishServiceStatusOnline('piperchat')
+  }
+
+  static async shutdown() {
+    await this.serviceEventsRepository.publishServiceStatusOffline('piperchat')
   }
 
   static async declareQueue() {
@@ -26,6 +33,10 @@ export class ServiceEvents {
     })
 
     await channel?.assertExchange('channels', 'fanout', {
+      durable: true,
+    })
+
+    await channel?.assertExchange('services', 'fanout', {
       durable: true,
     })
   }

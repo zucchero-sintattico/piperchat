@@ -1,11 +1,11 @@
 import { RabbitMQ } from '@piperchat/commons'
-import { ServerEventRepository } from './server-event-repository'
+import { ServerEventsRepository } from './server-events-repository'
 
 /**
  * Entity events repository
  * It is responsible for publishing events to the message broker.
  */
-export class ServerEventRepositoryImpl implements ServerEventRepository {
+export class ServerEventsRepositoryImpl implements ServerEventsRepository {
   private broker: RabbitMQ | undefined
 
   getChannel() {

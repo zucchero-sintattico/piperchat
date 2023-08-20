@@ -1,6 +1,6 @@
-import { ChannelEventRepository } from './channel-event-repository'
+import { ChannelEventsRepository } from './channel-events-repository'
 import { RabbitMQ } from '@piperchat/commons'
-export class ChannelEventRepositoryImpl implements ChannelEventRepository {
+export class ChannelEventsRepositoryImpl implements ChannelEventsRepository {
   private broker: RabbitMQ | undefined
 
   getChannel() {

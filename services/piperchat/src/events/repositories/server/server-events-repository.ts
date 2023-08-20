@@ -1,4 +1,4 @@
-export interface ServerEventRepository {
+export interface ServerEventsRepository {
   publishServerCreated(payload: any): Promise<void>
 
   publishServerUpdated(payload: any): Promise<void>

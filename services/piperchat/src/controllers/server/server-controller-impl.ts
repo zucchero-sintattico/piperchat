@@ -1,14 +1,14 @@
 import { Server } from '@models/server-model'
 import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
-import { ServerEventRepository } from '@events/repositories/server/server-event-repository'
-import { ServerEventRepositoryImpl } from '@events/repositories/server/server-event-repository-impl'
+import { ServerEventsRepository } from '@/events/repositories/server/server-events-repository'
+import { ServerEventsRepositoryImpl } from '@/events/repositories/server/server-events-repository-impl'
 import { Checker } from '../checker'
 import { ServerController, ServerControllerExceptions } from './server-controller'
 
 export class ServerControllerImpl implements ServerController {
   private serverRepository: ServerRepository = new ServerRepositoryImpl()
-  private serverEventRepository: ServerEventRepository = new ServerEventRepositoryImpl()
+  private serverEventRepository: ServerEventsRepository = new ServerEventsRepositoryImpl()
   private checker = new Checker()
 
   async createServer(name: string, description: string, owner: string): Promise<Server> {

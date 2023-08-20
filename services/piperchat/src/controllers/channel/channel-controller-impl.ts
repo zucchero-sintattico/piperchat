@@ -1,15 +1,15 @@
 import { ChannelController, ChannelControllerExceptions } from './channel-controller'
 import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
-import { ChannelEventRepository } from '@events/repositories/channel/channel-event-repository'
-import { ChannelEventRepositoryImpl } from '@events/repositories/channel/channel-event-repository-impl'
+import { ChannelEventsRepository } from '@/events/repositories/channel/channel-events-repository'
+import { ChannelEventsRepositoryImpl } from '@/events/repositories/channel/channel-events-repository-impl'
 import { Checker } from '@controllers/checker'
 import { Channel } from '@/models/channel-model'
 
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
-  private channelEventRepository: ChannelEventRepository =
-    new ChannelEventRepositoryImpl()
+  private channelEventRepository: ChannelEventsRepository =
+    new ChannelEventsRepositoryImpl()
   private checker = new Checker()
 
   async getChannels(serverId: string, username: string) {
