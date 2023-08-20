@@ -8,8 +8,9 @@ import { ServiceEventsRepository } from '@piperchat/commons'
  * It is also responsible for updating the database.
  */
 export class ServiceEvents {
-  private static broker: RabbitMQ;
-  private static serviceEventsRepository: ServiceEventsRepository = new ServiceEventsRepository();
+  private static broker: RabbitMQ
+  private static serviceEventsRepository: ServiceEventsRepository =
+    new ServiceEventsRepository()
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
