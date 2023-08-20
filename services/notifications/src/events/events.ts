@@ -1,4 +1,5 @@
 import { RabbitMQ } from '@piperchat/commons'
+import { ServiceEventsRepository } from '@piperchat/commons'
 import {
   NotificationRepository,
   NotificationRepositoryImpl,
@@ -12,11 +13,18 @@ import {
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
+  private static serviceEventsRepository: ServiceEventsRepository =
+    new ServiceEventsRepository()
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
     await this.declareQueue()
     await this.setupListeners()
+    await this.serviceEventsRepository.publishServiceStatusOnline('notifications')
+  }
+
+  static async shutdown() {
+    await this.serviceEventsRepository.publishServiceStatusOffline('notifications')
   }
 
   static async declareQueue() {
@@ -24,6 +32,10 @@ export class ServiceEvents {
 
     // Declare the exchange
     await channel?.assertExchange('messages', 'fanout', {
+      durable: true,
+    })
+
+    await channel?.assertExchange('services', 'fanout', {
       durable: true,
     })
   }
