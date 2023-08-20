@@ -1,8 +1,8 @@
 import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
 import { ChannelController, ChannelControllerExceptions } from './channel-controller'
-import { MessageEventRepository } from '@events/repositories/message-event-repository'
-import { MessageEventRepositoryImpl } from '@events/repositories/message-event-repository-impl'
+import { MessageEventsRepository } from '@events/repositories/message-events-repository'
+import { MessageEventsRepositoryImpl } from '@events/repositories/message-events-repository-impl'
 import { MessageChannel, Message } from '@models/messages-model'
 import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
@@ -10,8 +10,8 @@ import { ServerRepositoryImpl } from '@repositories/server/server-repository-imp
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
   private serverRepository: ServerRepository = new ServerRepositoryImpl()
-  private messageEventRepository: MessageEventRepository =
-    new MessageEventRepositoryImpl()
+  private messageEventRepository: MessageEventsRepository =
+    new MessageEventsRepositoryImpl()
 
   async getChannels(serverId: string): Promise<MessageChannel[]> {
     return await this.channelRepository.getChannels(serverId)

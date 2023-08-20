@@ -9,7 +9,7 @@ import { ServiceEventsRepository } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ;
-  private static serviceEventsRepository: ServiceEventsRepository;
+  private static serviceEventsRepository: ServiceEventsRepository = new ServiceEventsRepository();
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()

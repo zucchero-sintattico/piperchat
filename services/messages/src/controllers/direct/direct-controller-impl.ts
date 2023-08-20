@@ -3,13 +3,13 @@ import { DirectController } from './direct-controller'
 import { DirectRepository } from '@repositories/direct/direct-repository'
 import { Direct, Message } from '@models/messages-model'
 import { DirectRepositoryImpl } from '@repositories/direct/direct-repository-impl'
-import { MessageEventRepository } from '@events/repositories/message-event-repository'
-import { MessageEventRepositoryImpl } from '@events/repositories/message-event-repository-impl'
+import { MessageEventsRepository } from '@events/repositories/message-events-repository'
+import { MessageEventsRepositoryImpl } from '@/events/repositories/message-events-repository-impl'
 
 export class DirectControllerImpl implements DirectController {
   private directRepository: DirectRepository = new DirectRepositoryImpl()
-  private messageEventRepository: MessageEventRepository =
-    new MessageEventRepositoryImpl()
+  private messageEventRepository: MessageEventsRepository =
+    new MessageEventsRepositoryImpl()
 
   async getDirectMessagesPaginated(
     username1: string,
