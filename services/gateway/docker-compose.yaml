@@ -1,13 +1,39 @@
 services:
+  # gateway:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./services/gateway/conf.d:/etc/nginx/
+  #   depends_on:
+  #     - messages-service
+  #     - monitoring-service
+  #     - notifications-service
+  #     - piperchat-service
+  #     - users-service
+  #     - webrtc-service
+  #   networks:
+  #     - frontend
+
   gateway:
-    image: hello-world
+    image: traefik:v2.10
+    command: |
+      --api.insecure=true
+      --providers.docker
     ports:
-      - 80:80
+      - '80:80'
+      - '8080:8080'
     volumes:
-      - ./:/etc/nginx/
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
     depends_on:
       - messages-service
+      - monitoring-service
+      - notifications-service
+      - piperchat-service
       - users-service
+      - webrtc-service
+    networks:
+      - frontend
 
 networks:
   frontend:

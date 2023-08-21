@@ -16,6 +16,15 @@ services:
     environment:
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-piperchat-service:27017/piperchat'
+    labels:
+      - |
+        traefik.http.routers.piperchat-service.rule=
+        (Method(`GET`, `POST`) && Path(`/servers`)) ||
+        (Method(`GET`, `PUT`, `DELETE`) && Path(`/servers/{serverId:[^/]+}`)) ||
+        (Method(`GET`, `POST`, `DELETE`) && Path(`/servers/{serverId:[^/]+}/partecipants`)) ||
+        (Method(`DELETE`) && Path(`/servers/{serverId:[^/]+}/partecipants/{userId:[^/]+}`)) ||
+        (Method(`GET`, `POST`) && Path(`/servers/{serverId:[^/]+}/channels`)) ||
+        (Method(`GET`, `PUT`, `DELETE`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}`))
 
   db-piperchat-service:
     image: mongo
