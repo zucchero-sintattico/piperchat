@@ -2,7 +2,7 @@ import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
 import cookieParser from 'cookie-parser'
-import cors from 'cors';
+import cors from 'cors'
 
 export class UsersServer {
   private port: number
@@ -13,7 +13,7 @@ export class UsersServer {
     this.port = port
     this.app = express()
     this.app.use(cors())
-    this.app.use(express.json());
+    this.app.use(express.json())
     this.server = http.createServer(this.app)
     this.setupMiddleware()
     this.setupRouter()
