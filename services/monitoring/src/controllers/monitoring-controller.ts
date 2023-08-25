@@ -1,4 +1,3 @@
-import { MessageMonitorEntity, UserMonitorEntity } from '@models/monitoring-model'
 import { Request, Response } from 'express'
 import { MessageEventsRepository } from '@events/repositories/ monitoring-events-repository'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
