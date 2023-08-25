@@ -6,4 +6,4 @@ healthCheckRouter.get('/', (req, res) => {
   res.status(200).send('OK')
 })
 
-export { healthCheckRouter as HealthCheckRouter }
+export { healthCheckRouter }

@@ -1,16 +1,13 @@
 import { Router } from 'express'
-import { DirectRouter } from './message-router'
-import { ChannelRouter } from './channels-router'
-import { HealthCheckRouter } from '@piperchat/commons'
+import { directRouter } from './message-router'
+import { channelRouter } from './channels-router'
+import { healthCheckRouter } from '@piperchat/commons'
 
 const serviceRouter = Router()
-const channelRouter = Router()
-const healthCheckRouter = Router()
 
 // Register all routers
-serviceRouter.use('/users', DirectRouter)
-channelRouter.use('/servers', ChannelRouter)
-healthCheckRouter.use('/healthcheck', HealthCheckRouter)
+serviceRouter.use('/users', directRouter)
+serviceRouter.use('/servers', channelRouter)
+serviceRouter.use('/healthcheck', healthCheckRouter)
 
 export { serviceRouter }
-export { channelRouter }
