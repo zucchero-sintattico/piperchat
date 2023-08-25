@@ -31,16 +31,11 @@ export class UserRequestImpl implements UserRequest {
       data: data,
       withCredentials: true
     }
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data))
-        return response.data
-      })
-      .catch((error) => {
-        console.log(error)
-        throw new Error(error)
-      })
+    try {
+      const response = await axios.request(config)
+      return response
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

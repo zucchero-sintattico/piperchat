@@ -5,7 +5,6 @@
   <div v-else class="text-center">
     <h2>Welcome, {{ userStore.state.name }}</h2>
     <Counter />
-    <button class="btn btn-secondary" @click="userStore.logout()">Logout</button>
   </div>
 </template>
 

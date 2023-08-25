@@ -1,5 +1,4 @@
 import { computed, reactive } from 'vue'
-import axios from 'axios'
 import { UserRequestImpl } from '../services/users/user-requests-impl'
 
 const Request: UserRequest = new UserRequestImpl()
