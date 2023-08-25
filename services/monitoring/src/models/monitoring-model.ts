@@ -4,7 +4,7 @@ interface EventLog {
   _id: string
   topic: string
   event: string
-  payload: any
+  payload: object
   timestamp: Date
 }
 
