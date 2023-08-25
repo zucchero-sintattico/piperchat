@@ -2,6 +2,8 @@ import { Router } from 'express'
 
 const healthCheckRouter = Router()
 
-healthCheckRouter.get('/healthcheck', (req, res) => {
+healthCheckRouter.get('/', (req, res) => {
   res.status(200).send('OK')
 })
+
+export { healthCheckRouter as HealthCheckRouter }
