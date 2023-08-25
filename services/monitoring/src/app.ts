@@ -1,31 +1,32 @@
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
+import { RabbitMQ, MongooseUtils, MicroserviceConfiguration } from '@piperchat/commons'
 import mongoose from 'mongoose'
 import { ServiceEvents } from '@events/events'
 import { MonitoringServer } from './server'
 
-// Connections info
-const port = Number.parseInt(process.env.PORT!) || 3000
-const amqpUri = process.env.AMQP_URI || 'amqp://localhost'
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
-
-// Express app
-const app: MonitoringServer = new MonitoringServer(port)
-
 // Start function
-const start = async () => {
+const start = async (configuration: MicroserviceConfiguration) => {
   // Initialize mongoose
-  await MongooseUtils.initialize(mongoose, mongoUri)
+  await MongooseUtils.initialize(mongoose, configuration.mongoUri)
 
   // Initialize RabbitMQ
-  await RabbitMQ.initialize(amqpUri)
+  await RabbitMQ.initialize(configuration.amqpUri)
 
   // Initialize service events listeners
   await ServiceEvents.initialize()
 
+  const app: MonitoringServer = new MonitoringServer(configuration.port)
+
   app.start(() => {
-    console.log(`Started on port: ${port}`)
+    console.log(`Started on port: ${configuration.port}`)
   })
 }
 
+// Connections info
+const configuration = {
+  port: Number.parseInt(process.env['PORT']!) || 3000,
+  amqpUri: process.env['AMQP_URI'] || 'amqp://localhost:5672',
+  mongoUri: process.env['MONGO_URI'] || 'mongodb://localhost:27017',
+}
+
 // Start the service
-start()
+start(configuration)
