@@ -20,7 +20,7 @@ sessionRouter.post('/', async (req: Request, res: Response) => {
   try {
     const session = await sessionController.createSession(req.body.allowedUsers)
     return res.status(201).send(session)
-  } catch (err: any) {
+  } catch (err) {
     console.error(err)
     return res.status(500).send({ message: 'Internal server error', error: err })
   }
@@ -38,7 +38,7 @@ sessionRouter.put('/:id', async (req: Request, res: Response) => {
   try {
     await sessionController.updateSession(req.params.id, req.body.allowedUsers)
     return res.status(200).send()
-  } catch (err: any) {
+  } catch (err) {
     console.error(err)
     if (err instanceof SessionControllerExceptions.SessionNotFound) {
       return res.status(404).send({ message: 'Session not found', error: err })
