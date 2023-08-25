@@ -19,7 +19,7 @@ userStatusRouter.get('/:username/status', async (req: Request, res: Response) =>
     } else {
       res.status(200).json({ status: 'offline', lastActive: user.lastActive })
     }
-  } catch (e: any) {
+  } catch (e) {
     res.status(404).json({ error: 'User not found' })
   }
 })

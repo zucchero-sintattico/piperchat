@@ -5,13 +5,8 @@ import {
   UserStatusRepository,
   UserStatusRepositoryImpl,
 } from '@repositories/user-status-repository'
-import {
-  UserStatusController,
-  UserStatusControllerImpl,
-} from '@controllers/user-status-controller'
 
 let userStatusRepository: UserStatusRepository
-let userStatusController: UserStatusController
 
 beforeAll(async () => {
   const amqpUri = process.env.AMQP_URI || 'amqp://localhost:5672'
@@ -28,7 +23,6 @@ beforeAll(async () => {
 
   // Initialize repositories
   userStatusRepository = new UserStatusRepositoryImpl()
-  userStatusController = new UserStatusControllerImpl()
 })
 
 afterAll(async () => {

@@ -7,7 +7,7 @@ export class ClientProxy {
     this.socket = socket
   }
 
-  public send(data: any) {
+  public send(data: object) {
     this.socket.write(`data: ${JSON.stringify(data)}\n\n`)
   }
 }
