@@ -1,5 +1,5 @@
 import { ChannelRepository } from './channel-repository'
-import { Server, Servers } from '@models/server-model'
+import { Servers } from '@models/server-model'
 
 export class ChannelRepositoryImpl implements ChannelRepository {
   async getChannels(serverId: string) {

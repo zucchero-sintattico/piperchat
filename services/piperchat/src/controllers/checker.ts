@@ -19,11 +19,10 @@ export class Checker {
 
   public async getServerIfExists(serverId: string) {
     try {
-      var server = await this.serverRepository.getServerById(serverId)
+      return await this.serverRepository.getServerById(serverId)
     } catch (e) {
       throw new ServerControllerExceptions.ServerNotFound()
     }
-    return server
   }
 
   public async checkIfChannelAlreadyExists(serverId: string, name: string) {

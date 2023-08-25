@@ -39,7 +39,7 @@ afterAll(async () => {
 describe('ChannelsCrudOps', () => {
   describe('Get', () => {
     it('A user should be able to get a channel if he is in the server', async () => {
-      let server = await createServer('server1', 'user1')
+      const server = await createServer('server1', 'user1')
       const channel = await createChannel(
         server._id,
         'user1',
@@ -74,13 +74,7 @@ describe('ChannelsCrudOps', () => {
   describe('Create', () => {
     it('A user should be able to create a channel if he is the owner of the server', async () => {
       let server = await createServer('server1', 'user1')
-      const channel = await createChannel(
-        server._id,
-        'user1',
-        'channel1',
-        'text',
-        'channel1'
-      )
+      await createChannel(server._id, 'user1', 'channel1', 'text', 'channel1')
       server = await serverController.getServer(server._id)
       expect(server.channels.length).toBe(1)
     })
@@ -123,7 +117,7 @@ describe('ChannelsCrudOps', () => {
     })
 
     it('A user should not be able to update a channel if he is not the owner of the server', async () => {
-      let server = await createServer('server1', 'user1')
+      const server = await createServer('server1', 'user1')
       const channel = await createChannel(
         server._id,
         'user1',
@@ -149,7 +143,7 @@ describe('ChannelsCrudOps', () => {
     })
 
     it('A user should not be able to update a channel if the channel does not exist', async () => {
-      let server = await createServer('server1', 'user1')
+      const server = await createServer('server1', 'user1')
       await expect(
         channelController.updateChannel(
           server._id,
@@ -162,7 +156,7 @@ describe('ChannelsCrudOps', () => {
     })
 
     it('A user should not be able to update a channel if he choose a name of another channel', async () => {
-      let server = await createServer('server1', 'user1')
+      const server = await createServer('server1', 'user1')
       const channel1 = await createChannel(
         server._id,
         'user1',
@@ -170,13 +164,7 @@ describe('ChannelsCrudOps', () => {
         'text',
         'channel1'
       )
-      const channel2 = await createChannel(
-        server._id,
-        'user1',
-        'channel2',
-        'text',
-        'channel2'
-      )
+      await createChannel(server._id, 'user1', 'channel2', 'text', 'channel2')
       await expect(
         channelController.updateChannel(
           server._id,
@@ -229,7 +217,7 @@ describe('ChannelsCrudOps', () => {
     })
 
     it('A user should not be able to delete a channel if the channel does not exist', async () => {
-      let server = await createServer('server1', 'user1')
+      const server = await createServer('server1', 'user1')
       await expect(
         channelController.deleteChannel(server._id, '123', 'user1')
       ).rejects.toThrow(ChannelControllerExceptions.ChannelNotFound)

@@ -42,7 +42,7 @@ export class ServerControllerImpl implements ServerController {
     description?: string | undefined
   ): Promise<Server> {
     // check if user is owner
-    let server = await this.checker.getServerIfExists(id)
+    const server = await this.checker.getServerIfExists(id)
     this.checker.checkIfUserIsTheOwner(server, username)
     try {
       const serverUpdated = await this.serverRepository.updateServerById(
