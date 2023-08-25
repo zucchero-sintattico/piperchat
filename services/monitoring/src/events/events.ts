@@ -1,4 +1,6 @@
+import { Channel } from 'amqplib'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
+import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
 import { RabbitMQ } from '@piperchat/commons'
 
 /**
@@ -9,48 +11,66 @@ import { RabbitMQ } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
-  private static monitoringRepository: MonitoringRepository = new MonitoringRepository()
+  private static monitoringRepository: MonitoringRepository =
+    new MonitoringRepositoryImpl()
+
+  private static logExchanges = ['messages', 'users', 'servers', 'channels']
+  private static exchanges = ServiceEvents.logExchanges.concat(['services'])
+  private static services = [
+    'messages',
+    'users',
+    'piperchat',
+    'webRTC',
+    'notifications',
+    'gateway',
+  ]
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
+    await this.declareServices()
     await this.declareQueue()
     await this.setupListeners()
   }
 
-  static async declareQueue() {
-    const channel = this.broker.getChannel()
-
-    // Declare the exchange
-    await channel?.assertExchange('user', 'fanout', {
+  private static async assertExchange(
+    channel: Channel | undefined,
+    exchangeName: string
+  ) {
+    await channel?.assertExchange(exchangeName, 'fanout', {
       durable: true,
     })
   }
 
-  static async setupListeners() {
-    // One for every service exchanges
+  static async declareQueue() {
+    const channel = this.broker.getChannel()
+    // Declare the exchange
+    for (const exchange of this.exchanges) {
+      await this.assertExchange(channel, exchange)
+    }
+  }
 
-    this.subscribeToExchange('user', async (event, data) => {
-      switch (event) {
-        case 'user.created':
-          await this.monitoringRepository.createUserEvent({
-            username: data.username,
-            event: 'created',
-          })
-          break
-        case 'user.updated':
-          await this.monitoringRepository.createUserEvent({
-            username: data.username,
-            event: 'updated',
-          })
-          break
-        case 'user.deleted':
-          await this.monitoringRepository.createUserEvent({
-            username: data.username,
-            event: 'deleted',
-          })
-          break
-      }
+  static async setupListeners() {
+    // Logs listeners
+    for (const exchange of this.logExchanges) {
+      await this.subscribeToExchange(exchange, async (event, data) => {
+        await this.monitoringRepository.log({
+          topic: exchange,
+          event: event,
+          payload: data,
+        })
+      })
+    }
+
+    // Service status listeners
+    await this.subscribeToExchange('services', async (event, data) => {
+      await this.monitoringRepository.changeServiceStatus(data.service, data.status)
     })
+  }
+
+  static async declareServices() {
+    for (const service of this.services) {
+      await this.monitoringRepository.createServiceStatus(service, 'offline')
+    }
   }
 
   private static async subscribeToExchange(

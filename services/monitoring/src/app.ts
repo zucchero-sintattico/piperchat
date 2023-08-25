@@ -5,8 +5,10 @@ import { MonitoringServer } from './server'
 
 // Connections info
 const port = Number.parseInt(process.env.PORT!) || 3000
-const amqpUri = process.env.AMQP_URI || 'amqp://localhost'
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
+const amqpUri = process.env.AMQP_URI || 'amqp://localhost:5672/'
+const mongoUri =
+  process.env.MONGO_URI ||
+  'mongodb://db-monitoring-service-username:db-monitoring-service-password@localhost:27017/db-monitoring-service-database?authSource=admin'
 
 // Express app
 const app: MonitoringServer = new MonitoringServer(port)
