@@ -21,7 +21,7 @@ friendsRouter.get('/', async (req: Request, res: Response) => {
   try {
     const friends = await friendsController.getFriends(req.user.username)
     return res.status(200).json({ friends: friends })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof FriendsControllerExceptions.UserNotFound) {
       return res.status(404).json({ message: 'User not found', error: e })
     } else {
@@ -34,7 +34,7 @@ friendsRouter.get('/requests', async (req: Request, res: Response) => {
   try {
     const requests = await friendsController.getFriendsRequests(req.user.username)
     return res.status(200).json({ requests: requests })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof FriendsControllerExceptions.UserNotFound) {
       return res.status(404).json({ message: 'User not found', error: e })
     } else {
@@ -59,7 +59,7 @@ friendsRouter.post('/requests', async (req: Request, res: Response) => {
       try {
         await friendsController.sendFriendRequest(req.user.username, req.body.to)
         return res.status(200).json({ message: 'Friend request sent' })
-      } catch (e: any) {
+      } catch (e) {
         if (e instanceof FriendsControllerExceptions.UserNotFound) {
           return res.status(404).json({ message: 'User not found', error: e.message })
         } else if (e instanceof FriendsControllerExceptions.FriendRequestAlreadySent) {
@@ -74,7 +74,7 @@ friendsRouter.post('/requests', async (req: Request, res: Response) => {
       try {
         await friendsController.acceptFriendRequest(req.user.username, req.body.to)
         return res.status(200).json({ message: 'Friend request accepted' })
-      } catch (e: any) {
+      } catch (e) {
         if (e instanceof FriendsControllerExceptions.UserNotFound) {
           return res.status(404).json({ message: 'User not found', error: e.message })
         } else if (e instanceof FriendsControllerExceptions.FriendRequestNotPresent) {
@@ -89,7 +89,7 @@ friendsRouter.post('/requests', async (req: Request, res: Response) => {
       try {
         await friendsController.denyFriendRequest(req.user.username, req.body.to)
         return res.status(200).json({ message: 'Friend request denied' })
-      } catch (e: any) {
+      } catch (e) {
         if (e instanceof FriendsControllerExceptions.UserNotFound) {
           return res.status(404).json({ message: 'User not found', error: e.message })
         } else if (e instanceof FriendsControllerExceptions.FriendRequestNotPresent) {

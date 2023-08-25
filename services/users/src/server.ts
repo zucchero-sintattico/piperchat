@@ -27,7 +27,7 @@ export class UsersServer {
   }
 
   async start(onStarted: () => void = () => {}) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       this.server.listen(this.port, () => {
         onStarted()
         resolve()

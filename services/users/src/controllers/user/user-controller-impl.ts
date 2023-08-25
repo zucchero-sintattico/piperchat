@@ -1,4 +1,3 @@
-import { Users } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import { UserController, UserStatusInfo } from './user-controller'

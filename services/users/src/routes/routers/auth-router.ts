@@ -7,6 +7,7 @@ import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
 import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
+  UsersMessages,
 } from '@piperchat/commons'
 
 const authController: AuthController = new AuthControllerImpl()
@@ -25,12 +26,18 @@ authRouter.post('/register', async (req: Request, res: Response) => {
       req.body.description,
       req.body.photo
     )
-    return res.status(200).json({ message: 'Registered', createdUser: user })
-  } catch (e: any) {
+    return res
+      .status(200)
+      .json({ message: 'Registered', createdUser: user } as UsersMessages.Ok)
+  } catch (e) {
     if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
-      return res.status(409).json({ message: 'User already exists' })
+      return res
+        .status(409)
+        .json({ message: 'User already exists' } as UsersMessages.Error)
     } else {
-      return res.status(500).json({ message: 'Internal Server Error', error: e })
+      return res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: e } as UsersMessages.Error)
     }
   }
 })
@@ -43,7 +50,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const token = await authController.login(req.body.username, req.body.password)
     res.cookie('jwt', token, { httpOnly: true })
     return res.status(200).json({ message: 'Logged in' })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
       return res.status(401).json({ message: 'Invalid username or password' })
     } else {
@@ -62,7 +69,7 @@ authRouter
       await authController.logout(req.user.username)
       res.clearCookie('jwt')
       return res.status(200).json({ message: 'Logged out' })
-    } catch (e: any) {
+    } catch (e) {
       if (e instanceof AuthControllerExceptions.UserNotFound) {
         return res.status(404).json({ message: 'User not found' })
       } else {
@@ -80,7 +87,7 @@ authRouter
         .status(200)
         .cookie('jwt', token, { httpOnly: true })
         .json({ message: 'Refreshed token' })
-    } catch (e: any) {
+    } catch (e) {
       if (e instanceof AuthControllerExceptions.UserNotFound) {
         return res.status(404).json({ message: 'User not found' })
       } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {

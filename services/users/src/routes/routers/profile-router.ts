@@ -15,7 +15,7 @@ profileRouter.put('/photo', async (req: Request, res: Response) => {
   try {
     await profileController.updateUserPhoto(req.user.username, req.body.photo)
     return res.status(200).json({ message: 'Photo set' })
-  } catch (e: any) {
+  } catch (e) {
     return res.status(400).json({ message: 'Bad request', error: e })
   }
 })
@@ -27,7 +27,7 @@ profileRouter.put('/description', async (req: Request, res: Response) => {
   try {
     await profileController.updateUserDescription(req.user.username, req.body.description)
     return res.status(200).json({ message: 'Description set' })
-  } catch (e: any) {
+  } catch (e) {
     return res.status(404).json({ message: 'Bad request', error: e })
   }
 })

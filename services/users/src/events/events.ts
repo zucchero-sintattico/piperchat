@@ -66,7 +66,7 @@ export class ServiceEvents {
       return
     }
     await channel?.bindQueue(queue.queue, exchange, '')
-    channel?.consume(queue.queue, async (message: any): Promise<void> => {
+    channel?.consume(queue.queue, async (message): Promise<void> => {
       if (!message) {
         return
       }

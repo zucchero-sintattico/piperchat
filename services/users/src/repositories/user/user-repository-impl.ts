@@ -24,7 +24,6 @@ export class UserRepositoryImpl implements UserRepository {
     ).orFail()
   }
 
-  async setUserPhoto(username: string, photo: string): Promise<void> {}
   async getUserByUsername(username: string): Promise<User> {
     return await Users.findOne({ username: username }).orFail()
   }
@@ -34,8 +33,10 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async login(username: string, refreshToken: string): Promise<void> {
-    const user = await this.getUserByUsername(username)
-    await Users.findOneAndUpdate({ username: username }, { refreshToken: refreshToken })
+    await Users.findOneAndUpdate(
+      { username: username },
+      { refreshToken: refreshToken }
+    ).orFail()
   }
 
   async logout(username: string): Promise<void> {

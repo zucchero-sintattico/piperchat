@@ -15,7 +15,7 @@ usersRouter.get('/:username/status', async (req: Request, res: Response) => {
   try {
     const status = await userController.getUserStatus(req.params['username']!)
     return res.status(200).json({ status: status })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof UserControllerExceptions.UserNotFound) {
       return res.status(404).json({ message: 'User not found', error: e })
     } else {
@@ -28,7 +28,7 @@ usersRouter.get('/:username/photo', async (req: Request, res: Response) => {
   try {
     const photo = await userController.getUserPhoto(req.params['username']!)
     return res.status(200).json({ photo: photo })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof UserControllerExceptions.UserNotFound) {
       return res.status(404).json({ message: 'User not found', error: e })
     } else {
@@ -41,7 +41,7 @@ usersRouter.get('/:username/description', async (req: Request, res: Response) =>
   try {
     const description = await userController.getUserDescription(req.params['username']!)
     return res.status(200).json({ description: description })
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof UserControllerExceptions.UserNotFound) {
       return res.status(404).json({ message: 'User not found', error: e })
     } else {
