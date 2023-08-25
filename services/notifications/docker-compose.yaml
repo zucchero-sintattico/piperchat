@@ -16,6 +16,10 @@ services:
     environment:
       - "AMQP_URI=${BROKER_URI}"
       - "MONGO_URI=mongodb://db-notifications-service:27017/notifications"
+    labels:
+      - |
+        traefik.http.routers.notifications-service.rule=
+        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`))
 
   db-notifications-service:
     image: mongo
