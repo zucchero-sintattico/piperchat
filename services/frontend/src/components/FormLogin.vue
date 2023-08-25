@@ -6,7 +6,13 @@
     </div>
     <div class="form-group my-2">
       <label>Password</label>
-      <input v-model="form.password" class="form-control" type="password" placeholder="Password" required />
+      <input
+        v-model="form.password"
+        class="form-control"
+        type="password"
+        placeholder="Password"
+        required
+      />
     </div>
     <div class="text-danger my-2">{{ userStore.state.error }}</div>
     <button class="btn btn-success btn-block my-2" type="submit">Login</button>

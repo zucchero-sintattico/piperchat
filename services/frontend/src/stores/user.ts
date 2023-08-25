@@ -1,10 +1,13 @@
 import { computed, reactive } from 'vue'
 import axios from 'axios'
+import { UserRequestImpl } from '../services/users/user-requests-impl'
+
+const Request: UserRequest = new UserRequestImpl()
 
 const state = reactive({
   name: '',
   username: '',
-
+  email: '',
   error: ''
 })
 
@@ -14,37 +17,11 @@ const getters = reactive({
 
 const actions = {
   async getUser() {
-
+    Request.getUserFromToken()
   },
   async login(username: string, password: string) {
-
-    const data = JSON.stringify({
-      username: username,
-      password: password
-    })
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'http://localhost:3000/auth/login',
-      headers: {
-        'Access-Control-Allow-Origin':'*',
-        'Content-Type': 'application/json',
-      },
-      data: data
-    }
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data))
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    Request.login(username, password)
   }
-
-
 }
 
 export default { state, getters, ...actions }

@@ -5,9 +5,7 @@
   <div v-else class="text-center">
     <h2>Welcome, {{ userStore.state.name }}</h2>
     <Counter />
-    <button class="btn btn-secondary" @click="userStore.logout()">
-      Logout
-    </button>
+    <button class="btn btn-secondary" @click="userStore.logout()">Logout</button>
   </div>
 </template>
 
@@ -16,7 +14,6 @@ import { defineComponent, onMounted } from 'vue'
 
 import userStore from '@/stores/user'
 import FormLogin from '@/components/FormLogin.vue'
-
 
 export default defineComponent({
   name: 'App',

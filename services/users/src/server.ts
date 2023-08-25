@@ -12,7 +12,11 @@ export class UsersServer {
   constructor(port: number) {
     this.port = port
     this.app = express()
-    this.app.use(cors())
+    const corsOptions = {
+      origin: 'http://localhost:5173',
+      credentials: true,
+    }
+    this.app.use(cors(corsOptions))
     this.app.use(express.json())
     this.server = http.createServer(this.app)
     this.setupMiddleware()
