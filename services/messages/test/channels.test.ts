@@ -7,8 +7,8 @@ import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
 
-let channelController = new ChannelControllerImpl()
-let serverRepository: ServerRepository = new ServerRepositoryImpl()
+const channelController = new ChannelControllerImpl()
+const serverRepository: ServerRepository = new ServerRepositoryImpl()
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')

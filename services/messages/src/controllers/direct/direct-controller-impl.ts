@@ -1,7 +1,7 @@
 import { DirectController } from './direct-controller'
 
 import { DirectRepository } from '@repositories/direct/direct-repository'
-import { Direct, Message } from '@models/messages-model'
+import { Message } from '@models/messages-model'
 import { DirectRepositoryImpl } from '@repositories/direct/direct-repository-impl'
 import { MessageEventsRepository } from '@events/repositories/message-events-repository'
 import { MessageEventsRepositoryImpl } from '@/events/repositories/message-events-repository-impl'

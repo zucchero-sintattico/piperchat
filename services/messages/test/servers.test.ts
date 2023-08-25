@@ -4,7 +4,7 @@ import { Servers } from '@models/messages-model'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
 
-let serverRepository: ServerRepository = new ServerRepositoryImpl()
+const serverRepository: ServerRepository = new ServerRepositoryImpl()
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')

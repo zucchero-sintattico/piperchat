@@ -4,7 +4,7 @@ import { Directs } from '@models/messages-model'
 import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
 import { ServiceEvents } from '@events/events'
 
-let directController = new DirectControllerImpl()
+const directController = new DirectControllerImpl()
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
