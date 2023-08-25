@@ -1,5 +1,7 @@
+import { Mongoose } from 'mongoose'
+
 export class MongooseUtils {
-  static async initialize(mongoose: any, connectionUri: string) {
+  static async initialize(mongoose: Mongoose, connectionUri: string) {
     try {
       await mongoose.connect(connectionUri)
       console.log('Connected to MongoDB')
@@ -8,11 +10,11 @@ export class MongooseUtils {
     }
   }
 
-  static async close(mongoose: any) {
+  static async close(mongoose: Mongoose) {
     await mongoose.disconnect()
   }
 
-  static async clear(mongoose: any) {
+  static async clear(mongoose: Mongoose) {
     const collections = mongoose.connection.collections
     for (const key in collections) {
       const collection = collections[key]

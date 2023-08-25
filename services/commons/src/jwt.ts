@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { Request, Response, NextFunction } from 'express'
 
 /**
  * JWT Token Info
@@ -20,6 +21,7 @@ type UserInfo = {
  * @param user User info embedded in the JWT Token
  */
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user: UserJWTInfo
@@ -101,7 +103,11 @@ export const verifyRefreshToken = (token: string) => {
  * @returns 401 if the JWT Access Token is invalid
  * @returns 401 if the JWT Access Token is expired
  */
-export const JWTAuthenticationMiddleware = (req: any, res: any, next: any): void => {
+export const JWTAuthenticationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
     res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
@@ -125,7 +131,11 @@ export const JWTAuthenticationMiddleware = (req: any, res: any, next: any): void
  * @returns 401 if the JWT Access Token is missing
  * @returns 400 if the JWT Access Token is valid
  */
-export const JWTRefreshTokenMiddleware = (req: any, res: any, next: any): void => {
+export const JWTRefreshTokenMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
     res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
