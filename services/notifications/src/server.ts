@@ -1,6 +1,7 @@
 import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
+import { healthCheckRouter } from '@piperchat/commons'
 import cookieParser from 'cookie-parser'
 
 export class NotificationsServer {
@@ -22,6 +23,7 @@ export class NotificationsServer {
   }
 
   private setupRouter() {
+    this.app.use('/health', healthCheckRouter)
     this.app.use('/', serviceRouter)
   }
 
