@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { serverRouter } from './routers/server-router'
 import { channelRouter } from './routers/channel-router'
-import { healthCheckRouter } from '@piperchat/commons'
 import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 
 const serviceRouter = Router()
@@ -10,6 +9,5 @@ serviceRouter.use(JWTAuthenticationMiddleware)
 // Register all routers
 serviceRouter.use('/servers/:serverId/channels', channelRouter)
 serviceRouter.use('/servers', serverRouter)
-serviceRouter.use('/healthcheck', healthCheckRouter)
 
 export { serviceRouter }
