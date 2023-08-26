@@ -13,6 +13,7 @@ export class HealthCheckService {
     setInterval(() => {
       this.microservices.forEach(async (microservice) => {
         try {
+          console.log(`Checking ${microservice}`)
           await axios.get(microservice)
           await this.monitoringRepository.changeServiceStatus(microservice, 'online')
         } catch (error) {
