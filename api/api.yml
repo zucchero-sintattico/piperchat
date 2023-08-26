@@ -473,6 +473,7 @@ paths:
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
 
+  /servers/{serverId}:
     put:
       summary: Modify server
       description: The owner modify server information
@@ -584,7 +585,7 @@ paths:
         '422':
           description: 'Unprocessable entity: the user is the owner of the server'
 
-  /servers/{serverId}/partecipants/{userId}:
+  /servers/{serverId}/partecipants/{username}:
     delete:
       summary: Remove user from server
       description: The owner remove a user from the server
