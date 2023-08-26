@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-
-import { ErrorResponse, Response, ResponseFacade } from './response'
+import { Empty, ErrorResponse, Response, ResponseFacade } from '@/api/response'
 
 /**
  * Register endpoint
  */
 export namespace Register {
-  export interface Request {
-    username: string
-    password: string
-    email: string
-    description?: string
-    photo?: Buffer
+  export namespace Request {
+    export type Params = Empty
+    export type Query = Empty
+    export type Body = {
+      username: string
+      password: string
+      email: string
+      description?: string
+      photo?: Buffer
+    }
   }
 
   export namespace Responses {
@@ -23,7 +26,7 @@ export namespace Register {
     }
 
     export class Success extends Response {
-      status = 200
+      statusCode = 200
       createdUser: UserLoginResponse
       constructor(user: UserLoginResponse) {
         super()
@@ -36,7 +39,7 @@ export namespace Register {
 
   export namespace Errors {
     export class UserAlreadyExists extends ErrorResponse {
-      status = 409
+      statusCode = 409
       error = 'User already exists' as const
     }
 
@@ -50,14 +53,18 @@ export namespace Register {
  * Login endpoint
  */
 export namespace Login {
-  export interface Request {
-    username: string
-    password: string
+  export namespace Request {
+    export type Params = Empty
+    export type Query = Empty
+    export type Body = {
+      username: string
+      password: string
+    }
   }
 
   export namespace Responses {
     export class Success extends Response {
-      status = 200
+      statusCode = 200
       message = 'Logged in' as const
       jwt: string
       constructor(jwt: string) {
@@ -75,7 +82,7 @@ export namespace Login {
 
   export namespace Errors {
     export class UsernameOrPasswordIncorrect extends ErrorResponse {
-      status = 401
+      statusCode = 401
       error = 'Username or password incorrect' as const
     }
     export type Type = UsernameOrPasswordIncorrect
@@ -88,10 +95,14 @@ export namespace Login {
  * Logout endpoint
  */
 export namespace Logout {
-  export interface Request {}
+  export namespace Request {
+    export type Params = Empty
+    export type Query = Empty
+    export type Body = Empty
+  }
   export namespace Responses {
     export class Success extends Response {
-      status = 200
+      statusCode = 200
       message = 'Logged out' as const
       override send(res: ResponseFacade) {
         res.clearCookie('jwt')
@@ -103,11 +114,11 @@ export namespace Logout {
   }
   export namespace Errors {
     export class UserNotFound extends ErrorResponse {
-      status = 404
+      statusCode = 404
       error = 'User not found' as const
     }
     export class NotLoggedIn extends ErrorResponse {
-      status = 401
+      statusCode = 401
       error = 'User not logged in' as const
     }
     export type Type = UserNotFound | NotLoggedIn
@@ -119,10 +130,14 @@ export namespace Logout {
  * Refresh token endpoint
  */
 export namespace RefreshToken {
-  export interface Request {}
+  export namespace Request {
+    export type Params = Empty
+    export type Query = Empty
+    export type Body = Empty
+  }
   export namespace Responses {
     export class Success extends Response {
-      status = 200
+      statusCode = 200
       message = 'Refreshed token' as const
       jwt: string
       constructor(jwt: string) {
@@ -138,15 +153,15 @@ export namespace RefreshToken {
   }
   export namespace Errors {
     export class UserNotFound extends ErrorResponse {
-      status = 404
+      statusCode = 404
       error = 'User not found' as const
     }
     export class InvalidRefreshToken extends ErrorResponse {
-      status = 401
+      statusCode = 401
       error = 'Invalid refresh token' as const
     }
     export class RefreshTokenNotPresent extends ErrorResponse {
-      status = 401
+      statusCode = 401
       error = 'Refresh token not present' as const
     }
     export type Type = UserNotFound | InvalidRefreshToken | RefreshTokenNotPresent

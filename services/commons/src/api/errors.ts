@@ -1,7 +1,7 @@
 import { ErrorResponse } from './response'
 
 export class InternalServerError extends ErrorResponse {
-  status = 500
+  statusCode = 500
   error = 'Internal Server Error' as const
   errorMessage: unknown
   constructor(e: unknown = '') {

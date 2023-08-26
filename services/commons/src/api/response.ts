@@ -1,3 +1,4 @@
+export type Empty = Record<string, never>
 export interface ResponseFacade {
   status(status: number): ResponseFacade
   json(data: unknown): ResponseFacade
@@ -6,9 +7,9 @@ export interface ResponseFacade {
 }
 
 export abstract class Response {
-  abstract status: number
-  public send(res: ResponseFacade): void {
-    res.status(this.status).json(this)
+  abstract statusCode: number
+  public send(res?: ResponseFacade): void {
+    res?.status(this.statusCode).json(this)
   }
 }
 

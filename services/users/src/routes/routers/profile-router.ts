@@ -1,24 +1,38 @@
 import { Request, Response, Router } from 'express'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { Api, JWTAuthenticationMiddleware } from '@piperchat/commons'
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
+
+// Import specific interfaces from the API
+import ApiErrors = Api.Errors
+import UpdatePhotoApi = Api.Users.Profile.UpdatePhoto
 
 const profileController: ProfileController = new ProfileControllerImpl()
 
 export const profileRouter = Router()
 profileRouter.use(JWTAuthenticationMiddleware)
 
-profileRouter.put('/photo', async (req: Request, res: Response) => {
-  if (!req.body.photo) {
-    return res.status(400).json({ message: "Missing 'photo' in body" })
+profileRouter.put(
+  '/photo',
+  async (
+    req: Request<
+      UpdatePhotoApi.Request.Params,
+      UpdatePhotoApi.Response,
+      UpdatePhotoApi.Request.Body,
+      UpdatePhotoApi.Request.Query
+    >,
+    res: Response<UpdatePhotoApi.Response | ApiErrors.InternalServerError>
+  ) => {
+    try {
+      await profileController.updateUserPhoto(req.user.username, req.body.photo)
+      const response = new UpdatePhotoApi.Responses.Success()
+      response.send(res)
+    } catch (e) {
+      const response = new ApiErrors.InternalServerError(e)
+      response.send(res)
+    }
   }
-  try {
-    await profileController.updateUserPhoto(req.user.username, req.body.photo)
-    return res.status(200).json({ message: 'Photo set' })
-  } catch (e) {
-    return res.status(400).json({ message: 'Bad request', error: e })
-  }
-})
+)
 
 profileRouter.put('/description', async (req: Request, res: Response) => {
   if (!req.body.description) {
