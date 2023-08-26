@@ -49,7 +49,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
   }
   // check if token is already present and if it is valid
   if (req.cookies.jwt && isAccessTokenValid(req.cookies.jwt)) {
-    return res.status(409).json({ message: 'Already logged in' })
+    return res.status(200).json({ message: 'Already logged in' })
   }
   try {
     const token = await authController.login(req.body.username, req.body.password)
