@@ -17,4 +17,5 @@ docker compose \
     -f ./services/piperchat/docker-compose.yaml \
     -f ./services/users/docker-compose.yaml \
     -f ./services/webrtc/docker-compose.yaml \
+    -f ./dev/inspector.docker-compose.yaml \
     up
