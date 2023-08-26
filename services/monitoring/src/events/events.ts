@@ -14,20 +14,10 @@ export class ServiceEvents {
   private static monitoringRepository: MonitoringRepository =
     new MonitoringRepositoryImpl()
 
-  private static logExchanges = ['messages', 'users', 'servers', 'channels']
-  private static exchanges = ServiceEvents.logExchanges.concat(['services'])
-  private static services = [
-    'messages',
-    'users',
-    'piperchat',
-    'webRTC',
-    'notifications',
-    'gateway',
-  ]
+  private static exchanges = ['messages', 'users', 'servers', 'channels']
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
-    await this.declareServices()
     await this.declareQueue()
     await this.setupListeners()
   }
@@ -51,7 +41,7 @@ export class ServiceEvents {
 
   static async setupListeners() {
     // Logs listeners
-    for (const exchange of this.logExchanges) {
+    for (const exchange of this.exchanges) {
       await this.subscribeToExchange(exchange, async (event, data) => {
         await this.monitoringRepository.log({
           topic: exchange,
@@ -59,17 +49,6 @@ export class ServiceEvents {
           payload: data,
         })
       })
-    }
-
-    // Service status listeners
-    await this.subscribeToExchange('services', async (event, data) => {
-      await this.monitoringRepository.changeServiceStatus(data.service, data.status)
-    })
-  }
-
-  static async declareServices() {
-    for (const service of this.services) {
-      await this.monitoringRepository.createServiceStatus(service, 'offline')
     }
   }
 
