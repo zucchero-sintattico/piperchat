@@ -3,7 +3,7 @@ services:
     image: piperchat
     command: ['npm', 'run', '--workspace', './services/monitoring', 'start']
     expose:
-      - '3000'
+      - ${MONITORING_SERVICE_PORT}
     depends_on:
       db-monitoring-service:
         condition: service_healthy
