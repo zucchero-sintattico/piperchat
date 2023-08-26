@@ -11,6 +11,15 @@ const userController: UserController = new UserControllerImpl()
 export const usersRouter = Router()
 usersRouter.use(JWTAuthenticationMiddleware)
 
+usersRouter.get('/whoami', async (req: Request, res: Response) => {
+  try {
+    const user = await userController.getUser(req.user.username)
+    return res.status(200).json({ user: user })
+  } catch (e: any) {
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 usersRouter.get('/:username/status', async (req: Request, res: Response) => {
   try {
     const status = await userController.getUserStatus(req.params['username']!)

@@ -33,6 +33,10 @@ export class UserApi {
     return response
   }
 
+  async whoami() {
+    return await this.request.get('/users/whoami').set('Cookie', this.cookie)
+  }
+
   async getDescription(username: string) {
     return await this.request
       .get(`/users/${username}/description`)

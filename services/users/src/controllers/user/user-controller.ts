@@ -4,6 +4,14 @@ export type UserStatusInfo = {
 }
 export interface UserController {
   /**
+   * Get a user.
+   * @param username The username of the user.
+   * @returns The user.
+   * @throws {UserNotFound} If the user is not found.
+   */
+  getUser(username: string): Promise<User>
+
+  /**
    * Get the status of a user.
    * @param username The username of the user.
    * @returns The status of the user.
