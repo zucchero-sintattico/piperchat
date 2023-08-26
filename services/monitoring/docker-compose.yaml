@@ -18,6 +18,10 @@ services:
       - 'MONGO_URI=mongodb://db-monitoring-service:27017/monitoring'
       - 'SERVICES_URI=${USERS_SERVICE_URI},${MESSAGES_SERVICE_URI},
         ${PIPERCHAT_SERVICE_URI},${WEBRTC_URI},${NOTIFICATIONS_SERVICE_URI}'
+    labels:
+      - |
+        traefik.http.routers.monitoring-service.rule=
+        (Method(`GET`) && Path(`/health`))
 
   db-monitoring-service:
     image: mongo
