@@ -53,4 +53,4 @@ channelRouter.post(':serverId/channels/:channelId/messages', async (req, res) =>
   }
 })
 
-export { channelRouter as ChannelRouter }
+export { channelRouter }

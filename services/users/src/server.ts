@@ -1,7 +1,9 @@
 import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
+import { healthCheckRouter } from '@piperchat/commons'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
 export class UsersServer {
   private port: number
@@ -11,6 +13,12 @@ export class UsersServer {
   constructor(port: number) {
     this.port = port
     this.app = express()
+    const corsOptions = {
+      origin: 'http://localhost:5173',
+      credentials: true,
+    }
+    this.app.use(cors(corsOptions))
+    this.app.use(express.json())
     this.server = http.createServer(this.app)
     this.setupMiddleware()
     this.setupRouter()
@@ -23,6 +31,7 @@ export class UsersServer {
   }
 
   private setupRouter() {
+    this.app.use('/health', healthCheckRouter)
     this.app.use('/', serviceRouter)
   }
 

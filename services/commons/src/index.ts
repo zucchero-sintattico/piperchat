@@ -12,3 +12,4 @@ export interface MicroserviceConfiguration {
   amqpUri: string
   mongoUri: string
 }
+export { healthCheckRouter } from './healthcheck-router'

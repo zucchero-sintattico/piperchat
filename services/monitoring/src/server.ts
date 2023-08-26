@@ -2,11 +2,14 @@ import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import { HealthCheckService } from './healtcheck-service'
 
 export class MonitoringServer {
   private port: number
   private app: express.Application
   public server: http.Server
+  private healthCheckService: HealthCheckService = new HealthCheckService()
 
   constructor(port: number) {
     this.port = port
@@ -17,6 +20,11 @@ export class MonitoringServer {
   }
 
   private setupMiddleware() {
+    const corsOptions = {
+      origin: 'http://localhost:5173/',
+      credentials: true,
+    }
+    this.app.use(cors(corsOptions))
     this.app.use(express.json())
     this.app.use(cookieParser())
   }
@@ -29,6 +37,7 @@ export class MonitoringServer {
     return new Promise<void>((resolve) => {
       this.server.listen(this.port, () => {
         onStarted()
+        this.healthCheckService.start()
         resolve()
       })
     })

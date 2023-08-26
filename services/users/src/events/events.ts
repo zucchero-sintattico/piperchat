@@ -1,7 +1,4 @@
-import { UserRepository } from '@repositories/user/user-repository'
-import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import { RabbitMQ } from '@piperchat/commons'
-import { ServiceEventsRepository } from '@piperchat/commons'
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -10,20 +7,14 @@ import { ServiceEventsRepository } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
-  private static userRepository: UserRepository = new UserRepositoryImpl()
-  private static serviceEventsRepository: ServiceEventsRepository =
-    new ServiceEventsRepository()
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
     await this.declareQueue()
     await this.setupListeners()
-    await this.serviceEventsRepository.publishServiceStatusOnline('users')
   }
 
-  static async shutdown() {
-    await this.serviceEventsRepository.publishServiceStatusOffline('users')
-  }
+  static async shutdown() {}
 
   static async declareQueue() {
     const channel = this.broker.getChannel()
