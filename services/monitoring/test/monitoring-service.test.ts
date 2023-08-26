@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from 'mongoose'
+import mongoose from 'mongoose'
 import { RabbitMQ } from '@piperchat/commons'
 import { ServiceEvents } from '@events/events'
 import { EventLogEntity, ServiceStatusEntity } from '@models/monitoring-model'
