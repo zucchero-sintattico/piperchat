@@ -8,6 +8,7 @@ import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
   UsersMessages,
+  isAccessTokenValid,
 } from '@piperchat/commons'
 
 const authController: AuthController = new AuthControllerImpl()
@@ -46,7 +47,8 @@ authRouter.post('/login', async (req: Request, res: Response) => {
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ message: 'Missing username or password' })
   }
-  if (req.user) {
+  // check if token is already present and if it is valid
+  if (req.cookies.jwt && isAccessTokenValid(req.cookies.jwt)) {
     return res.status(409).json({ message: 'Already logged in' })
   }
   try {
