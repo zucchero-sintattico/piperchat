@@ -47,12 +47,15 @@ authRouter.post('/register', async (req: Requests.Register, res: Responses.Regis
       req.body.description ?? '',
       req.body.photo ?? null
     )
-    return res.status(200).json(new RegisterApi.Responses.Success(user))
+    const response = new RegisterApi.Responses.Success(user)
+    return response.send(res)
   } catch (e) {
     if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
-      return res.status(409).json(new RegisterApi.Errors.UserAlreadyExists())
+      const response = new RegisterApi.Errors.UserAlreadyExists()
+      response.send(res)
     } else {
-      return res.status(500).json(new ApiErrors.InternalServerError(e))
+      const response = new ApiErrors.InternalServerError(e)
+      response.send(res)
     }
   }
 })
@@ -60,13 +63,15 @@ authRouter.post('/register', async (req: Requests.Register, res: Responses.Regis
 authRouter.post('/login', async (req: Requests.Login, res: Responses.Login) => {
   try {
     const token = await authController.login(req.body.username, req.body.password)
-    res.cookie('jwt', token, { httpOnly: true })
-    return res.status(200).json(new LoginApi.Responses.Success())
+    const response = new LoginApi.Responses.Success(token)
+    response.send(res)
   } catch (e) {
     if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
-      return res.status(401).json(new LoginApi.Errors.UsernameOrPasswordIncorrect())
+      const response = new LoginApi.Errors.UsernameOrPasswordIncorrect()
+      response.send(res)
     } else {
-      return res.status(500).json(new ApiErrors.InternalServerError(e))
+      const response = new ApiErrors.InternalServerError(e)
+      response.send(res)
     }
   }
 })
@@ -76,16 +81,19 @@ authRouter
   .post('/logout', async (req: Requests.Logout, res: Responses.Logout) => {
     try {
       if (!req.user) {
-        return res.status(401).json(new LogoutApi.Errors.NotLoggedIn())
+        const response = new LogoutApi.Errors.NotLoggedIn()
+        response.send(res)
       }
       await authController.logout(req.user.username)
-      res.clearCookie('jwt')
-      return res.status(200).json(new LogoutApi.Responses.Success())
+      const response = new LogoutApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof AuthControllerExceptions.UserNotFound) {
-        return res.status(404).json(new LogoutApi.Errors.UserNotFound())
+        const response = new LogoutApi.Errors.UserNotFound()
+        response.send(res)
       } else {
-        return res.status(500).json(new ApiErrors.InternalServerError(e))
+        const response = new ApiErrors.InternalServerError(e)
+        response.send(res)
       }
     }
   })
@@ -97,19 +105,21 @@ authRouter
     async (req: Requests.RefreshToken, res: Responses.RefreshToken) => {
       try {
         const token = await authController.refreshToken(req.user.username)
-        return res
-          .status(200)
-          .cookie('jwt', token, { httpOnly: true })
-          .json(new RefreshTokenApi.Responses.Success())
+        const response = new RefreshTokenApi.Responses.Success(token)
+        response.send(res)
       } catch (e) {
         if (e instanceof AuthControllerExceptions.UserNotFound) {
-          return res.status(404).json(new RefreshTokenApi.Errors.UserNotFound())
+          const response = new RefreshTokenApi.Errors.UserNotFound()
+          response.send(res)
         } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
-          return res.status(401).json(new RefreshTokenApi.Errors.InvalidRefreshToken())
+          const response = new RefreshTokenApi.Errors.InvalidRefreshToken()
+          response.send(res)
         } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
-          return res.status(401).json(new RefreshTokenApi.Errors.InvalidRefreshToken())
+          const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
+          response.send(res)
         } else {
-          return res.status(500).json(new ApiErrors.InternalServerError(e))
+          const response = new ApiErrors.InternalServerError(e)
+          response.send(res)
         }
       }
     }
