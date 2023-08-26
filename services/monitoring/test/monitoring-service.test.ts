@@ -138,8 +138,7 @@ describe('Service Status', () => {
 
   it('should change the status of a service', async () => {
     await monitoringRepository.createServiceStatus('service1', 'online')
-    await monitoringEventRepository.publishNewServiceStatus('service1', 'offline')
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    await monitoringRepository.changeServiceStatus('service1', 'offline')
     const status = await monitoringRepository.getServiceStatus('service1')
     expect(status.status).toBe('offline')
   })
