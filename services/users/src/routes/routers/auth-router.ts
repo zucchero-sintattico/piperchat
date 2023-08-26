@@ -46,6 +46,9 @@ authRouter.post('/login', async (req: Request, res: Response) => {
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ message: 'Missing username or password' })
   }
+  if (req.user) {
+    return res.status(409).json({ message: 'Already logged in' })
+  }
   try {
     const token = await authController.login(req.body.username, req.body.password)
     res.cookie('jwt', token, { httpOnly: true })
