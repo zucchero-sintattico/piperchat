@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { ErrorResponse } from './commons'
 
 export namespace ErrorsResponses {
-  export class InternalServerError implements ErrorResponse {
+  export class InternalServerError {
     error = 'Internal Server Error' as const
     errorMessage: unknown
     constructor(e: unknown = '') {
