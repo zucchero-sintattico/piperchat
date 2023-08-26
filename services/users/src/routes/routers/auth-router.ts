@@ -12,7 +12,7 @@ import {
 } from '@piperchat/commons'
 
 // Import specific interfaces from the API
-import Errors = Api.ErrorsResponses
+import ApiErrors = Api.Errors
 import LoginApi = Api.Users.Login
 import RegisterApi = Api.Users.Register
 import LogoutApi = Api.Users.Logout
@@ -26,11 +26,11 @@ namespace Requests {
   export type RefreshToken = Request<undefined, undefined, RefreshTokenApi.Request>
 }
 namespace Responses {
-  export type Login = Response<LoginApi.Response | Errors.InternalServerError>
-  export type Register = Response<RegisterApi.Response | Errors.InternalServerError>
-  export type Logout = Response<LogoutApi.Response | Errors.InternalServerError>
+  export type Login = Response<LoginApi.Response | ApiErrors.InternalServerError>
+  export type Register = Response<RegisterApi.Response | ApiErrors.InternalServerError>
+  export type Logout = Response<LogoutApi.Response | ApiErrors.InternalServerError>
   export type RefreshToken = Response<
-    RefreshTokenApi.Response | Errors.InternalServerError
+    RefreshTokenApi.Response | ApiErrors.InternalServerError
   >
 }
 
@@ -52,7 +52,7 @@ authRouter.post('/register', async (req: Requests.Register, res: Responses.Regis
     if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
       return res.status(409).json(new RegisterApi.Errors.UserAlreadyExists())
     } else {
-      return res.status(500).json(new Errors.InternalServerError(e))
+      return res.status(500).json(new ApiErrors.InternalServerError(e))
     }
   }
 })
@@ -66,7 +66,7 @@ authRouter.post('/login', async (req: Requests.Login, res: Responses.Login) => {
     if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
       return res.status(401).json(new LoginApi.Errors.UsernameOrPasswordIncorrect())
     } else {
-      return res.status(500).json(new Errors.InternalServerError(e))
+      return res.status(500).json(new ApiErrors.InternalServerError(e))
     }
   }
 })
@@ -85,7 +85,7 @@ authRouter
       if (e instanceof AuthControllerExceptions.UserNotFound) {
         return res.status(404).json(new LogoutApi.Errors.UserNotFound())
       } else {
-        return res.status(500).json(new Errors.InternalServerError(e))
+        return res.status(500).json(new ApiErrors.InternalServerError(e))
       }
     }
   })
@@ -109,7 +109,7 @@ authRouter
         } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
           return res.status(401).json(new RefreshTokenApi.Errors.InvalidRefreshToken())
         } else {
-          return res.status(500).json(new Errors.InternalServerError(e))
+          return res.status(500).json(new ApiErrors.InternalServerError(e))
         }
       }
     }
