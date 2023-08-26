@@ -3,17 +3,20 @@ services:
     image: piperchat
     command: ['npm', 'run', '--workspace', './services/messages', 'start']
     expose:
-      - '3000'
+      - '${MESSAGES_SERVICE_PORT}'
     depends_on:
       db-messages-service:
         condition: service_healthy
       broker:
         condition: service_healthy
     networks:
-      - messages-network
-      - backend
-      - frontend
+      messages-network:
+      backend:
+        aliases:
+          - ${MESSAGES_SERVICE_NAME}
+      frontend:
     environment:
+      - 'PORT=${MESSAGES_SERVICE_PORT}'
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-messages-service:27017/messages'
     labels:

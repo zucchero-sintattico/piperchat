@@ -3,17 +3,20 @@ services:
     image: piperchat
     command: ['npm', 'run', '--workspace', './services/users', 'start']
     expose:
-      - '3000'
+      - '${USERS_SERVICE_PORT}'
     depends_on:
       db-users-service:
         condition: service_healthy
       broker:
         condition: service_healthy
     networks:
-      - users-network
-      - backend
-      - frontend
+      users-network:
+      backend:
+        aliases:
+          - ${USERS_SERVICE_NAME}
+      frontend:
     environment:
+      - 'PORT=${USERS_SERVICE_PORT}'
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-users-service:27017/users'
     labels:

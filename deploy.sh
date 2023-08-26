@@ -2,7 +2,7 @@
 
 find . -iname "dist" -exec rm -rf {} +
 
-docker build . --tag piperchat
+# docker build . --tag piperchat
 
 docker compose \
     --project-name piperchat \
@@ -17,4 +17,4 @@ docker compose \
     -f ./services/piperchat/docker-compose.yaml \
     -f ./services/users/docker-compose.yaml \
     -f ./services/webrtc/docker-compose.yaml \
-    up -d
+    up

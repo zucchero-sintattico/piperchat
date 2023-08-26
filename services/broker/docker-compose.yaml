@@ -1,7 +1,6 @@
 services:
   broker:
     image: rabbitmq:3-management-alpine
-    hostname: ${BROKER_HOSTNAME}
     expose:
       - '${BROKER_PORT}'
     # for development only
@@ -10,7 +9,11 @@ services:
     # volumes:
     #   - .docker/broker/data/:/var/lib/broker/
     networks:
-      - backend
+      backend:
+        aliases:
+          - ${BROKER_NAME}
+    environment:
+      - 'RABBITMQ_NODE_PORT=${BROKER_PORT}'
     healthcheck:
       test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
 

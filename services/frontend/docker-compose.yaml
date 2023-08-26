@@ -1,9 +1,19 @@
 services:
   frontend-service:
     image: piperchat
-    command: ['npm', 'run', '--workspace', './services/frontend', 'start']
+    command:
+      [
+        'npm',
+        'run',
+        '--workspace',
+        './services/frontend',
+        'start',
+        '--',
+        '--listen',
+        '${FRONTEND_SERVICE_PORT}'
+      ]
     expose:
-      - '3000'
+      - '${FRONTEND_SERVICE_PORT}'
     depends_on:
       broker:
         condition: service_healthy
