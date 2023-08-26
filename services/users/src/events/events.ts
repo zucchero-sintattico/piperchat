@@ -42,13 +42,13 @@ export class ServiceEvents {
     this.subscribeToExchange('user', async (event, data) => {
       switch (event) {
         case 'user.created':
-          console.log('User created', data)
+          //console.log('User created', data)
           break
         case 'user.updated':
-          console.log('User updated', data)
+          //console.log('User updated', data)
           break
         case 'user.deleted':
-          console.log('User deleted', data)
+          //console.log('User deleted', data)
           break
       }
     })

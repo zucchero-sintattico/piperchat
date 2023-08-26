@@ -1,3 +1,5 @@
+import { User } from '@/models/user-model'
+
 export type UserStatusInfo = {
   online: boolean
   lastActive: Date
