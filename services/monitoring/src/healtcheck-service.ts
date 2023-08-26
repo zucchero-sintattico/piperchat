@@ -4,7 +4,9 @@ import { MonitoringRepositoryImpl } from './repositories/monitoring-repository-i
 
 export class HealthCheckService {
   private monitoringRepository: MonitoringRepository = new MonitoringRepositoryImpl()
-  private microservices: string[] = process.env.SERVICES_URI!.split(',')
+  private microservices: string[] = process.env.SERVICES_URI
+    ? process.env.SERVICES_URI.split(',')
+    : []
   private interval: number = Number.parseInt(process.env.HEALTHCHECK_INTERVAL!) || 5000
 
   async start() {

@@ -1,22 +1,17 @@
 import { Router } from 'express'
-import { EntityController } from '@controllers/monitoring-controller'
+import { MonitoringController } from '@/controllers/monitoring-controller'
+import { MonitoringControllerImpl } from '@/controllers/monitoring-controller-impl'
 
-const entityController = new EntityController()
+const monitoringRouter: Router = Router()
+const monitoringController: MonitoringController = new MonitoringControllerImpl()
 
-/**
- * The router of a generic entity.
- */
-const entityRouter = Router()
+monitoringRouter.get('/', async (req, res) => {
+  try {
+    const monitoring = await monitoringController.getServiceStatus()
+    res.status(200).json(monitoring)
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server error', error: e })
+  }
+})
 
-entityRouter
-  .route('/')
-  .get(entityController.getEntities.bind(entityController))
-  .post(entityController.createEntity.bind(entityController))
-
-entityRouter
-  .route('/:id')
-  .get(entityController.getEntityById.bind(entityController))
-  .put(entityController.updateEntity.bind(entityController))
-  .delete(entityController.deleteEntity.bind(entityController))
-
-export { entityRouter }
+export { monitoringRouter }

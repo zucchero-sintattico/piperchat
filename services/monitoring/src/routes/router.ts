@@ -1,10 +1,9 @@
 import { Router } from 'express'
-import { monitoringUserRouter } from './monitoring-user-router'
+import { monitoringRouter } from './monitoring-router'
 
 const serviceRouter = Router()
 
 // Register all routers
-serviceRouter.use('/users', monitoringUserRouter)
-serviceRouter.use('/messages', monitoringUserRouter)
+serviceRouter.use('/health', monitoringRouter)
 
 export { serviceRouter }
