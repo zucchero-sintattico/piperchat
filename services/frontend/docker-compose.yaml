@@ -1,0 +1,16 @@
+services:
+  frontend-service:
+    image: piperchat
+    command: ['npm', 'run', '--workspace', './services/frontend', 'start']
+    expose:
+      - '3000'
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - frontend
+    labels:
+      - |
+        traefik.http.routers.frontend-service.rule=
+        (Method(`GET`) && Path(`/`)) ||
+        (Method(`GET`) && PathPrefix(`/assets/`))

@@ -12,5 +12,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  cacheDir: '../../node_modules/.vite'
+  cacheDir: '../../node_modules/.vite',
+
+  server: {
+    proxy: {
+      '^(?!/site).*$': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
+  }
 })
