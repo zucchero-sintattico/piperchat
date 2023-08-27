@@ -2,7 +2,7 @@
 
 find . -iname "dist" -exec rm -rf {} +
 
-# docker build . --tag piperchat
+docker build . --tag piperchat
 
 docker compose \
     --project-name piperchat \
