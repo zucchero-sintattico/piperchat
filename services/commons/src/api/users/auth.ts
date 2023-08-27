@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response, ResponseFacade } from '@/api/response'
 import { RequestSchema, EmptySchema } from '@/api/schema'
+import { Response as ExResponse, Request as ExRequest } from 'express'
+import { InternalServerError } from '../errors'
 
 /**
  * Register endpoint
@@ -15,15 +17,15 @@ export namespace Register {
       description?: string
       photo?: Buffer
     }
-    export const Schema = class implements RequestSchema {
-      Params = {}
-      Body = {
+    export const Schema: RequestSchema = {
+      Params: {},
+      Body: {
         username: 'string',
         password: 'string',
         email: 'string',
         description: 'string?',
         photo: 'Buffer?',
-      }
+      },
     }
   }
 
@@ -57,6 +59,8 @@ export namespace Register {
   }
 
   export type Response = Responses.Type | Errors.Type
+  export type ExpressRequest = ExRequest<Request.Params, Response, Request.Body>
+  export type ExpressResponse = ExResponse<Response | InternalServerError>
 }
 
 /**
@@ -69,12 +73,12 @@ export namespace Login {
       username: string
       password: string
     }
-    export const Schema = class implements RequestSchema {
-      Params = {}
-      Body = {
+    export const Schema: RequestSchema = {
+      Params: {},
+      Body: {
         username: 'string',
         password: 'string',
-      }
+      },
     }
   }
 
@@ -105,6 +109,8 @@ export namespace Login {
   }
 
   export type Response = Responses.Type | Errors.Type
+  export type ExpressRequest = ExRequest<Request.Params, Response, Request.Body>
+  export type ExpressResponse = ExResponse<Response | InternalServerError>
 }
 
 /**
@@ -140,6 +146,8 @@ export namespace Logout {
     export type Type = UserNotFound | NotLoggedIn
   }
   export type Response = Responses.Type | Errors.Type
+  export type ExpressRequest = ExRequest<Request.Params, Response, Request.Body>
+  export type ExpressResponse = ExResponse<Response | InternalServerError>
 }
 
 /**
@@ -183,4 +191,6 @@ export namespace RefreshToken {
     export type Type = UserNotFound | InvalidRefreshToken | RefreshTokenNotPresent
   }
   export type Response = Responses.Type | Errors.Type
+  export type ExpressRequest = ExRequest<Request.Params, Response, Request.Body>
+  export type ExpressResponse = ExResponse<Response | InternalServerError>
 }

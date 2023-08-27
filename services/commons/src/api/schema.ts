@@ -3,7 +3,7 @@ export interface RequestSchema {
   Body: Record<string, string>
 }
 
-export class EmptySchema implements RequestSchema {
-  Params = {}
-  Body = {}
+export const EmptySchema: RequestSchema = {
+  Params: {},
+  Body: {},
 }

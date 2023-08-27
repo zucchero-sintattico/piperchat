@@ -24,16 +24,10 @@ export const authRouter = Router({
   strict: true,
 })
 
-type RegisterRequest = Request<
-  RegisterApi.Request.Params,
-  RegisterApi.Response,
-  RegisterApi.Request.Body
->
-type RegisterResponse = Response<RegisterApi.Response | ApiErrors.InternalServerError>
 authRouter.post(
   '/register',
-  Api.Validate(new RegisterApi.Request.Schema()),
-  async (req: RegisterRequest, res: RegisterResponse) => {
+  Api.Validate(RegisterApi.Request.Schema),
+  async (req: RegisterApi.ExpressRequest, res: RegisterApi.ExpressResponse) => {
     try {
       const user = await authController.register(
         req.body.username,
@@ -58,11 +52,8 @@ authRouter.post(
 
 authRouter.post(
   '/login',
-  Api.Validate(new LoginApi.Request.Schema()),
-  async (
-    req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
-    res: Response<LoginApi.Response | ApiErrors.InternalServerError>
-  ) => {
+  Api.Validate(LoginApi.Request.Schema),
+  async (req: RegisterApi.ExpressRequest, res: RegisterApi.ExpressResponse) => {
     try {
       const token = await authController.login(req.body.username, req.body.password)
       const response = new LoginApi.Responses.Success(token)
@@ -82,11 +73,8 @@ authRouter.post(
 authRouter.post(
   '/logout',
   JWTAuthenticationMiddleware,
-  Api.Validate(new LogoutApi.Request.Schema()),
-  async (
-    req: Request<LogoutApi.Request.Params, LogoutApi.Response, LogoutApi.Request.Body>,
-    res: Response<LogoutApi.Response | ApiErrors.InternalServerError>
-  ) => {
+  Api.Validate(LogoutApi.Request.Schema),
+  async (req: LogoutApi.ExpressRequest, res: LogoutApi.ExpressResponse) => {
     try {
       if (!req.user) {
         const response = new LogoutApi.Errors.NotLoggedIn()
@@ -110,15 +98,8 @@ authRouter.post(
 authRouter.post(
   '/refresh-token',
   JWTRefreshTokenMiddleware,
-  Api.Validate(new RefreshTokenApi.Request.Schema()),
-  async (
-    req: Request<
-      RefreshTokenApi.Request.Params,
-      RefreshTokenApi.Response,
-      RefreshTokenApi.Request.Body
-    >,
-    res: Response<RefreshTokenApi.Response | ApiErrors.InternalServerError>
-  ) => {
+  Api.Validate(RefreshTokenApi.Request.Schema),
+  async (req: RefreshTokenApi.ExpressRequest, res: RefreshTokenApi.ExpressResponse) => {
     try {
       const token = await authController.refreshToken(req.user.username)
       const response = new RefreshTokenApi.Responses.Success(token)
