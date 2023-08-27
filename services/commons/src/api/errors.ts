@@ -9,3 +9,21 @@ export class InternalServerError extends ErrorResponse {
     this.errorMessage = e
   }
 }
+
+interface BadFieldError {
+  field: string
+  expected: string
+  received: string
+}
+
+export class BadRequest extends ErrorResponse {
+  statusCode = 400
+  error = 'Bad Request' as const
+  params: BadFieldError[]
+  body: BadFieldError[]
+  constructor(params: BadFieldError[], body: BadFieldError[]) {
+    super()
+    this.params = params
+    this.body = body
+  }
+}

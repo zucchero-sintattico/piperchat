@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response, ResponseFacade } from '@/api/response'
+import { RequestSchema, EmptySchema } from '@/api/schema'
 
 /**
  * Register endpoint
@@ -7,13 +8,22 @@ import { Empty, ErrorResponse, Response, ResponseFacade } from '@/api/response'
 export namespace Register {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = {
       username: string
       password: string
       email: string
       description?: string
       photo?: Buffer
+    }
+    export const Schema = class implements RequestSchema {
+      Params = {}
+      Body = {
+        username: 'string',
+        password: 'string',
+        email: 'string',
+        description: 'string?',
+        photo: 'Buffer?',
+      }
     }
   }
 
@@ -55,10 +65,16 @@ export namespace Register {
 export namespace Login {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = {
       username: string
       password: string
+    }
+    export const Schema = class implements RequestSchema {
+      Params = {}
+      Body = {
+        username: 'string',
+        password: 'string',
+      }
     }
   }
 
@@ -97,8 +113,8 @@ export namespace Login {
 export namespace Logout {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = Empty
+    export const Schema = EmptySchema
   }
   export namespace Responses {
     export class Success extends Response {
@@ -132,8 +148,8 @@ export namespace Logout {
 export namespace RefreshToken {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = Empty
+    export const Schema = EmptySchema
   }
   export namespace Responses {
     export class Success extends Response {

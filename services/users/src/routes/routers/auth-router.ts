@@ -24,17 +24,16 @@ export const authRouter = Router({
   strict: true,
 })
 
+type RegisterRequest = Request<
+  RegisterApi.Request.Params,
+  RegisterApi.Response,
+  RegisterApi.Request.Body
+>
+type RegisterResponse = Response<RegisterApi.Response | ApiErrors.InternalServerError>
 authRouter.post(
   '/register',
-  async (
-    req: Request<
-      RegisterApi.Request.Params,
-      RegisterApi.Response,
-      RegisterApi.Request.Body,
-      RegisterApi.Request.Query
-    >,
-    res: Response<RegisterApi.Response | ApiErrors.InternalServerError>
-  ) => {
+  Api.Validate(new RegisterApi.Request.Schema()),
+  async (req: RegisterRequest, res: RegisterResponse) => {
     try {
       const user = await authController.register(
         req.body.username,
@@ -59,13 +58,9 @@ authRouter.post(
 
 authRouter.post(
   '/login',
+  Api.Validate(new LoginApi.Request.Schema()),
   async (
-    req: Request<
-      LoginApi.Request.Params,
-      LoginApi.Response,
-      LoginApi.Request.Body,
-      LoginApi.Request.Query
-    >,
+    req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
     res: Response<LoginApi.Response | ApiErrors.InternalServerError>
   ) => {
     try {
@@ -84,70 +79,64 @@ authRouter.post(
   }
 )
 
-authRouter
-  .use(JWTAuthenticationMiddleware)
-  .post(
-    '/logout',
-    async (
-      req: Request<
-        LogoutApi.Request.Params,
-        LogoutApi.Response,
-        LogoutApi.Request.Body,
-        LogoutApi.Request.Query
-      >,
-      res: Response<LogoutApi.Response | ApiErrors.InternalServerError>
-    ) => {
-      try {
-        if (!req.user) {
-          const response = new LogoutApi.Errors.NotLoggedIn()
-          response.send(res)
-        }
-        await authController.logout(req.user.username)
-        const response = new LogoutApi.Responses.Success()
+authRouter.post(
+  '/logout',
+  JWTAuthenticationMiddleware,
+  Api.Validate(new LogoutApi.Request.Schema()),
+  async (
+    req: Request<LogoutApi.Request.Params, LogoutApi.Response, LogoutApi.Request.Body>,
+    res: Response<LogoutApi.Response | ApiErrors.InternalServerError>
+  ) => {
+    try {
+      if (!req.user) {
+        const response = new LogoutApi.Errors.NotLoggedIn()
         response.send(res)
-      } catch (e) {
-        if (e instanceof AuthControllerExceptions.UserNotFound) {
-          const response = new LogoutApi.Errors.UserNotFound()
-          response.send(res)
-        } else {
-          const response = new ApiErrors.InternalServerError(e)
-          response.send(res)
-        }
+      }
+      await authController.logout(req.user.username)
+      const response = new LogoutApi.Responses.Success()
+      response.send(res)
+    } catch (e) {
+      if (e instanceof AuthControllerExceptions.UserNotFound) {
+        const response = new LogoutApi.Errors.UserNotFound()
+        response.send(res)
+      } else {
+        const response = new ApiErrors.InternalServerError(e)
+        response.send(res)
       }
     }
-  )
+  }
+)
 
-authRouter
-  .use(JWTRefreshTokenMiddleware)
-  .post(
-    '/refresh-token',
-    async (
-      req: Request<
-        RefreshTokenApi.Request.Params,
-        RefreshTokenApi.Response,
-        RefreshTokenApi.Request.Body,
-        RefreshTokenApi.Request.Query
-      >,
-      res: Response<RefreshTokenApi.Response | ApiErrors.InternalServerError>
-    ) => {
-      try {
-        const token = await authController.refreshToken(req.user.username)
-        const response = new RefreshTokenApi.Responses.Success(token)
+authRouter.post(
+  '/refresh-token',
+  JWTRefreshTokenMiddleware,
+  Api.Validate(new RefreshTokenApi.Request.Schema()),
+  async (
+    req: Request<
+      RefreshTokenApi.Request.Params,
+      RefreshTokenApi.Response,
+      RefreshTokenApi.Request.Body
+    >,
+    res: Response<RefreshTokenApi.Response | ApiErrors.InternalServerError>
+  ) => {
+    try {
+      const token = await authController.refreshToken(req.user.username)
+      const response = new RefreshTokenApi.Responses.Success(token)
+      response.send(res)
+    } catch (e) {
+      if (e instanceof AuthControllerExceptions.UserNotFound) {
+        const response = new RefreshTokenApi.Errors.UserNotFound()
         response.send(res)
-      } catch (e) {
-        if (e instanceof AuthControllerExceptions.UserNotFound) {
-          const response = new RefreshTokenApi.Errors.UserNotFound()
-          response.send(res)
-        } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
-          const response = new RefreshTokenApi.Errors.InvalidRefreshToken()
-          response.send(res)
-        } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
-          const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
-          response.send(res)
-        } else {
-          const response = new ApiErrors.InternalServerError(e)
-          response.send(res)
-        }
+      } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
+        const response = new RefreshTokenApi.Errors.InvalidRefreshToken()
+        response.send(res)
+      } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
+        const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
+        response.send(res)
+      } else {
+        const response = new ApiErrors.InternalServerError(e)
+        response.send(res)
       }
     }
-  )
+  }
+)
