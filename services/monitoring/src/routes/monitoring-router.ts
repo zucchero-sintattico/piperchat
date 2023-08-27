@@ -7,6 +7,7 @@ const monitoringController: MonitoringController = new MonitoringControllerImpl(
 
 monitoringRouter.get('/', async (req, res) => {
   try {
+    console.log('GET /monitoring')
     const monitoring = await monitoringController.getServiceStatus()
     res.status(200).json(monitoring)
   } catch (e) {
