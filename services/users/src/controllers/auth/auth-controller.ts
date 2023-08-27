@@ -48,6 +48,7 @@ export interface AuthController {
 export class AuthControllerExceptions {
   static UserAlreadyExists = class extends Error {}
   static UserNotFound = class extends Error {}
+  static UserAlreadyLoggedIn = class extends Error {}
   static RefreshTokenNotPresent = class extends Error {}
   static InvalidRefreshToken = class extends Error {}
   static InvalidUsernameOrPassword = class extends Error {}

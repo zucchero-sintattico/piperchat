@@ -26,6 +26,7 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     depends_on:
+      - frontend-service
       - messages-service
       - monitoring-service
       - notifications-service

@@ -49,6 +49,8 @@ paths:
       responses:
         '200':
           description: Ok
+        '400':
+          description: Bad request'
         '401':
           description: Unauthorized
 
@@ -473,6 +475,7 @@ paths:
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
 
+  /servers/{serverId}:
     put:
       summary: Modify server
       description: The owner modify server information
@@ -486,7 +489,14 @@ paths:
         content:
           application/json:
             schema:
-              '$ref': '#/components/schemas/server'
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beautiful Server
+                description:
+                  type: string
+                  example: This server is created for make new friends!
       responses:
         '200':
           description: Ok
@@ -584,7 +594,7 @@ paths:
         '422':
           description: 'Unprocessable entity: the user is the owner of the server'
 
-  /servers/{serverId}/partecipants/{userId}:
+  /servers/{serverId}/partecipants/{username}:
     delete:
       summary: Remove user from server
       description: The owner remove a user from the server

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Request, Router, Response } from 'express'
+import { Router } from 'express'
 import {
   AuthController,
   AuthControllerExceptions,

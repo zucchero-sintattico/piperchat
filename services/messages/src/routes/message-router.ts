@@ -29,4 +29,4 @@ directRouter.post('/:username/messages', async (req, res) => {
   res.status(200).json({ message: 'Message sent' })
 })
 
-export { directRouter as DirectRouter }
+export { directRouter }
