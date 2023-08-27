@@ -69,4 +69,11 @@ export interface MonitoringRepository {
    * The array is empty if there are no statuses.
    */
   getServicesStatus(): Promise<ServiceStatus[]>
+
+  /**
+   * Clean the service status db.
+   *
+   * @returns A promise that resolves when the service status is cleaned.
+   */
+  cleanServiceStatus(): Promise<void>
 }

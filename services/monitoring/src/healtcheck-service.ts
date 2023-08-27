@@ -10,6 +10,7 @@ export class HealthCheckService {
   private interval: number = Number.parseInt(process.env.HEALTHCHECK_INTERVAL!) || 5000
 
   async start() {
+    await this.monitoringRepository.cleanServiceStatus()
     for (const microservice of this.microservices) {
       await this.monitoringRepository.createServiceStatus(microservice, 'offline')
       console.log(`Created status for ${microservice}`)
@@ -19,10 +20,11 @@ export class HealthCheckService {
         try {
           let path = microservice + '/health'
           console.log(`Checking ${path}`)
-          await axios.get(path + '/health')
+          await axios.get(path)
           await this.monitoringRepository.changeServiceStatus(microservice, 'online')
           console.log(`${microservice} is online`)
         } catch (error) {
+          console.log(error)
           await this.monitoringRepository.changeServiceStatus(microservice, 'offline')
           console.log(`${microservice} is offline`)
         }
