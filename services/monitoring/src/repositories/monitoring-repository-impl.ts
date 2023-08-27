@@ -53,4 +53,8 @@ export class MonitoringRepositoryImpl implements MonitoringRepository {
   async getServicesStatus(): Promise<ServiceStatus[]> {
     return await ServiceStatusEntity.find({}).sort({ timestamp: 1 }).limit(1000).exec()
   }
+
+  async cleanServiceStatus(): Promise<void> {
+    await ServiceStatusEntity.deleteMany({})
+  }
 }

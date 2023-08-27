@@ -14,7 +14,7 @@ export class ServiceEvents {
   private static monitoringRepository: MonitoringRepository =
     new MonitoringRepositoryImpl()
 
-  private static exchanges = ['messages', 'users', 'servers', 'channels']
+  private static exchanges = ['messages', 'users', 'servers', 'channels', 'notifications']
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
@@ -50,6 +50,7 @@ export class ServiceEvents {
         })
       })
     }
+    setUpHealtCheckListener()
   }
 
   private static async subscribeToExchange(
@@ -75,3 +76,15 @@ export class ServiceEvents {
     })
   }
 }
+static function setUpHealtCheckListener() {
+  for (const exchange of this.exchanges) {
+    await this.subscribeToExchange(exchange, async (event, data) => {
+      await this.monitoringRepository.log({
+        topic: exchange,
+        event: event,
+        payload: data,
+      })
+    })
+  }
+}
+
