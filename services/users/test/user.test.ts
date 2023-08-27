@@ -47,7 +47,7 @@ afterEach(async () => {
 
 describe('User authentication', () => {
   it('A user must provide username, password and email', async () => {
-    const response = await userApi.register('', '', '')
+    const response = await userApi.registerWithoutEmail('test', 'test')
     console.log(response)
     expect(response.status).toBe(400)
   })
