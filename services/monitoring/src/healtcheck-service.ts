@@ -20,7 +20,7 @@ export class HealthCheckService {
         try {
           let path = microservice + '/health'
           console.log(`Checking ${path}`)
-          await axios.get(path + '/health')
+          await axios.get(path)
           await this.monitoringRepository.changeServiceStatus(microservice, 'online')
           console.log(`${microservice} is online`)
         } catch (error) {
