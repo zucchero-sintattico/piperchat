@@ -1,6 +1,6 @@
 services:
-  bash:
-    image: alpine:latest
+  inspector:
+    image: ubuntu:latest
     env_file:
       - .env
 
