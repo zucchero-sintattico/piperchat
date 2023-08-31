@@ -9,7 +9,7 @@ monitoringRouter.get('/', async (req, res) => {
   try {
     console.log('GET /monitoring')
     const monitoring = await monitoringController.getServiceStatus()
-    res.status(200).json(monitoring)
+    return res.status(200).json(monitoring)
   } catch (e) {
     return res.status(500).json({ message: 'Internal server error', error: e })
   }

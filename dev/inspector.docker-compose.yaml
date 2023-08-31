@@ -1,6 +1,7 @@
 services:
   inspector:
     image: ubuntu:latest
+    tty: true
     env_file:
       - .env
 
