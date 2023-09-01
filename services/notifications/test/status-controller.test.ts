@@ -7,11 +7,10 @@ import {
 } from '@repositories/user-status-repository'
 
 let userStatusRepository: UserStatusRepository
+const amqpUri = process.env.AMQP_URI || 'amqp://localhost'
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
 
 beforeAll(async () => {
-  const amqpUri = process.env.AMQP_URI || 'amqp://localhost:5672'
-  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
-
   // Initialize mongoose
   await MongooseUtils.initialize(mongoose, mongoUri)
 
