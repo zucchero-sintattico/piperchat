@@ -28,10 +28,6 @@ export class ServiceEvents {
     await channel?.assertExchange('channels', 'fanout', {
       durable: true,
     })
-
-    await channel?.assertExchange('services', 'fanout', {
-      durable: true,
-    })
   }
 
   static async setupListeners() {}

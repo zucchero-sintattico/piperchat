@@ -36,9 +36,7 @@ export class RabbitMQ {
 
   async connect() {
     try {
-      console.log('Connecting to RabbitMQ')
       this.connection = await amqp.connect(this.connectionUri)
-      console.log('Connected to RabbitMQ')
       this.channel = await this.connection.createChannel()
     } catch (err) {
       console.error(err)
