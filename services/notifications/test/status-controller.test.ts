@@ -30,6 +30,7 @@ afterAll(async () => {
 })
 
 describe('Online status', () => {
+  console.log('Testing online status')
   it('A user should change his status from online to offline', async () => {
     await userStatusRepository.setOnline('user1')
     let user = await userStatusRepository.getUser('user1')
