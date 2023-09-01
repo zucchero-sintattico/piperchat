@@ -1,26 +1,63 @@
-import { computed, reactive } from 'vue'
-import { UserRequestImpl } from '../services/users/user-requests-impl'
+import axios from 'axios'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-const Request: UserRequest = new UserRequestImpl()
+export const useUserStore = defineStore(
+  'user',
+  () => {
+    const isLoggedIn = ref(false)
+    const username = ref('')
+    const email = ref('')
+    const description = ref('')
+    const photo = ref('')
 
-const state = reactive({
-  name: '',
-  username: '',
-  email: '',
-  error: ''
-})
+    async function login(parameters: { username: string; password: string }) {
+      const response = await axios.post('/auth/login', parameters)
+      if (response.status === 200) {
+        const data = await response.data
+        username.value = data.username
+        email.value = data.email
+        description.value = data.description
+        photo.value = data.photo
+        isLoggedIn.value = true
+      }
+    }
+    async function register(parameters: { username: string; email: string; password: string }) {
+      try {
+        const response = await axios.post('/auth/register', parameters)
+        if (response.status === 200) {
+          const data = await response.data
+          username.value = data.username
+          email.value = data.email
+          description.value = data.description
+          photo.value = data.photo
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-const getters = reactive({
-  isLoggedIn: computed(() => state.username !== '')
-})
+    async function logout() {
+      const response = await axios.post('/auth/logout')
+      if (response.status === 200) {
+        username.value = ''
+        email.value = ''
+        description.value = ''
+        photo.value = ''
+        isLoggedIn.value = false
+      }
+    }
 
-const actions = {
-  async getUser() {
-    Request.getUserFromToken()
+    return {
+      isLoggedIn,
+      username,
+      email,
+      description,
+      photo,
+      login,
+      register,
+      logout
+    }
   },
-  async login(username: string, password: string) {
-    Request.login(username, password)
-  }
-}
-
-export default { state, getters, ...actions }
+  { persist: true }
+)

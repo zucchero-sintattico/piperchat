@@ -12,6 +12,8 @@
     "lint:fix": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix"
   },
   "dependencies": {
+    "pinia": "^2.1.6",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "serve": "^14.2.1",
     "vue": "^3.3.4",
     "vue-cookies": "^1.8.3",
