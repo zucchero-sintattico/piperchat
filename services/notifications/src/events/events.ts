@@ -17,10 +17,18 @@ export class ServiceEvents {
     new ServiceEventsRepository()
 
   static async initialize() {
+    console.log('Initializing service events')
     this.broker = RabbitMQ.getInstance()
+    console.log('Broker initialized')
+    console.log('Declaring queue')
     await this.declareQueue()
+    console.log('Queue declared')
+    console.log('Setting up listeners')
     await this.setupListeners()
+    console.log('Listeners set up')
+    console.log('Publishing service status online')
     await this.serviceEventsRepository.publishServiceStatusOnline('notifications')
+    console.log('Service status published')
   }
 
   static async shutdown() {
