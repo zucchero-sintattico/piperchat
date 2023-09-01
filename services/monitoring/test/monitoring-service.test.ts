@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { RabbitMQ } from '@piperchat/commons'
+import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
 import { ServiceEvents } from '@events/events'
 import { EventLogEntity, ServiceStatusEntity } from '@models/monitoring-model'
 import { MonitoringEventRepository } from './repositories/monitoring-event-repository'
@@ -25,10 +25,13 @@ const serverEvent = {
   },
 }
 
-beforeAll(async () => {
-  await mongoose.connect('mongodb://localhost:27017/')
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
+const amqpUri = process.env.AMQP_URI || 'amqp://localhost:5672'
 
-  await RabbitMQ.initialize('amqp://localhost')
+beforeAll(async () => {
+  await MongooseUtils.initialize(mongoose, mongoUri)
+
+  await RabbitMQ.initialize(amqpUri)
 
   await ServiceEvents.initialize()
 })
@@ -44,7 +47,7 @@ afterEach(async () => {
 })
 
 afterAll(async () => {
-  await mongoose.connection.close()
+  await MongooseUtils.close(mongoose)
   await RabbitMQ.disconnect()
 })
 
