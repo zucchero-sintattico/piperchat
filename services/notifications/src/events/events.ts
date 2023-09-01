@@ -13,8 +13,6 @@ import {
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
-  private static serviceEventsRepository: ServiceEventsRepository =
-    new ServiceEventsRepository()
 
   static async initialize() {
     console.log('Initializing service events')
@@ -26,13 +24,6 @@ export class ServiceEvents {
     console.log('Setting up listeners')
     await this.setupListeners()
     console.log('Listeners set up')
-    console.log('Publishing service status online')
-    await this.serviceEventsRepository.publishServiceStatusOnline('notifications')
-    console.log('Service status published')
-  }
-
-  static async shutdown() {
-    await this.serviceEventsRepository.publishServiceStatusOffline('notifications')
   }
 
   static async declareQueue() {
@@ -40,10 +31,6 @@ export class ServiceEvents {
 
     // Declare the exchange
     await channel?.assertExchange('messages', 'fanout', {
-      durable: true,
-    })
-
-    await channel?.assertExchange('services', 'fanout', {
       durable: true,
     })
   }
