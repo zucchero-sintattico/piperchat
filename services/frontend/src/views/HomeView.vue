@@ -2,8 +2,9 @@
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 
+const userStore = useUserStore()
+
 function logout() {
-  const userStore = useUserStore()
   userStore.logout()
   router.push({ name: 'Login' })
 }
@@ -11,6 +12,9 @@ function logout() {
 
 <template>
   <h1>HomePage</h1>
+
+  <h2> Hi, {{ userStore.username }} </h2>
+  <p>Your email is : {{ userStore.email }}</p>
   <button @click="logout">Logout</button>
 </template>
 
@@ -18,6 +22,7 @@ function logout() {
 h1 {
   text-align: center;
 }
+
 button {
   margin: auto;
   display: block;

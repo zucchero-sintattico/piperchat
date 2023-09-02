@@ -11,14 +11,22 @@ export const useUserStore = defineStore(
     const description = ref('')
     const photo = ref('')
 
-    async function login(parameters: { username: string; password: string }) {
-      const response = await axios.post('/auth/login', parameters)
+    async function whoami() {
+      const response = await axios.get('/users/whoami')
       if (response.status === 200) {
-        const data = await response.data
+        console.log(response.data.user)
+        const data = await response.data.user
         username.value = data.username
         email.value = data.email
         description.value = data.description
         photo.value = data.photo
+      }
+    }
+
+    async function login(parameters: { username: string; password: string }) {
+      const response = await axios.post('/auth/login', parameters)
+      if (response.status === 200) {
+        await whoami()
         isLoggedIn.value = true
       }
     }
@@ -26,11 +34,7 @@ export const useUserStore = defineStore(
       try {
         const response = await axios.post('/auth/register', parameters)
         if (response.status === 200) {
-          const data = await response.data
-          username.value = data.username
-          email.value = data.email
-          description.value = data.description
-          photo.value = data.photo
+          await whoami()
         }
       } catch (error) {
         console.log(error)
