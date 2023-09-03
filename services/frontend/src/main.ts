@@ -7,6 +7,9 @@ import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
 import './assets/reset.css'
 import { useUserStore } from './stores/user'
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)

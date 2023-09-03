@@ -13,7 +13,7 @@ function logout() {
 <template>
   <h1>HomePage</h1>
 
-  <h2> Hi, {{ userStore.username }} </h2>
+  <h2>Hi, {{ userStore.username }}</h2>
   <p>Your email is : {{ userStore.email }}</p>
   <button @click="logout">Logout</button>
 </template>

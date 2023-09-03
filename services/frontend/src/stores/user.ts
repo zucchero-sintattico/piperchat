@@ -14,7 +14,6 @@ export const useUserStore = defineStore(
     async function whoami() {
       const response = await axios.get('/users/whoami')
       if (response.status === 200) {
-        console.log(response.data.user)
         const data = await response.data.user
         username.value = data.username
         email.value = data.email
@@ -34,7 +33,7 @@ export const useUserStore = defineStore(
       try {
         const response = await axios.post('/auth/register', parameters)
         if (response.status === 200) {
-          await whoami()
+          console.log('register success')
         }
       } catch (error) {
         console.log(error)

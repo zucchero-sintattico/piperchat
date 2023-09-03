@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import router from '../router/index'
 
 const username = ref('')
+const email = ref('')
 const password = ref('')
 
 async function login() {
@@ -19,7 +20,7 @@ async function register() {
   const userStore = useUserStore()
   await userStore.register({
     username: username.value,
-    email: username.value,
+    email: email.value,
     password: password.value
   })
 }
@@ -33,7 +34,8 @@ async function register() {
       <input v-model="username" type="text" id="username" name="username" />
       <label for="password">Password</label>
       <input v-model="password" type="password" id="password" name="password" />
-      <input @click="login" type="submit" name="" id="" />
+      <input @click="login" type="submit" name="" value="LogIn" id="" />
+      <input type="submit" name="" value="Register" id="" />
     </form>
   </div>
 
@@ -41,7 +43,9 @@ async function register() {
     <h1>Register</h1>
     <form @submit.prevent>
       <label for="username">Username</label>
-      <input v-model="username" type="text" id="username" name="username" />
+      <input v-model="username" type="text" id="email" name="username" />
+      <label for="email">email</label>
+      <input v-model="email" type="text" id="email" name="username" />
       <label for="password">Password</label>
       <input v-model="password" type="password" id="password" name="password" />
       <input @click="register" type="submit" name="" id="" />
