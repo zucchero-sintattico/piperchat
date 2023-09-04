@@ -1,4 +1,4 @@
-import { Api } from '..'
+import { BadRequest } from './errors'
 import { ResponseFacade } from './response'
 
 interface RequestFacade<Params, Body> {
@@ -59,7 +59,7 @@ export default function validateRequestMiddleware<
     }
 
     if (paramsError.length > 0 || bodyError.length > 0) {
-      const response = new Api.Errors.BadRequest(paramsError, bodyError)
+      const response = new BadRequest(paramsError, bodyError)
       response.send(res)
     } else {
       next()
