@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { Empty, ErrorResponse } from '@/api/response'
+import { Empty, ErrorResponse } from './response'
 import { RequestSchema } from './schema'
 
 /**

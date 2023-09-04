@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { Empty, Response } from '@/api/response'
+import { Empty, Response } from '../response'
 
 /**
  * Update photo endpoint

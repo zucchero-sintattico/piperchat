@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Empty, ErrorResponse, Response, ResponseFacade } from '@/api/response'
-import { RequestSchema, EmptySchema } from '@/api/schema'
+import { Empty, ErrorResponse, Response, ResponseFacade } from '../response'
+import { RequestSchema, EmptySchema } from '../schema'
 
 /**
  * Register endpoint
