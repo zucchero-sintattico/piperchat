@@ -1,11 +1,13 @@
 import { Request, Response, Router } from 'express'
-import { Api, JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
 
 // Import specific interfaces from the API
+import * as Api from '@piperchat/commons/src/api/index'
 import ApiErrors = Api.Errors
 import UpdatePhotoApi = Api.Users.Profile.UpdatePhoto
+import UpdateDescriptionApi = Api.Users.Profile.UpdateDescription
 
 const profileController: ProfileController = new ProfileControllerImpl()
 
@@ -14,12 +16,12 @@ profileRouter.use(JWTAuthenticationMiddleware)
 
 profileRouter.put(
   '/photo',
+  Api.Validate(UpdatePhotoApi.Request.Schema),
   async (
     req: Request<
       UpdatePhotoApi.Request.Params,
       UpdatePhotoApi.Response,
-      UpdatePhotoApi.Request.Body,
-      UpdatePhotoApi.Request.Query
+      UpdatePhotoApi.Request.Body
     >,
     res: Response<UpdatePhotoApi.Response | ApiErrors.InternalServerError>
   ) => {
@@ -34,14 +36,27 @@ profileRouter.put(
   }
 )
 
-profileRouter.put('/description', async (req: Request, res: Response) => {
-  if (!req.body.description) {
-    return res.status(400).json({ message: "Missing 'description' in body" })
+profileRouter.put(
+  '/description',
+  Api.Validate(UpdateDescriptionApi.Request.Schema),
+  async (
+    req: Request<
+      UpdateDescriptionApi.Request.Params,
+      UpdateDescriptionApi.Response,
+      UpdateDescriptionApi.Request.Body
+    >,
+    res: Response<UpdateDescriptionApi.Response | ApiErrors.InternalServerError>
+  ) => {
+    try {
+      await profileController.updateUserDescription(
+        req.user.username,
+        req.body.description
+      )
+      const response = new UpdateDescriptionApi.Responses.Success()
+      response.send(res)
+    } catch (e) {
+      const response = new ApiErrors.InternalServerError(e)
+      response.send(res)
+    }
   }
-  try {
-    await profileController.updateUserDescription(req.user.username, req.body.description)
-    return res.status(200).json({ message: 'Description set' })
-  } catch (e) {
-    return res.status(404).json({ message: 'Bad request', error: e })
-  }
-})
+)

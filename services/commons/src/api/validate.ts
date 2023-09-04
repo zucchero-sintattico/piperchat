@@ -6,7 +6,7 @@ interface RequestFacade<Params, Body> {
   body: Body
 }
 
-export default function validateRequestMiddleware<
+export function validateRequestMiddleware<
   P extends Record<string, unknown>,
   B extends Record<string, unknown>,
 >(schema: {

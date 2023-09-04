@@ -5,9 +5,10 @@ import {
   UserControllerExceptions,
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
-import { Api, JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 
 // Import specific interfaces from the API
+import * as Api from '@piperchat/commons/src/api/index'
 import ApiErrors = Api.Errors
 import WhoamiApi = Api.Users.User.Whoami
 import GetUserStatusApi = Api.Users.User.GetUserStatus
@@ -21,13 +22,9 @@ usersRouter.use(JWTAuthenticationMiddleware)
 
 usersRouter.get(
   '/whoami',
+  Api.Validate(WhoamiApi.Request.Schema),
   async (
-    req: Request<
-      WhoamiApi.Request.Params,
-      WhoamiApi.Response,
-      WhoamiApi.Request.Body,
-      WhoamiApi.Request.Query
-    >,
+    req: Request<WhoamiApi.Request.Params, WhoamiApi.Response, WhoamiApi.Request.Body>,
     res: Response<WhoamiApi.Response | ApiErrors.InternalServerError>
   ) => {
     try {
@@ -43,12 +40,12 @@ usersRouter.get(
 
 usersRouter.get(
   '/:username/status',
+  Api.Validate(GetUserStatusApi.Request.Schema),
   async (
     req: Request<
       GetUserStatusApi.Request.Params,
       GetUserStatusApi.Response,
-      GetUserStatusApi.Request.Body,
-      GetUserStatusApi.Request.Query
+      GetUserStatusApi.Request.Body
     >,
     res: Response<GetUserStatusApi.Response | ApiErrors.InternalServerError>
   ) => {
@@ -74,8 +71,7 @@ usersRouter.get(
     req: Request<
       GetUserPhotoApi.Request.Params,
       GetUserPhotoApi.Response,
-      GetUserPhotoApi.Request.Body,
-      GetUserPhotoApi.Request.Query
+      GetUserPhotoApi.Request.Body
     >,
     res: Response<GetUserPhotoApi.Response | ApiErrors.InternalServerError>
   ) => {
@@ -101,8 +97,7 @@ usersRouter.get(
     req: Request<
       GetUserDescriptionApi.Request.Params,
       GetUserDescriptionApi.Response,
-      GetUserDescriptionApi.Request.Body,
-      GetUserDescriptionApi.Request.Query
+      GetUserDescriptionApi.Request.Body
     >,
     res: Response<GetUserDescriptionApi.Response | ApiErrors.InternalServerError>
   ) => {

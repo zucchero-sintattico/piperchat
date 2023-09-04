@@ -6,12 +6,12 @@ import {
 } from '@controllers/auth/auth-controller'
 import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
 import {
-  Api,
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
 } from '@piperchat/commons'
 
 // Import specific interfaces from the API
+import * as Api from '@piperchat/commons/src/api/index'
 import ApiErrors = Api.Errors
 import LoginApi = Api.Users.Auth.Login
 import RegisterApi = Api.Users.Auth.Register
