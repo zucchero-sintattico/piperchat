@@ -1,4 +1,5 @@
 export type Empty = Record<string, never>
+
 export interface ResponseFacade {
   status(status: number): ResponseFacade
   json(data: unknown): ResponseFacade
