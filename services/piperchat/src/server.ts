@@ -21,7 +21,6 @@ export class PiperchatServer {
   private setupMiddleware() {
     this.app.use(cookieParser())
     this.app.use(express.json())
-    this.app.use(JWTAuthenticationMiddleware)
   }
 
   private setupRouter() {
