@@ -4,11 +4,15 @@ import router from './router'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
 
-import './assets/reset.css'
 import { useUserStore } from './stores/user'
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { Quasar } from 'quasar'
+
+// Import icon libraries
+import '@quasar/extras/material-icons/material-icons.css'
+
+// Import Quasar css
+import 'quasar/src/css/index.sass'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -26,5 +30,6 @@ router.beforeEach((to, from, next) => {
 })
 
 app.use(router)
+app.use(Quasar, { plugins: {} })
 
 app.mount('#app')

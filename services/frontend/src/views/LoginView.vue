@@ -1,84 +1,52 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
 import { ref } from 'vue'
-import router from '../router/index'
+import LoginForm from '@/components/login-component/LoginForm.vue'
 
-const username = ref('')
-const email = ref('')
-const password = ref('')
-
-async function login() {
-  const userStore = useUserStore()
-  await userStore.login({
-    username: username.value,
-    password: password.value
-  })
-  router.push({ name: 'Home' })
-}
-
-async function register() {
-  const userStore = useUserStore()
-  await userStore.register({
-    username: username.value,
-    email: email.value,
-    password: password.value
-  })
-}
+const tab = ref('login')
 </script>
 
 <template>
-  <div class="container">
-    <h1>Login</h1>
-    <form @submit.prevent>
-      <label for="username">Username</label>
-      <input v-model="username" type="text" id="username" name="username" />
-      <label for="password">Password</label>
-      <input v-model="password" type="password" id="password" name="password" />
-      <input @click="login" type="submit" name="" value="LogIn" id="" />
-      <input type="submit" name="" value="Register" id="" />
-    </form>
-  </div>
+  <div class="q-pa-md container">
+    <q-card>
+      <q-tabs
+        v-model="tab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+      >
+        <q-tab name="login" label="Login" />
+        <q-tab name="register" label="Register" />
+      </q-tabs>
 
-  <div class="container">
-    <h1>Register</h1>
-    <form @submit.prevent>
-      <label for="username">Username</label>
-      <input v-model="username" type="text" id="email" name="username" />
-      <label for="email">email</label>
-      <input v-model="email" type="text" id="email" name="username" />
-      <label for="password">Password</label>
-      <input v-model="password" type="password" id="password" name="password" />
-      <input @click="register" type="submit" name="" id="" />
-    </form>
+      <q-separator />
+
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel name="login">
+          <LoginForm class="tabs" />
+        </q-tab-panel>
+
+        <q-tab-panel name="register">
+          <LoginForm class="tabs" />
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
   </div>
 </template>
 
-<style scoped>
-h1 {
-  color: red;
-  text-align: center;
-}
-
+<style scoped lang="scss">
 .container {
-  background-color: darkgray;
-  border: 1px solid black;
-  width: 30%;
-  margin: auto;
-
-  padding: 1rem 2rem;
-  margin-top: 10%;
+  width: 50%;
+  margin: 5% auto;
 }
 
-input {
-  display: block;
-  margin-bottom: 1rem;
-  height: 2rem;
-  width: 100%;
+.tabs {
+  width: 75%;
+  margin: 2% auto;
 }
 
-form {
-  margin: auto;
-  display: flex;
-  flex-direction: column;
+:deep(.q-tab__label) {
+  font-size: 1.5em;
 }
 </style>
