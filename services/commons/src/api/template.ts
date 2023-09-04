@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
 import { Empty, ErrorResponse } from '@/api/response'
+import { RequestSchema } from './schema'
 
 /**
  * Short template per endpoint
@@ -8,8 +9,11 @@ import { Empty, ErrorResponse } from '@/api/response'
 export namespace ShortTemplate {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = Empty
+    export const Schema: RequestSchema = {
+      Params: {},
+      Body: {},
+    }
   }
   export namespace Responses {
     export class Success extends Response {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import {
   AuthController,
   AuthControllerExceptions,
@@ -27,7 +27,14 @@ export const authRouter = Router({
 authRouter.post(
   '/register',
   Api.Validate(RegisterApi.Request.Schema),
-  async (req: RegisterApi.ExpressRequest, res: RegisterApi.ExpressResponse) => {
+  async (
+    req: Request<
+      RegisterApi.Request.Params,
+      RegisterApi.Response,
+      RegisterApi.Request.Body
+    >,
+    res: Response<RegisterApi.Response | ApiErrors.InternalServerError>
+  ) => {
     try {
       const user = await authController.register(
         req.body.username,
@@ -53,7 +60,10 @@ authRouter.post(
 authRouter.post(
   '/login',
   Api.Validate(LoginApi.Request.Schema),
-  async (req: RegisterApi.ExpressRequest, res: RegisterApi.ExpressResponse) => {
+  async (
+    req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
+    res: Response<LoginApi.Response | ApiErrors.InternalServerError>
+  ) => {
     try {
       const token = await authController.login(req.body.username, req.body.password)
       const response = new LoginApi.Responses.Success(token)
@@ -74,7 +84,10 @@ authRouter.post(
   '/logout',
   JWTAuthenticationMiddleware,
   Api.Validate(LogoutApi.Request.Schema),
-  async (req: LogoutApi.ExpressRequest, res: LogoutApi.ExpressResponse) => {
+  async (
+    req: Request<LogoutApi.Request.Params, LogoutApi.Response>,
+    res: Response<LogoutApi.Response | ApiErrors.InternalServerError>
+  ) => {
     try {
       if (!req.user) {
         const response = new LogoutApi.Errors.NotLoggedIn()
@@ -99,7 +112,10 @@ authRouter.post(
   '/refresh-token',
   JWTRefreshTokenMiddleware,
   Api.Validate(RefreshTokenApi.Request.Schema),
-  async (req: RefreshTokenApi.ExpressRequest, res: RefreshTokenApi.ExpressResponse) => {
+  async (
+    req: Request<RefreshTokenApi.Request.Params, RefreshTokenApi.Response>,
+    res: Response<RefreshTokenApi.Response | ApiErrors.InternalServerError>
+  ) => {
     try {
       const token = await authController.refreshToken(req.user.username)
       const response = new RefreshTokenApi.Responses.Success(token)

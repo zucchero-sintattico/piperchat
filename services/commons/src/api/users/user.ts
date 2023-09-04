@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '@/api/response'
+import { EmptySchema, RequestSchema } from '../schema'
 
 /**
  * Whoami endpoint
@@ -7,8 +8,8 @@ import { Empty, ErrorResponse, Response } from '@/api/response'
 export namespace Whoami {
   export namespace Request {
     export type Params = Empty
-    export type Query = Empty
     export type Body = Empty
+    export const Schema: RequestSchema = EmptySchema
   }
   export namespace Responses {
     interface WhoamiUser {
@@ -37,8 +38,13 @@ export namespace GetUserStatus {
     export type Params = {
       username: string
     }
-    export type Query = Empty
     export type Body = Empty
+    export const Schema: RequestSchema = {
+      Params: {
+        username: 'string',
+      },
+      Body: {},
+    }
   }
   export namespace Responses {
     type UserStatusInfo = {
@@ -75,8 +81,13 @@ export namespace GetUserPhoto {
     export type Params = {
       username: string
     }
-    export type Query = Empty
     export type Body = Empty
+    export const Schema: RequestSchema = {
+      Params: {
+        username: 'string',
+      },
+      Body: {},
+    }
   }
   export namespace Responses {
     export class Success extends Response {
@@ -107,8 +118,13 @@ export namespace GetUserDescription {
     export type Params = {
       username: string
     }
-    export type Query = Empty
     export type Body = Empty
+    export const Schema: RequestSchema = {
+      Params: {
+        username: 'string',
+      },
+      Body: {},
+    }
   }
   export namespace Responses {
     export class Success extends Response {
