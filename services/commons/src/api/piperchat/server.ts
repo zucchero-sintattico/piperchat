@@ -335,9 +335,6 @@ export namespace CreateServer {
     export class Success extends Response {
       statusCode = 200
       message = 'Server created successfully'
-      constructor(public serverId: string) {
-        super()
-      }
     }
     export type Type = Success
   }
