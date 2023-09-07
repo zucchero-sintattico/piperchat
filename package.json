@@ -51,6 +51,7 @@
     "services/frontend",
     "services/messages",
     "services/monitoring",
+    "services/notifications",
     "services/piperchat",
     "services/users",
     "services/webrtc"
