@@ -1,6 +1,3 @@
-import { User } from '@/models/user-model'
-
-
 export interface UserController {
   /**
    * Get a user.
@@ -8,7 +5,7 @@ export interface UserController {
    * @returns The user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUser(username: string): Promise<User>
+  getUser(username: string): Promise<string>
 
   /**
    * Get the status of a user.
@@ -16,7 +13,7 @@ export interface UserController {
    * @returns The status of the user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUserStatus(username: string): Promise<UserStatusInfo>
+  getUserStatus(username: string): Promise<string>
 
   /**
    * Get the photo of a user.
@@ -25,7 +22,7 @@ export interface UserController {
    * @throws {UserNotFound} If the user is not found.
    * @throws {PhotoNotPresent} If the photo is not present.
    */
-  getUserPhoto(username: string): Promise<Buffer>
+  getUserPhoto(username: string): Promise<string>
 
   /**
    * Get the user's description.
