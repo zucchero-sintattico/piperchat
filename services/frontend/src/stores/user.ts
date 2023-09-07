@@ -1,6 +1,7 @@
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { AuthControllerImpl } from '../services/users/auth/auth-controller-impl'
+import { UserControllerImpl } from '@/services/users/user/user-controller-impl'
 
 export const useUserStore = defineStore(
   'user',
@@ -10,44 +11,56 @@ export const useUserStore = defineStore(
     const email = ref('')
     const description = ref('')
     const photo = ref('')
-
+    const error = ref('')
     async function whoami() {
-      const response = await axios.get('/users/whoami')
-      if (response.status === 200) {
-        const data = await response.data.user
-        username.value = data.username
-        email.value = data.email
-        description.value = data.description
-        photo.value = data.photo
+      try {
+        const response = await UserController.getUser()
+        username.value = response.data.username
+        email.value = response.data.email
+        description.value = response.data.description
+        photo.value = response.data.photo
+      } catch (e) {
+        console.log(e)
       }
     }
 
+    const AuthController = new AuthControllerImpl()
+    const UserController = new UserControllerImpl()
+
     async function login(parameters: { username: string; password: string }) {
-      const response = await axios.post('/auth/login', parameters)
-      if (response.status === 200) {
-        await whoami()
+      try {
+        await AuthController.login(parameters.username, parameters.password)
         isLoggedIn.value = true
+        error.value = ''
+        console.log('login')
+        await whoami()
+      } catch (e) {
+        console.log(e)
+        error.value = 'Errore nel login'
       }
     }
     async function register(parameters: { username: string; email: string; password: string }) {
       try {
-        const response = await axios.post('/auth/register', parameters)
-        if (response.status === 200) {
-          console.log('register success')
-        }
-      } catch (error) {
-        console.log(error)
+        await AuthController.register(
+          parameters.username,
+          parameters.email,
+          parameters.password,
+          null,
+          null
+        )
+      } catch (e) {
+        console.log(e)
+        error.value = 'Errore nella registrazione'
       }
     }
 
     async function logout() {
-      const response = await axios.post('/auth/logout')
-      if (response.status === 200) {
-        username.value = ''
-        email.value = ''
-        description.value = ''
-        photo.value = ''
+      try {
+        await AuthController.logout()
         isLoggedIn.value = false
+      } catch (e) {
+        console.log(e)
+        error.value = 'Errore nel logout'
       }
     }
 
@@ -57,6 +70,7 @@ export const useUserStore = defineStore(
       email,
       description,
       photo,
+      error,
       login,
       register,
       logout

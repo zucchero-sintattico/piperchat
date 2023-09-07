@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import router from '../../router/index'
 
 const username = ref('')
 const password = ref('')
-const accept = ref(false)
+const userStore = useUserStore()
 
 function onSubmit() {
-  console.log('Submitted!')
+  userStore.login({ username: username.value, password: password.value })
+  router.push({ name: 'Home' })
 }
 
 function onReset() {
@@ -38,6 +41,12 @@ function onReset() {
       ]"
     />
     <div>
+      <!--login error message-->
+      <q-item v-if="userStore.error" color="red" icon="warning">
+        {{ userStore.error }}
+        <br />
+      </q-item>
+
       <q-btn label="Submit" type="submit" color="primary" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>

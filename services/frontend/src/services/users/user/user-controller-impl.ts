@@ -1,8 +1,8 @@
 import type { UserController } from './user-controller'
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 export class UserControllerImpl implements UserController {
-  async getUser(username: string): Promise<string> {
-    const response = await axios.get(`/users/${username}/user`)
+  async getUser(): Promise<AxiosResponse<any, any>> {
+    const response = await axios.get(`/users/whoami`)
     if (response.status === 200) {
       return response.data
     } else if (response.status === 400) {
@@ -12,10 +12,10 @@ export class UserControllerImpl implements UserController {
     } else if (response.status === 404) {
       throw new Error('User not found')
     }
-    return Promise.resolve('user getted')
+    throw new Error('Unknown error')
   }
 
-  async getUserStatus(username: string): Promise<string> {
+  async getUserStatus(username: string): Promise<AxiosResponse<any, any>> {
     const response = await axios.get(`/users/${username}/status`)
 
     if (response.status === 200) {
@@ -27,10 +27,10 @@ export class UserControllerImpl implements UserController {
     } else if (response.status === 404) {
       throw new Error('User not found')
     }
-    return Promise.resolve('user status getted')
+    throw new Error('Unknown error')
   }
 
-  async getUserPhoto(username: string): Promise<string> {
+  async getUserPhoto(username: string): Promise<AxiosResponse<any, any>> {
     const response = await axios.get(`/users/${username}/photo`)
 
     if (response.status === 200) {
@@ -42,10 +42,10 @@ export class UserControllerImpl implements UserController {
     } else if (response.status === 404) {
       throw new Error('User not found')
     }
-    return Promise.resolve('user photo getted')
+    throw new Error('Unknown error')
   }
 
-  async getUserDescription(username: string): Promise<string> {
+  async getUserDescription(username: string): Promise<AxiosResponse<any, any>> {
     const response = await axios.get(`/users/${username}/description`)
 
     if (response.status === 200) {
@@ -57,6 +57,6 @@ export class UserControllerImpl implements UserController {
     } else if (response.status === 404) {
       throw new Error('User not found')
     }
-    return Promise.resolve('user description getted')
+    throw new Error('Unknown error')
   }
 }

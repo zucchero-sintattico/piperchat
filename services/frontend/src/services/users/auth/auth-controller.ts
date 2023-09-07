@@ -22,7 +22,7 @@ export interface AuthController {
    * @returns The access token.
    * @throws {InvalidUsernameOrPassword} If the username or password is invalid.
    */
-  login(username: string, password: string): Promise<string>
+  login(username: string, password: string): Promise<any>
 
   /**
    * Logout a user.

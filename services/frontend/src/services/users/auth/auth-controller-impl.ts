@@ -29,7 +29,7 @@ export class AuthControllerImpl implements AuthController {
     return Promise.resolve('register success')
   }
 
-  async login(username: string, password: string): Promise<string> {
+  async login(username: string, password: string): Promise<any> {
     const data = {
       username: username,
       password: password

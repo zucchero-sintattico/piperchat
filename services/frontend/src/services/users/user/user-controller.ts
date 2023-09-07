@@ -5,7 +5,7 @@ export interface UserController {
    * @returns The user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUser(username: string): Promise<string>
+  getUser(): Promise<any>
 
   /**
    * Get the status of a user.
@@ -13,7 +13,7 @@ export interface UserController {
    * @returns The status of the user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUserStatus(username: string): Promise<string>
+  getUserStatus(username: string): Promise<any>
 
   /**
    * Get the photo of a user.
@@ -22,7 +22,7 @@ export interface UserController {
    * @throws {UserNotFound} If the user is not found.
    * @throws {PhotoNotPresent} If the photo is not present.
    */
-  getUserPhoto(username: string): Promise<string>
+  getUserPhoto(username: string): Promise<any>
 
   /**
    * Get the user's description.
@@ -30,5 +30,5 @@ export interface UserController {
    * @returns The description of the user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUserDescription(username: string): Promise<string>
+  getUserDescription(username: string): Promise<any>
 }

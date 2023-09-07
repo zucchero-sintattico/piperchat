@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
 const accept = ref(false)
 
-function onSubmit() {
-  console.log('Submitted!')
+async function onSubmit() {
+  const userStore = useUserStore()
+  await userStore.register({
+    username: username.value,
+    email: email.value,
+    password: password.value
+  })
 }
 
 function onReset() {
