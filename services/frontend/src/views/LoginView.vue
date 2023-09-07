@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import LoginForm from '@/components/login-component/LoginForm.vue'
+import RegisterForm from '@/components/login-component/RegisterForm.vue'
 
 const tab = ref('login')
 </script>
@@ -28,7 +29,7 @@ const tab = ref('login')
         </q-tab-panel>
 
         <q-tab-panel name="register">
-          <LoginForm class="tabs" />
+          <RegisterForm class="tabs" />
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
