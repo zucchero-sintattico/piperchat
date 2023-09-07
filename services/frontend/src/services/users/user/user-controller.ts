@@ -32,8 +32,3 @@ export interface UserController {
    */
   getUserDescription(username: string): Promise<string>
 }
-
-export class UserControllerExceptions {
-  static UserNotFound = class extends Error {}
-  static PhotoNotPresent = class extends Error {}
-}
