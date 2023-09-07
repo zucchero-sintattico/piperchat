@@ -1,9 +1,6 @@
 import { User } from '@/models/user-model'
 
-export type UserStatusInfo = {
-  online: boolean
-  lastActive: Date
-}
+
 export interface UserController {
   /**
    * Get a user.
