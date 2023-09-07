@@ -22,7 +22,10 @@ export default defineConfig({
   server: {
     proxy: {
       '^(?!/site).*$': {
-        target: 'http://localhost:3000',
+        // target for testing with production backend
+        target: 'http://localhost',
+        // target for single service testing
+        // target: 'http://localhost:3000',
         changeOrigin: true
       }
     }
