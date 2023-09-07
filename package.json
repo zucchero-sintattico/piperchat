@@ -47,6 +47,12 @@
     "typescript": "<5.2.0"
   },
   "workspaces": [
-    "services/*"
+    "services/commons",
+    "services/frontend",
+    "services/messages",
+    "services/monitoring",
+    "services/piperchat",
+    "services/users",
+    "services/webrtc"
   ]
 }
