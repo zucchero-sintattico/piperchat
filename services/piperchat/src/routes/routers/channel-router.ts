@@ -6,21 +6,20 @@ import { ServerControllerExceptions } from '@controllers/server/server-controlle
 const channelController: ChannelController = new ChannelControllerImpl()
 export const channelRouter = Router()
 
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiError = Api.Errors
-import GetChannelsApi = Api.Piperchat.Channel.GetChannels
-import CreateChannelApi = Api.Piperchat.Channel.CreateChannel
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetChannelsApi, CreateChannelApi } from '@api/piperchat/channel'
 
 channelRouter.get(
   '/',
-  Api.Validate(GetChannelsApi.Request.Schema),
+  Validate(GetChannelsApi.Request.Schema),
   async (
     req: Request<
       GetChannelsApi.Request.Params,
       GetChannelsApi.Response,
       GetChannelsApi.Request.Body
     >,
-    res: Response<GetChannelsApi.Response | ApiError.InternalServerError>
+    res: Response<GetChannelsApi.Response | InternalServerError>
   ) => {
     try {
       const channels = await channelController.getChannels(
@@ -37,7 +36,7 @@ channelRouter.get(
         const response = new GetChannelsApi.Errors.UserNotAuthorized()
         response.send(res)
       } else {
-        const response = new Api.Errors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -46,14 +45,14 @@ channelRouter.get(
 
 channelRouter.post(
   '/',
-  Api.Validate(CreateChannelApi.Request.Schema),
+  Validate(CreateChannelApi.Request.Schema),
   async (
     req: Request<
       CreateChannelApi.Request.Params,
       CreateChannelApi.Response,
       CreateChannelApi.Request.Body
     >,
-    res: Response<CreateChannelApi.Response | ApiError.InternalServerError>
+    res: Response<CreateChannelApi.Response | InternalServerError>
   ) => {
     try {
       await channelController.createChannel(
@@ -73,7 +72,7 @@ channelRouter.post(
         const response = new CreateChannelApi.Errors.UserNotAuthorized()
         response.send(res)
       } else {
-        const response = new Api.Errors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }

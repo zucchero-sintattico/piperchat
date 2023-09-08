@@ -8,28 +8,30 @@ import { ServerControllerImpl } from '@controllers/server/server-controller-impl
 const serverController: ServerController = new ServerControllerImpl()
 export const serverRouter = Router()
 
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import KickUserFromServerApi = Api.Piperchat.Server.KickUserFromServer
-import GetServerParticipantsApi = Api.Piperchat.Server.GetServerParticipants
-import JoinServerApi = Api.Piperchat.Server.JoinServer
-import LeftServerApi = Api.Piperchat.Server.LeftServer
-import GetServerApi = Api.Piperchat.Server.GetServer
-import UpdateServerApi = Api.Piperchat.Server.UpdateServer
-import DeleteServerApi = Api.Piperchat.Server.DeleteServer
-import GetServersApi = Api.Piperchat.Server.GetServers
-import CreateServerApi = Api.Piperchat.Server.CreateServer
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import {
+  GetServersApi,
+  CreateServerApi,
+  GetServerApi,
+  UpdateServerApi,
+  DeleteServerApi,
+  JoinServerApi,
+  LeftServerApi,
+  GetServerParticipantsApi,
+  KickUserFromServerApi,
+} from '@api/piperchat/server'
 
 serverRouter.delete(
   '/:serverId/partecipants/:username',
-  Api.Validate(KickUserFromServerApi.Request.Schema),
+  Validate(KickUserFromServerApi.Request.Schema),
   async (
     req: Request<
       KickUserFromServerApi.Request.Params,
       KickUserFromServerApi.Response,
       KickUserFromServerApi.Request.Body
     >,
-    res: Response<KickUserFromServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<KickUserFromServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.kickUserFromTheServer(
@@ -50,7 +52,7 @@ serverRouter.delete(
         const response = new KickUserFromServerApi.Errors.OwnerCannotLeave()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -59,14 +61,14 @@ serverRouter.delete(
 
 serverRouter.get(
   '/:serverId/partecipants',
-  Api.Validate(GetServerParticipantsApi.Request.Schema),
+  Validate(GetServerParticipantsApi.Request.Schema),
   async (
     req: Request<
       GetServerParticipantsApi.Request.Params,
       GetServerParticipantsApi.Response,
       GetServerParticipantsApi.Request.Body
     >,
-    res: Response<GetServerParticipantsApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetServerParticipantsApi.Response | InternalServerError>
   ) => {
     try {
       const participants = await serverController.getServerParticipants(
@@ -83,7 +85,7 @@ serverRouter.get(
         const response = new GetServerParticipantsApi.Errors.UserNotAuthorized()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -92,14 +94,14 @@ serverRouter.get(
 
 serverRouter.post(
   '/:serverId/partecipants',
-  Api.Validate(JoinServerApi.Request.Schema),
+  Validate(JoinServerApi.Request.Schema),
   async (
     req: Request<
       JoinServerApi.Request.Params,
       JoinServerApi.Response,
       JoinServerApi.Request.Body
     >,
-    res: Response<JoinServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<JoinServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.joinServer(req.params.serverId, req.user.username)
@@ -110,7 +112,7 @@ serverRouter.post(
         const response = new JoinServerApi.Errors.ServerNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -119,14 +121,14 @@ serverRouter.post(
 
 serverRouter.delete(
   '/:serverId/partecipants',
-  Api.Validate(LeftServerApi.Request.Schema),
+  Validate(LeftServerApi.Request.Schema),
   async (
     req: Request<
       LeftServerApi.Request.Params,
       LeftServerApi.Response,
       LeftServerApi.Request.Body
     >,
-    res: Response<LeftServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<LeftServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.leaveServer(req.params.serverId, req.user.username)
@@ -143,7 +145,7 @@ serverRouter.delete(
         const response = new LeftServerApi.Errors.OwnerCannotLeave()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -152,14 +154,14 @@ serverRouter.delete(
 
 serverRouter.get(
   '/:serverId',
-  Api.Validate(GetServerApi.Request.Schema),
+  Validate(GetServerApi.Request.Schema),
   async (
     req: Request<
       GetServerApi.Request.Params,
       GetServerApi.Response,
       GetServerApi.Request.Body
     >,
-    res: Response<GetServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetServerApi.Response | InternalServerError>
   ) => {
     try {
       const server = await serverController.getServer(req.params.serverId)
@@ -170,7 +172,7 @@ serverRouter.get(
         const response = new GetServerApi.Errors.ServerNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -179,14 +181,14 @@ serverRouter.get(
 
 serverRouter.put(
   '/:serverId',
-  Api.Validate(UpdateServerApi.Request.Schema),
+  Validate(UpdateServerApi.Request.Schema),
   async (
     req: Request<
       UpdateServerApi.Request.Params,
       UpdateServerApi.Response,
       UpdateServerApi.Request.Body
     >,
-    res: Response<UpdateServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<UpdateServerApi.Response | InternalServerError>
   ) => {
     if (req.body.name == undefined && req.body.description == undefined) {
       const response = new UpdateServerApi.Errors.NameOrDescriptionRequired()
@@ -209,7 +211,7 @@ serverRouter.put(
         const response = new UpdateServerApi.Errors.UserNotAuthorized()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -218,14 +220,14 @@ serverRouter.put(
 
 serverRouter.delete(
   '/:serverId',
-  Api.Validate(DeleteServerApi.Request.Schema),
+  Validate(DeleteServerApi.Request.Schema),
   async (
     req: Request<
       DeleteServerApi.Request.Params,
       DeleteServerApi.Response,
       DeleteServerApi.Request.Body
     >,
-    res: Response<DeleteServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<DeleteServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.deleteServer(req.params.serverId, req.user.username)
@@ -239,7 +241,7 @@ serverRouter.delete(
         const response = new DeleteServerApi.Errors.UserNotAuthorized()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -248,14 +250,14 @@ serverRouter.delete(
 
 serverRouter.get(
   '/',
-  Api.Validate(GetServersApi.Request.Schema),
+  Validate(GetServersApi.Request.Schema),
   async (
     req: Request<
       GetServersApi.Request.Params,
       GetServersApi.Response,
       GetServersApi.Request.Body
     >,
-    res: Response<GetServersApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetServersApi.Response | InternalServerError>
   ) => {
     try {
       const servers = await serverController.getServers(req.user.username)
@@ -266,7 +268,7 @@ serverRouter.get(
         const response = new GetServersApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -275,14 +277,14 @@ serverRouter.get(
 
 serverRouter.post(
   '/',
-  Api.Validate(CreateServerApi.Request.Schema),
+  Validate(CreateServerApi.Request.Schema),
   async (
     req: Request<
       CreateServerApi.Request.Params,
       CreateServerApi.Response,
       CreateServerApi.Request.Body
     >,
-    res: Response<CreateServerApi.Response | ApiErrors.InternalServerError>
+    res: Response<CreateServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.createServer(
@@ -293,7 +295,7 @@ serverRouter.post(
       const response = new CreateServerApi.Responses.Success()
       response.send(res)
     } catch (e) {
-      const response = new ApiErrors.InternalServerError(e)
+      const response = new InternalServerError(e)
       response.send(res)
     }
   }

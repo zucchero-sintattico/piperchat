@@ -2,7 +2,7 @@ import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
 
 /* eslint-disable @typescript-eslint/no-namespace */
-export namespace KickUserFromServer {
+export namespace KickUserFromServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -42,7 +42,7 @@ export namespace KickUserFromServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServerParticipants {
+export namespace GetServerParticipantsApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -78,7 +78,7 @@ export namespace GetServerParticipants {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace JoinServer {
+export namespace JoinServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -108,7 +108,7 @@ export namespace JoinServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace LeftServer {
+export namespace LeftServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -146,7 +146,7 @@ export namespace LeftServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServer {
+export namespace GetServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -194,7 +194,7 @@ export namespace GetServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace UpdateServer {
+export namespace UpdateServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -238,7 +238,7 @@ export namespace UpdateServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace DeleteServer {
+export namespace DeleteServerApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -272,7 +272,7 @@ export namespace DeleteServer {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServers {
+export namespace GetServersApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty
@@ -316,7 +316,7 @@ export namespace GetServers {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace CreateServer {
+export namespace CreateServerApi {
   export namespace Request {
     export type Params = Empty
     export type Body = {

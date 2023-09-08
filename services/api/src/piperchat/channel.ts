@@ -2,7 +2,7 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
 
-export namespace GetChannels {
+export namespace GetChannelsApi {
   export namespace Request {
     export type Params = {
       serverId: string
@@ -46,7 +46,7 @@ export namespace GetChannels {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace CreateChannel {
+export namespace CreateChannelApi {
   export namespace Request {
     export type Params = {
       serverId: string
