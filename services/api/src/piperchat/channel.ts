@@ -4,6 +4,7 @@ import { RequestSchema } from '../schema'
 
 export namespace GetChannelsApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       serverId: string
     }
@@ -48,6 +49,7 @@ export namespace GetChannelsApi {
 
 export namespace CreateChannelApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       serverId: string
     }

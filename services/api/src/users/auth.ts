@@ -7,6 +7,7 @@ import { RequestSchema, EmptySchema } from '../schema'
  */
 export namespace RegisterApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = {
       username: string
@@ -64,6 +65,7 @@ export namespace RegisterApi {
  */
 export namespace LoginApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = {
       username: string
@@ -112,6 +114,7 @@ export namespace LoginApi {
  */
 export namespace LogoutApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema = EmptySchema
@@ -147,6 +150,7 @@ export namespace LogoutApi {
  */
 export namespace RefreshTokenApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema = EmptySchema

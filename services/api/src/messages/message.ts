@@ -4,6 +4,7 @@ import { RequestSchema } from '../schema'
 
 export namespace GetDirectMessagesApi {
   export namespace Request {
+    export type Type = Body & Params & Query
     export type Params = {
       username: string
     }
@@ -51,6 +52,7 @@ export namespace GetDirectMessagesApi {
 
 export namespace SendDirectMessageApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       username: string
     }

@@ -7,6 +7,7 @@ import { EmptySchema, RequestSchema } from '../schema'
  */
 export namespace WhoamiApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
@@ -35,6 +36,7 @@ export namespace WhoamiApi {
  */
 export namespace GetUserStatusApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       username: string
     }
@@ -78,6 +80,7 @@ export namespace GetUserStatusApi {
  */
 export namespace GetUserPhotoApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       username: string
     }
@@ -115,6 +118,7 @@ export namespace GetUserPhotoApi {
  */
 export namespace GetUserDescriptionApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       username: string
     }

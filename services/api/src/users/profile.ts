@@ -8,6 +8,7 @@ import { RequestSchema } from '../schema'
  */
 export namespace UpdatePhotoApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = {
       photo: Buffer
@@ -37,6 +38,7 @@ export namespace UpdatePhotoApi {
  */
 export namespace UpdateDescriptionApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = {
       description: string

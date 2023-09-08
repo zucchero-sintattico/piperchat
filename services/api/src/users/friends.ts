@@ -4,6 +4,7 @@ import { EmptySchema, RequestSchema } from '../schema'
 
 export namespace GetFriendsApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
@@ -31,6 +32,7 @@ export namespace GetFriendsApi {
 
 export namespace GetFriendsRequestsApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
@@ -58,6 +60,7 @@ export namespace GetFriendsRequestsApi {
 
 export namespace SendFriendRequestApi {
   export namespace Request {
+    export type Type = Body & Params
     export enum FriendRequestAction {
       send = 'send',
       accept = 'accept',

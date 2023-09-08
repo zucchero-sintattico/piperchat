@@ -240,6 +240,7 @@ export namespace UpdateServerApi {
 
 export namespace DeleteServerApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       serverId: string
     }
@@ -274,6 +275,7 @@ export namespace DeleteServerApi {
 
 export namespace GetServersApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = {
@@ -318,6 +320,7 @@ export namespace GetServersApi {
 
 export namespace CreateServerApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = Empty
     export type Body = {
       name: string
