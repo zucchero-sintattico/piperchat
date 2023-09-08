@@ -1,6 +1,6 @@
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 
-export const connect = (sessionId, stream, token, onStream, onUserLeave) => {
+export const connect = (serverId, channelId, stream, token, onStream, onUserLeave) => {
   const constraints = {
     video: true,
     audio: false,
@@ -113,9 +113,9 @@ export const connect = (sessionId, stream, token, onStream, onUserLeave) => {
       console.log('Received ice-candidate', candidate + ' from ' + from)
       await peers[from].addIceCandidate(candidate)
     })
-    console.log('Joining room', sessionId)
+    console.log('Joining channel', channelId, 'on server', serverId)
 
-    socket.emit('join-room', sessionId)
+    socket.emit('join-channel', serverId, channelId)
   })
 
   socket.on('disconnect', () => {

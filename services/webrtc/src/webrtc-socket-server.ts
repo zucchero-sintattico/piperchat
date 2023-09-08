@@ -1,13 +1,17 @@
 import { Server, Socket } from 'socket.io'
 import { decodeAccessToken, isAccessTokenValid } from '@piperchat/commons'
 import http from 'http'
-import { SessionRepository } from '@repositories/session/session-repository'
-import { SessionRepositoryImpl } from '@repositories/session/session-repository-impl'
 import { SessionEventsRepository } from '@events/repositories/session/session-events-repository'
 import { SessionEventsRepositoryImpl } from '@events/repositories/session/session-events-repository-impl'
+import {
+  ChannelRepository,
+  ChannelRepositoryImpl,
+} from './repositories/channels/channel-repository'
+import { PiperchatServiceApiRepository } from '@commons/infra-service/repositories/piperchat-service'
 
 export class WebRTCSocketServer {
-  private sessionRepository: SessionRepository = new SessionRepositoryImpl()
+  private channelController: ChannelRepository = new ChannelRepositoryImpl()
+  private piperchatServiceApiRepository = new PiperchatServiceApiRepository()
   private sessionEventsRepository: SessionEventsRepository =
     new SessionEventsRepositoryImpl()
   private io: Server
@@ -34,75 +38,91 @@ export class WebRTCSocketServer {
   async handleSocket(socket: Socket, username: string) {
     console.log('Socket connected', socket.id, username)
 
-    socket.on('join-room', async (sessionId) => {
-      console.log('Joining room', sessionId)
-
+    socket.on('join-channel', async (serverId: string, channelId: string) => {
+      console.log('Joining channel', channelId, 'on server', serverId)
       try {
-        const session = await this.sessionRepository.getSessionById(sessionId)
-        const isUserAllowedInSession = session.allowedUsers.includes(username)
-        if (!isUserAllowedInSession) {
+        if (
+          !(await this.channelController.isUserParticipantInServer(serverId, username))
+        ) {
           console.log('User not allowed in session')
           socket.disconnect()
           return
         }
       } catch (e) {
-        console.log('Session does not exist')
+        console.log('Channel not found')
         socket.disconnect()
         return
       }
 
-      const usersAlreadyInSession =
-        await this.sessionRepository.getUsersInSession(sessionId)
-
-      const isUserAlreadyInSession = usersAlreadyInSession.find(
-        (user) => user.username === username
+      const userAlreadyInSession = await this.channelController.getUserInChannel(
+        serverId,
+        channelId,
+        username
       )
+
+      const isUserAlreadyInSession = userAlreadyInSession !== undefined
+
       if (isUserAlreadyInSession) {
         console.log('User already in session, disconnecting')
         socket.disconnect()
         return
       }
 
-      await this.sessionRepository.addNewUserToSession(sessionId, username, socket.id)
+      await this.channelController.addUserToChannel(serverId, username, socket.id)
 
-      socket.to(sessionId).emit('user-connected', username)
-      socket.join(sessionId)
-      this.sessionEventsRepository.publishUserJoinedSessionEvent(sessionId, username)
+      socket.to(channelId).emit('user-connected', username)
+      socket.join(channelId)
+
+      // TODO: Change names
+      this.sessionEventsRepository.publishUserJoinedSessionEvent(channelId, username)
 
       socket.on('disconnect', async () => {
-        console.log('DISCONNECTING USER: ', username)
-        socket.to(sessionId).emit('user-disconnected', username)
-        this.sessionRepository.removeUserFromSession(sessionId, username)
-        this.sessionEventsRepository.publishUserLeftSessionEvent(sessionId, username)
+        console.log('Disconnecting user:', username)
+        socket.to(channelId).emit('user-disconnected', username)
 
-        const usersInSession = await this.sessionRepository.getUsersInSession(sessionId)
+        this.channelController.removeUserFromChannel(serverId, channelId, username)
+
+        // TODO: Change names
+        this.sessionEventsRepository.publishUserLeftSessionEvent(channelId, username)
+
+        const usersInSession = await this.channelController.getUsersInChannel(
+          serverId,
+          channelId
+        )
+
         if (usersInSession.length === 0) {
-          this.sessionEventsRepository.publishSessionEndedEvent(sessionId)
+          // TODO: Change names
+          this.sessionEventsRepository.publishSessionEndedEvent(channelId)
         }
       })
 
       socket.on('offer', async (offer, to) => {
-        const socketId = await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-          sessionId,
+        const user = await this.channelController.getUserInChannel(
+          serverId,
+          channelId,
           to
         )
-        this.io.sockets.sockets.get(socketId)?.emit('offer', offer, username)
+        this.io.sockets.sockets.get(user.socketId)?.emit('offer', offer, username)
       })
 
       socket.on('answer', async (answer, to) => {
-        const socketId = await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-          sessionId,
+        const user = await this.channelController.getUserInChannel(
+          serverId,
+          channelId,
           to
         )
-        this.io.sockets.sockets.get(socketId)?.emit('answer', answer, username)
+        this.io.sockets.sockets.get(user.socketId)?.emit('answer', answer, username)
       })
 
       socket.on('ice-candidate', async (candidate, to) => {
-        const socketId = await this.sessionRepository.getSocketIdBySessionIdAndUsername(
-          sessionId,
+        const user = await this.channelController.getUserInChannel(
+          serverId,
+          channelId,
           to
         )
-        this.io.sockets.sockets.get(socketId)?.emit('ice-candidate', candidate, username)
+        this.io.sockets.sockets
+          .get(user.socketId)
+          ?.emit('ice-candidate', candidate, username)
       })
     })
   }
