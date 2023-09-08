@@ -23,7 +23,7 @@ import {
 } from '@api/piperchat/server'
 
 serverRouter.delete(
-  '/:serverId/partecipants/:username',
+  '/:serverId/participants/:username',
   Validate(KickUserFromServerApi.Request.Schema),
   async (
     req: Request<
@@ -60,7 +60,7 @@ serverRouter.delete(
 )
 
 serverRouter.get(
-  '/:serverId/partecipants',
+  '/:serverId/participants',
   Validate(GetServerParticipantsApi.Request.Schema),
   async (
     req: Request<
@@ -93,7 +93,7 @@ serverRouter.get(
 )
 
 serverRouter.post(
-  '/:serverId/partecipants',
+  '/:serverId/participants',
   Validate(JoinServerApi.Request.Schema),
   async (
     req: Request<
@@ -120,7 +120,7 @@ serverRouter.post(
 )
 
 serverRouter.delete(
-  '/:serverId/partecipants',
+  '/:serverId/participants',
   Validate(LeftServerApi.Request.Schema),
   async (
     req: Request<
