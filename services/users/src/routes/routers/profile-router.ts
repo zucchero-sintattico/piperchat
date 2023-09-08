@@ -4,10 +4,9 @@ import { ProfileControllerImpl } from '@controllers/profile/profile-controller-i
 import { ProfileController } from '@controllers/profile/profile-controller'
 
 // Import specific interfaces from the API
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import UpdatePhotoApi = Api.Users.Profile.UpdatePhoto
-import UpdateDescriptionApi = Api.Users.Profile.UpdateDescription
+import { InternalServerError } from '@api/errors'
+import { Validate } from '@api/validate'
+import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
 
 const profileController: ProfileController = new ProfileControllerImpl()
 
@@ -16,21 +15,21 @@ profileRouter.use(JWTAuthenticationMiddleware)
 
 profileRouter.put(
   '/photo',
-  Api.Validate(UpdatePhotoApi.Request.Schema),
+  Validate(UpdatePhotoApi.Request.Schema),
   async (
     req: Request<
       UpdatePhotoApi.Request.Params,
       UpdatePhotoApi.Response,
       UpdatePhotoApi.Request.Body
     >,
-    res: Response<UpdatePhotoApi.Response | ApiErrors.InternalServerError>
+    res: Response<UpdatePhotoApi.Response | InternalServerError>
   ) => {
     try {
       await profileController.updateUserPhoto(req.user.username, req.body.photo)
       const response = new UpdatePhotoApi.Responses.Success()
       response.send(res)
     } catch (e) {
-      const response = new ApiErrors.InternalServerError(e)
+      const response = new InternalServerError(e)
       response.send(res)
     }
   }
@@ -38,14 +37,14 @@ profileRouter.put(
 
 profileRouter.put(
   '/description',
-  Api.Validate(UpdateDescriptionApi.Request.Schema),
+  Validate(UpdateDescriptionApi.Request.Schema),
   async (
     req: Request<
       UpdateDescriptionApi.Request.Params,
       UpdateDescriptionApi.Response,
       UpdateDescriptionApi.Request.Body
     >,
-    res: Response<UpdateDescriptionApi.Response | ApiErrors.InternalServerError>
+    res: Response<UpdateDescriptionApi.Response | InternalServerError>
   ) => {
     try {
       await profileController.updateUserDescription(
@@ -55,7 +54,7 @@ profileRouter.put(
       const response = new UpdateDescriptionApi.Responses.Success()
       response.send(res)
     } catch (e) {
-      const response = new ApiErrors.InternalServerError(e)
+      const response = new InternalServerError(e)
       response.send(res)
     }
   }

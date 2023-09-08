@@ -6,11 +6,13 @@ import {
 import { FriendsControllerImpl } from '@controllers/friends/friends-controller-impl'
 import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import GetFriendsApi = Api.Users.Friends.GetFriends
-import GetFriendsRequestsApi = Api.Users.Friends.GetFriendsRequests
-import SendFriendRequestApi = Api.Users.Friends.SendFriendRequest
+import { InternalServerError } from '@api/errors'
+import { Validate } from '@api/validate'
+import {
+  GetFriendsRequestsApi,
+  SendFriendRequestApi,
+  GetFriendsApi,
+} from '@api/users/friends'
 
 const friendsController: FriendsController = new FriendsControllerImpl()
 
@@ -19,14 +21,14 @@ friendsRouter.use(JWTAuthenticationMiddleware)
 
 friendsRouter.get(
   '/',
-  Api.Validate(GetFriendsApi.Request.Schema),
+  Validate(GetFriendsApi.Request.Schema),
   async (
     req: Request<
       GetFriendsApi.Request.Params,
       GetFriendsApi.Response,
       GetFriendsApi.Request.Body
     >,
-    res: Response<GetFriendsApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetFriendsApi.Response | InternalServerError>
   ) => {
     try {
       const friends = await friendsController.getFriends(req.user.username)
@@ -37,7 +39,7 @@ friendsRouter.get(
         const response = new GetFriendsApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -46,14 +48,14 @@ friendsRouter.get(
 
 friendsRouter.get(
   '/requests',
-  Api.Validate(GetFriendsRequestsApi.Request.Schema),
+  Validate(GetFriendsRequestsApi.Request.Schema),
   async (
     req: Request<
       GetFriendsRequestsApi.Request.Params,
       GetFriendsRequestsApi.Response,
       GetFriendsRequestsApi.Request.Body
     >,
-    res: Response<GetFriendsRequestsApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetFriendsRequestsApi.Response | InternalServerError>
   ) => {
     try {
       const requests = await friendsController.getFriendsRequests(req.user.username)
@@ -64,7 +66,7 @@ friendsRouter.get(
         const response = new GetFriendsRequestsApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -73,14 +75,14 @@ friendsRouter.get(
 
 friendsRouter.post(
   '/requests',
-  Api.Validate(SendFriendRequestApi.Request.Schema),
+  Validate(SendFriendRequestApi.Request.Schema),
   async (
     req: Request<
       SendFriendRequestApi.Request.Params,
       SendFriendRequestApi.Response,
       SendFriendRequestApi.Request.Body
     >,
-    res: Response<SendFriendRequestApi.Response | ApiErrors.InternalServerError>
+    res: Response<SendFriendRequestApi.Response | InternalServerError>
   ) => {
     if (
       !Object.values(SendFriendRequestApi.Request.FriendRequestAction).includes(
@@ -105,7 +107,7 @@ friendsRouter.post(
             const response = new SendFriendRequestApi.Errors.FriendRequestAlreadySent()
             response.send(res)
           } else {
-            const response = new ApiErrors.InternalServerError(e)
+            const response = new InternalServerError(e)
             response.send(res)
           }
         }
@@ -123,7 +125,7 @@ friendsRouter.post(
             const response = new SendFriendRequestApi.Errors.FriendRequestNotFound()
             response.send(res)
           } else {
-            const response = new ApiErrors.InternalServerError(e)
+            const response = new InternalServerError(e)
             response.send(res)
           }
         }
@@ -141,7 +143,7 @@ friendsRouter.post(
             const response = new SendFriendRequestApi.Errors.FriendRequestNotFound()
             response.send(res)
           } else {
-            const response = new ApiErrors.InternalServerError(e)
+            const response = new InternalServerError(e)
             response.send(res)
           }
         }

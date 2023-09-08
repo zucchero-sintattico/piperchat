@@ -5,7 +5,7 @@ import { RequestSchema, EmptySchema } from '../schema'
 /**
  * Register endpoint
  */
-export namespace Register {
+export namespace RegisterApi {
   export namespace Request {
     export type Params = Empty
     export type Body = {
@@ -62,7 +62,7 @@ export namespace Register {
 /**
  * Login endpoint
  */
-export namespace Login {
+export namespace LoginApi {
   export namespace Request {
     export type Params = Empty
     export type Body = {
@@ -110,7 +110,7 @@ export namespace Login {
 /**
  * Logout endpoint
  */
-export namespace Logout {
+export namespace LogoutApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty
@@ -145,7 +145,7 @@ export namespace Logout {
 /**
  * Refresh token endpoint
  */
-export namespace RefreshToken {
+export namespace RefreshTokenApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty

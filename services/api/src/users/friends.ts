@@ -2,7 +2,7 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { EmptySchema, RequestSchema } from '../schema'
 
-export namespace GetFriends {
+export namespace GetFriendsApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty
@@ -29,7 +29,7 @@ export namespace GetFriends {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetFriendsRequests {
+export namespace GetFriendsRequestsApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty
@@ -56,7 +56,7 @@ export namespace GetFriendsRequests {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace SendFriendRequest {
+export namespace SendFriendRequestApi {
   export namespace Request {
     export enum FriendRequestAction {
       send = 'send',

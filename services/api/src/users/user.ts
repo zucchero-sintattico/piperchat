@@ -5,7 +5,7 @@ import { EmptySchema, RequestSchema } from '../schema'
 /**
  * Whoami endpoint
  */
-export namespace Whoami {
+export namespace WhoamiApi {
   export namespace Request {
     export type Params = Empty
     export type Body = Empty
@@ -33,7 +33,7 @@ export namespace Whoami {
 /**
  * Get user status
  */
-export namespace GetUserStatus {
+export namespace GetUserStatusApi {
   export namespace Request {
     export type Params = {
       username: string
@@ -76,7 +76,7 @@ export namespace GetUserStatus {
 /**
  * Get user photo
  */
-export namespace GetUserPhoto {
+export namespace GetUserPhotoApi {
   export namespace Request {
     export type Params = {
       username: string
@@ -113,7 +113,7 @@ export namespace GetUserPhoto {
 /**
  * Get user description
  */
-export namespace GetUserDescription {
+export namespace GetUserDescriptionApi {
   export namespace Request {
     export type Params = {
       username: string

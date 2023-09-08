@@ -7,7 +7,7 @@ interface RequestFacade<Params, Body, Query> {
   query: Query
 }
 
-export function validateRequestMiddleware<
+export function Validate<
   P extends Record<string, unknown>,
   B extends Record<string, unknown>,
   Q extends Record<string, unknown>,

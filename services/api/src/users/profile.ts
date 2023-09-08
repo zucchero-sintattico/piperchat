@@ -6,7 +6,7 @@ import { RequestSchema } from '../schema'
 /**
  * Update photo endpoint
  */
-export namespace UpdatePhoto {
+export namespace UpdatePhotoApi {
   export namespace Request {
     export type Params = Empty
     export type Body = {
@@ -35,7 +35,7 @@ export namespace UpdatePhoto {
 /**
  * Update description endpoint
  */
-export namespace UpdateDescription {
+export namespace UpdateDescriptionApi {
   export namespace Request {
     export type Params = Empty
     export type Body = {

@@ -11,12 +11,9 @@ import {
 } from '@piperchat/commons'
 
 // Import specific interfaces from the API
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import LoginApi = Api.Users.Auth.Login
-import RegisterApi = Api.Users.Auth.Register
-import LogoutApi = Api.Users.Auth.Logout
-import RefreshTokenApi = Api.Users.Auth.RefreshToken
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
 
 const authController: AuthController = new AuthControllerImpl()
 
@@ -26,14 +23,14 @@ export const authRouter = Router({
 
 authRouter.post(
   '/register',
-  Api.Validate(RegisterApi.Request.Schema),
+  Validate(RegisterApi.Request.Schema),
   async (
     req: Request<
       RegisterApi.Request.Params,
       RegisterApi.Response,
       RegisterApi.Request.Body
     >,
-    res: Response<RegisterApi.Response | ApiErrors.InternalServerError>
+    res: Response<RegisterApi.Response | InternalServerError>
   ) => {
     try {
       const user = await authController.register(
@@ -50,7 +47,7 @@ authRouter.post(
         const response = new RegisterApi.Errors.UserAlreadyExists()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -59,10 +56,10 @@ authRouter.post(
 
 authRouter.post(
   '/login',
-  Api.Validate(LoginApi.Request.Schema),
+  Validate(LoginApi.Request.Schema),
   async (
     req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
-    res: Response<LoginApi.Response | ApiErrors.InternalServerError>
+    res: Response<LoginApi.Response | InternalServerError>
   ) => {
     try {
       const token = await authController.login(req.body.username, req.body.password)
@@ -73,7 +70,7 @@ authRouter.post(
         const response = new LoginApi.Errors.UsernameOrPasswordIncorrect()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -83,10 +80,10 @@ authRouter.post(
 authRouter.post(
   '/logout',
   JWTAuthenticationMiddleware,
-  Api.Validate(LogoutApi.Request.Schema),
+  Validate(LogoutApi.Request.Schema),
   async (
     req: Request<LogoutApi.Request.Params, LogoutApi.Response>,
-    res: Response<LogoutApi.Response | ApiErrors.InternalServerError>
+    res: Response<LogoutApi.Response | InternalServerError>
   ) => {
     try {
       if (!req.user) {
@@ -101,7 +98,7 @@ authRouter.post(
         const response = new LogoutApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -111,10 +108,10 @@ authRouter.post(
 authRouter.post(
   '/refresh-token',
   JWTRefreshTokenMiddleware,
-  Api.Validate(RefreshTokenApi.Request.Schema),
+  Validate(RefreshTokenApi.Request.Schema),
   async (
     req: Request<RefreshTokenApi.Request.Params, RefreshTokenApi.Response>,
-    res: Response<RefreshTokenApi.Response | ApiErrors.InternalServerError>
+    res: Response<RefreshTokenApi.Response | InternalServerError>
   ) => {
     try {
       const token = await authController.refreshToken(req.user.username)
@@ -131,7 +128,7 @@ authRouter.post(
         const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }

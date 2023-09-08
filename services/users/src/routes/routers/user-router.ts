@@ -8,12 +8,14 @@ import { UserControllerImpl } from '@controllers/user/user-controller-impl'
 import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 
 // Import specific interfaces from the API
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import WhoamiApi = Api.Users.User.Whoami
-import GetUserStatusApi = Api.Users.User.GetUserStatus
-import GetUserPhotoApi = Api.Users.User.GetUserPhoto
-import GetUserDescriptionApi = Api.Users.User.GetUserDescription
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import {
+  WhoamiApi,
+  GetUserStatusApi,
+  GetUserPhotoApi,
+  GetUserDescriptionApi,
+} from '@api/users/user'
 
 const userController: UserController = new UserControllerImpl()
 
@@ -22,17 +24,17 @@ usersRouter.use(JWTAuthenticationMiddleware)
 
 usersRouter.get(
   '/whoami',
-  Api.Validate(WhoamiApi.Request.Schema),
+  Validate(WhoamiApi.Request.Schema),
   async (
     req: Request<WhoamiApi.Request.Params, WhoamiApi.Response, WhoamiApi.Request.Body>,
-    res: Response<WhoamiApi.Response | ApiErrors.InternalServerError>
+    res: Response<WhoamiApi.Response | InternalServerError>
   ) => {
     try {
       const user = await userController.getUser(req.user.username)
       const response = new WhoamiApi.Responses.Success(user)
       response.send(res)
     } catch (e) {
-      const response = new ApiErrors.InternalServerError(e)
+      const response = new InternalServerError(e)
       response.send(res)
     }
   }
@@ -40,14 +42,14 @@ usersRouter.get(
 
 usersRouter.get(
   '/:username/status',
-  Api.Validate(GetUserStatusApi.Request.Schema),
+  Validate(GetUserStatusApi.Request.Schema),
   async (
     req: Request<
       GetUserStatusApi.Request.Params,
       GetUserStatusApi.Response,
       GetUserStatusApi.Request.Body
     >,
-    res: Response<GetUserStatusApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetUserStatusApi.Response | InternalServerError>
   ) => {
     try {
       const status = await userController.getUserStatus(req.params.username)
@@ -58,7 +60,7 @@ usersRouter.get(
         const response = new GetUserStatusApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -73,7 +75,7 @@ usersRouter.get(
       GetUserPhotoApi.Response,
       GetUserPhotoApi.Request.Body
     >,
-    res: Response<GetUserPhotoApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetUserPhotoApi.Response | InternalServerError>
   ) => {
     try {
       const photo = await userController.getUserPhoto(req.params.username)
@@ -84,7 +86,7 @@ usersRouter.get(
         const response = new GetUserPhotoApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -99,7 +101,7 @@ usersRouter.get(
       GetUserDescriptionApi.Response,
       GetUserDescriptionApi.Request.Body
     >,
-    res: Response<GetUserDescriptionApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetUserDescriptionApi.Response | InternalServerError>
   ) => {
     try {
       const description = await userController.getUserDescription(req.params.username)
@@ -110,7 +112,7 @@ usersRouter.get(
         const response = new GetUserDescriptionApi.Errors.UserNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
