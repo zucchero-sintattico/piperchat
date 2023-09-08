@@ -1,5 +1,5 @@
 import { notifiableUsers } from '@models/notification-model'
-
+import { NewMessage } from '@api/notifications/messages'
 export interface Message {
   from: string
   to: string
@@ -16,12 +16,9 @@ export interface NotificationRepository {
 
 export class NotificationRepositoryImpl implements NotificationRepository {
   onNewMessage(message: Message): void {
-    notifiableUsers.sendIfPresent(message.to, {
-      type: 'new-message',
-      data: {
-        from: message.from,
-        content: message.content,
-      },
-    })
+    notifiableUsers.sendIfPresent(
+      message.to,
+      new NewMessage(message.from, message.content)
+    )
   }
 }
