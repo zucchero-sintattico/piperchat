@@ -8,108 +8,191 @@ import { ServerControllerImpl } from '@controllers/server/server-controller-impl
 const serverController: ServerController = new ServerControllerImpl()
 export const serverRouter = Router()
 
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import {
+  GetServersApi,
+  CreateServerApi,
+  GetServerApi,
+  UpdateServerApi,
+  DeleteServerApi,
+  JoinServerApi,
+  LeftServerApi,
+  GetServerParticipantsApi,
+  KickUserFromServerApi,
+} from '@api/piperchat/server'
+
 serverRouter.delete(
   '/:serverId/partecipants/:username',
-  async (req: Request, res: Response) => {
+  Validate(KickUserFromServerApi.Request.Schema),
+  async (
+    req: Request<
+      KickUserFromServerApi.Request.Params,
+      KickUserFromServerApi.Response,
+      KickUserFromServerApi.Request.Body
+    >,
+    res: Response<KickUserFromServerApi.Response | InternalServerError>
+  ) => {
     try {
       await serverController.kickUserFromTheServer(
         req.params.serverId,
         req.params.username,
         req.user.username
       )
-      res.status(200).json({ message: 'User kicked successfully' })
+      const response = new KickUserFromServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new KickUserFromServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        const response = new KickUserFromServerApi.Errors.UserNotAuthorized()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
+        const response = new KickUserFromServerApi.Errors.OwnerCannotLeave()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        return res.status(403).json({
-          message: "You don't have permissions to access this resource",
-          error: e,
-        })
-      }
-      if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
-        return res.status(422).json({
-          message: 'Unprocessable entity: the user is the owner of the server',
-          error: e,
-        })
-      }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
   }
 )
 
-serverRouter
-  .get('/:serverId/partecipants', async (req: Request, res: Response) => {
+serverRouter.get(
+  '/:serverId/partecipants',
+  Validate(GetServerParticipantsApi.Request.Schema),
+  async (
+    req: Request<
+      GetServerParticipantsApi.Request.Params,
+      GetServerParticipantsApi.Response,
+      GetServerParticipantsApi.Request.Body
+    >,
+    res: Response<GetServerParticipantsApi.Response | InternalServerError>
+  ) => {
     try {
-      const partecipants = await serverController.getServerParticipants(
+      const participants = await serverController.getServerParticipants(
         req.params.serverId,
         req.user.username
       )
-      res.status(200).json({ partecipants: partecipants })
+      const response = new GetServerParticipantsApi.Responses.Success(participants)
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new GetServerParticipantsApi.Errors.ServerNotFound()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        const response = new GetServerParticipantsApi.Errors.UserNotAuthorized()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        return res.status(403).json({
-          message: "You don't have permissions to access this resource",
-          error: e,
-        })
-      }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
-  .post('/:serverId/partecipants', async (req: Request, res: Response) => {
+  }
+)
+
+serverRouter.post(
+  '/:serverId/partecipants',
+  Validate(JoinServerApi.Request.Schema),
+  async (
+    req: Request<
+      JoinServerApi.Request.Params,
+      JoinServerApi.Response,
+      JoinServerApi.Request.Body
+    >,
+    res: Response<JoinServerApi.Response | InternalServerError>
+  ) => {
     try {
       await serverController.joinServer(req.params.serverId, req.user.username)
-      res.status(200).json({ message: 'Server joined successfully' })
+      const response = new JoinServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new JoinServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
-  .delete('/:serverId/partecipants', async (req: Request, res: Response) => {
+  }
+)
+
+serverRouter.delete(
+  '/:serverId/partecipants',
+  Validate(LeftServerApi.Request.Schema),
+  async (
+    req: Request<
+      LeftServerApi.Request.Params,
+      LeftServerApi.Response,
+      LeftServerApi.Request.Body
+    >,
+    res: Response<LeftServerApi.Response | InternalServerError>
+  ) => {
     try {
       await serverController.leaveServer(req.params.serverId, req.user.username)
-      res.status(200).json({ message: 'Server left successfully' })
+      const response = new LeftServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new LeftServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        const response = new LeftServerApi.Errors.UserNotInServer()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
+        const response = new LeftServerApi.Errors.OwnerCannotLeave()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        return res.status(403).json({
-          message: "You don't have permissions to access this resource",
-          error: e,
-        })
-      }
-      if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
-        return res.status(422).json({
-          message: 'Unprocessable entity: the user is the owner of the server',
-          error: e,
-        })
-      }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
+  }
+)
 
-serverRouter
-  .get('/:serverId', async (req: Request, res: Response) => {
+serverRouter.get(
+  '/:serverId',
+  Validate(GetServerApi.Request.Schema),
+  async (
+    req: Request<
+      GetServerApi.Request.Params,
+      GetServerApi.Response,
+      GetServerApi.Request.Body
+    >,
+    res: Response<GetServerApi.Response | InternalServerError>
+  ) => {
     try {
       const server = await serverController.getServer(req.params.serverId)
-      res.status(200).json({ server: server })
+      const response = new GetServerApi.Responses.Success(server)
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new GetServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
-  .put('/:serverId', async (req: Request, res: Response) => {
+  }
+)
+
+serverRouter.put(
+  '/:serverId',
+  Validate(UpdateServerApi.Request.Schema),
+  async (
+    req: Request<
+      UpdateServerApi.Request.Params,
+      UpdateServerApi.Response,
+      UpdateServerApi.Request.Body
+    >,
+    res: Response<UpdateServerApi.Response | InternalServerError>
+  ) => {
     if (req.body.name == undefined && req.body.description == undefined) {
-      return res.status(400).json({ message: 'Bad request' })
+      const response = new UpdateServerApi.Errors.NameOrDescriptionRequired()
+      response.send(res)
     }
     try {
       await serverController.updateServer(
@@ -118,61 +201,102 @@ serverRouter
         req.body.name,
         req.body.description
       )
-      res.status(200).json({ message: 'Server updated successfully' })
+      const response = new UpdateServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new UpdateServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        const response = new UpdateServerApi.Errors.UserNotAuthorized()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        return res.status(403).json({
-          message: "You don't have permissions to access this resource",
-          error: e,
-        })
-      }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
-  .delete('/:serverId', async (req: Request, res: Response) => {
+  }
+)
+
+serverRouter.delete(
+  '/:serverId',
+  Validate(DeleteServerApi.Request.Schema),
+  async (
+    req: Request<
+      DeleteServerApi.Request.Params,
+      DeleteServerApi.Response,
+      DeleteServerApi.Request.Body
+    >,
+    res: Response<DeleteServerApi.Response | InternalServerError>
+  ) => {
     try {
       await serverController.deleteServer(req.params.serverId, req.user.username)
-      res.status(200).json({ message: 'Server deleted successfully' })
+      const response = new DeleteServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new DeleteServerApi.Errors.ServerNotFound()
+        response.send(res)
+      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
+        const response = new DeleteServerApi.Errors.UserNotAuthorized()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        return res.status(403).json({
-          message: "You don't have permissions to access this resource",
-          error: e,
-        })
-      }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
+  }
+)
 
-serverRouter
-  .get('/', async (req: Request, res: Response) => {
+serverRouter.get(
+  '/',
+  Validate(GetServersApi.Request.Schema),
+  async (
+    req: Request<
+      GetServersApi.Request.Params,
+      GetServersApi.Response,
+      GetServersApi.Request.Body
+    >,
+    res: Response<GetServersApi.Response | InternalServerError>
+  ) => {
     try {
       const servers = await serverController.getServers(req.user.username)
-      res.status(200).json({ servers: servers })
+      const response = new GetServersApi.Responses.Success(servers)
+      response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.UserNotFound) {
-        return res.status(404).json({ message: 'User not found', error: e })
+        const response = new GetServersApi.Errors.UserNotFound()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
       }
-      return res.status(500).json({ message: 'Internal server error', error: e })
     }
-  })
-  .post('/', async (req: Request, res: Response) => {
-    if (req.body.name == undefined || req.body.description == undefined) {
-      return res.status(400).json({ message: 'Bad Request' })
-    }
+  }
+)
+
+serverRouter.post(
+  '/',
+  Validate(CreateServerApi.Request.Schema),
+  async (
+    req: Request<
+      CreateServerApi.Request.Params,
+      CreateServerApi.Response,
+      CreateServerApi.Request.Body
+    >,
+    res: Response<CreateServerApi.Response | InternalServerError>
+  ) => {
     try {
       await serverController.createServer(
         req.body.name,
         req.body.description,
         req.user.username
       )
+      const response = new CreateServerApi.Responses.Success()
+      response.send(res)
     } catch (e) {
-      return res.status(500).json({ message: 'Internal server error', error: e })
+      const response = new InternalServerError(e)
+      response.send(res)
     }
-  })
+  }
+)

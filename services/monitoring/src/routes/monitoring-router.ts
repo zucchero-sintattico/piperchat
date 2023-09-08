@@ -1,18 +1,34 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { MonitoringController } from '@/controllers/monitoring-controller'
 import { MonitoringControllerImpl } from '@/controllers/monitoring-controller-impl'
+
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetServicesStatusApi } from '@api/monitoring/status'
 
 const monitoringRouter: Router = Router()
 const monitoringController: MonitoringController = new MonitoringControllerImpl()
 
-monitoringRouter.get('/', async (req, res) => {
-  try {
-    console.log('GET /monitoring')
-    const monitoring = await monitoringController.getServiceStatus()
-    return res.status(200).json(monitoring)
-  } catch (e) {
-    return res.status(500).json({ message: 'Internal server error', error: e })
+monitoringRouter.get(
+  '/',
+  Validate(GetServicesStatusApi.Request.Schema),
+  async (
+    req: Request<
+      GetServicesStatusApi.Request.Params,
+      GetServicesStatusApi.Response,
+      GetServicesStatusApi.Request.Body
+    >,
+    res: Response<GetServicesStatusApi.Response | InternalServerError>
+  ) => {
+    try {
+      const monitoring = await monitoringController.getServiceStatus()
+      const response = new GetServicesStatusApi.Responses.Success(monitoring)
+      response.send(res)
+    } catch (e) {
+      const response = new InternalServerError(e)
+      response.send(res)
+    }
   }
-})
+)
 
 export { monitoringRouter }

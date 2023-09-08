@@ -1,4 +1,5 @@
-import { Request, Router, Response } from 'express'
+/* eslint-disable @typescript-eslint/no-namespace */
+import { Request, Response, Router } from 'express'
 import {
   AuthController,
   AuthControllerExceptions,
@@ -7,100 +8,129 @@ import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
 import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
-  UsersMessages,
-  isAccessTokenValid,
 } from '@piperchat/commons'
+
+// Import specific interfaces from the API
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
 
 const authController: AuthController = new AuthControllerImpl()
 
-export const authRouter = Router()
-
-authRouter.post('/register', async (req: Request, res: Response) => {
-  if (!req.body.username || !req.body.password || !req.body.email) {
-    return res.status(400).json({ message: 'Missing username, password or email' })
-  }
-  try {
-    const user = await authController.register(
-      req.body.username,
-      req.body.email,
-      req.body.password,
-      req.body.description,
-      req.body.photo
-    )
-    return res
-      .status(200)
-      .json({ message: 'Registered', createdUser: user } as UsersMessages.Ok)
-  } catch (e) {
-    if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
-      return res
-        .status(409)
-        .json({ message: 'User already exists' } as UsersMessages.Error)
-    } else {
-      return res
-        .status(500)
-        .json({ message: 'Internal Server Error', error: e } as UsersMessages.Error)
-    }
-  }
+export const authRouter = Router({
+  strict: true,
 })
 
-authRouter.post('/login', async (req: Request, res: Response) => {
-  if (!req.body.username || !req.body.password) {
-    return res.status(400).json({ message: 'Missing username or password' })
-  }
-  // check if token is already present and if it is valid
-  if (req.cookies.jwt && isAccessTokenValid(req.cookies.jwt)) {
-    return res.status(200).json({ message: 'Already logged in' })
-  }
-  try {
-    const token = await authController.login(req.body.username, req.body.password)
-    res.cookie('jwt', token, { httpOnly: true })
-    return res.status(200).json({ message: 'Logged in' })
-  } catch (e) {
-    if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
-      return res.status(401).json({ message: 'Invalid username or password' })
-    } else {
-      return res.status(500).json({ message: 'Internal Server Error', error: e })
+authRouter.post(
+  '/register',
+  Validate(RegisterApi.Request.Schema),
+  async (
+    req: Request<
+      RegisterApi.Request.Params,
+      RegisterApi.Response,
+      RegisterApi.Request.Body
+    >,
+    res: Response<RegisterApi.Response | InternalServerError>
+  ) => {
+    try {
+      const user = await authController.register(
+        req.body.username,
+        req.body.email,
+        req.body.password,
+        req.body.description ?? '',
+        req.body.photo ?? null
+      )
+      const response = new RegisterApi.Responses.Success(user)
+      return response.send(res)
+    } catch (e) {
+      if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
+        const response = new RegisterApi.Errors.UserAlreadyExists()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
+      }
     }
   }
-})
+)
 
-authRouter
-  .use(JWTAuthenticationMiddleware)
-  .post('/logout', async (req: Request, res: Response) => {
+authRouter.post(
+  '/login',
+  Validate(LoginApi.Request.Schema),
+  async (
+    req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
+    res: Response<LoginApi.Response | InternalServerError>
+  ) => {
+    try {
+      const token = await authController.login(req.body.username, req.body.password)
+      const response = new LoginApi.Responses.Success(token)
+      response.send(res)
+    } catch (e) {
+      if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
+        const response = new LoginApi.Errors.UsernameOrPasswordIncorrect()
+        response.send(res)
+      } else {
+        const response = new InternalServerError(e)
+        response.send(res)
+      }
+    }
+  }
+)
+
+authRouter.post(
+  '/logout',
+  JWTAuthenticationMiddleware,
+  Validate(LogoutApi.Request.Schema),
+  async (
+    req: Request<LogoutApi.Request.Params, LogoutApi.Response>,
+    res: Response<LogoutApi.Response | InternalServerError>
+  ) => {
     try {
       if (!req.user) {
-        return res.status(401).json({ message: 'Unauthorized' })
+        const response = new LogoutApi.Errors.NotLoggedIn()
+        response.send(res)
       }
       await authController.logout(req.user.username)
-      res.clearCookie('jwt')
-      return res.status(200).json({ message: 'Logged out' })
+      const response = new LogoutApi.Responses.Success()
+      response.send(res)
     } catch (e) {
       if (e instanceof AuthControllerExceptions.UserNotFound) {
-        return res.status(404).json({ message: 'User not found' })
+        const response = new LogoutApi.Errors.UserNotFound()
+        response.send(res)
       } else {
-        return res.status(500).json({ message: 'Internal Server Error', error: e })
+        const response = new InternalServerError(e)
+        response.send(res)
       }
     }
-  })
+  }
+)
 
-authRouter
-  .use(JWTRefreshTokenMiddleware)
-  .post('/refresh-token', async (req: Request, res: Response) => {
+authRouter.post(
+  '/refresh-token',
+  JWTRefreshTokenMiddleware,
+  Validate(RefreshTokenApi.Request.Schema),
+  async (
+    req: Request<RefreshTokenApi.Request.Params, RefreshTokenApi.Response>,
+    res: Response<RefreshTokenApi.Response | InternalServerError>
+  ) => {
     try {
       const token = await authController.refreshToken(req.user.username)
-      return res
-        .status(200)
-        .cookie('jwt', token, { httpOnly: true })
-        .json({ message: 'Refreshed token' })
+      const response = new RefreshTokenApi.Responses.Success(token)
+      response.send(res)
     } catch (e) {
       if (e instanceof AuthControllerExceptions.UserNotFound) {
-        return res.status(404).json({ message: 'User not found' })
+        const response = new RefreshTokenApi.Errors.UserNotFound()
+        response.send(res)
       } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
-        return res.status(401).json({ message: 'Invalid refresh token' })
+        const response = new RefreshTokenApi.Errors.InvalidRefreshToken()
+        response.send(res)
       } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
-        return res.status(401).json({ message: 'Refresh token not present' })
+        const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
+        response.send(res)
       } else {
-        return res.status(500).json({ message: 'Internal Server Error', error: e })
+        const response = new InternalServerError(e)
+        response.send(res)
       }
     }
-  })
+  }
+)

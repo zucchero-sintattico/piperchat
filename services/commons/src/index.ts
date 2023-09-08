@@ -5,7 +5,6 @@ export * from './infra-service-middleware'
 export * from './jwt'
 export { RabbitMQ } from './rabbit-mq'
 export { MongooseUtils } from './mongoose-utils'
-export * as UsersMessages from './api-interface/users'
 
 export interface MicroserviceConfiguration {
   port: number

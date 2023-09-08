@@ -1,0 +1,15 @@
+{
+  "name": "@piperchat/api",
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc --build -v && tsc-alias",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

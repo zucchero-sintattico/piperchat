@@ -17,6 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@piperchat/commons": "^1.0.0",
+    "@piperchat/api": "^1.0.0",
+    "@piperchat/messages-api": "^1.0.0",
     "amqplib": "^0.10.3",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
