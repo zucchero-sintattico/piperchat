@@ -2,7 +2,7 @@ import supertest from 'supertest'
 import { UsersServer } from '@/server'
 import { UserApi } from './api/user-api'
 import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
-import { ServiceEvents } from '@events/events'
+import { EventsService } from '@/events-service'
 import mongoose from 'mongoose'
 
 let server: UsersServer
@@ -23,7 +23,7 @@ beforeAll(async () => {
   await RabbitMQ.initialize(amqpUri)
 
   // Initialize service events listeners
-  await ServiceEvents.initialize()
+  await EventsService.initialize()
   await server.start()
   userApi = new UserApi(supertest(server.server))
 })

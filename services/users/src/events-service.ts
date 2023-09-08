@@ -5,7 +5,7 @@ import { RabbitMQ } from '@piperchat/commons'
  * It is also responsible for handling the events.
  * It is also responsible for updating the database.
  */
-export class ServiceEvents {
+export class EventsService {
   private static broker: RabbitMQ
 
   static async initialize() {
@@ -16,7 +16,7 @@ export class ServiceEvents {
 
   static async shutdown() {}
 
-  static async declareQueue() {
+  private static async declareQueue() {
     const channel = this.broker.getChannel()
 
     // Declare the exchange
@@ -25,25 +25,11 @@ export class ServiceEvents {
     })
   }
 
-  static async setupListeners() {
-    this.subscribeToExchange('user', async (event, data) => {
-      switch (event) {
-        case 'user.created':
-          //console.log('User created', data)
-          break
-        case 'user.updated':
-          //console.log('User updated', data)
-          break
-        case 'user.deleted':
-          //console.log('User deleted', data)
-          break
-      }
-    })
-  }
+  private static async setupListeners() {}
 
   private static async subscribeToExchange(
     exchange: string,
-    callback: (event: string, data: any) => void
+    callback: (event: string, data: unknown) => void
   ) {
     const channel = this.broker.getChannel()
     const queue = await channel?.assertQueue('', {

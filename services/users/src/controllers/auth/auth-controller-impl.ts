@@ -1,4 +1,3 @@
-import { UserEventsRepository } from '@events/repositories/user/user-events-repository'
 import { User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
@@ -8,15 +7,16 @@ import {
 } from '@controllers/auth/auth-controller'
 import bcrypt from 'bcrypt'
 import {
+  RabbitMQ,
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
 } from '@piperchat/commons'
-import { UserEventsRepositoryImpl } from '@events/repositories/user/user-events-repository-impl'
+import { UserCreatedMessage, UserLoggedInMessage } from '@messages-api/users'
 
 export class AuthControllerImpl implements AuthController {
+  private broker: RabbitMQ = RabbitMQ.getInstance()
   private userRepository: UserRepository = new UserRepositoryImpl()
-  private userEventsRepository: UserEventsRepository = new UserEventsRepositoryImpl()
 
   async register(
     username: string,
@@ -31,7 +31,15 @@ export class AuthControllerImpl implements AuthController {
       .catch(() => {
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
-    await this.userEventsRepository.publishUserCreated(user)
+    await this.broker.publish(
+      new UserCreatedMessage({
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        profilePicture: user.profilePicture,
+        createdAt: user.createdAt,
+      })
+    )
     return user
   }
 
@@ -49,6 +57,12 @@ export class AuthControllerImpl implements AuthController {
     const refreshToken = generateRefreshToken(user)
 
     await this.userRepository.login(user.username, refreshToken)
+
+    await this.broker.publish(
+      new UserLoggedInMessage({
+        username: user.username,
+      })
+    )
     return accessToken
   }
 
@@ -74,5 +88,10 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
+    await this.broker.publish(
+      new UserLoggedInMessage({
+        username: username,
+      })
+    )
   }
 }

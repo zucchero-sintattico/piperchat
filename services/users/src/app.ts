@@ -1,5 +1,5 @@
 import { RabbitMQ, MongooseUtils, MicroserviceConfiguration } from '@piperchat/commons'
-import { ServiceEvents } from '@events/events'
+import { EventsService } from '@/events-service'
 import { UsersServer } from './server'
 import mongoose from 'mongoose'
 
@@ -10,7 +10,7 @@ const start = async (configuration: MicroserviceConfiguration) => {
   // Initialize RabbitMQ
   await RabbitMQ.initialize(configuration.amqpUri)
 
-  await ServiceEvents.initialize()
+  await EventsService.initialize()
 
   const app: UsersServer = new UsersServer(configuration.port)
 

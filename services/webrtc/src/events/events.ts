@@ -1,5 +1,7 @@
-import { SessionRepository } from '@repositories/session/session-repository'
-import { SessionRepositoryImpl } from '@repositories/session/session-repository-impl'
+import {
+  ChannelRepository,
+  ChannelRepositoryImpl,
+} from '@/repositories/channels/channel-repository'
 import { RabbitMQ } from '@piperchat/commons'
 
 /**
@@ -10,7 +12,7 @@ import { RabbitMQ } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
-  private static sessionRepository: SessionRepository = new SessionRepositoryImpl()
+  private static channelRepository: ChannelRepository = new ChannelRepositoryImpl()
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()

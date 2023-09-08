@@ -1,4 +1,5 @@
 import amqp from 'amqplib'
+import { EventMessage } from '@messages-api/event-message'
 
 export class RabbitMQ {
   static instance: RabbitMQ
@@ -41,6 +42,15 @@ export class RabbitMQ {
     } catch (err) {
       console.error(err)
     }
+  }
+
+  async publish(message: EventMessage) {
+    const channel = this.getChannel()
+    channel?.publish(
+      message.exchange,
+      message.routingKey,
+      Buffer.from(JSON.stringify(message.data))
+    )
   }
 
   getChannel() {
