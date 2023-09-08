@@ -41,33 +41,6 @@ usersRouter.get(
 )
 
 usersRouter.get(
-  '/:username/status',
-  Validate(GetUserStatusApi.Request.Schema),
-  async (
-    req: Request<
-      GetUserStatusApi.Request.Params,
-      GetUserStatusApi.Response,
-      GetUserStatusApi.Request.Body
-    >,
-    res: Response<GetUserStatusApi.Response | InternalServerError>
-  ) => {
-    try {
-      const status = await userController.getUserStatus(req.params.username)
-      const response = new GetUserStatusApi.Responses.Success(status)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof UserControllerExceptions.UserNotFound) {
-        const response = new GetUserStatusApi.Errors.UserNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
-
-usersRouter.get(
   '/:username/photo',
   async (
     req: Request<
