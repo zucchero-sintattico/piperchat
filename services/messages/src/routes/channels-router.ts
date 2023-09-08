@@ -5,17 +5,16 @@ import {
 } from '@controllers/channel/channel-controller'
 import { ChannelControllerImpl } from '@controllers/channel/channel-controller-impl'
 
-import * as Api from '@piperchat/commons/src/api/index'
-import ApiErrors = Api.Errors
-import GetChannelMessagesApi = Api.Messages.Channel.GetChannelMessages
-import SendMessageInChannelApi = Api.Messages.Channel.SendMessageInChannel
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/channel'
 
 const channelController: ChannelController = new ChannelControllerImpl()
 const channelRouter = Router()
 
 channelRouter.get(
   ':serverId/channels/:channelId/messages',
-  Api.Validate(GetChannelMessagesApi.Request.Schema),
+  Validate(GetChannelMessagesApi.Request.Schema),
   async (
     req: Request<
       GetChannelMessagesApi.Request.Params,
@@ -23,7 +22,7 @@ channelRouter.get(
       GetChannelMessagesApi.Request.Body,
       GetChannelMessagesApi.Request.Query
     >,
-    res: Response<GetChannelMessagesApi.Response | ApiErrors.InternalServerError>
+    res: Response<GetChannelMessagesApi.Response | InternalServerError>
   ) => {
     try {
       const messages = await channelController.getChannelMessagesPaginated(
@@ -42,7 +41,7 @@ channelRouter.get(
         const response = new GetChannelMessagesApi.Errors.ServerNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }
@@ -51,14 +50,14 @@ channelRouter.get(
 
 channelRouter.post(
   ':serverId/channels/:channelId/messages',
-  Api.Validate(SendMessageInChannelApi.Request.Schema),
+  Validate(SendMessageInChannelApi.Request.Schema),
   async (
     req: Request<
       SendMessageInChannelApi.Request.Params,
       SendMessageInChannelApi.Response,
       SendMessageInChannelApi.Request.Body
     >,
-    res: Response<SendMessageInChannelApi.Response | ApiErrors.InternalServerError>
+    res: Response<SendMessageInChannelApi.Response | InternalServerError>
   ) => {
     try {
       await channelController.sendMessage(
@@ -77,7 +76,7 @@ channelRouter.post(
         const response = new SendMessageInChannelApi.Errors.ServerNotFound()
         response.send(res)
       } else {
-        const response = new ApiErrors.InternalServerError(e)
+        const response = new InternalServerError(e)
         response.send(res)
       }
     }

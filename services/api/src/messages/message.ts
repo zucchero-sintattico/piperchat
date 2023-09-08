@@ -2,7 +2,7 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
 
-export namespace GetDirectMessages {
+export namespace GetDirectMessagesApi {
   export namespace Request {
     export type Params = {
       username: string
@@ -49,7 +49,7 @@ export namespace GetDirectMessages {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace SendDirectMessage {
+export namespace SendDirectMessageApi {
   export namespace Request {
     export type Params = {
       username: string
