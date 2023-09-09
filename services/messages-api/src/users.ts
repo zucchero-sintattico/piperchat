@@ -1,46 +1,71 @@
-import { EventMessage } from './event-message'
+export class UserCreatedMessage {
+  static exchange = 'user'
+  static routingKey = 'user.created'
 
-interface UserInfo {
   username: string
   email: string
-  description: string
-  profilePicture: Buffer
-  createdAt: Date
+  description?: string
+  profilePicture?: Buffer
+  constructor(data: {
+    username: string
+    email: string
+    description?: string
+    profilePicture?: Buffer
+  }) {
+    this.username = data.username
+    this.email = data.email
+    this.description = data.description
+    this.profilePicture = data.profilePicture
+  }
 }
 
-export class UserCreatedMessage implements EventMessage {
-  exchange = 'user'
-  routingKey = 'user.created'
-  constructor(public data: UserInfo) {}
-}
+export class UserUpdatedMessage {
+  static exchange = 'user'
+  static routingKey = 'user.updated'
 
-interface UserUpdatedInfo {
   username: string
   email?: string
   description?: string
   profilePicture?: Buffer
+  constructor(data: {
+    username: string
+    email?: string
+    description?: string
+    profilePicture?: Buffer
+  }) {
+    this.username = data.username
+    this.email = data.email
+    this.description = data.description
+    this.profilePicture = data.profilePicture
+  }
 }
 
-export class UserUpdatedMessage implements EventMessage {
-  exchange = 'user'
-  routingKey = 'user.updated'
-  constructor(public data: UserUpdatedInfo) {}
+export class UserDeletedMessage {
+  static exchange = 'user'
+  static routingKey = 'user.deleted'
+
+  username: string
+  constructor(data: { username: string }) {
+    this.username = data.username
+  }
 }
 
-export class UserDeletedMessage implements EventMessage {
-  exchange = 'user'
-  routingKey = 'user.deleted'
-  constructor(public data: { username: string }) {}
+export class UserLoggedInMessage {
+  static exchange = 'user'
+  static routingKey = 'user.logged.in'
+
+  username: string
+  constructor(data: { username: string }) {
+    this.username = data.username
+  }
 }
 
-export class UserLoggedInMessage implements EventMessage {
-  exchange = 'user'
-  routingKey = 'user.logged.in'
-  constructor(public data: { username: string }) {}
-}
+export class UserLoggedOutMessage {
+  static exchange = 'user'
+  static routingKey = 'user.logged.out'
 
-export class UserLoggedOutMessage implements EventMessage {
-  exchange = 'user'
-  routingKey = 'user.logged.out'
-  constructor(public data: { username: string }) {}
+  username: string
+  constructor(data: { username: string }) {
+    this.username = data.username
+  }
 }

@@ -1,9 +1,5 @@
 import { User } from '@/models/user-model'
 
-export type UserStatusInfo = {
-  online: boolean
-  lastActive: Date
-}
 export interface UserController {
   /**
    * Get a user.
@@ -12,14 +8,6 @@ export interface UserController {
    * @throws {UserNotFound} If the user is not found.
    */
   getUser(username: string): Promise<User>
-
-  /**
-   * Get the status of a user.
-   * @param username The username of the user.
-   * @returns The status of the user.
-   * @throws {UserNotFound} If the user is not found.
-   */
-  getUserStatus(username: string): Promise<UserStatusInfo>
 
   /**
    * Get the photo of a user.

@@ -1,10 +1,12 @@
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
 import mongoose from 'mongoose'
-import { ServiceEvents } from '@events/events'
+import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
 import {
   UserStatusRepository,
   UserStatusRepositoryImpl,
 } from '@repositories/user-status-repository'
+import { NotificationsServiceEventsConfiguration } from '@/events-configuration'
 
 let userStatusRepository: UserStatusRepository
 const amqpUri = process.env.AMQP_URI || 'amqp://localhost'
@@ -18,7 +20,8 @@ beforeAll(async () => {
   await RabbitMQ.initialize(amqpUri)
 
   // Initialize service events listeners
-  await ServiceEvents.initialize()
+  const eventsConfig = new NotificationsServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 
   // Initialize repositories
   userStatusRepository = new UserStatusRepositoryImpl()

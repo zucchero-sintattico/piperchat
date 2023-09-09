@@ -6,6 +6,5 @@
     "outDir": "./dist",
     "composite": true
   },
-  "include": ["./src/**/*"],
-  "references": [{ "path": "../messages-api" }]
+  "include": ["./src/**/*"]
 }

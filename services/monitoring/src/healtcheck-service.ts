@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { MonitoringRepository } from './repositories/monitoring-repository'
 import { MonitoringRepositoryImpl } from './repositories/monitoring-repository-impl'
+import http from 'http'
 
 export class HealthCheckService {
   private monitoringRepository: MonitoringRepository = new MonitoringRepositoryImpl()
@@ -18,10 +19,10 @@ export class HealthCheckService {
     setInterval(async () => {
       this.microservices.forEach(async (microservice) => {
         try {
-          let path = microservice + '/health'
+          const path = microservice + '/health'
           console.log(`Checking ${path}`)
           await axios.get(path, {
-            httpAgent: new (require('http').Agent)({ keepAlive: false }),
+            httpAgent: new http.Agent({ keepAlive: false }),
           })
           await this.monitoringRepository.changeServiceStatus(microservice, 'online')
           console.log(`${microservice} is online`)

@@ -7,15 +7,18 @@ import {
 } from '@controllers/auth/auth-controller'
 import bcrypt from 'bcrypt'
 import {
-  RabbitMQ,
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@piperchat/commons'
-import { UserCreatedMessage, UserLoggedInMessage } from '@messages-api/users'
+} from '@piperchat/commons/src/jwt'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import {
+  UserCreatedMessage,
+  UserLoggedInMessage,
+  UserLoggedOutMessage,
+} from '@piperchat/messages-api/src/users'
 
 export class AuthControllerImpl implements AuthController {
-  private broker: RabbitMQ = RabbitMQ.getInstance()
   private userRepository: UserRepository = new UserRepositoryImpl()
 
   async register(
@@ -31,13 +34,13 @@ export class AuthControllerImpl implements AuthController {
       .catch(() => {
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
-    await this.broker.publish(
+    await RabbitMQ.getInstance().publish(
+      UserCreatedMessage,
       new UserCreatedMessage({
         username: user.username,
         email: user.email,
         description: user.description,
         profilePicture: user.profilePicture,
-        createdAt: user.createdAt,
       })
     )
     return user
@@ -58,7 +61,8 @@ export class AuthControllerImpl implements AuthController {
 
     await this.userRepository.login(user.username, refreshToken)
 
-    await this.broker.publish(
+    await RabbitMQ.getInstance().publish(
+      UserLoggedInMessage,
       new UserLoggedInMessage({
         username: user.username,
       })
@@ -88,8 +92,9 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
-    await this.broker.publish(
-      new UserLoggedInMessage({
+    await RabbitMQ.getInstance().publish(
+      UserLoggedOutMessage,
+      new UserLoggedOutMessage({
         username: username,
       })
     )

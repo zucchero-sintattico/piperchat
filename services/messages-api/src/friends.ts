@@ -1,19 +1,35 @@
-import { EventMessage } from './event-message'
+export class FriendRequestSentMessage {
+  static exchange = 'friend'
+  static routingKey = 'friend.request.sent'
 
-export class FriendRequestSentMessage implements EventMessage {
-  exchange = 'friend'
-  routingKey = 'friend.request.sent'
-  constructor(public data: { from: string; to: string }) {}
+  from: string
+  to: string
+  constructor(data: { from: string; to: string }) {
+    this.from = data.from
+    this.to = data.to
+  }
 }
 
-export class FriendRequestAcceptedMessage implements EventMessage {
-  exchange = 'friend'
-  routingKey = 'friend.request.accepted'
-  constructor(public data: { from: string; to: string }) {}
+export class FriendRequestAcceptedMessage {
+  static exchange = 'friend'
+  static routingKey = 'friend.request.accepted'
+
+  from: string
+  to: string
+  constructor(data: { from: string; to: string }) {
+    this.from = data.from
+    this.to = data.to
+  }
 }
 
-export class FriendRequestDeniedMessage implements EventMessage {
-  exchange = 'friend'
-  routingKey = 'friend.request.denied'
-  constructor(public data: { from: string; to: string }) {}
+export class FriendRequestDeniedMessage {
+  static exchange = 'friend'
+  static routingKey = 'friend.request.denied'
+
+  from: string
+  to: string
+  constructor(data: { from: string; to: string }) {
+    this.from = data.from
+    this.to = data.to
+  }
 }

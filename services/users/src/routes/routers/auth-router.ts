@@ -8,12 +8,17 @@ import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
 import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
-} from '@piperchat/commons'
+} from '@piperchat/commons/src/jwt'
 
 // Import specific interfaces from the API
-import { Validate } from '@api/validate'
-import { InternalServerError } from '@api/errors'
-import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
+import { Validate } from '@piperchat/api/src/validate'
+import { InternalServerError } from '@piperchat/api/src/errors'
+import {
+  LoginApi,
+  RegisterApi,
+  LogoutApi,
+  RefreshTokenApi,
+} from '@piperchat/api/src/users/auth'
 
 const authController: AuthController = new AuthControllerImpl()
 
@@ -47,6 +52,7 @@ authRouter.post(
         const response = new RegisterApi.Errors.UserAlreadyExists()
         response.send(res)
       } else {
+        console.log(e)
         const response = new InternalServerError(e)
         response.send(res)
       }

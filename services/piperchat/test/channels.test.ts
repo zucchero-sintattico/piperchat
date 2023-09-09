@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
-import { ServiceEvents } from '@events/events'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
 import {
   ChannelController,
   ChannelControllerExceptions,
@@ -12,6 +13,7 @@ import {
   ServerControllerExceptions,
 } from '@controllers/server/server-controller'
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
+import { PiperchatServiceEventsConfiguration } from '@/events-configuration'
 
 let serverController: ServerController
 let channelController: ChannelController
@@ -19,7 +21,8 @@ let channelController: ChannelController
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017/')
   await RabbitMQ.initialize('amqp://localhost:5672')
-  await ServiceEvents.initialize()
+  const eventsConfig = new PiperchatServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 })
 
 beforeEach(async () => {

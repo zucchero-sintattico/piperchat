@@ -1,4 +1,4 @@
-import { BasicEventsRepository } from '@piperchat/commons'
+import { BasicEventsRepository } from '@piperchat/commons/src/basic-events-repository'
 import { MessageEventsRepository } from './message-events-repository'
 
 export class MessageEventsRepositoryImpl
