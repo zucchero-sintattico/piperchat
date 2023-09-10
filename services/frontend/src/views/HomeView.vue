@@ -14,6 +14,10 @@ function logout() {
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+function toggleLeftOpen() {
+  leftDrawerOpen.value = true
+}
 </script>
 
 <template>
@@ -31,9 +35,8 @@ function toggleLeftDrawer() {
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab label="Friends" />
-        <q-route-tab label="All" />
-        <q-route-tab label="Pending" />
+        <q-route-tab label="Friends" @click="toggleLeftOpen" />
+        <q-route-tab label="Pending" @click="toggleLeftOpen" />
       </q-tabs>
     </q-header>
 
