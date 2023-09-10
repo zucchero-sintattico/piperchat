@@ -17,11 +17,7 @@ function toggleLeftDrawer() {
 </script>
 
 <template>
-  <q-layout view="hHh lpR lFf">
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="bg-dark">
-      <!-- drawer content -->
-    </q-drawer>
-
+  <q-layout view="hHh lpR lFf" class="bg-accent">
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
