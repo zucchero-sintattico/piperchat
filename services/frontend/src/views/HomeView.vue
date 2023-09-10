@@ -37,7 +37,7 @@ function toggleLeftOpen() {
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab label="Directs" @click="toggleLeftOpen" />
+        <q-route-tab label="Pending" @click="toggleLeftOpen" />
         <q-route-tab label="Friends" @click="toggleLeftOpen" />
         <q-route-tab label="Pending" @click="toggleLeftOpen" />
       </q-tabs>
@@ -45,8 +45,12 @@ function toggleLeftOpen() {
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="row">
+
         <ServerList />
+
+
         <DirectsList />
+
       </div>
     </q-drawer>
 
