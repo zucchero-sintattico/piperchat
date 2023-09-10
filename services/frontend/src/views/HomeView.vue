@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
+import ServerList from '../components/home-component/ServerList.vue'
+import DirectsList from '../components/home-component/DirectsList.vue'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
@@ -35,6 +37,7 @@ function toggleLeftOpen() {
       </q-toolbar>
 
       <q-tabs align="left">
+        <q-route-tab label="Directs" @click="toggleLeftOpen" />
         <q-route-tab label="Friends" @click="toggleLeftOpen" />
         <q-route-tab label="Pending" @click="toggleLeftOpen" />
       </q-tabs>
@@ -42,9 +45,8 @@ function toggleLeftOpen() {
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="row">
-        <div class="col-4 bg-dark"></div>
-
-        <div class="col-8 bg-secondary"></div>
+        <ServerList />
+        <DirectsList />
       </div>
     </q-drawer>
 
