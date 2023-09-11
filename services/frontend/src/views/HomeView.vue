@@ -1,9 +1,9 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import ServerList from '../components/home-component/ServerList.vue'
-import DirectsList from '../components/home-component/DirectsList.vue'
+import ConversationBar from '@/components/home-component/ConversationBar.vue'
+import ContentArea from '@/components/home-component/ContentArea.vue'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
@@ -42,15 +42,13 @@ function toggleLeftOpen() {
       </q-tabs>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <div class="row no-wrap left-menu bg-dark">
-        <ServerList />
-        <DirectsList />
-      </div>
-    </q-drawer>
+    <!-- pass leftDrawopen as props -->
+    <ConversationBar show-if-above v-model="leftDrawerOpen" side="left" bordered />
 
-    <q-page-container>
-      <router-view />
+    <!--Use the rest part of the page to show ContentArea component-->
+    <q-page-container class="full-height">
+      <ContentArea />
+      <!-- <router-view /> -->
     </q-page-container>
   </q-layout>
 </template>
