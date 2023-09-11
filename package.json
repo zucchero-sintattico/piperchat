@@ -49,9 +49,11 @@
     "typescript": "<5.2.0"
   },
   "workspaces": [
+    "services/api",
     "services/commons",
     "services/frontend",
     "services/messages",
+    "services/messages-api",
     "services/monitoring",
     "services/notifications",
     "services/piperchat",

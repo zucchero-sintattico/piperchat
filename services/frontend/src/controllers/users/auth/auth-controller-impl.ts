@@ -1,6 +1,6 @@
 import type { AuthController } from './auth-controller'
 import { RegisterApi, LoginApi, LogoutApi, RefreshTokenApi } from '@piperchat/api/src/users/auth'
-import { AxiosController } from '../axios-controller'
+import { AxiosController } from '../../axios-controller'
 
 export class AuthControllerImpl extends AxiosController implements AuthController {
   async register(request: RegisterApi.Request.Type): Promise<RegisterApi.Response> {
