@@ -1,19 +1,22 @@
 import mongoose from 'mongoose'
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
-import { ServiceEvents } from '@events/events'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import {
   ServerController,
   ServerControllerExceptions,
 } from '@controllers/server/server-controller'
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
 import { Servers } from '@models/server-model'
+import { PiperchatServiceEventsConfiguration } from '@/events-configuration'
+import { ServiceEvents } from '@commons/events/service-events'
 
 let controller: ServerController
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017/')
   await RabbitMQ.initialize('amqp://localhost')
-  await ServiceEvents.initialize()
+  const eventsConfig = new PiperchatServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 })
 
 beforeEach(async () => {

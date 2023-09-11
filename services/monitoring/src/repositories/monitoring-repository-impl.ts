@@ -3,17 +3,13 @@ import {
   EventLogEntity,
   ServiceStatus,
   ServiceStatusEntity,
-} from '../models/monitoring-model'
-import { MonitoringRepository } from './monitoring-repository'
+} from '@models/monitoring-model'
+import { MonitoringRepository, Event } from './monitoring-repository'
 
 export class MonitoringRepositoryImpl implements MonitoringRepository {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async log(event: any): Promise<void> {
-    await EventLogEntity.create({
-      topic: event.topic,
-      event: event.event,
-      payload: event.payload,
-    })
+  async log(event: Event): Promise<void> {
+    await EventLogEntity.create(event)
   }
 
   async getLogsOfTopic(topic: string): Promise<EventLog[]> {

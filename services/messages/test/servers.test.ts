@@ -1,17 +1,25 @@
 import mongoose from 'mongoose'
-import { MongooseUtils } from '@piperchat/commons'
 import { Servers } from '@models/messages-model'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
+import { MessagesServiceEventsConfiguration } from '@/events-configuration'
+import { ServiceEvents } from '@commons/events/service-events'
 
 const serverRepository: ServerRepository = new ServerRepositoryImpl()
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
+  await RabbitMQ.initialize('amqp://localhost')
+
+  const eventsConfig = new MessagesServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 })
 
 afterAll(async () => {
   await MongooseUtils.close(mongoose)
+  await RabbitMQ.disconnect()
 })
 
 afterEach(async () => {

@@ -1,5 +1,5 @@
-import { Empty, Response } from '@/response'
-import { RequestSchema } from '@/schema'
+import { Empty, Response } from '@api/response'
+import { RequestSchema } from '@api/schema'
 
 /* eslint-disable @typescript-eslint/no-namespace */
 export namespace GetServicesStatusApi {

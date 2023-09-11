@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { JWTAuthenticationMiddleware } from '@commons/jwt'
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
 
 // Import specific interfaces from the API
-import { InternalServerError } from '@api/errors'
+import { InternalServerError } from '@api//errors'
 import { Validate } from '@api/validate'
 import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
 

@@ -7,8 +7,6 @@ export interface User {
   description: string
   profilePicture: Buffer
   createdAt: Date
-  online: boolean
-  lastActive: Date
   refreshToken: string
   friends: string[]
   friendsRequests: string[]
@@ -43,14 +41,6 @@ export const UserSchema = new Schema({
     type: Date,
     default: Date.now,
     required: true,
-  },
-  online: {
-    type: Boolean,
-    default: false,
-  },
-  lastActive: {
-    type: Date,
-    default: Date.now,
   },
   refreshToken: {
     type: String,

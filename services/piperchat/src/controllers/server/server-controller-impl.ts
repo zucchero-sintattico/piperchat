@@ -1,24 +1,36 @@
 import { Server } from '@models/server-model'
 import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
-import { ServerEventsRepository } from '@/events/repositories/server/server-events-repository'
-import { ServerEventsRepositoryImpl } from '@/events/repositories/server/server-events-repository-impl'
 import { Checker } from '../checker'
 import { ServerController, ServerControllerExceptions } from './server-controller'
+import { RabbitMQ } from '@commons/rabbit-mq'
+
+import {
+  ServerCreated,
+  ServerUpdated,
+  ServerDeleted,
+  UserJoinedServer,
+  UserLeftServer,
+  UserKickedFromServer,
+} from '@messages-api/servers'
 
 export class ServerControllerImpl implements ServerController {
   private serverRepository: ServerRepository = new ServerRepositoryImpl()
-  private serverEventRepository: ServerEventsRepository = new ServerEventsRepositoryImpl()
   private checker = new Checker()
 
   async createServer(name: string, description: string, owner: string): Promise<Server> {
     const server = await this.serverRepository.createServer(name, description, owner)
-    await this.serverEventRepository.publishServerCreated({
-      _id: server._id,
-      name: server.name,
-      description: server.description,
-      owner: server.owner,
-    })
+
+    await RabbitMQ.getInstance().publish(
+      ServerCreated,
+      new ServerCreated({
+        id: server._id.toString(),
+        name: server.name,
+        description: server.description,
+        owner: server.owner,
+      })
+    )
+
     return server
   }
   async getServers(username: string): Promise<Server[]> {
@@ -50,11 +62,14 @@ export class ServerControllerImpl implements ServerController {
         name,
         description
       )
-      await this.serverEventRepository.publishServerUpdated({
-        serverId: serverUpdated._id,
-        name: serverUpdated.name,
-        description: serverUpdated.description,
-      })
+      await RabbitMQ.getInstance().publish(
+        ServerUpdated,
+        new ServerUpdated({
+          id: serverUpdated._id.toString(),
+          name: serverUpdated.name,
+          description: serverUpdated.description,
+        })
+      )
       return serverUpdated
     } catch (e) {
       throw new ServerControllerExceptions.ServerNotFound()
@@ -66,9 +81,12 @@ export class ServerControllerImpl implements ServerController {
     this.checker.checkIfUserIsTheOwner(server, username)
     try {
       await this.serverRepository.deleteServerById(id)
-      await this.serverEventRepository.publishServerDeleted({
-        serverId: server._id,
-      })
+      await RabbitMQ.getInstance().publish(
+        ServerDeleted,
+        new ServerDeleted({
+          id: id,
+        })
+      )
     } catch (e) {
       throw new ServerControllerExceptions.ServerNotFound()
     }
@@ -88,10 +106,13 @@ export class ServerControllerImpl implements ServerController {
       server._id,
       username
     )
-    await this.serverEventRepository.publishUserJoined({
-      serverId: serverUpdated._id,
-      username: username,
-    })
+    await RabbitMQ.getInstance().publish(
+      UserJoinedServer,
+      new UserJoinedServer({
+        serverId: serverUpdated._id.toString(),
+        username: username,
+      })
+    )
     return serverUpdated
   }
   async leaveServer(id: string, username: string): Promise<Server> {
@@ -105,10 +126,13 @@ export class ServerControllerImpl implements ServerController {
         id,
         username
       )
-      await this.serverEventRepository.publishUserLeft({
-        serverId: serverUpdated._id,
-        username: username,
-      })
+      await RabbitMQ.getInstance().publish(
+        UserLeftServer,
+        new UserLeftServer({
+          serverId: serverUpdated._id.toString(),
+          username: username,
+        })
+      )
       return serverUpdated
     } catch (e) {
       throw new ServerControllerExceptions.UserNotFound()
@@ -130,10 +154,13 @@ export class ServerControllerImpl implements ServerController {
         id,
         username
       )
-      await this.serverEventRepository.publishUserKicked({
-        serverId: serverUpdated._id,
-        username: username,
-      })
+      await RabbitMQ.getInstance().publish(
+        UserKickedFromServer,
+        new UserKickedFromServer({
+          serverId: serverUpdated._id.toString(),
+          username: username,
+        })
+      )
       return serverUpdated
     } catch (e) {
       throw new ServerControllerExceptions.UserNotFound()

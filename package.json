@@ -16,8 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@piperchat/commons": "^1.0.0",
     "@piperchat/api": "^1.0.0",
+    "@piperchat/commons": "^1.0.0",
     "@piperchat/messages-api": "^1.0.0",
     "amqplib": "^0.10.3",
     "axios": "^1.5.0",
@@ -49,9 +49,11 @@
     "typescript": "<5.2.0"
   },
   "workspaces": [
+    "services/api",
     "services/commons",
     "services/frontend",
     "services/messages",
+    "services/messages-api",
     "services/monitoring",
     "services/notifications",
     "services/piperchat",

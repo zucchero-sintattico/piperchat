@@ -2,10 +2,12 @@ import mongoose from 'mongoose'
 import { ChannelControllerImpl } from '@controllers/channel/channel-controller-impl'
 import { ChannelControllerExceptions } from '@controllers/channel/channel-controller'
 import { Servers } from '@models/messages-model'
-import { ServiceEvents } from '@events/events'
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
+import { ServiceEvents } from '@commons/events/service-events'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
+import { MessagesServiceEventsConfiguration } from '@/events-configuration'
 
 const channelController = new ChannelControllerImpl()
 const serverRepository: ServerRepository = new ServerRepositoryImpl()
@@ -13,7 +15,8 @@ const serverRepository: ServerRepository = new ServerRepositoryImpl()
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
   await RabbitMQ.initialize('amqp://localhost:5672')
-  await ServiceEvents.initialize()
+  const eventsConfig = new MessagesServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 })
 
 afterAll(async () => {

@@ -2,13 +2,11 @@
   "name": "@piperchat/piperchat",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/app.js",
+  "main": "./src/app.ts",
   "scripts": {
-    "build": "tsc --build -v && tsc-alias",
-    "start": "node .",
-    "start:build": "npm run build && npm run start",
+    "start": "ts-node --transpile-only -r tsconfig-paths/register .",
     "dev": "ts-node-dev --respawn -r tsconfig-paths/register src/app.ts",
-    "test": "jest --verbose --testTimeout=5000 --detectOpenHandles",
+    "test": "jest --verbose --testTimeout=5000 --detectOpenHandles --passWithNoTests",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --ext .ts . --fix"
   },

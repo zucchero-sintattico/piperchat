@@ -2,7 +2,6 @@ import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
 import cookieParser from 'cookie-parser'
-import cors from 'cors'
 import { HealthCheckService } from './healtcheck-service'
 
 export class MonitoringServer {

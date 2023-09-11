@@ -1,8 +1,7 @@
 import { Channel } from 'amqplib'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
 import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
-import { RabbitMQ } from '@piperchat/commons'
-import { set } from 'mongoose'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
 /**
  * Service events
@@ -56,7 +55,7 @@ export class ServiceEvents {
 
   private static async subscribeToExchange(
     exchange: string,
-    callback: (event: string, data: any) => void
+    callback: (event: string, data: unknown) => void
   ) {
     const channel = this.broker.getChannel()
     const queue = await channel?.assertQueue('', {
@@ -75,10 +74,5 @@ export class ServiceEvents {
       const data = JSON.parse(content)
       callback(message.fields.routingKey, data)
     })
-  }
-  private static async setUpHealtCheckListener() {
-    for (const exchange of this.exchanges) {
-      await this.subscribeToExchange(exchange + '-health', async (event, data) => {})
-    }
   }
 }

@@ -5,10 +5,7 @@ import {
   AuthControllerExceptions,
 } from '@controllers/auth/auth-controller'
 import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
-import {
-  JWTAuthenticationMiddleware,
-  JWTRefreshTokenMiddleware,
-} from '@piperchat/commons'
+import { JWTAuthenticationMiddleware, JWTRefreshTokenMiddleware } from '@commons/jwt'
 
 // Import specific interfaces from the API
 import { Validate } from '@api/validate'
@@ -40,13 +37,19 @@ authRouter.post(
         req.body.description ?? '',
         req.body.photo ?? null
       )
-      const response = new RegisterApi.Responses.Success(user)
+      const response = new RegisterApi.Responses.Success({
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        photo: user.profilePicture,
+      })
       return response.send(res)
     } catch (e) {
       if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
         const response = new RegisterApi.Errors.UserAlreadyExists()
         response.send(res)
       } else {
+        console.log(e)
         const response = new InternalServerError(e)
         response.send(res)
       }

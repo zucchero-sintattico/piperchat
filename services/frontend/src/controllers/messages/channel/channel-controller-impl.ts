@@ -1,5 +1,5 @@
-import axios from 'axios'
 import type { ChannelController } from './channel-controller'
+
 export class ChannelControllerImpl implements ChannelController {
   async getChannels(serverId: string): Promise<MessageChannel[]> {
     throw new Error('Method not implemented.')

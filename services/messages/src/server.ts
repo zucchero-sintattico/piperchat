@@ -1,7 +1,7 @@
 import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
-import { healthCheckRouter } from '@piperchat/commons'
+import { healthCheckRouter } from '@commons/healthcheck-router'
 import cookieParser from 'cookie-parser'
 
 export class MessagesServer {

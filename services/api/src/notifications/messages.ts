@@ -1,13 +1,9 @@
 export class NewMessage {
   type = 'new-message' as const
-  data: {
-    from: string
-    content: string
-  }
-  constructor(from: string, content: string) {
-    this.data = {
-      from,
-      content,
-    }
+  from: string
+  content: string
+  constructor(data: { from: string; content: string }) {
+    this.from = data.from
+    this.content = data.content
   }
 }

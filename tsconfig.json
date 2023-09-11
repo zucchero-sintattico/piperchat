@@ -18,12 +18,11 @@
     "paths": {
       "@/*": ["src/*"],
       "@controllers/*": ["src/controllers/*"],
-      "@events/*": ["src/events/*"],
       "@models/*": ["src/models/*"],
       "@repositories/*": ["src/repositories/*"],
       "@routes/*": ["src/routes/*"],
-      "@api/*": ["../api/src/*"],
       "@commons/*": ["../commons/src/*"],
+      "@api/*": ["../api/src/*"],
       "@messages-api/*": ["../messages-api/src/*"]
     }
   }

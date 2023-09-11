@@ -1,18 +1,16 @@
 import amqp from 'amqplib'
 
 export class RabbitMQ {
-  static instance: RabbitMQ
+  static instance: RabbitMQ | undefined
 
   private connectionUri: string
   private connection: amqp.Connection | undefined
   private channel: amqp.Channel | undefined
 
   static async initialize(connectionUri: string) {
-    console.log('Initializing RabbitMQ')
     if (!RabbitMQ.instance) {
-      console.log('RabbitMQ not initialized')
+      console.log('Initializing RabbitMQ')
       RabbitMQ.instance = new RabbitMQ(connectionUri)
-      console.log('RabbitMQ instance created, connection uri: ' + connectionUri)
       await RabbitMQ.instance.connect()
     }
   }
@@ -25,6 +23,7 @@ export class RabbitMQ {
 
   static getInstance() {
     if (!RabbitMQ.instance) {
+      console.log(RabbitMQ.instance)
       throw new Error('RabbitMQ not initialized')
     }
     return RabbitMQ.instance
@@ -41,6 +40,19 @@ export class RabbitMQ {
     } catch (err) {
       console.error(err)
     }
+  }
+
+  async publish<T extends object>(
+    EventType: { exchange: string; routingKey: string },
+    message: T
+  ) {
+    const channel = this.getChannel()
+    await channel?.assertExchange(EventType.exchange, 'fanout', { durable: true })
+    channel?.publish(
+      EventType.exchange,
+      EventType.routingKey,
+      Buffer.from(JSON.stringify(message))
+    )
   }
 
   getChannel() {

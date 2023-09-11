@@ -1,15 +1,13 @@
 import { ChannelController, ChannelControllerExceptions } from './channel-controller'
 import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
-import { ChannelEventsRepository } from '@/events/repositories/channel/channel-events-repository'
-import { ChannelEventsRepositoryImpl } from '@/events/repositories/channel/channel-events-repository-impl'
 import { Checker } from '@controllers/checker'
 import { Channel } from '@/models/channel-model'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
+import { ChannelCreated, ChannelDeleted, ChannelUpdated } from '@messages-api/channels'
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
-  private channelEventRepository: ChannelEventsRepository =
-    new ChannelEventsRepositoryImpl()
   private checker = new Checker()
 
   async getChannels(serverId: string, username: string) {
@@ -44,13 +42,16 @@ export class ChannelControllerImpl implements ChannelController {
       channelType,
       description
     )
-    await this.channelEventRepository.publishChannelCreated({
-      serverId: serverId.toString(),
-      channelId: channel._id.toString(),
-      name: channel.name,
-      channelType: channel.channelType,
-      description: channel.description,
-    })
+    await RabbitMQ.getInstance().publish(
+      ChannelCreated,
+      new ChannelCreated({
+        serverId: serverId.toString(),
+        channelId: channel._id.toString(),
+        name: channel.name,
+        channelType: channel.channelType,
+        description: channel.description,
+      })
+    )
     return channel
   }
 
@@ -73,13 +74,15 @@ export class ChannelControllerImpl implements ChannelController {
         name,
         description
       )
-      await this.channelEventRepository.publishChannelUpdated({
-        serverId: serverId.toString(),
-        channelId: channelUpdated._id.toString(),
-        name: channelUpdated.name,
-        channelType: channelUpdated.channelType,
-        description: channelUpdated.description,
-      })
+      await RabbitMQ.getInstance().publish(
+        ChannelUpdated,
+        new ChannelUpdated({
+          serverId: serverId.toString(),
+          channelId: channelId.toString(),
+          name: name,
+          description: description,
+        })
+      )
       return channelUpdated
     } catch (e) {
       throw new ChannelControllerExceptions.ChannelNotFound()
@@ -91,10 +94,13 @@ export class ChannelControllerImpl implements ChannelController {
     this.checker.checkIfUserIsTheOwner(server, username)
     try {
       await this.channelRepository.deleteChannel(serverId, channelId)
-      await this.channelEventRepository.publishChannelDeleted({
-        serverId: serverId.toString(),
-        channelId: channelId.toString(),
-      })
+      await RabbitMQ.getInstance().publish(
+        ChannelDeleted,
+        new ChannelDeleted({
+          serverId: serverId.toString(),
+          channelId: channelId.toString(),
+        })
+      )
     } catch (e) {
       throw new ChannelControllerExceptions.ChannelNotFound()
     }

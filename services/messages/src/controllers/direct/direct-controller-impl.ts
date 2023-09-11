@@ -3,13 +3,10 @@ import { DirectController } from './direct-controller'
 import { DirectRepository } from '@repositories/direct/direct-repository'
 import { Message } from '@models/messages-model'
 import { DirectRepositoryImpl } from '@repositories/direct/direct-repository-impl'
-import { MessageEventsRepository } from '@events/repositories/message-events-repository'
-import { MessageEventsRepositoryImpl } from '@/events/repositories/message-events-repository-impl'
-
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { NewMessageOnDirect } from '@messages-api/directs'
 export class DirectControllerImpl implements DirectController {
   private directRepository: DirectRepository = new DirectRepositoryImpl()
-  private messageEventRepository: MessageEventsRepository =
-    new MessageEventsRepositoryImpl()
 
   async getDirectMessagesPaginated(
     username1: string,
@@ -31,10 +28,14 @@ export class DirectControllerImpl implements DirectController {
     message: string
   ): Promise<void> {
     await this.directRepository.sendDirectMessage(username1, username2, message)
-    this.messageEventRepository.publishNewMessageOnDirect({
-      sender: username1,
-      receiver: username2,
-      message: message,
-    })
+
+    await RabbitMQ.getInstance().publish(
+      NewMessageOnDirect,
+      new NewMessageOnDirect({
+        sender: username1,
+        receiver: username2,
+        message: message,
+      })
+    )
   }
 }
