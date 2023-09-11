@@ -45,12 +45,9 @@ function toggleLeftOpen() {
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="row">
-
         <ServerList />
 
-
         <DirectsList />
-
       </div>
     </q-drawer>
 
