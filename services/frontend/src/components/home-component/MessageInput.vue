@@ -10,15 +10,22 @@ function sendMessage() {
 </script>
 
 <template>
-  <div class="row justify-center foot">
-    <q-input
-      class="col-11 text"
-      outlined
-      placeholder="Type a message..."
-      v-model="message"
-      @keyup.enter="sendMessage"
-    ></q-input>
-    <q-btn class="col-1 btnn" color="primary" dense flat icon="send" @click="sendMessage" />
+  <div class=" justify-center foot">
+    <q-input filled class="full-width full-height" v-model="message" label="Write...">
+      <template v-slot:before>
+        <q-avatar>
+          <img src="https://cdn.quasar.dev/img/avatar.png" />
+        </q-avatar>
+      </template>
+
+      <template v-slot:hint>
+        <q-icon v-if="message !== ''" name="close" @click="sendMessage" />
+      </template>
+
+      <template v-slot:after>
+        <q-btn round dense flat icon="send" color="primary" />
+      </template>
+    </q-input>
   </div>
 </template>
 
@@ -26,9 +33,10 @@ function sendMessage() {
 .foot {
   position: sticky;
   bottom: 0;
+  background-color: lightgray;
 }
 
-.text {
+.textfield {
   background-color: white;
 }
 
