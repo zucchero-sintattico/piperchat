@@ -21,9 +21,9 @@
         </div>
       </div>
     </q-scroll-area>
-    <div class="row justify-center" style="bottom: sticky;">
+    <div class="row justify-center" style="bottom: sticky">
       <q-input
-        style="width: 90%;"
+        style="width: 90%"
         outlined
         placeholder="Type a message..."
         v-model="message"
@@ -34,6 +34,4 @@
   </div>
 </template>
 
-<style>
-
-</style>
+<style></style>
