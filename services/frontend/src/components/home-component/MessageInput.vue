@@ -9,7 +9,7 @@ function sendMessage() {
 }
 
 function deleteMessage() {
-    message.value = ""
+  message.value = ''
 }
 </script>
 
@@ -40,10 +40,8 @@ function deleteMessage() {
 }
 
 /* make its background blurred */
-.textfield{
-    background-color: gainsboro
-
-   
+.textfield {
+  background-color: gainsboro;
 }
 
 .btnn {
