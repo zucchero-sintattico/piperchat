@@ -6,9 +6,9 @@ import { ServerControllerExceptions } from '@controllers/server/server-controlle
 const channelController: ChannelController = new ChannelControllerImpl()
 export const channelRouter = Router()
 
-import { Validate } from '@api/validate'
-import { InternalServerError } from '@api/errors'
-import { GetChannelsApi, CreateChannelApi } from '@api/piperchat/channel'
+import { Validate } from '@piperchat/api/src/validate'
+import { InternalServerError } from '@piperchat/api/src/errors'
+import { GetChannelsApi, CreateChannelApi } from '@piperchat/api/src/piperchat/channel'
 
 channelRouter.get(
   '/',
