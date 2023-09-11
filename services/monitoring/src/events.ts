@@ -1,7 +1,7 @@
 import { Channel } from 'amqplib'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
 import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
 /**
  * Service events

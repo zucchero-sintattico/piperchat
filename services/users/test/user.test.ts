@@ -1,11 +1,11 @@
 import supertest from 'supertest'
 import { UsersServer } from '@/server'
 import { UserApi } from './api/user-api'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import mongoose from 'mongoose'
 import { UserServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { ServiceEvents } from '@commons/events/service-events'
 
 let server: UsersServer
 

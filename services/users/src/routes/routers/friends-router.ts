@@ -4,15 +4,15 @@ import {
   FriendsControllerExceptions,
 } from '@controllers/friends/friends-controller'
 import { FriendsControllerImpl } from '@controllers/friends/friends-controller-impl'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons/src/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/jwt'
 
-import { InternalServerError } from '@piperchat/api/src/errors'
-import { Validate } from '@piperchat/api/src/validate'
+import { InternalServerError } from '@api/errors'
+import { Validate } from '@api/validate'
 import {
   GetFriendsRequestsApi,
   SendFriendRequestApi,
   GetFriendsApi,
-} from '@piperchat/api/src/users/friends'
+} from '@api/users/friends'
 
 const friendsController: FriendsController = new FriendsControllerImpl()
 

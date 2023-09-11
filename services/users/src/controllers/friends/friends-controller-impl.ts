@@ -1,11 +1,11 @@
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 import { FriendsController } from './friends-controller'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
   FriendRequestAcceptedMessage,
   FriendRequestDeniedMessage,
   FriendRequestSentMessage,
-} from '@piperchat/messages-api/src/friends'
+} from '@messages-api/friends'
 export class FriendsControllerImpl implements FriendsController {
   private userRepository = new UserRepositoryImpl()
 

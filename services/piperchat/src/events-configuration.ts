@@ -1,5 +1,5 @@
-import { EventsConfiguration } from '@piperchat/commons/src/events/events-configuration'
-import { UserCreatedMessage, UserDeletedMessage } from '@piperchat/messages-api/src/users'
+import { EventsConfiguration } from '@commons/events/events-configuration'
+import { UserCreatedMessage, UserDeletedMessage } from '@messages-api/users'
 
 export class PiperchatServiceEventsConfiguration extends EventsConfiguration {
   constructor() {

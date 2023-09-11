@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
@@ -37,16 +37,14 @@ function toggleLeftOpen() {
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab label="Pending" @click="toggleLeftOpen" />
         <q-route-tab label="Friends" @click="toggleLeftOpen" />
         <q-route-tab label="Pending" @click="toggleLeftOpen" />
       </q-tabs>
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <div class="row">
+      <div class="row no-wrap left-menu bg-dark">
         <ServerList />
-
         <DirectsList />
       </div>
     </q-drawer>
@@ -58,7 +56,7 @@ function toggleLeftOpen() {
 </template>
 
 <style>
-.row {
+.left-menu {
   height: 100%;
 }
 </style>

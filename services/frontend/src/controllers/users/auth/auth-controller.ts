@@ -1,4 +1,4 @@
-import { RefreshTokenApi, RegisterApi, LoginApi, LogoutApi } from '@piperchat/api/src/users/auth'
+import { RefreshTokenApi, RegisterApi, LoginApi, LogoutApi } from '@api/users/auth'
 
 export interface AuthController {
   /**

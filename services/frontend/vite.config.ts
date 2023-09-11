@@ -14,11 +14,11 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@api': fileURLToPath(new URL('../api/src', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
   cacheDir: '../../node_modules/.vite',
-
   server: {
     proxy: {
       '^(?!/site).*$': {

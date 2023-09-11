@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl'
 import { Directs } from '@models/messages-model'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
+import { ServiceEvents } from '@commons/events/service-events'
 import { MessagesServiceEventsConfiguration } from '@/events-configuration'
 
 const directController = new DirectControllerImpl()

@@ -3,7 +3,7 @@ import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { Checker } from '../checker'
 import { ServerController, ServerControllerExceptions } from './server-controller'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
 import {
   ServerCreated,
@@ -12,7 +12,7 @@ import {
   UserJoinedServer,
   UserLeftServer,
   UserKickedFromServer,
-} from '@piperchat/messages-api/src/servers'
+} from '@messages-api/servers'
 
 export class ServerControllerImpl implements ServerController {
   private serverRepository: ServerRepository = new ServerRepositoryImpl()

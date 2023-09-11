@@ -1,7 +1,7 @@
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import mongoose from 'mongoose'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { ServiceEvents } from '@commons/events/service-events'
 import {
   UserStatusRepository,
   UserStatusRepositoryImpl,

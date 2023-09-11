@@ -5,16 +5,12 @@ import {
   UserControllerExceptions,
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons/src/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/jwt'
 
 // Import specific interfaces from the API
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import {
-  WhoamiApi,
-  GetUserPhotoApi,
-  GetUserDescriptionApi,
-} from '@piperchat/api/src/users/user'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { WhoamiApi, GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/user'
 
 const userController: UserController = new UserControllerImpl()
 
@@ -30,7 +26,10 @@ usersRouter.get(
   ) => {
     try {
       const user = await userController.getUser(req.user.username)
-      const response = new WhoamiApi.Responses.Success(user)
+      const response = new WhoamiApi.Responses.Success({
+        username: user.username,
+        email: user.email,
+      })
       response.send(res)
     } catch (e) {
       const response = new InternalServerError(e)

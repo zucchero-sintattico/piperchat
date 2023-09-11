@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import {
   ServerController,
   ServerControllerExceptions,
@@ -8,7 +8,7 @@ import {
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
 import { Servers } from '@models/server-model'
 import { PiperchatServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { ServiceEvents } from '@commons/events/service-events'
 
 let controller: ServerController
 
