@@ -26,7 +26,10 @@ usersRouter.get(
   ) => {
     try {
       const user = await userController.getUser(req.user.username)
-      const response = new WhoamiApi.Responses.Success(user)
+      const response = new WhoamiApi.Responses.Success({
+        username: user.username,
+        email: user.email,
+      })
       response.send(res)
     } catch (e) {
       const response = new InternalServerError(e)

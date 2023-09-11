@@ -37,7 +37,12 @@ authRouter.post(
         req.body.description ?? '',
         req.body.photo ?? null
       )
-      const response = new RegisterApi.Responses.Success(user)
+      const response = new RegisterApi.Responses.Success({
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        photo: user.profilePicture,
+      })
       return response.send(res)
     } catch (e) {
       if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
