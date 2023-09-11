@@ -7,23 +7,27 @@ function sendMessage() {
   console.log(message.value)
   // TODO
 }
+
+function deleteMessage() {
+    message.value = ""
+}
 </script>
 
 <template>
-  <div class="justify-center foot">
-    <q-input filled class="full-width full-height" v-model="message" label="Write...">
+  <div class="foot">
+    <q-input class="textfield" filled v-model="message" label="Write...">
       <template v-slot:before>
         <q-avatar>
           <img src="https://cdn.quasar.dev/img/avatar.png" />
         </q-avatar>
       </template>
 
-      <template v-slot:hint>
-        <q-icon v-if="message !== ''" name="close" @click="sendMessage" />
+      <template v-slot:append>
+        <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
 
       <template v-slot:after>
-        <q-btn round dense flat icon="send" color="primary" />
+        <q-btn round dense flat icon="send" color="primary" @click="sendMessage" />
       </template>
     </q-input>
   </div>
@@ -33,11 +37,13 @@ function sendMessage() {
 .foot {
   position: sticky;
   bottom: 0;
-  background-color: lightgray;
 }
 
-.textfield {
-  background-color: white;
+/* make its background blurred */
+.textfield{
+    background-color: gainsboro
+
+   
 }
 
 .btnn {
