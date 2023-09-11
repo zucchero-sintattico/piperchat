@@ -1,17 +1,15 @@
 import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
 import { ChannelController, ChannelControllerExceptions } from './channel-controller'
-import { MessageEventsRepository } from '@/events/repositories/message-events-repository'
-import { MessageEventsRepositoryImpl } from '@/events/repositories/message-events-repository-impl'
 import { MessageChannel, Message } from '@models/messages-model'
 import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { NewMessageOnChannel } from '@messages-api/channels'
 
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
   private serverRepository: ServerRepository = new ServerRepositoryImpl()
-  private messageEventRepository: MessageEventsRepository =
-    new MessageEventsRepositoryImpl()
 
   async getChannels(serverId: string): Promise<MessageChannel[]> {
     return await this.channelRepository.getChannels(serverId)
@@ -57,12 +55,16 @@ export class ChannelControllerImpl implements ChannelController {
     await this.checkIfUserIsInTheServer(serverId, sender)
     await this.checkIfChannelExists(channelId, serverId)
     await this.channelRepository.sendMessage(channelId, serverId, sender, message)
-    await this.messageEventRepository.publishNewMessageOnChannel({
-      channelId,
-      serverId,
-      sender,
-      message,
-    })
+
+    await RabbitMQ.getInstance().publish(
+      NewMessageOnChannel,
+      new NewMessageOnChannel({
+        serverId: serverId,
+        channelId: channelId,
+        sender: sender,
+        message: message,
+      })
+    )
   }
 
   async checkIfChannelExists(channelId: string, serverId: string): Promise<boolean> {

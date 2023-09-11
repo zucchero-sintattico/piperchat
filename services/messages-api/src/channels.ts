@@ -56,6 +56,27 @@ export class ChannelDeleted {
   }
 }
 
+export class NewMessageOnChannel {
+  static exchange = 'channel'
+  static routingKey = 'message.new'
+
+  serverId: string
+  channelId: string
+  sender: string
+  message: string
+  constructor(data: {
+    serverId: string
+    channelId: string
+    sender: string
+    message: string
+  }) {
+    this.serverId = data.serverId
+    this.channelId = data.channelId
+    this.sender = data.sender
+    this.message = data.message
+  }
+}
+
 export class UserJoinedMultimediaChannel {
   static exchange = 'multimedia'
   static routingKey = 'user.joined'
