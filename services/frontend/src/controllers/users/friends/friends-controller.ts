@@ -1,41 +1,29 @@
+import { GetFriendsApi, GetFriendsRequestsApi, SendFriendRequestApi } from '@api/users/friends'
 export interface FriendsController {
   /**
    * Get the friends of a user.
    * @returns The friends of the user.
-   * @throws {UserNotFound} If the user is not found.
    */
-  getFriends(): Promise<string[]>
+  getFriends(): Promise<GetFriendsApi.Response>
 
   /**
    * Get friend's requests
    * @returns The friend's requests of the user.
-   * @throws {UserNotFound} If the user is not found.
    */
-  getFriendsRequests(): Promise<string[]>
+  getFriendsRequests(): Promise<GetFriendsRequestsApi.Response>
 
   /**
    * Send a friend request to a user.
-   * @param friendUsername The username of the friend.
-   * @throws {UserNotFound} If the user or the friend is not found.
-   * @throws {FriendRequestAlreadySent} If the friend request is already sent.
    */
-  sendFriendRequest(friendUsername: string): Promise<void>
+  sendFriendRequest(to: string): Promise<SendFriendRequestApi.Response>
 
   /**
    * Accept a friend request from a user.
-   * @param friendUsername The username of the friend.
-   * @throws {UserNotFound} If the user is not found.
-   * @throws {UserNotFound} If the friend is not found.
-   * @throws {FriendRequestNotPresent} If the friend request is not present.
    */
-  acceptFriendRequest(friendUsername: string): Promise<void>
+  acceptFriendRequest(to: string): Promise<SendFriendRequestApi.Response>
 
   /**
    * Deny a friend request from a user.
-   * @param friendUsername The username of the friend.
-   * @throws {UserNotFound} If the user is not found.
-   * @throws {UserNotFound} If the friend is not found.
-   * @throws {FriendRequestNotPresent} If the friend request is not present.
    */
-  denyFriendRequest(friendUsername: string): Promise<void>
+  denyFriendRequest(to: string): Promise<SendFriendRequestApi.Response>
 }
