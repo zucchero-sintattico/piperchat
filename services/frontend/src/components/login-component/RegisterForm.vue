@@ -5,7 +5,6 @@ import { useUserStore } from '@/stores/user'
 const username = ref('')
 const email = ref('')
 const password = ref('')
-const accept = ref(false)
 
 async function onSubmit() {
   const userStore = useUserStore()
@@ -54,11 +53,16 @@ function onReset() {
       ]"
     />
 
-    <q-toggle v-model="accept" label="I accept the license and terms" />
-
-    <div>
+    <div class="buttons">
       <q-btn label="Submit" type="submit" color="primary" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
   </q-form>
 </template>
+
+<style scoped>
+.buttons {
+  display: flex;
+  justify-content: right;
+}
+</style>
