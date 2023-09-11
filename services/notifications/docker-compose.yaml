@@ -28,6 +28,8 @@ services:
     image: mongo
     expose:
       - '27017'
+    volumes:
+      - './.docker/db-notifications:/data/db'
     healthcheck:
       test: |
         host=`hostname --ip-address || echo '127.0.0.1'`;

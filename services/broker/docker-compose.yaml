@@ -12,6 +12,8 @@ services:
       backend:
         aliases:
           - ${BROKER_NAME}
+    volumes:
+      - './.docker/db-broker:/data/db'
     environment:
       - 'RABBITMQ_NODE_PORT=${BROKER_PORT}'
     healthcheck:
