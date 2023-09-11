@@ -1,8 +1,6 @@
 import { Server, Socket } from 'socket.io'
 import { decodeAccessToken, isAccessTokenValid } from '@piperchat/commons'
 import http from 'http'
-import { SessionEventsRepository } from '@events/repositories/session/session-events-repository'
-import { SessionEventsRepositoryImpl } from '@events/repositories/session/session-events-repository-impl'
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
@@ -12,8 +10,6 @@ import { PiperchatServiceApiRepository } from '@commons/infra-service/repositori
 export class WebRTCSocketServer {
   private channelController: ChannelRepository = new ChannelRepositoryImpl()
   private piperchatServiceApiRepository = new PiperchatServiceApiRepository()
-  private sessionEventsRepository: SessionEventsRepository =
-    new SessionEventsRepositoryImpl()
   private io: Server
 
   constructor(server: http.Server) {
@@ -74,7 +70,7 @@ export class WebRTCSocketServer {
       socket.join(channelId)
 
       // TODO: Change names
-      this.sessionEventsRepository.publishUserJoinedSessionEvent(channelId, username)
+      // this.sessionEventsRepository.publishUserJoinedSessionEvent(channelId, username)
 
       socket.on('disconnect', async () => {
         console.log('Disconnecting user:', username)
@@ -83,7 +79,7 @@ export class WebRTCSocketServer {
         this.channelController.removeUserFromChannel(serverId, channelId, username)
 
         // TODO: Change names
-        this.sessionEventsRepository.publishUserLeftSessionEvent(channelId, username)
+        // this.sessionEventsRepository.publishUserLeftSessionEvent(channelId, username)
 
         const usersInSession = await this.channelController.getUsersInChannel(
           serverId,
@@ -92,7 +88,7 @@ export class WebRTCSocketServer {
 
         if (usersInSession.length === 0) {
           // TODO: Change names
-          this.sessionEventsRepository.publishSessionEndedEvent(channelId)
+          // this.sessionEventsRepository.publishSessionEndedEvent(channelId)
         }
       })
 
