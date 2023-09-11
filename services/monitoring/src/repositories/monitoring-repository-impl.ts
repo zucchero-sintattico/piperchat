@@ -7,6 +7,7 @@ import {
 import { MonitoringRepository } from './monitoring-repository'
 
 export class MonitoringRepositoryImpl implements MonitoringRepository {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async log(event: any): Promise<void> {
     await EventLogEntity.create({
       topic: event.topic,

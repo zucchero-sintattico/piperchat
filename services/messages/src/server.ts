@@ -2,7 +2,6 @@ import http from 'http'
 import express from 'express'
 import { serviceRouter } from './routes/router'
 import { healthCheckRouter } from '@piperchat/commons'
-// import { JWTAuthenticationMiddleware } from "@piperchat/commons";
 import cookieParser from 'cookie-parser'
 
 export class MessagesServer {
@@ -21,7 +20,6 @@ export class MessagesServer {
   private setupMiddleware() {
     this.app.use(cookieParser())
     this.app.use(express.json())
-    // this.app.use(jwtValidTokenRequired);
   }
 
   private setupRouter() {

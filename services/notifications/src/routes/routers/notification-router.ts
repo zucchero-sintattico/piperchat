@@ -4,13 +4,10 @@ import {
   NotificationControllerImpl,
 } from '@controllers/notification-controller'
 import { ClientProxy } from '@models/client-proxy'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 
 const notificationController: NotificationController = new NotificationControllerImpl()
 
 export const notificationRouter = Router()
-
-notificationRouter.use(JWTAuthenticationMiddleware)
 
 notificationRouter.get('/', async (req: Request, res: Response) => {
   const headers = {

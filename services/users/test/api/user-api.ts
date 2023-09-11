@@ -17,6 +17,13 @@ export class UserApi {
     })
   }
 
+  async registerWithoutEmail(username: string, password: string) {
+    return await this.request.post('/auth/register').send({
+      username: username,
+      password: password,
+    })
+  }
+
   // login a user and save the access token
   async login(username: string, password: string) {
     const response = await this.request.post('/auth/login').send({
