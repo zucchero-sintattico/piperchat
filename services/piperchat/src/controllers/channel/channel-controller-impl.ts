@@ -3,13 +3,9 @@ import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
 import { Checker } from '@controllers/checker'
 import { Channel } from '@/models/channel-model'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
-import {
-  ChannelCreated,
-  ChannelDeleted,
-  ChannelUpdated,
-} from '@piperchat/messages-api/src/channels'
+import { ChannelCreated, ChannelDeleted, ChannelUpdated } from '@messages-api/channels'
 export class ChannelControllerImpl implements ChannelController {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
   private checker = new Checker()

@@ -1,6 +1,6 @@
 import http from 'http'
 import express from 'express'
-import { healthCheckRouter } from '@piperchat/commons/src/healthcheck-router'
+import { healthCheckRouter } from '@commons/healthcheck-router'
 import cookieParser from 'cookie-parser'
 import { WebRTCSocketServer } from './webrtc-socket-server'
 

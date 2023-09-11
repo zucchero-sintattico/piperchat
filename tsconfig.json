@@ -20,7 +20,10 @@
       "@controllers/*": ["src/controllers/*"],
       "@models/*": ["src/models/*"],
       "@repositories/*": ["src/repositories/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@commons/*": ["../commons/src/*"],
+      "@api/*": ["../api/src/*"],
+      "@messages-api/*": ["../messages-api/src/*"]
     }
   }
 }

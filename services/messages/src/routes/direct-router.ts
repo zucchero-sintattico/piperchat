@@ -2,12 +2,9 @@ import { Request, Response, Router } from 'express'
 import { DirectController } from '@controllers/direct/direct-controller'
 import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl'
 
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import {
-  GetDirectMessagesApi,
-  SendDirectMessageApi,
-} from '@piperchat/api/src/messages/message'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/message'
 
 const directController: DirectController = new DirectControllerImpl()
 const directRouter = Router()

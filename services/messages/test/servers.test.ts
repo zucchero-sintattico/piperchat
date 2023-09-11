@@ -2,10 +2,10 @@ import mongoose from 'mongoose'
 import { Servers } from '@models/messages-model'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import { MessagesServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { ServiceEvents } from '@commons/events/service-events'
 
 const serverRepository: ServerRepository = new ServerRepositoryImpl()
 

@@ -5,9 +5,9 @@ import {
   UserStatusControllerImpl,
 } from '@controllers/user-status-controller'
 
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import { GetUserStatusApi } from '@piperchat/api/src/users/user'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetUserStatusApi } from '@api/users/user'
 
 const userStatusController: UserStatusController = new UserStatusControllerImpl()
 export const userStatusRouter = Router()

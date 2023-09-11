@@ -1,4 +1,4 @@
-import { EventsConfiguration } from '@piperchat/commons/src/events/events-configuration'
+import { EventsConfiguration } from '@commons/events/events-configuration'
 
 export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
   constructor() {

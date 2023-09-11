@@ -1,8 +1,8 @@
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 import { ProfileController } from './profile-controller'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
-import { UserUpdatedMessage } from '@piperchat/messages-api/src/users'
+import { UserUpdatedMessage } from '@messages-api/users'
 
 export class ProfileControllerImpl implements ProfileController {
   private userRepository: UserRepository = new UserRepositoryImpl()

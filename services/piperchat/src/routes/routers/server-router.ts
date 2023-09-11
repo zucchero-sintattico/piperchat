@@ -8,8 +8,8 @@ import { ServerControllerImpl } from '@controllers/server/server-controller-impl
 const serverController: ServerController = new ServerControllerImpl()
 export const serverRouter = Router()
 
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
 import {
   GetServersApi,
   CreateServerApi,
@@ -20,7 +20,7 @@ import {
   LeftServerApi,
   GetServerParticipantsApi,
   KickUserFromServerApi,
-} from '@piperchat/api/src/piperchat/server'
+} from '@api/piperchat/server'
 
 serverRouter.delete(
   '/:serverId/participants/:username',

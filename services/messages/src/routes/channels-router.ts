@@ -5,12 +5,9 @@ import {
 } from '@controllers/channel/channel-controller'
 import { ChannelControllerImpl } from '@controllers/channel/channel-controller-impl'
 
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import {
-  GetChannelMessagesApi,
-  SendMessageInChannelApi,
-} from '@piperchat/api/src/messages/channel'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/channel'
 
 const channelController: ChannelController = new ChannelControllerImpl()
 const channelRouter = Router()

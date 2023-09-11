@@ -1,4 +1,4 @@
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { RabbitMQ } from '@commons/rabbit-mq'
 
 export class BasicEventRepository {
   private broker: RabbitMQ | undefined

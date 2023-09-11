@@ -2,9 +2,9 @@ import { Request, Response, Router } from 'express'
 import { MonitoringController } from '@/controllers/monitoring-controller'
 import { MonitoringControllerImpl } from '@/controllers/monitoring-controller-impl'
 
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import { GetServicesStatusApi } from '@piperchat/api/src/monitoring/status'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { GetServicesStatusApi } from '@api/monitoring/status'
 
 const monitoringRouter: Router = Router()
 const monitoringController: MonitoringController = new MonitoringControllerImpl()

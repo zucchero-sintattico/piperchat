@@ -10,13 +10,13 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@piperchat/commons/src/jwt'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+} from '@commons/jwt'
+import { RabbitMQ } from '@commons/rabbit-mq'
 import {
   UserCreatedMessage,
   UserLoggedInMessage,
   UserLoggedOutMessage,
-} from '@piperchat/messages-api/src/users'
+} from '@messages-api/users'
 
 export class AuthControllerImpl implements AuthController {
   private userRepository: UserRepository = new UserRepositoryImpl()

@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io'
-import { decodeAccessToken, isAccessTokenValid } from '@piperchat/commons/src/jwt'
+import { decodeAccessToken, isAccessTokenValid } from '@commons/jwt'
 import http from 'http'
 import {
   ChannelRepository,

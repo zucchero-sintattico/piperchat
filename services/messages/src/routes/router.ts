@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { directRouter } from './direct-router'
 import { channelRouter } from './channels-router'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons/src/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/jwt'
 
 const serviceRouter = Router()
 serviceRouter.use(JWTAuthenticationMiddleware)

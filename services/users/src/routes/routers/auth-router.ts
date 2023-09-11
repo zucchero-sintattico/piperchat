@@ -5,20 +5,12 @@ import {
   AuthControllerExceptions,
 } from '@controllers/auth/auth-controller'
 import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
-import {
-  JWTAuthenticationMiddleware,
-  JWTRefreshTokenMiddleware,
-} from '@piperchat/commons/src/jwt'
+import { JWTAuthenticationMiddleware, JWTRefreshTokenMiddleware } from '@commons/jwt'
 
 // Import specific interfaces from the API
-import { Validate } from '@piperchat/api/src/validate'
-import { InternalServerError } from '@piperchat/api/src/errors'
-import {
-  LoginApi,
-  RegisterApi,
-  LogoutApi,
-  RefreshTokenApi,
-} from '@piperchat/api/src/users/auth'
+import { Validate } from '@api/validate'
+import { InternalServerError } from '@api/errors'
+import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
 
 const authController: AuthController = new AuthControllerImpl()
 

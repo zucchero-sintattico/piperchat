@@ -1,4 +1,4 @@
-import { BadRequest, InternalServerError } from '@piperchat/api/src/errors'
+import { BadRequest, InternalServerError } from '@api/errors'
 import axios from 'axios'
 
 export abstract class AxiosController {

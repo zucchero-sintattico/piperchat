@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
-import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
+import { ServiceEvents } from '@commons/events/service-events'
 import {
   ChannelController,
   ChannelControllerExceptions,

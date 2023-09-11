@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
-import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { RabbitMQ } from '@commons/rabbit-mq'
+import { MongooseUtils } from '@commons/mongoose-utils'
 import { ServiceEvents } from '@/events'
 import { EventLogEntity, ServiceStatusEntity } from '@models/monitoring-model'
 import { MonitoringEventRepository } from './repositories/monitoring-event-repository'
