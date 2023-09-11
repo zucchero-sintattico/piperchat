@@ -46,6 +46,11 @@ afterEach(async () => {
 })
 
 describe('User authentication', () => {
+  it('A user must provide username, password and email', async () => {
+    const response = await userApi.registerWithoutEmail('test', 'test')
+    expect(response.status).toBe(400)
+  })
+
   it('A new user should be able to register only once', async () => {
     const response = await userApi.register('test0', 'test0', 'test0')
     expect(response.status).toBe(409)

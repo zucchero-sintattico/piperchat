@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { AuthControllerImpl } from '../services/users/auth/auth-controller-impl'
-import { UserControllerImpl } from '@/services/users/user/user-controller-impl'
+import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
+import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
+import type { AuthController } from '@/controllers/users/auth/auth-controller'
+import type { UserController } from '@/controllers/users/user/user-controller'
+import { LoginApi, RegisterApi } from '@piperchat/api/src/users/auth'
 
 export const useUserStore = defineStore(
   'user',
@@ -14,7 +17,7 @@ export const useUserStore = defineStore(
     const error = ref('')
     async function whoami() {
       try {
-        const response = await UserController.getUser()
+        const response = await userController.getUser()
         username.value = response.data.username
         email.value = response.data.email
         description.value = response.data.description
@@ -24,16 +27,21 @@ export const useUserStore = defineStore(
       }
     }
 
-    const AuthController = new AuthControllerImpl()
-    const UserController = new UserControllerImpl()
+    const authController: AuthController = new AuthControllerImpl()
+    const userController: UserController = new UserControllerImpl()
 
     async function login(parameters: { username: string; password: string }) {
       try {
-        await AuthController.login(parameters.username, parameters.password)
-        isLoggedIn.value = true
-        error.value = ''
-        console.log('login')
-        await whoami()
+        const response: LoginApi.Response = await authController.login({
+          username: parameters.username,
+          password: parameters.password
+        })
+        if (response instanceof LoginApi.Responses.Success) {
+          isLoggedIn.value = true
+          error.value = ''
+          console.log('login')
+          await whoami()
+        }
       } catch (e) {
         console.log(e)
         error.value = 'Errore nel login'
@@ -41,13 +49,11 @@ export const useUserStore = defineStore(
     }
     async function register(parameters: { username: string; email: string; password: string }) {
       try {
-        await AuthController.register(
-          parameters.username,
-          parameters.email,
-          parameters.password,
-          null,
-          null
-        )
+        await authController.register({
+          username: parameters.username,
+          email: parameters.email,
+          password: parameters.password
+        })
       } catch (e) {
         console.log(e)
         error.value = 'Errore nella registrazione'
@@ -56,7 +62,7 @@ export const useUserStore = defineStore(
 
     async function logout() {
       try {
-        await AuthController.logout()
+        await authController.logout()
         isLoggedIn.value = false
       } catch (e) {
         console.log(e)

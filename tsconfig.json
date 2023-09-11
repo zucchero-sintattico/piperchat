@@ -21,7 +21,10 @@
       "@events/*": ["src/events/*"],
       "@models/*": ["src/models/*"],
       "@repositories/*": ["src/repositories/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@api/*": ["../api/src/*"],
+      "@commons/*": ["../commons/src/*"],
+      "@messages-api/*": ["../messages-api/src/*"]
     }
   }
 }

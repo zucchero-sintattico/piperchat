@@ -3,31 +3,59 @@ import { JWTAuthenticationMiddleware } from '@piperchat/commons'
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
 
+// Import specific interfaces from the API
+import { InternalServerError } from '@api/errors'
+import { Validate } from '@api/validate'
+import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
+
 const profileController: ProfileController = new ProfileControllerImpl()
 
 export const profileRouter = Router()
 profileRouter.use(JWTAuthenticationMiddleware)
 
-profileRouter.put('/photo', async (req: Request, res: Response) => {
-  if (!req.body.photo) {
-    return res.status(400).json({ message: "Missing 'photo' in body" })
+profileRouter.put(
+  '/photo',
+  Validate(UpdatePhotoApi.Request.Schema),
+  async (
+    req: Request<
+      UpdatePhotoApi.Request.Params,
+      UpdatePhotoApi.Response,
+      UpdatePhotoApi.Request.Body
+    >,
+    res: Response<UpdatePhotoApi.Response | InternalServerError>
+  ) => {
+    try {
+      await profileController.updateUserPhoto(req.user.username, req.body.photo)
+      const response = new UpdatePhotoApi.Responses.Success()
+      response.send(res)
+    } catch (e) {
+      const response = new InternalServerError(e)
+      response.send(res)
+    }
   }
-  try {
-    await profileController.updateUserPhoto(req.user.username, req.body.photo)
-    return res.status(200).json({ message: 'Photo set' })
-  } catch (e) {
-    return res.status(400).json({ message: 'Bad request', error: e })
-  }
-})
+)
 
-profileRouter.put('/description', async (req: Request, res: Response) => {
-  if (!req.body.description) {
-    return res.status(400).json({ message: "Missing 'description' in body" })
+profileRouter.put(
+  '/description',
+  Validate(UpdateDescriptionApi.Request.Schema),
+  async (
+    req: Request<
+      UpdateDescriptionApi.Request.Params,
+      UpdateDescriptionApi.Response,
+      UpdateDescriptionApi.Request.Body
+    >,
+    res: Response<UpdateDescriptionApi.Response | InternalServerError>
+  ) => {
+    try {
+      await profileController.updateUserDescription(
+        req.user.username,
+        req.body.description
+      )
+      const response = new UpdateDescriptionApi.Responses.Success()
+      response.send(res)
+    } catch (e) {
+      const response = new InternalServerError(e)
+      response.send(res)
+    }
   }
-  try {
-    await profileController.updateUserDescription(req.user.username, req.body.description)
-    return res.status(200).json({ message: 'Description set' })
-  } catch (e) {
-    return res.status(404).json({ message: 'Bad request', error: e })
-  }
-})
+)
