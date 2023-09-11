@@ -16,7 +16,7 @@ export abstract class AxiosController {
         throw new Error(errorResponse.toString())
       } else if (e.response.data instanceof InternalServerError) {
         const errorResponse = e.response.data as InternalServerError
-        throw new Error(errorResponse.errorMessage)
+        throw new Error(errorResponse.toString())
       } else {
         return e.response.data as Response
       }
