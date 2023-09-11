@@ -1,5 +1,10 @@
 import { EventLog, ServiceStatus } from '@models/monitoring-model'
 
+export interface Event {
+  topic: string
+  event: string
+  payload: unknown
+}
 export interface MonitoringRepository {
   /**
    * Log the event in the database.
@@ -7,7 +12,7 @@ export interface MonitoringRepository {
    * @param event The event to be logged.
    * @returns A promise that resolves when the event is logged.
    */
-  log(event: any): Promise<void>
+  log(event: Event): Promise<void>
 
   /**
    * Get all events of a topic.

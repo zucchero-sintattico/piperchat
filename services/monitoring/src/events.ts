@@ -55,7 +55,7 @@ export class ServiceEvents {
 
   private static async subscribeToExchange(
     exchange: string,
-    callback: (event: string, data: any) => void
+    callback: (event: string, data: unknown) => void
   ) {
     const channel = this.broker.getChannel()
     const queue = await channel?.assertQueue('', {
