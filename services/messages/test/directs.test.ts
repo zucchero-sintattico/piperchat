@@ -1,15 +1,19 @@
 import mongoose from 'mongoose'
 import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl'
 import { Directs } from '@models/messages-model'
-import { RabbitMQ, MongooseUtils } from '@piperchat/commons'
-import { ServiceEvents } from '@events/events'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
+import { MessagesServiceEventsConfiguration } from '@/events-configuration'
 
 const directController = new DirectControllerImpl()
 
 beforeAll(async () => {
   await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
   await RabbitMQ.initialize('amqp://localhost')
-  await ServiceEvents.initialize()
+
+  const eventsConfig = new MessagesServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 })
 
 afterAll(async () => {

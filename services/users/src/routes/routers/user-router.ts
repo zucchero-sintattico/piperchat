@@ -5,17 +5,16 @@ import {
   UserControllerExceptions,
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { JWTAuthenticationMiddleware } from '@piperchat/commons/src/jwt'
 
 // Import specific interfaces from the API
-import { Validate } from '@api/validate'
-import { InternalServerError } from '@api/errors'
+import { Validate } from '@piperchat/api/src/validate'
+import { InternalServerError } from '@piperchat/api/src/errors'
 import {
   WhoamiApi,
-  GetUserStatusApi,
   GetUserPhotoApi,
   GetUserDescriptionApi,
-} from '@api/users/user'
+} from '@piperchat/api/src/users/user'
 
 const userController: UserController = new UserControllerImpl()
 

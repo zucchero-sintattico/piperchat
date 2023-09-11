@@ -1,4 +1,3 @@
-import { UserEventsRepository } from '@events/repositories/user/user-events-repository'
 import { User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
@@ -11,12 +10,16 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@piperchat/commons'
-import { UserEventsRepositoryImpl } from '@events/repositories/user/user-events-repository-impl'
+} from '@piperchat/commons/src/jwt'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import {
+  UserCreatedMessage,
+  UserLoggedInMessage,
+  UserLoggedOutMessage,
+} from '@piperchat/messages-api/src/users'
 
 export class AuthControllerImpl implements AuthController {
   private userRepository: UserRepository = new UserRepositoryImpl()
-  private userEventsRepository: UserEventsRepository = new UserEventsRepositoryImpl()
 
   async register(
     username: string,
@@ -31,7 +34,15 @@ export class AuthControllerImpl implements AuthController {
       .catch(() => {
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
-    await this.userEventsRepository.publishUserCreated(user)
+    await RabbitMQ.getInstance().publish(
+      UserCreatedMessage,
+      new UserCreatedMessage({
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        profilePicture: user.profilePicture,
+      })
+    )
     return user
   }
 
@@ -49,6 +60,13 @@ export class AuthControllerImpl implements AuthController {
     const refreshToken = generateRefreshToken(user)
 
     await this.userRepository.login(user.username, refreshToken)
+
+    await RabbitMQ.getInstance().publish(
+      UserLoggedInMessage,
+      new UserLoggedInMessage({
+        username: user.username,
+      })
+    )
     return accessToken
   }
 
@@ -74,5 +92,11 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
+    await RabbitMQ.getInstance().publish(
+      UserLoggedOutMessage,
+      new UserLoggedOutMessage({
+        username: username,
+      })
+    )
   }
 }

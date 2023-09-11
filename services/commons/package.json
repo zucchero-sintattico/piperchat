@@ -1,7 +1,6 @@
 {
   "name": "@piperchat/commons",
   "version": "1.0.0",
-  "main": "dist/src/index.js",
   "devDependencies": {},
   "scripts": {
     "prepare": "npm run build",

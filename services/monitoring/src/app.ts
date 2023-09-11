@@ -1,7 +1,9 @@
-import { RabbitMQ, MongooseUtils, MicroserviceConfiguration } from '@piperchat/commons'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { MicroserviceConfiguration } from '@piperchat/commons/src/microservice-configuration'
 import mongoose from 'mongoose'
-import { ServiceEvents } from '@events/events'
 import { MonitoringServer } from './server'
+import { ServiceEvents } from './events'
 
 // Start function
 const start = async (configuration: MicroserviceConfiguration) => {

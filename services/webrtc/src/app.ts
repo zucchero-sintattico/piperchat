@@ -1,6 +1,10 @@
-import { RabbitMQ, MongooseUtils, MicroserviceConfiguration } from '@piperchat/commons'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+import { MongooseUtils } from '@piperchat/commons/src/mongoose-utils'
+import { MicroserviceConfiguration } from '@piperchat/commons/src/microservice-configuration'
 import mongoose from 'mongoose'
+import { ServiceEvents } from '@piperchat/commons/src/events/service-events'
 import { WebRTCServer } from './server'
+import { WebRtcServiceEventsConfiguration } from './events-configuration'
 
 // Start function
 const start = async (configuration: MicroserviceConfiguration) => {
@@ -11,6 +15,8 @@ const start = async (configuration: MicroserviceConfiguration) => {
   await RabbitMQ.initialize(configuration.amqpUri)
 
   // Initialize service events listeners
+  const eventsConfig = new WebRtcServiceEventsConfiguration()
+  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
 
   // Express app
   const app: WebRTCServer = new WebRTCServer(configuration.port)

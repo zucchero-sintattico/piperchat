@@ -1,4 +1,8 @@
-import { RabbitMQ } from '@piperchat/commons'
+import { Channel } from 'amqplib'
+import { MonitoringRepository } from '@repositories/monitoring-repository'
+import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
+import { RabbitMQ } from '@piperchat/commons/src/rabbit-mq'
+
 /**
  * Service events
  * It is responsible for listening to events from the message broker.
@@ -7,6 +11,10 @@ import { RabbitMQ } from '@piperchat/commons'
  */
 export class ServiceEvents {
   private static broker: RabbitMQ
+  private static monitoringRepository: MonitoringRepository =
+    new MonitoringRepositoryImpl()
+
+  private static exchanges = ['messages', 'users', 'servers', 'channels', 'notifications']
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()
@@ -14,22 +22,35 @@ export class ServiceEvents {
     await this.setupListeners()
   }
 
-  static async declareQueue() {
-    const channel = this.broker.getChannel()
-
-    // Declare the exchange
-    await channel?.assertExchange('messages', 'fanout', {
+  private static async assertExchange(
+    channel: Channel | undefined,
+    exchangeName: string
+  ) {
+    await channel?.assertExchange(exchangeName, 'fanout', {
       durable: true,
     })
   }
 
+  static async declareQueue() {
+    const channel = this.broker.getChannel()
+    // Declare the exchange
+    for (const exchange of this.exchanges) {
+      await this.assertExchange(channel, exchange)
+    }
+  }
+
   static async setupListeners() {
-    this.subscribeToExchange('messages', async (event, data) => {
-      switch (event) {
-        case '':
-          break
-      }
-    })
+    // Logs listeners
+    for (const exchange of this.exchanges) {
+      await this.subscribeToExchange(exchange, async (event, data) => {
+        await this.monitoringRepository.log({
+          topic: exchange,
+          event: event,
+          payload: data,
+        })
+      })
+    }
+    // setUpHealtCheckListener()
   }
 
   private static async subscribeToExchange(

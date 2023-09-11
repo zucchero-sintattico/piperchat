@@ -1,15 +1,13 @@
 import { Server, Socket } from 'socket.io'
-import { decodeAccessToken, isAccessTokenValid } from '@piperchat/commons'
+import { decodeAccessToken, isAccessTokenValid } from '@piperchat/commons/src/jwt'
 import http from 'http'
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
 } from './repositories/channels/channel-repository'
-import { PiperchatServiceApiRepository } from '@commons/infra-service/repositories/piperchat-service'
 
 export class WebRTCSocketServer {
   private channelController: ChannelRepository = new ChannelRepositoryImpl()
-  private piperchatServiceApiRepository = new PiperchatServiceApiRepository()
   private io: Server
 
   constructor(server: http.Server) {

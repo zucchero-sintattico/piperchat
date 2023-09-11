@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { notificationRouter } from './routers/notification-router'
 import { userStatusRouter } from './routers/user-status-router'
-import { JWTAuthenticationMiddleware } from '@piperchat/commons'
+import { JWTAuthenticationMiddleware } from '@piperchat/commons/src/jwt'
 const serviceRouter = Router()
 serviceRouter.use(JWTAuthenticationMiddleware)
 

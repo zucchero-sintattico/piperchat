@@ -1,6 +1,6 @@
-import { EventLog, ServiceStatus } from '../models/monitoring-model'
-import { MonitoringRepository } from '../repositories/monitoring-repository'
-import { MonitoringRepositoryImpl } from '../repositories/monitoring-repository-impl'
+import { EventLog, ServiceStatus } from '@models/monitoring-model'
+import { MonitoringRepository } from '@repositories/monitoring-repository'
+import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
 import { MonitoringController } from './monitoring-controller'
 
 export class MonitoringControllerImpl implements MonitoringController {

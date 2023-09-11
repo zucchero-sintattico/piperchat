@@ -3,7 +3,7 @@ import {
   EventLogEntity,
   ServiceStatus,
   ServiceStatusEntity,
-} from '../models/monitoring-model'
+} from '@models/monitoring-model'
 import { MonitoringRepository } from './monitoring-repository'
 
 export class MonitoringRepositoryImpl implements MonitoringRepository {
