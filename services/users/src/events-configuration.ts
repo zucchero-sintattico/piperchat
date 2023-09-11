@@ -4,11 +4,5 @@ import { UserCreatedMessage, UserDeletedMessage } from '@messages-api/users'
 export class UserServiceEventsConfiguration extends EventsConfiguration {
   constructor() {
     super()
-    this.on(UserCreatedMessage, (message: UserCreatedMessage) => {
-      console.log('User created', message)
-    })
-    this.on(UserDeletedMessage, (message: UserDeletedMessage) => {
-      console.log('User deleted', message)
-    })
   }
 }
