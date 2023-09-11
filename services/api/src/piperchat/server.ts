@@ -4,6 +4,7 @@ import { RequestSchema } from '../schema'
 /* eslint-disable @typescript-eslint/no-namespace */
 export namespace KickUserFromServerApi {
   export namespace Request {
+    export type Type = Params & Body
     export type Params = {
       serverId: string
       username: string
@@ -44,6 +45,7 @@ export namespace KickUserFromServerApi {
 
 export namespace GetServerParticipantsApi {
   export namespace Request {
+    export type Type = Params & Body
     export type Params = {
       serverId: string
     }
@@ -80,6 +82,7 @@ export namespace GetServerParticipantsApi {
 
 export namespace JoinServerApi {
   export namespace Request {
+    export type Type = Params & Body
     export type Params = {
       serverId: string
     }
@@ -110,6 +113,7 @@ export namespace JoinServerApi {
 
 export namespace LeftServerApi {
   export namespace Request {
+    export type Type = Params & Body
     export type Params = {
       serverId: string
     }
@@ -148,6 +152,7 @@ export namespace LeftServerApi {
 
 export namespace GetServerApi {
   export namespace Request {
+    export type Type = Params & Body
     export type Params = {
       serverId: string
     }
@@ -196,6 +201,7 @@ export namespace GetServerApi {
 
 export namespace UpdateServerApi {
   export namespace Request {
+    export type Type = Body & Params
     export type Params = {
       serverId: string
     }
