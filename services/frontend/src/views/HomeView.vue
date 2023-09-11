@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
