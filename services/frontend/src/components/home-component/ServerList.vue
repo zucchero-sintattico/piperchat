@@ -1,11 +1,25 @@
 <script setup lang="ts"></script>
 
 <template>
-    <q-scroll-area visible class="col-4 bg-dark">
-        <div class="column items-center">
-            <div v-for="n in 40" :key="n" class="col q-mt-md">
-                <q-avatar color="accent" text-color="dark">{{ n }}</q-avatar>
+    <div class="column">
+        <q-item>
+            <q-avatar color="primary" text-color="accent">
+                <q-icon name="chat" size="1.5rem" />
+            </q-avatar>
+        </q-item>
+
+
+        <q-separator color="accent" inset />
+
+
+        <q-scroll-area visible class="col bg-dark">
+
+            <div v-for="n in 40" :key="n" class="col">
+                <q-item>
+                    <q-avatar color="accent" text-color="dark">{{ n }}</q-avatar>
+                </q-item>
             </div>
-        </div>
-    </q-scroll-area>
+
+        </q-scroll-area>
+    </div>
 </template>

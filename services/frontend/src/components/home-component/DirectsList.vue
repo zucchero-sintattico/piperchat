@@ -1,8 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-    <q-scroll-area visible class="col-8 bg-secondary">
-
-
+    <q-scroll-area visible class="col bg-secondary">
         <div class="column">
             <div class="col">
                 <q-item>
@@ -21,6 +19,5 @@
                 </div>
             </div>
         </div>
-
     </q-scroll-area>
 </template>
