@@ -10,7 +10,7 @@ function sendMessage() {
 </script>
 
 <template>
-  <div class=" justify-center foot">
+  <div class="justify-center foot">
     <q-input filled class="full-width full-height" v-model="message" label="Write...">
       <template v-slot:before>
         <q-avatar>
