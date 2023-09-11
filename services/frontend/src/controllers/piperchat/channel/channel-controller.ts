@@ -1,40 +1,19 @@
+import { CreateChannelApi, GetChannelByIdApi, GetChannelsApi } from '@api/piperchat/channel'
 export interface ChannelController {
   /**
-   * Get achannel by server id
-   * @param serverId the id of the server
-   * @returns the channel
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not in the server
+   * Get channel by server id
    */
-  getChannels(serverId: string): Promise<any>
+  getChannels(request: GetChannelsApi.Request.Type): Promise<GetChannelsApi.Response>
 
   /**
-   * Get achannel by id
-   * @param serverId the id of the server
-   * @param channelId the id of the channel
-   * @returns the channel
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not in the server
-   * @throws {ChannelNotFound} if the channel does not exist
+   * Get channel by id
    */
-  getChannelById(serverId: string, channelId: string): Promise<any>
+  getChannelById(request: GetChannelByIdApi.Request.Type): Promise<GetChannelByIdApi.Response>
 
   /**
-   * Create achannel
-   * @param serverId
-   * @param name the name of the channel
-   * @param channelType the type of the channel
-   * @param description? the description of the channel
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not the owner of the server
-   * @throws {ChannelAlreadyExists} if the channel already exists
+   * Create a channel
    */
-  createChannel(
-    serverId: string,
-    name: string,
-    channelType: string,
-    description?: string
-  ): Promise<any>
+  createChannel(request: CreateChannelApi.Request.Type): Promise<CreateChannelApi.Response>
 
   /**
    * Update achannel
