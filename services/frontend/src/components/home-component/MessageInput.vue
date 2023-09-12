@@ -31,5 +31,4 @@ function deleteMessage() {
 .foot
   position: sticky
   bottom: 0
-
 </style>
