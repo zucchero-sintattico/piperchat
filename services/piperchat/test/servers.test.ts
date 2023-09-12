@@ -1,35 +1,29 @@
-import mongoose from 'mongoose'
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
+import { PiperchatServiceConfiguration } from '@/configuration'
+import { Microservice } from '@commons/service'
 import {
   ServerController,
   ServerControllerExceptions,
 } from '@controllers/server/server-controller'
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
 import { Servers } from '@models/server-model'
-import { PiperchatServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@commons/events/service-events'
 
 let controller: ServerController
 
-beforeAll(async () => {
-  await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017/')
-  await RabbitMQ.initialize('amqp://localhost')
-  const eventsConfig = new PiperchatServiceEventsConfiguration()
-  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
-})
+const piperchatMicroservice: Microservice = new Microservice(
+  PiperchatServiceConfiguration
+)
 
-beforeEach(async () => {
+beforeAll(async () => {
+  await piperchatMicroservice.start()
   controller = new ServerControllerImpl()
 })
 
 afterEach(async () => {
-  await Servers.deleteMany({})
+  await piperchatMicroservice.clearDatabase()
 })
 
 afterAll(async () => {
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
+  await piperchatMicroservice.stop()
 })
 
 describe('ServersCrudOps', () => {

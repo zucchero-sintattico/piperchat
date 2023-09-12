@@ -1,14 +1,13 @@
-import mongoose from 'mongoose'
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
-import { ServiceEvents } from '@/events'
-import { EventLogEntity, ServiceStatusEntity } from '@models/monitoring-model'
+import { EventLogEntity } from '@models/monitoring-model'
 import { MonitoringEventRepository } from './repositories/monitoring-event-repository'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
 import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
+import { Microservice } from '@commons/service'
+import { MonitoringServiceConfiguration } from '@/configuration'
 
 let monitoringRepository: MonitoringRepository
 let monitoringEventRepository: MonitoringEventRepository
+
 const messageEvent = {
   topic: 'messages',
   event: 'message.direct.sent',
@@ -25,16 +24,12 @@ const serverEvent = {
     name: 'Server 1',
   },
 }
-
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
-const amqpUri = process.env.AMQP_URI || 'amqp://localhost:5672'
+const monitoringMicroservice: Microservice = new Microservice(
+  MonitoringServiceConfiguration
+)
 
 beforeAll(async () => {
-  await MongooseUtils.initialize(mongoose, mongoUri)
-
-  await RabbitMQ.initialize(amqpUri)
-
-  await ServiceEvents.initialize()
+  await monitoringMicroservice.start()
 })
 
 beforeEach(async () => {
@@ -43,13 +38,11 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await EventLogEntity.deleteMany({})
-  await ServiceStatusEntity.deleteMany({})
+  await monitoringMicroservice.clearDatabase()
 })
 
 afterAll(async () => {
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
+  await monitoringMicroservice.stop()
 })
 
 describe('Log Service', () => {

@@ -1,4 +1,4 @@
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { FriendsController } from './friends-controller'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {

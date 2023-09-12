@@ -1,6 +1,6 @@
 export interface ServerRepository {
   /**
-   * Add partecipant to server
+   * Add participant to server
    * @param serverId
    * @param participantId
    * @returns Promise<void>
@@ -8,7 +8,7 @@ export interface ServerRepository {
   addParticipant(serverId: string, participantId: string): Promise<void>
 
   /**
-   * Remove partecipant from server
+   * Remove participant from server
    * @param serverId
    * @param participantId
    * @returns Promise<void>
@@ -24,7 +24,7 @@ export interface ServerRepository {
   addServer(serverId: string, participantId: string): Promise<void>
 
   /**
-   * Get servers partecipant
+   * Get servers participant
    * @param serverId
    * @returns Promise<string[]>
    */

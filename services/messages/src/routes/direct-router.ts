@@ -4,7 +4,7 @@ import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl
 
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
-import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/message'
+import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/direct'
 
 const directController: DirectController = new DirectControllerImpl()
 const directRouter = Router()

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { serverRouter } from './routers/server-router'
 import { channelRouter } from './routers/channel-router'
-import { JWTAuthenticationMiddleware } from '@commons/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 const serviceRouter = Router()
 serviceRouter.use(JWTAuthenticationMiddleware)

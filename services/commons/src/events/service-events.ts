@@ -1,4 +1,4 @@
-import { RabbitMQ } from '../rabbit-mq'
+import { RabbitMQ } from '../utils/rabbit-mq'
 import { EventsConfiguration } from './events-configuration'
 
 export class ServiceEvents {

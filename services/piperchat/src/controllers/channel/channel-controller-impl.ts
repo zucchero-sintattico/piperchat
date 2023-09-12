@@ -3,7 +3,7 @@ import { ChannelRepository } from '@repositories/channel/channel-repository'
 import { ChannelRepositoryImpl } from '@repositories/channel/channel-repository-impl'
 import { Checker } from '@controllers/checker'
 import { Channel } from '@/models/channel-model'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 
 import { ChannelCreated, ChannelDeleted, ChannelUpdated } from '@messages-api/channels'
 export class ChannelControllerImpl implements ChannelController {

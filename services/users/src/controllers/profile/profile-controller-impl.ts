@@ -1,4 +1,4 @@
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { ProfileController } from './profile-controller'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'

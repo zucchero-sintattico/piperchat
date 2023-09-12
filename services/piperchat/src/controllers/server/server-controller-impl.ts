@@ -3,7 +3,7 @@ import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { Checker } from '../checker'
 import { ServerController, ServerControllerExceptions } from './server-controller'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 
 import {
   ServerCreated,

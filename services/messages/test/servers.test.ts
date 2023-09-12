@@ -1,38 +1,30 @@
-import mongoose from 'mongoose'
-import { Servers } from '@models/messages-model'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
 import { ServerRepository } from '@repositories/server/server-repository'
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
-import { MessagesServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@commons/events/service-events'
+import { Microservice } from '@commons/service'
+import { MessagesServiceConfiguration } from '@/configuration'
 
+const messagesMicroservice: Microservice = new Microservice(MessagesServiceConfiguration)
 const serverRepository: ServerRepository = new ServerRepositoryImpl()
 
 beforeAll(async () => {
-  await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
-  await RabbitMQ.initialize('amqp://localhost')
-
-  const eventsConfig = new MessagesServiceEventsConfiguration()
-  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
+  await messagesMicroservice.start()
 })
 
 afterAll(async () => {
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
+  await messagesMicroservice.stop()
 })
 
 afterEach(async () => {
-  await Servers.deleteMany({})
+  await messagesMicroservice.clearDatabase()
 })
 
 //server tests
 describe('CREATE operation', () => {
   it('basic create', async () => {
-    await serverRepository.addServer('serverId', 'partecipantId')
+    await serverRepository.addServer('serverId', 'participantId')
     const servers = await serverRepository.getServerParticipants('serverId')
     expect(servers.length).toBe(1)
-    expect(servers[0]).toBe('partecipantId')
+    expect(servers[0]).toBe('participantId')
   })
 })
 
@@ -43,34 +35,34 @@ describe('GET operation', () => {
     )
   })
   it('should return a server if it exists', async () => {
-    await serverRepository.addServer('serverId', 'partecipantId')
+    await serverRepository.addServer('serverId', 'participantId')
     const servers = await serverRepository.getServerParticipants('serverId')
     expect(servers.length).toBe(1)
-    expect(servers[0]).toBe('partecipantId')
+    expect(servers[0]).toBe('participantId')
   })
 })
 
-describe('Partecipant operations', () => {
-  it('should add a partecipant to a server', async () => {
-    await serverRepository.addServer('serverId', 'partecipantId')
-    await serverRepository.addParticipant('serverId', 'partecipantId2')
+describe('Participant operations', () => {
+  it('should add a participant to a server', async () => {
+    await serverRepository.addServer('serverId', 'participantId')
+    await serverRepository.addParticipant('serverId', 'participantId2')
     const servers = await serverRepository.getServerParticipants('serverId')
     expect(servers.length).toBe(2)
-    expect(servers[0]).toBe('partecipantId')
-    expect(servers[1]).toBe('partecipantId2')
+    expect(servers[0]).toBe('participantId')
+    expect(servers[1]).toBe('participantId2')
   })
-  it('should remove a partecipant from a server', async () => {
-    await serverRepository.addServer('serverId', 'partecipantId')
-    await serverRepository.addParticipant('serverId', 'partecipantId2')
-    await serverRepository.removeParticipant('serverId', 'partecipantId2')
+  it('should remove a participant from a server', async () => {
+    await serverRepository.addServer('serverId', 'participantId')
+    await serverRepository.addParticipant('serverId', 'participantId2')
+    await serverRepository.removeParticipant('serverId', 'participantId2')
     const servers = await serverRepository.getServerParticipants('serverId')
     expect(servers.length).toBe(1)
-    expect(servers[0]).toBe('partecipantId')
+    expect(servers[0]).toBe('participantId')
   })
   it("should return an error if server doesn't exists in remove operation", async () => {
-    await serverRepository.addServer('serverId', 'partecipantId')
+    await serverRepository.addServer('serverId', 'participantId')
     await expect(
-      serverRepository.removeParticipant('serverId2', 'partecipantId')
+      serverRepository.removeParticipant('serverId2', 'participantId')
     ).rejects.toThrow(Error)
   })
 })

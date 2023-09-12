@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl'
 import { Directs } from '@models/messages-model'
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
+import { MongooseUtils } from '@commons/utils/mongoose'
 import { ServiceEvents } from '@commons/events/service-events'
 import { MessagesServiceEventsConfiguration } from '@/events-configuration'
 

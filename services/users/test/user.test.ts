@@ -1,35 +1,23 @@
 import supertest from 'supertest'
-import { UsersServer } from '@/server'
 import { UserApi } from './api/user-api'
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
-import mongoose from 'mongoose'
-import { UserServiceEventsConfiguration } from '@/events-configuration'
-import { ServiceEvents } from '@commons/events/service-events'
-
-let server: UsersServer
+import { Microservice } from '@commons/service'
+import { UserServiceConfiguration } from '@/configuration'
 
 let userApi: UserApi
+let userMicroservice: Microservice
 
 beforeAll(async () => {
-  const port = Number.parseInt(process.env['PORT']!) || 3000
-  const amqpUri = process.env['AMQP_URI'] || 'amqp://localhost:5672'
-  const mongoUri = process.env['MONGO_URI'] || 'mongodb://localhost:27017'
+  userMicroservice = new Microservice(UserServiceConfiguration)
+  await userMicroservice.start()
+  userApi = new UserApi(supertest(userMicroservice.getServer()))
+})
 
-  server = new UsersServer(port)
+afterAll(async () => {
+  await userMicroservice.stop()
+})
 
-  // Initialize mongoose
-  await MongooseUtils.initialize(mongoose, mongoUri)
-
-  // Initialize RabbitMQ
-  await RabbitMQ.initialize(amqpUri)
-
-  // Initialize service events listeners
-  const eventsConfig = new UserServiceEventsConfiguration()
-  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
-
-  await server.start()
-  userApi = new UserApi(supertest(server.server))
+afterEach(async () => {
+  await userMicroservice.clearDatabase()
 })
 
 beforeEach(async () => {
@@ -37,16 +25,6 @@ beforeEach(async () => {
   expect(response.status).toBe(200)
   response = await userApi.register('test1', 'test1', 'test1')
   expect(response.status).toBe(200)
-})
-
-afterAll(async () => {
-  server.stop()
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
-})
-
-afterEach(async () => {
-  await MongooseUtils.clear(mongoose)
 })
 
 describe('User authentication', () => {

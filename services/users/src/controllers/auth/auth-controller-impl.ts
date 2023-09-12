@@ -10,8 +10,8 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@commons/jwt'
-import { RabbitMQ } from '@commons/rabbit-mq'
+} from '@commons/utils/jwt'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import {
   UserCreatedMessage,
   UserLoggedInMessage,

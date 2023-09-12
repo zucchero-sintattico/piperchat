@@ -3,7 +3,7 @@ import { DirectController } from './direct-controller'
 import { DirectRepository } from '@repositories/direct/direct-repository'
 import { Message } from '@models/messages-model'
 import { DirectRepositoryImpl } from '@repositories/direct/direct-repository-impl'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { NewMessageOnDirect } from '@messages-api/directs'
 export class DirectControllerImpl implements DirectController {
   private directRepository: DirectRepository = new DirectRepositoryImpl()

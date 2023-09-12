@@ -5,7 +5,10 @@ import {
   AuthControllerExceptions,
 } from '@controllers/auth/auth-controller'
 import { AuthControllerImpl } from '@controllers/auth/auth-controller-impl'
-import { JWTAuthenticationMiddleware, JWTRefreshTokenMiddleware } from '@commons/jwt'
+import {
+  JWTAuthenticationMiddleware,
+  JWTRefreshTokenMiddleware,
+} from '@commons/utils/jwt'
 
 // Import specific interfaces from the API
 import { Validate } from '@api/validate'

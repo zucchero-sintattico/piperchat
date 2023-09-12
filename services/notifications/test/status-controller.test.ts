@@ -1,35 +1,22 @@
-import { RabbitMQ } from '@commons/rabbit-mq'
-import { MongooseUtils } from '@commons/mongoose-utils'
-import mongoose from 'mongoose'
-import { ServiceEvents } from '@commons/events/service-events'
 import {
   UserStatusRepository,
   UserStatusRepositoryImpl,
 } from '@repositories/user-status-repository'
-import { NotificationsServiceEventsConfiguration } from '@/events-configuration'
+import { Microservice } from '@commons/service'
+import { NotificationsServiceConfiguration } from '@/configuration'
 
 let userStatusRepository: UserStatusRepository
-const amqpUri = process.env.AMQP_URI || 'amqp://localhost'
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017'
+const notificationsMicroservice: Microservice = new Microservice(
+  NotificationsServiceConfiguration
+)
 
 beforeAll(async () => {
-  // Initialize mongoose
-  await MongooseUtils.initialize(mongoose, mongoUri)
-
-  // Initialize RabbitMQ
-  await RabbitMQ.initialize(amqpUri)
-
-  // Initialize service events listeners
-  const eventsConfig = new NotificationsServiceEventsConfiguration()
-  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
-
-  // Initialize repositories
+  await notificationsMicroservice.start()
   userStatusRepository = new UserStatusRepositoryImpl()
 })
 
 afterAll(async () => {
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
+  await notificationsMicroservice.stop()
 })
 
 describe('Online status', () => {

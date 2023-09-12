@@ -4,7 +4,7 @@ import { ChannelController, ChannelControllerExceptions } from './channel-contro
 import { MessageChannel, Message } from '@models/messages-model'
 import { ServerRepository } from '@repositories/server/server-repository'
 import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { NewMessageOnChannel } from '@messages-api/channels'
 
 export class ChannelControllerImpl implements ChannelController {

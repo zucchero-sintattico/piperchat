@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io'
-import { decodeAccessToken, isAccessTokenValid } from '@commons/jwt'
+import { decodeAccessToken, isAccessTokenValid } from '@commons/utils/jwt'
 import http from 'http'
 import {
   ChannelRepository,

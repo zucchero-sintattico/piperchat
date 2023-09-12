@@ -6,10 +6,10 @@ export class ServerRepositoryImpl implements ServerRepository {
     await Servers.updateOne({ id: serverId }, { $push: { participants: participantId } })
   }
 
-  async removeParticipant(serverId: string, partecipantId: string): Promise<void> {
+  async removeParticipant(serverId: string, participantId: string): Promise<void> {
     await Servers.findOneAndUpdate(
       { id: serverId },
-      { $pull: { participants: partecipantId } }
+      { $pull: { participants: participantId } }
     ).orFail()
   }
 

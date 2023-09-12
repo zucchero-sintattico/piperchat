@@ -4,7 +4,7 @@ import {
   FriendsControllerExceptions,
 } from '@controllers/friends/friends-controller'
 import { FriendsControllerImpl } from '@controllers/friends/friends-controller-impl'
-import { JWTAuthenticationMiddleware } from '@commons/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 import { InternalServerError } from '@api/errors'
 import { Validate } from '@api/validate'

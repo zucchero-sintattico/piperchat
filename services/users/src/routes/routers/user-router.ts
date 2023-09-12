@@ -5,7 +5,7 @@ import {
   UserControllerExceptions,
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
-import { JWTAuthenticationMiddleware } from '@commons/jwt'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 // Import specific interfaces from the API
 import { Validate } from '@api/validate'

@@ -1,7 +1,7 @@
 import { Channel } from 'amqplib'
 import { MonitoringRepository } from '@repositories/monitoring-repository'
 import { MonitoringRepositoryImpl } from '@repositories/monitoring-repository-impl'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 
 /**
  * Service events
@@ -9,7 +9,7 @@ import { RabbitMQ } from '@commons/rabbit-mq'
  * It is also responsible for handling the events.
  * It is also responsible for updating the database.
  */
-export class ServiceEvents {
+export class AllEventsListener {
   private static broker: RabbitMQ
   private static monitoringRepository: MonitoringRepository =
     new MonitoringRepositoryImpl()

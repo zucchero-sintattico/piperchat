@@ -4,7 +4,7 @@ import {
   UserStatusRepositoryImpl,
 } from '@repositories/user-status-repository'
 import { ClientProxy } from '@models/client-proxy'
-import { RabbitMQ } from '@commons/rabbit-mq'
+import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { UserOnlineMessage, UserOfflineMessage } from '@messages-api/users'
 
 export interface NotificationController {
