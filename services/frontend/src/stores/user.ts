@@ -33,7 +33,7 @@ export const useUserStore = defineStore(
     async function login(
       parameters: { username: string; password: string },
       onSuccess: () => void,
-      onError: () => void
+      onError: (error: any) => void
     ) {
       try {
         const response: LoginApi.Response = await authController.login({
@@ -42,14 +42,13 @@ export const useUserStore = defineStore(
         })
         if (response instanceof LoginApi.Responses.Success) {
           isLoggedIn.value = true
-          error.value = ''
           onSuccess()
           await whoami()
+        } else if (response instanceof LoginApi.Errors.UsernameOrPasswordIncorrect) {
+          onError('Wrong Username or Password')
         }
-      } catch (e) {
-        console.log(e)
-        error.value = 'Errore nel login'
-        onError()
+      } catch (e: any) {
+        onError(e)
       }
     }
     async function register(parameters: { username: string; email: string; password: string }) {
