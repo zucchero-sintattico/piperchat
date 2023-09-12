@@ -32,6 +32,4 @@ function deleteMessage() {
   position: sticky
   bottom: 0
 
-.blurred
-  backdrop-filter: blur(15px)
 </style>
