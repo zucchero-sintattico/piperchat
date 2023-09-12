@@ -25,7 +25,7 @@ function deleteMessage() {
       </template>
 
       <template v-slot:after>
-        <q-btn round dense flat icon="send" color="primary" @click="sendMessage" />
+        <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
       </template>
     </q-input>
   </div>
