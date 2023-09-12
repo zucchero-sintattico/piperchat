@@ -17,7 +17,7 @@ import {
   UpdateServerApi,
   DeleteServerApi,
   JoinServerApi,
-  LeftServerApi,
+  LeaveServerApi,
   GetServerParticipantsApi,
   KickUserFromServerApi,
 } from '@api/piperchat/server'
@@ -121,28 +121,28 @@ serverRouter.post(
 
 serverRouter.delete(
   '/:serverId/participants',
-  Validate(LeftServerApi.Request.Schema),
+  Validate(LeaveServerApi.Request.Schema),
   async (
     req: Request<
-      LeftServerApi.Request.Params,
-      LeftServerApi.Response,
-      LeftServerApi.Request.Body
+      LeaveServerApi.Request.Params,
+      LeaveServerApi.Response,
+      LeaveServerApi.Request.Body
     >,
-    res: Response<LeftServerApi.Response | InternalServerError>
+    res: Response<LeaveServerApi.Response | InternalServerError>
   ) => {
     try {
       await serverController.leaveServer(req.params.serverId, req.user.username)
-      const response = new LeftServerApi.Responses.Success()
+      const response = new LeaveServerApi.Responses.Success()
       response.send(res)
     } catch (e) {
       if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new LeftServerApi.Errors.ServerNotFound()
+        const response = new LeaveServerApi.Errors.ServerNotFound()
         response.send(res)
       } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new LeftServerApi.Errors.UserNotInServer()
+        const response = new LeaveServerApi.Errors.UserNotInServer()
         response.send(res)
       } else if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
-        const response = new LeftServerApi.Errors.OwnerCannotLeave()
+        const response = new LeaveServerApi.Errors.OwnerCannotLeave()
         response.send(res)
       } else {
         const response = new InternalServerError(e)

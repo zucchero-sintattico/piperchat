@@ -111,7 +111,7 @@ export namespace JoinServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace LeftServerApi {
+export namespace LeaveServerApi {
   export namespace Request {
     export type Type = Params & Body
     export type Params = {

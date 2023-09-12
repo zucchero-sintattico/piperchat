@@ -6,7 +6,7 @@ import {
   GetServersApi,
   JoinServerApi,
   KickUserFromServerApi,
-  LeftServerApi,
+  LeaveServerApi,
   UpdateServerApi
 } from '@api/piperchat/server'
 
@@ -52,7 +52,7 @@ export interface ServerController {
   /**
    * Leave a server
    */
-  leaveServer(request: LeftServerApi.Request.Type): Promise<LeftServerApi.Response>
+  leaveServer(request: LeaveServerApi.Request.Type): Promise<LeaveServerApi.Response>
 
   /**
    * Kick a user from a server

@@ -8,7 +8,7 @@ import {
   GetServersApi,
   JoinServerApi,
   KickUserFromServerApi,
-  LeftServerApi,
+  LeaveServerApi,
   UpdateServerApi
 } from '@api/piperchat/server'
 
@@ -52,9 +52,9 @@ export class ServerControllerImpl extends AxiosController implements ServerContr
     return await this.post<JoinServerApi.Response>(`/servers/${params.serverId}/join`)
   }
 
-  async leaveServer(request: LeftServerApi.Request.Type): Promise<LeftServerApi.Response> {
-    const params = request as LeftServerApi.Request.Params
-    return await this.post<LeftServerApi.Response>(`/servers/${params.serverId}/leave`)
+  async leaveServer(request: LeaveServerApi.Request.Type): Promise<LeaveServerApi.Response> {
+    const params = request as LeaveServerApi.Request.Params
+    return await this.post<LeaveServerApi.Response>(`/servers/${params.serverId}/leave`)
   }
 
   async kickUserFromTheServer(
