@@ -4,9 +4,9 @@ export class ServerCreated {
 
   id: string
   name: string
-  description: string
+  description?: string
   owner: string
-  constructor(data: { id: string; name: string; description: string; owner: string }) {
+  constructor(data: { id: string; name: string; description?: string; owner: string }) {
     this.id = data.id
     this.name = data.name
     this.description = data.description
