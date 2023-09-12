@@ -57,6 +57,7 @@ function onReset() {
       v-model="username"
       label="Username"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
     />
 
@@ -65,6 +66,7 @@ function onReset() {
       v-model="email"
       label="Email"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
         (val) => /.+@.+/.test(val) || 'Invalid email address'
@@ -77,6 +79,7 @@ function onReset() {
       v-model="password"
       label="Your password"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
         (val) => (val && val.length > 7) || 'Password must be at least 8 characters long'
@@ -89,12 +92,13 @@ function onReset() {
       v-model="password2"
       label="Your password"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[(val) => (val && password === password2) || 'Passwords must match']"
     />
 
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" :disable="error" />
-      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      <q-btn label="Submit" type="submit" color="primary" :disable="error" class="text-h5" />
+      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
 
     <Transition>
@@ -102,10 +106,10 @@ function onReset() {
     </Transition>
 
     <!-- Banner for successful registration -->
-    <q-dialog v-model="registrationSuccess" class="success-banner">
+    <q-dialog v-model="registrationSuccess" class="success-banner text-h6">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Successful registration</div>
+          <div class="text-h4">Successful registration</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none text-success-banner">
@@ -125,5 +129,18 @@ function onReset() {
 .buttons {
   display: flex;
   justify-content: right;
+}
+
+:deep(.q-field__control) {
+  margin-top: 2em;
+  height: 6em;
+}
+
+:deep(.q-field__messages) {
+  font-size: 1.4em;
+}
+
+:deep(.q-field__label) {
+  font-size: 1.5em;
 }
 </style>

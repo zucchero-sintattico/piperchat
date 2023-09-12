@@ -36,12 +36,13 @@ function onReset() {
 </script>
 
 <template>
-  <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+  <q-form @submit="onSubmit" @reset="onReset">
     <q-input
       filled
       v-model="username"
       label="Username"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
     />
 
@@ -51,6 +52,7 @@ function onReset() {
       v-model="password"
       label="Your password"
       lazy-rules
+      :input-style="{ fontSize: '1.5em' }"
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
         (val) => (val && val.length > 7) || 'Password must be at least 8 characters long'
@@ -58,8 +60,8 @@ function onReset() {
     />
 
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" :disable="error" />
-      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      <q-btn label="Submit" type="submit" color="primary" class="text-h5" :disable="error" />
+      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
 
     <Transition>
@@ -68,9 +70,22 @@ function onReset() {
   </q-form>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .buttons {
   display: flex;
   justify-content: right;
+}
+
+:deep(.q-field__control) {
+  margin-top: 2em;
+  height: 6em;
+}
+
+:deep(.q-field__messages) {
+  font-size: 1.4em;
+}
+
+:deep(.q-field__label) {
+  font-size: 1.5em;
 }
 </style>

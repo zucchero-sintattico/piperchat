@@ -3,87 +3,84 @@ import { ref } from 'vue'
 import LoginForm from '@/components/login-component/LoginForm.vue'
 import RegisterForm from '@/components/login-component/RegisterForm.vue'
 
-const tab = ref('login')
+const login = ref(true)
 </script>
 
 <template>
   <div class="container">
-    <img src="../assets/piperchat-logo.jpg" alt="logo" class="logo" />
-
-    <div class="form">
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
-          <q-tab name="login" label="Login" />
-          <q-tab name="register" label="Register" />
-        </q-tabs>
-
-        <q-separator />
-
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="login">
-            <LoginForm class="tabs" />
-          </q-tab-panel>
-
-          <q-tab-panel name="register">
-            <RegisterForm class="tabs" />
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
+    <img src="../assets/piperchat-logo-no-background.png" alt="logo" />
+    <div v-if="login" class="form">
+      <h1>Login</h1>
+      <LoginForm />
+      <a @click="login = false">New user? Register</a>
+    </div>
+    <div v-else class="form">
+      <h1>Register</h1>
+      <RegisterForm />
+      <a @click="login = true">Already register? Login</a>
     </div>
   </div>
 </template>
 
 <style scoped>
 .container {
+  --left-bar: 500px;
+  --green: rgb(3, 100, 95);
   display: flex;
+  justify-content: center;
   align-items: center;
-  margin: 20vh auto;
-  height: 50vh;
+  height: 100vh;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  width: var(--left-bar);
+  left: 0;
+  z-index: -1;
+  height: 100%;
+  background-color: var(--green);
+}
+
+img {
+  width: var(--left-bar);
+  height: var(--left-bar);
+  background-color: var(--green);
 }
 
 .form {
-  flex-grow: 2;
-  margin: 0 5%;
+  display: inline-block;
+  width: 100%;
+  padding: 2em 5em;
+  font-size: 1em;
 }
 
-.tabs {
-  width: 75%;
-  margin: 5em auto;
+h1 {
+  font-weight: normal;
 }
 
-:deep(.q-tab__label) {
+a {
+  color: var(--green);
+  text-decoration: underline;
   font-size: 1.5em;
+  cursor: pointer;
 }
 
-.logo {
-  flex-grow: 0;
-  margin: auto 5em;
-  height: 70%;
-  border-radius: 50%;
-  box-shadow: 0 0 2em rgba(0, 0, 0, 1);
+a:hover {
+  color: rgb(0, 0, 0);
 }
 
-@media only screen and (max-width: 1200px) {
+@media (max-width: 1100px) {
   .container {
+    --left-bar: 400px;
     flex-direction: column;
-    margin: auto;
+    justify-content: start;
   }
 
-  .logo {
-    margin: 2em auto;
-    width: 40%;
-  }
-
-  .form {
-    margin: 0 auto;
-    width: 90%;
+  .container::before {
+    position: absolute;
+    width: 100%;
+    height: var(--left-bar);
   }
 }
 </style>

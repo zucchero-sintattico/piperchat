@@ -16,6 +16,10 @@ const props = defineProps(['errorMessage'])
   border-radius: 1em;
 }
 
+:deep(.q-banner__content) {
+  font-size: 1.5em;
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
