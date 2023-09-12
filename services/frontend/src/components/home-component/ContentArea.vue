@@ -4,8 +4,8 @@ import MessageInput from '@/components/home-component/MessageInput.vue'
 
 <template>
   <!--Message-->
-  <div class="q-pa-m">
-    <q-layout view="lHh Lpr lFf" container style="height: 1000px">
+  <q-page class="q-pa-auto">
+    <q-layout view="lHh Lpr lFf" container style="min-height: inherit">
       <q-header>
         <q-toolbar>
           <q-avatar>
@@ -36,9 +36,9 @@ import MessageInput from '@/components/home-component/MessageInput.vue'
           </q-page-scroller>
         </q-page>
       </q-page-container>
+      <MessageInput />
     </q-layout>
-    <MessageInput />
-  </div>
+  </q-page>
 </template>
 
 <style scoped lang="sass"></style>
