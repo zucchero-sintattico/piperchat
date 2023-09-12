@@ -17,7 +17,7 @@ export const useUserStore = defineStore(
     const error = ref('')
     async function whoami() {
       try {
-        const response = await userController.getUser()
+        const response = await userController.whoami()
         username.value = response.data.username
         email.value = response.data.email
         description.value = response.data.description

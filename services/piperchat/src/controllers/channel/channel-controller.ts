@@ -17,7 +17,6 @@ export interface ChannelController {
    * @param channelId the id of the channel
    * @param username the username of the user
    * @returns the channel
-   * @throws {ServerNotFound} if the server does not exist
    * @throws {UserNotAuthorized} if the user is not in the server
    * @throws {ChannelNotFound} if the channel does not exist
    */

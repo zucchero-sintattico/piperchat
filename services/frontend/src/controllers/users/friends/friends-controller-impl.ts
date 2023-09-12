@@ -1,84 +1,41 @@
+import { AxiosController } from '@/controllers/axios-controller'
 import type { FriendsController } from './friends-controller'
-import axios from 'axios'
+import {
+  SendFriendRequestApi,
+  type GetFriendsApi,
+  type GetFriendsRequestsApi
+} from '@api/users/friends'
 
-export class FriendsControllerImpl implements FriendsController {
-  async getFriends(): Promise<string[]> {
-    const response = await axios.get('/friends')
-    if (response.status === 200) {
-      return response.data
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    }
-    return Promise.resolve([])
+export class FriendsControllerImpl extends AxiosController implements FriendsController {
+  async getFriends(): Promise<GetFriendsApi.Response> {
+    return await this.get<GetFriendsApi.Response>('/friends')
   }
 
-  async getFriendsRequests(): Promise<string[]> {
-    const response = await axios.get('/friends/requests')
-    if (response.status === 200) {
-      return response.data
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    }
-    return Promise.resolve([])
+  async getFriendsRequests(): Promise<GetFriendsRequestsApi.Response> {
+    return await this.get<GetFriendsRequestsApi.Response>('/friends/requests')
   }
 
-  async sendFriendRequest(friendUsername: string): Promise<void> {
-    const data = {
-      friendUsername: friendUsername
+  async sendFriendRequest(to: string): Promise<SendFriendRequestApi.Response> {
+    const body: SendFriendRequestApi.Request.Body = {
+      to: to,
+      action: SendFriendRequestApi.Request.FriendRequestAction.send
     }
-
-    const response = await axios.post('/friends/requests', data)
-    if (response.status === 200) {
-      return response.data
-    } else if (response.status === 400) {
-      throw new Error('Bad requestd')
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    } else if (response.status === 404) {
-      throw new Error('UserNotFound')
-    }
-    return Promise.resolve()
+    return await this.post<SendFriendRequestApi.Response>('/friends/requests', body)
   }
 
-  async acceptFriendRequest(friendUsername: string): Promise<void> {
-    const data = {
-      friendUsername: friendUsername,
-      action: 'accept'
+  async acceptFriendRequest(to: string): Promise<SendFriendRequestApi.Response> {
+    const body: SendFriendRequestApi.Request.Body = {
+      to: to,
+      action: SendFriendRequestApi.Request.FriendRequestAction.accept
     }
-
-    const response = await axios.post('/friends/requests', data)
-    if (response.status === 200) {
-      return response.data
-    } else if (response.status === 400) {
-      throw new Error('Bad requestd')
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    } else if (response.status === 404) {
-      throw new Error('UserNotFound')
-    } else if (response.status === 409) {
-      throw new Error('FriendRequestNotPresent')
-    }
-    return Promise.resolve()
+    return await this.post<SendFriendRequestApi.Response>('/friends/requests', body)
   }
 
-  async denyFriendRequest(friendUsername: string): Promise<void> {
-    const data = {
-      friendUsername: friendUsername,
-      action: 'deny'
+  async denyFriendRequest(to: string): Promise<SendFriendRequestApi.Response> {
+    const body: SendFriendRequestApi.Request.Body = {
+      to: to,
+      action: SendFriendRequestApi.Request.FriendRequestAction.deny
     }
-
-    const response = await axios.post('/friends/requests', data)
-    if (response.status === 200) {
-      return response.data
-    } else if (response.status === 400) {
-      throw new Error('Bad requestd')
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    } else if (response.status === 404) {
-      throw new Error('UserNotFound')
-    } else if (response.status === 409) {
-      throw new Error('FriendRequestNotPresent')
-    }
-    return Promise.resolve()
+    return await this.post<SendFriendRequestApi.Response>('/friends/requests', body)
   }
 }

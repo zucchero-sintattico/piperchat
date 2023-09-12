@@ -1,35 +1,67 @@
-import axios from 'axios'
+import { AxiosController } from '@/controllers/axios-controller'
 import type { ServerController } from './server-controller'
-export class ServerControllerImpl implements ServerController {
-  async getServers(): Promise<any> {
-    throw new Error('Method not implemented.')
+import {
+  CreateServerApi,
+  DeleteServerApi,
+  GetServerApi,
+  GetServerParticipantsApi,
+  GetServersApi,
+  JoinServerApi,
+  KickUserFromServerApi,
+  LeaveServerApi,
+  UpdateServerApi
+} from '@api/piperchat/server'
+
+export class ServerControllerImpl extends AxiosController implements ServerController {
+  async getServers(): Promise<GetServersApi.Response> {
+    return await this.get<GetServersApi.Response>('/servers')
   }
-  async getServer(id: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async getServer(request: GetServerApi.Request.Type): Promise<GetServerApi.Response> {
+    const params = request as GetServerApi.Request.Params
+    return await this.get<GetServerApi.Response>(`/servers/${params.serverId}`)
   }
-  async createServer(name: string, description: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async createServer(request: CreateServerApi.Request.Type): Promise<CreateServerApi.Response> {
+    const body = request as CreateServerApi.Request.Body
+    return await this.post<CreateServerApi.Response>('/servers', body)
   }
-  async updateServer(
-    id: string,
-    name?: string | undefined,
-    description?: string | undefined
-  ): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async updateServer(request: UpdateServerApi.Request.Type): Promise<UpdateServerApi.Response> {
+    const params = request as UpdateServerApi.Request.Params
+    const body = request as UpdateServerApi.Request.Body
+    return await this.put<UpdateServerApi.Response>(`/servers/${params.serverId}`, body)
   }
-  async deleteServer(id: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async deleteServer(request: DeleteServerApi.Request.Type): Promise<DeleteServerApi.Response> {
+    const params = request as DeleteServerApi.Request.Params
+    return await this.delete<DeleteServerApi.Response>(`/servers/${params.serverId}`)
   }
-  async getServerParticipants(id: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async getServerParticipants(
+    request: GetServerParticipantsApi.Request.Type
+  ): Promise<GetServerParticipantsApi.Response> {
+    const params = request as GetServerParticipantsApi.Request.Params
+    return await this.get<GetServerParticipantsApi.Response>(
+      `/servers/${params.serverId}/participants`
+    )
   }
-  async joinServer(id: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async joinServer(request: JoinServerApi.Request.Type): Promise<JoinServerApi.Response> {
+    const params = request as JoinServerApi.Request.Params
+    return await this.post<JoinServerApi.Response>(`/servers/${params.serverId}/join`)
   }
-  async leaveServer(id: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async leaveServer(request: LeaveServerApi.Request.Type): Promise<LeaveServerApi.Response> {
+    const params = request as LeaveServerApi.Request.Params
+    return await this.post<LeaveServerApi.Response>(`/servers/${params.serverId}/leave`)
   }
-  async kickUserFromTheServer(id: string, admin: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async kickUserFromTheServer(
+    request: KickUserFromServerApi.Request.Type
+  ): Promise<KickUserFromServerApi.Response> {
+    const params = request as KickUserFromServerApi.Request.Params
+    const body = request as KickUserFromServerApi.Request.Body
+    return await this.post<KickUserFromServerApi.Response>(`/servers/${params.serverId}/kick`, body)
   }
 }

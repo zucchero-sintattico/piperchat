@@ -1,34 +1,29 @@
+import {
+  WhoamiApi,
+  GetUserStatusApi,
+  GetUserPhotoApi,
+  GetUserDescriptionApi
+} from '@api/users/user'
 export interface UserController {
   /**
-   * Get a user.
-   * @param username The username of the user.
-   * @returns The user.
-   * @throws {UserNotFound} If the user is not found.
+   * Get the current user.
    */
-  getUser(): Promise<any>
+  whoami(): Promise<WhoamiApi.Response>
 
   /**
    * Get the status of a user.
-   * @param username The username of the user.
-   * @returns The status of the user.
-   * @throws {UserNotFound} If the user is not found.
    */
-  getUserStatus(username: string): Promise<any>
+  getUserStatus(request: GetUserStatusApi.Request.Type): Promise<GetUserStatusApi.Response>
 
   /**
    * Get the photo of a user.
-   * @param username The username of the user.
-   * @returns The photo of the user.
-   * @throws {UserNotFound} If the user is not found.
-   * @throws {PhotoNotPresent} If the photo is not present.
    */
-  getUserPhoto(username: string): Promise<any>
+  getUserPhoto(request: GetUserPhotoApi.Request.Type): Promise<GetUserPhotoApi.Response>
 
   /**
    * Get the user's description.
-   * @param username The username of the user.
-   * @returns The description of the user.
-   * @throws {UserNotFound} If the user is not found.
    */
-  getUserDescription(username: string): Promise<any>
+  getUserDescription(
+    request: GetUserDescriptionApi.Request.Type
+  ): Promise<GetUserDescriptionApi.Response>
 }

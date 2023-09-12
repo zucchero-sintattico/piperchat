@@ -1,35 +1,17 @@
+import { AxiosController } from '@/controllers/axios-controller'
 import type { ProfileController } from './profile-controller'
-import axios from 'axios'
+import type { UpdateDescriptionApi, UpdatePhotoApi } from '@api/users/profile'
 
-export class ProfileControllerImpl implements ProfileController {
-  async updateUserPhoto(photo: string): Promise<void> {
-    const data = {
-      photo: photo
-    }
-
-    const response = await axios.put('/profile/photo', data)
-    if (response.status === 200) {
-      console.log('update photo success')
-    } else if (response.status === 400) {
-      throw new Error('Bad requestd')
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    }
-    return Promise.resolve()
+export class ProfileControllerImpl extends AxiosController implements ProfileController {
+  async updateUserPhoto(request: UpdatePhotoApi.Request.Type): Promise<UpdatePhotoApi.Response> {
+    const body = request as UpdatePhotoApi.Request.Body
+    return await this.put<UpdatePhotoApi.Response>('/profile/photo', body)
   }
-  async updateUserDescription(description: string): Promise<void> {
-    const data = {
-      description: description
-    }
 
-    const response = await axios.put('/profile/description', data)
-    if (response.status === 200) {
-      console.log('update description success')
-    } else if (response.status === 400) {
-      throw new Error('Bad requestd')
-    } else if (response.status === 401) {
-      throw new Error('Access token is missing or invalid')
-    }
-    return Promise.resolve()
+  async updateUserDescription(
+    request: UpdateDescriptionApi.Request.Type
+  ): Promise<UpdateDescriptionApi.Response> {
+    const body = request as UpdateDescriptionApi.Request.Body
+    return await this.put<UpdatePhotoApi.Response>('/profile/description', body)
   }
 }
