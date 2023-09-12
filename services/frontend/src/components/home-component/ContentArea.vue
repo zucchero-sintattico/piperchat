@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MessageInput from '@/components/home-component/MessageInput.vue'
 import ConversationHeader from './ConversationHeader.vue'
-import Chat from './Chat.vue'
+import ChatArea from './ChatArea.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import Chat from './Chat.vue'
   <q-page class="q-pa-auto">
     <q-layout view="lHh Lpr lFf" container style="min-height: inherit">
       <ConversationHeader />
-      <Chat />
+      <ChatArea />
       <MessageInput />
     </q-layout>
   </q-page>
