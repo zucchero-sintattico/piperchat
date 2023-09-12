@@ -16,12 +16,7 @@ function deleteMessage() {
 <template>
   <div class="foot">
     <q-input class="textfield" filled v-model="message" label="Write...">
-      <template v-slot:before>
-        <q-avatar>
-          <img src="https://cdn.quasar.dev/img/avatar.png" />
-        </q-avatar>
-      </template>
-
+      
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
