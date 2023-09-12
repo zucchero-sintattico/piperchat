@@ -30,12 +30,7 @@ export class BadRequest extends ErrorResponse {
   }
 }
 
-export class JwtTokenMissing extends ErrorResponse {
+export class JwtTokenMissingOrInvalid extends ErrorResponse {
   statusCode = 401
-  error = 'JWT Token Missing - Unauthorized' as const
-}
-
-export class JwtTokenInvalid extends ErrorResponse {
-  statusCode = 401
-  error = 'JWT Token Invalid - Unauthorized' as const
+  error = 'JWT Token Missing or Invalid' as const
 }

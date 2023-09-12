@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
-import { JwtTokenInvalid, JwtTokenMissing, JwtTokenMissingOrInvalid } from '@api/errors'
+import { JwtTokenMissingOrInvalid } from '@api/errors'
 /**
  * JWT Token Info
  * @param username Username of the user
@@ -110,7 +110,7 @@ export const JWTAuthenticationMiddleware = (
 ): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
-    const response = new JwtTokenMissing()
+    const response = new JwtTokenMissingOrInvalid()
     response.send(res)
     return
   }
@@ -118,7 +118,7 @@ export const JWTAuthenticationMiddleware = (
     req.user = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
     next()
   } catch (e) {
-    const response = new JwtTokenInvalid()
+    const response = new JwtTokenMissingOrInvalid()
     response.send(res)
   }
 }
@@ -139,7 +139,7 @@ export const JWTRefreshTokenMiddleware = (
 ): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
-    const response = new JwtTokenMissing()
+    const response = new JwtTokenMissingOrInvalid()
     response.send(res)
     return
   }

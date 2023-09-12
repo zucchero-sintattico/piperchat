@@ -919,17 +919,11 @@ components:
       content:
         application/json:
           schema:
-            oneOf:
-              - type: object
-                properties:
-                  message:
-                    type: string
-                    example: JWT token is missing
-              - type: object
-                properties:
-                  message:
-                    type: string
-                    example: JWT token is invalid
+            type: object
+            properties:
+              message:
+                type: string
+                example: JWT token Missing or Invalid
     UnauthorizedError:
       description: Access token is missing or invalid
     ForbiddenError:
