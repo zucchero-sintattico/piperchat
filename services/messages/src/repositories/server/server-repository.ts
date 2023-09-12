@@ -2,33 +2,33 @@ export interface ServerRepository {
   /**
    * Add partecipant to server
    * @param serverId
-   * @param partecipantId
+   * @param participantId
    * @returns Promise<void>
    */
-  addPartecipant(serverId: string, partecipantId: string): Promise<void>
+  addParticipant(serverId: string, participantId: string): Promise<void>
 
   /**
    * Remove partecipant from server
    * @param serverId
-   * @param partecipantId
+   * @param participantId
    * @returns Promise<void>
    */
-  removePartecipant(serverId: string, partecipantId: string): Promise<void>
+  removeParticipant(serverId: string, participantId: string): Promise<void>
 
   /**
    * Add server
    * @param serverId
-   * @param partecipantId
+   * @param participantId
    * @returns Promise<void>
    */
-  addServer(serverId: string, partecipantId: string): Promise<void>
+  addServer(serverId: string, participantId: string): Promise<void>
 
   /**
    * Get servers partecipant
    * @param serverId
    * @returns Promise<string[]>
    */
-  getServerPartecipants(serverId: string): Promise<string[]>
+  getServerParticipants(serverId: string): Promise<string[]>
 
   /**
    * Remove server
@@ -57,4 +57,6 @@ export interface ServerRepository {
    *
    */
   removeMessageChannel(serverId: string, channelId: string): Promise<void>
+
+  containsMessageChannel(serverId: string, channelId: string): Promise<boolean>
 }

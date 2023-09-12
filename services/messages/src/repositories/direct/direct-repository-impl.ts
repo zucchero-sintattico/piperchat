@@ -23,7 +23,7 @@ export class DirectRepositoryImpl implements DirectRepository {
 
   async createDirect(username1: string, username2: string): Promise<void> {
     await Directs.create({
-      partecipants: [username1, username2],
+      participants: [username1, username2],
     })
   }
 
@@ -34,8 +34,8 @@ export class DirectRepositoryImpl implements DirectRepository {
   ): Promise<void> {
     const direct = await Directs.findOne({
       $or: [
-        { partecipants: [username1, username2] },
-        { partecipants: [username2, username1] },
+        { participants: [username1, username2] },
+        { participants: [username2, username1] },
       ],
     })
     if (!direct) {
@@ -44,8 +44,8 @@ export class DirectRepositoryImpl implements DirectRepository {
     await Directs.updateOne(
       {
         $or: [
-          { partecipants: [username1, username2] },
-          { partecipants: [username2, username1] },
+          { participants: [username1, username2] },
+          { participants: [username2, username1] },
         ],
       },
       {

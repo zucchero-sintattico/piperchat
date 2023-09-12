@@ -48,6 +48,10 @@ export namespace GetChannelsApi {
 }
 
 export namespace CreateChannelApi {
+  export enum ChannelType {
+    Messages = 'messages',
+    Multimedia = 'multimedia',
+  }
   export namespace Request {
     export type Type = Body & Params
     export type Params = {
@@ -55,7 +59,7 @@ export namespace CreateChannelApi {
     }
     export type Body = {
       name: string
-      channelType: string
+      channelType: ChannelType
       description?: string
     }
     export const Schema: RequestSchema = {

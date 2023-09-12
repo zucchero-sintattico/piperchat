@@ -29,7 +29,6 @@ export class ChannelUpdated {
   serverId: string
   channelId: string
   name?: string
-  channelType?: string
   description?: string
   constructor(data: {
     serverId: string
