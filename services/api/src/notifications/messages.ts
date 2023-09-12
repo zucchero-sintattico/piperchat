@@ -35,3 +35,19 @@ export class FriendRequestAcceptedNotification {
     this.from = data.from
   }
 }
+
+export class UserOnlineNotification {
+  type = 'user-online' as const
+  user: string
+  constructor(data: { user: string }) {
+    this.user = data.user
+  }
+}
+
+export class UserOfflineNotification {
+  type = 'user-offline' as const
+  user: string
+  constructor(data: { user: string }) {
+    this.user = data.user
+  }
+}

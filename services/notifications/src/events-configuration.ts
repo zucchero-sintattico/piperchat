@@ -7,6 +7,8 @@ import {
   FriendRequestNotification,
   NewMessageOnDirectNotification,
   NewMessageOnChannelNotification,
+  UserOnlineNotification,
+  UserOfflineNotification,
 } from '@api/notifications/messages'
 import {
   FriendRequestSentMessage,
@@ -19,14 +21,70 @@ import {
   UserLeftServer,
   UserKickedFromServer,
 } from '@messages-api/servers'
-import { UserOnlineMessage, UserOfflineMessage } from '@messages-api/users'
+import {
+  UserOnlineMessage,
+  UserOfflineMessage,
+  UserCreatedMessage,
+  UserDeletedMessage,
+} from '@messages-api/users'
 import { Servers } from './models/server'
+import { Users } from './models/user'
 
 export class NotificationsServiceEventsConfiguration extends EventsConfiguration {
   constructor() {
     super()
     this.listenToServersUpdates()
+    this.listenToFriendsRequest()
+    this.listenToMessages()
+    this.listenToUserStatus()
+  }
 
+  listenToUserStatus() {
+    this.on(UserCreatedMessage, async (event: UserCreatedMessage) => {
+      await Users.create({
+        username: event.username,
+        friends: [],
+      })
+    })
+
+    this.on(UserDeletedMessage, async (event: UserDeletedMessage) => {
+      const user = await Users.findOne({ username: event.username })
+      const friends = user?.friends
+      await Users.deleteOne({ username: event.username })
+      await Users.updateMany(
+        { username: { $in: friends } },
+        { $pull: { friends: event.username } }
+      )
+    })
+
+    this.on(UserOnlineMessage, async (event: UserOnlineMessage) => {
+      const user = await Users.findOne({ username: event.username })
+      const friends = user?.friends
+      friends?.forEach((friend) => {
+        notifiableUsers.sendIfPresent(
+          friend,
+          new UserOnlineNotification({
+            user: event.username,
+          })
+        )
+      })
+    })
+
+    this.on(UserOfflineMessage, async (event: UserOfflineMessage) => {
+      const user = await Users.findOne({ username: event.username })
+      const friends = user?.friends
+      friends?.forEach((friend) => {
+        notifiableUsers.sendIfPresent(
+          friend,
+          new UserOfflineNotification({
+            user: event.username,
+          })
+        )
+      })
+    })
+  }
+
+  listenToMessages() {
     this.on(NewMessageOnChannel, async (event: NewMessageOnChannel) => {
       const server = await Servers.findOne({ _id: event.serverId })
       const participants = server?.participants.filter(
@@ -53,7 +111,9 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
         })
       )
     })
+  }
 
+  listenToFriendsRequest() {
     this.on(FriendRequestSentMessage, async (event: FriendRequestSentMessage) => {
       notifiableUsers.sendIfPresent(
         event.to,
@@ -64,20 +124,14 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
     })
 
     this.on(FriendRequestAcceptedMessage, async (event: FriendRequestAcceptedMessage) => {
+      await Users.updateOne({ username: event.from }, { $push: { friends: event.to } })
+      await Users.updateOne({ username: event.to }, { $push: { friends: event.from } })
       notifiableUsers.sendIfPresent(
         event.to,
         new FriendRequestAcceptedNotification({
           from: event.from,
         })
       )
-    })
-
-    this.on(UserOnlineMessage, async (event: UserOnlineMessage) => {
-      // TODO: Send to friends
-    })
-
-    this.on(UserOfflineMessage, async (event: UserOfflineMessage) => {
-      // TODO: Send to friends
     })
   }
 
