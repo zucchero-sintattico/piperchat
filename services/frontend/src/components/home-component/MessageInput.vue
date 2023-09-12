@@ -14,9 +14,8 @@ function deleteMessage() {
 </script>
 
 <template>
-  <div class="foot">
+  <div class="foot blurred">
     <q-input class="textfield" filled v-model="message" label="Write...">
-      
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
@@ -28,18 +27,11 @@ function deleteMessage() {
   </div>
 </template>
 
-<style scoped>
-.foot {
-  position: sticky;
-  bottom: 0;
-}
+<style scoped lang="sass">
+.foot
+  position: sticky
+  bottom: 0
 
-/* make its background blurred */
-.textfield {
-  background-color: gainsboro;
-}
-
-.btnn {
-  background-color: var(--primary);
-}
+.blurred
+  backdrop-filter: blur(15px)
 </style>
