@@ -1,10 +1,22 @@
-export class NewMessageNotification {
-  type = 'new-message' as const
+export class NewMessageOnDirectNotification {
+  type = 'new-direct-message' as const
   from: string
   content: string
   constructor(data: { from: string; content: string }) {
     this.from = data.from
     this.content = data.content
+  }
+}
+
+export class NewMessageOnChannelNotification {
+  type = 'new-channel-message' as const
+  from: string
+  content: string
+  channel: string
+  constructor(data: { from: string; content: string; channel: string }) {
+    this.from = data.from
+    this.content = data.content
+    this.channel = data.channel
   }
 }
 

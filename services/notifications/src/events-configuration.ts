@@ -5,7 +5,8 @@ import { notifiableUsers } from './models/notification-model'
 import {
   FriendRequestAcceptedNotification,
   FriendRequestNotification,
-  NewMessageNotification,
+  NewMessageOnDirectNotification,
+  NewMessageOnChannelNotification,
 } from '@api/notifications/messages'
 import {
   FriendRequestSentMessage,
@@ -34,9 +35,10 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
       participants?.forEach((participant) => {
         notifiableUsers.sendIfPresent(
           participant,
-          new NewMessageNotification({
+          new NewMessageOnChannelNotification({
             from: event.sender,
             content: event.message,
+            channel: event.channelId,
           })
         )
       })
@@ -45,7 +47,7 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
     this.on(NewMessageOnDirect, async (event: NewMessageOnDirect) => {
       notifiableUsers.sendIfPresent(
         event.receiver,
-        new NewMessageNotification({
+        new NewMessageOnDirectNotification({
           from: event.sender,
           content: event.message,
         })
