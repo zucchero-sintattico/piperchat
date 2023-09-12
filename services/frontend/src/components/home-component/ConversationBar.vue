@@ -7,8 +7,8 @@ import ChannelsList from './ChannelsList.vue'
   <q-drawer>
     <div class="row no-wrap left-menu bg-dark">
       <ServerList />
-      <ChannelsList />
-      <!--<DirectsList />-->
+      <!--<<ChannelsList />-->
+      <DirectsList />
     </div>
   </q-drawer>
 </template>
