@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
-
+import { JwtTokenInvalid, JwtTokenMissing, JwtTokenMissingOrInvalid } from '@api/errors'
 /**
  * JWT Token Info
  * @param username Username of the user
@@ -110,15 +110,16 @@ export const JWTAuthenticationMiddleware = (
 ): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
-    res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
+    const response = new JwtTokenMissing()
+    response.send(res)
     return
   }
   try {
     req.user = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
     next()
   } catch (e) {
-    res.status(401).json({ message: 'JWT Token Invalid - Unauthorized', error: e })
-    return
+    const response = new JwtTokenInvalid()
+    response.send(res)
   }
 }
 
@@ -138,16 +139,10 @@ export const JWTRefreshTokenMiddleware = (
 ): void => {
   const accessToken = req.cookies.jwt
   if (!accessToken) {
-    res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
+    const response = new JwtTokenMissing()
+    response.send(res)
     return
   }
-  try {
-    jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
-    res.status(400).json({
-      message: 'In order to refresh the token, you must have an expired Access Token',
-    })
-  } catch (e) {
-    next()
-  }
+  next()
   return
 }

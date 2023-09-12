@@ -29,3 +29,13 @@ export class BadRequest extends ErrorResponse {
     this.query = query
   }
 }
+
+export class JwtTokenMissing extends ErrorResponse {
+  statusCode = 401
+  error = 'JWT Token Missing - Unauthorized' as const
+}
+
+export class JwtTokenInvalid extends ErrorResponse {
+  statusCode = 401
+  error = 'JWT Token Invalid - Unauthorized' as const
+}

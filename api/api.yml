@@ -31,28 +31,14 @@ paths:
       tags:
         - 'auth'
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: user1
-                  description: Username of the user to be logged in
-                password:
-                  type: string
-                  example: password123
-              required:
-                - username
-                - password
+        '$ref': '#/components/requestBodies/login'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/LoggedIn'
         '400':
-          description: Bad request'
-        '401':
-          description: Unauthorized
+          '$ref': '#/components/responses/BadRequest'
+        '403':
+          '$ref': '#/components/responses/UsernameOrPasswordIncorrect'
 
   /auth/register:
     post:
@@ -61,37 +47,14 @@ paths:
       tags:
         - 'auth'
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: user1
-                password:
-                  type: string
-                  example: password123
-                email:
-                  type: string
-                  example:
-                description:
-                  type: string
-                  example: 'Here to make new friends'
-                photo:
-                  type: string
-                  format: base64
-              required:
-                - username
-                - password
-                - email
+        '$ref': '#/components/requestBodies/register'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/Registered'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '409':
-          description: Username or mail already exists # this is a security issue, we should not tell the user that the username already exists
+          '$ref': '#/components/responses/UserAlreadyExists'
 
   /auth/logout:
     post:
@@ -103,9 +66,9 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/LoggedOut'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
 
   /auth/refresh-token:
     post:
@@ -117,7 +80,7 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/RefreshToken'
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
 
@@ -854,12 +817,203 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
+  requestBodies:
+    login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+                description: Username of the user to be logged in
+              password:
+                type: string
+                example: password123
+                description: Password of the user to be logged in
+            required:
+              - username
+              - password
+    register:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+              password:
+                type: string
+                example: password123
+              email:
+                type: string
+                example: email@email.com
+              description:
+                type: string
+                example: 'Here to make new friends'
+              photo:
+                type: string
+                format: base64
+            required:
+              - username
+              - password
+              - email
+
   responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              params:
+                description: List of parameters that are not validß
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              body:
+                description: List of body fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              query:
+                description: List of query fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+    JwtTokenMissingOrInvalid:
+      description: JWT token is missing or invalid
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - type: object
+                properties:
+                  message:
+                    type: string
+                    example: JWT token is missing
+              - type: object
+                properties:
+                  message:
+                    type: string
+                    example: JWT token is invalid
     UnauthorizedError:
       description: Access token is missing or invalid
     ForbiddenError:
       description: You don't have permission to access this resource
 
+    # LOGIN
+    LoggedIn:
+      description: Logged in
+      content:
+        application/json:
+          schema:
+            properties:
+              jwt:
+                type: string
+                description: JWT token
+    UsernameOrPasswordIncorrect:
+      description: Username or password incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Username or password incorrect
+    # REGISTER
+    Registered:
+      description: User registered successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              createdUser:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: user1
+                  email:
+                    type: string
+                    example: email@email.com
+                  description:
+                    type: string
+                    example: 'Here to make new friends'
+                  photo:
+                    type: string
+                    format: base64
+                required:
+                  - username
+                  - email
+    UserAlreadyExists:
+      description: User already exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User already exists
+    # LOGOUT
+    LoggedOut:
+      description: Logged out
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Logged out
+
+    # REFRESH TOKEN
+    RefreshToken:
+      description: Refresh token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+                description: JWT token
   schemas:
     server:
       type: object
