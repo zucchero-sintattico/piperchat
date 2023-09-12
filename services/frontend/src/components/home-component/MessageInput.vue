@@ -15,7 +15,7 @@ function deleteMessage() {
 
 <template>
   <div class="foot blurred">
-    <q-input padding class="textfield" filled v-model="message" label="Write...">
+    <q-input padding filled v-model="message" label="Write...">
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
