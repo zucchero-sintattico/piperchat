@@ -19,7 +19,7 @@
         <div v-for="n in 4" :key="n" class="row">
           <q-list>
             <q-expansion-item
-              class="caption-white text-white caption-white"
+              dark
               icon="volume_up"
               :label="'Nome ' + n"
               caption="3 user Online"
@@ -43,7 +43,4 @@
   </q-scroll-area>
 </template>
 
-<style lang="sass">
-.caption-white
-  color: white
-</style>
+<style lang="sass"></style>
