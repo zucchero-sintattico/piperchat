@@ -1,23 +1,31 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 const props = defineProps(['errorMessage'])
+
+// This component only accept v-model
+const unused = ref(true)
 </script>
 
 <template>
-  <q-banner inline-actions class="text-white bg-red error-banner">
-    Login error: {{ props.errorMessage }}
-  </q-banner>
+  <q-dialog v-model="unused" seamless position="bottom">
+    <q-card style="width: 100%">
+      <q-card-section class="row items-center no-wrap bg-red" style="font-size: 1.1em">
+        <q-banner inline-actions class="text-white bg-red error-banner">
+          {{ props.errorMessage }}
+        </q-banner>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <style scoped>
-.error-banner {
-  position: absolute;
-  bottom: 5px;
-  width: 50%;
-  border-radius: 1em;
-}
-
 :deep(.q-banner__content) {
   font-size: 1.5em;
+}
+
+:deep(.q-card__section) {
+  height: 5em;
 }
 
 .v-enter-active,

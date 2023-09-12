@@ -4,7 +4,7 @@ import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-imp
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
-import { LoginApi, RegisterApi } from '@api/users/auth'
+import { LoginApi } from '@api/users/auth'
 
 export const useUserStore = defineStore(
   'user',
