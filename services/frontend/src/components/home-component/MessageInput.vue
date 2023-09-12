@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useMessageStore } from '@/stores/messages'
 
 const message = ref('')
+const messageStore = useMessageStore()
 
-function sendMessage() {
-  console.log(message.value)
-  // TODO
+async function sendMessage() {
+  console.log('message sent')
+  await messageStore.sendMessage('me', message.value)
+  message.value = ''
 }
 
 function deleteMessage() {
@@ -15,7 +18,7 @@ function deleteMessage() {
 
 <template>
   <div class="foot blurred">
-    <q-input padding filled v-model="message" label="Write...">
+    <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
