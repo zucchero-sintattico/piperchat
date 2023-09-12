@@ -1,33 +1,63 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
+import FormError from './FormError.vue'
+
+const REDIRECT_DELAY = 2000
+const ERROR_ANIMATION_DURATION = 2000
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const password2 = ref('')
+
+const registrationSuccess = ref(false)
+
+const error = ref(false)
+const errorMessage = ref('')
 
 async function onSubmit() {
   const userStore = useUserStore()
-  await userStore.register({
-    username: username.value,
-    email: email.value,
-    password: password.value
-  })
+  await userStore.register(
+    {
+      username: username.value,
+      email: email.value,
+      password: password.value
+    },
+    () => {
+      registrationSuccess.value = true
+      setTimeout(() => {
+        location.reload()
+      }, REDIRECT_DELAY)
+    },
+    (e: any) => {
+      error.value = true
+      errorMessage.value = e
+      setTimeout(() => {
+        error.value = false
+        errorMessage.value = ''
+      }, ERROR_ANIMATION_DURATION)
+    }
+  )
 }
 
 function onReset() {
-  console.log('Resetted!')
+  username.value = ''
+  email.value = ''
+  password.value = ''
+  password2.value = ''
 }
 </script>
 
 <template>
+  <!-- Form -->
   <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
     <q-input
       filled
       v-model="username"
       label="Username"
-      hint="Insert your username"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
     />
 
@@ -35,9 +65,12 @@ function onReset() {
       filled
       v-model="email"
       label="Email"
-      hint="Insert your email"
       lazy-rules
-      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+      :input-style="{ fontSize: '2em' }"
+      :rules="[
+        (val) => (val && val.length > 0) || 'Please type something',
+        (val) => /.+@.+/.test(val) || 'Invalid email address'
+      ]"
     />
 
     <q-input
@@ -45,18 +78,50 @@ function onReset() {
       type="password"
       v-model="password"
       label="Your password"
-      hint="Insert your password"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
         (val) => (val && val.length > 7) || 'Password must be at least 8 characters long'
       ]"
     />
 
+    <q-input
+      filled
+      type="password"
+      v-model="password2"
+      label="Your password"
+      lazy-rules
+      :input-style="{ fontSize: '2em' }"
+      :rules="[(val) => (val && password === password2) || 'Passwords must match']"
+    />
+
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" />
-      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      <q-btn label="Submit" type="submit" color="primary" :disable="error" class="text-h5" />
+      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
+
+    <Transition>
+      <FormError v-if="error" :errorMessage="errorMessage" />
+    </Transition>
+
+    <!-- Banner for successful registration -->
+    <q-dialog v-model="registrationSuccess" class="success-banner text-h6">
+      <q-card>
+        <q-card-section>
+          <div class="text-h4">Successful registration</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-success-banner">
+          Registration successful, you will redirected <br />
+          to the login page in a few seconds...
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-circular-progress indeterminate rounded size="30px" color="lime" class="q-ma-md" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-form>
 </template>
 
@@ -64,5 +129,18 @@ function onReset() {
 .buttons {
   display: flex;
   justify-content: right;
+}
+
+:deep(.q-field__control) {
+  margin-top: 2em;
+  height: 6em;
+}
+
+:deep(.q-field__messages) {
+  font-size: 1.4em;
+}
+
+:deep(.q-field__label) {
+  font-size: 1.5em;
 }
 </style>

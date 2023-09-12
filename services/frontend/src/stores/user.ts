@@ -4,7 +4,7 @@ import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-imp
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
-import { LoginApi, RegisterApi } from '@api/users/auth'
+import { LoginApi } from '@api/users/auth'
 
 export const useUserStore = defineStore(
   'user',
@@ -33,35 +33,54 @@ export const useUserStore = defineStore(
     async function login(
       parameters: { username: string; password: string },
       onSuccess: () => void,
-      onError: () => void
+      onError: (error: any) => void
     ) {
       try {
         const response: LoginApi.Response = await authController.login({
           username: parameters.username,
           password: parameters.password
         })
-        if (response instanceof LoginApi.Responses.Success) {
-          isLoggedIn.value = true
-          error.value = ''
-          onSuccess()
-          await whoami()
+        switch (response.statusCode) {
+          case 200:
+            isLoggedIn.value = true
+            onSuccess()
+            await whoami()
+            break
+          case 401:
+            onError('Wrong Username or Password')
+            break
+          default:
+            onError('Error')
+            break
         }
       } catch (e) {
-        console.log(e)
-        error.value = 'Errore nel login'
-        onError()
+        onError(e)
       }
     }
-    async function register(parameters: { username: string; email: string; password: string }) {
+    async function register(
+      parameters: { username: string; email: string; password: string },
+      onSuccess: () => void,
+      onError: (error: any) => void
+    ) {
       try {
-        await authController.register({
+        const response = await authController.register({
           username: parameters.username,
           email: parameters.email,
           password: parameters.password
         })
+        switch (response.statusCode) {
+          case 200:
+            onSuccess()
+            break
+          case 409:
+            onError('User already exists')
+            break
+          default:
+            onError('Error')
+            break
+        }
       } catch (e) {
-        console.log(e)
-        error.value = 'Errore nella registrazione'
+        onError(e)
       }
     }
 

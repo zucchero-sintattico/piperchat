@@ -2,13 +2,15 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../../router/index'
+import FormError from './FormError.vue'
+
+const ERROR_ANIMATION_DURATION = 2000
 
 const username = ref('')
 const password = ref('')
 const userStore = useUserStore()
-const error = ref(true)
-
-const ERROR_ANIMATION_DURATION = 2000
+const error = ref(false)
+const errorMessage = ref('')
 
 function onSubmit() {
   userStore.login(
@@ -16,10 +18,12 @@ function onSubmit() {
     () => {
       router.push({ name: 'Home' })
     },
-    () => {
+    (e: any) => {
       error.value = true
-      setInterval(() => {
+      errorMessage.value = e
+      setTimeout(() => {
         error.value = false
+        errorMessage.value = ''
       }, ERROR_ANIMATION_DURATION)
     }
   )
@@ -32,13 +36,13 @@ function onReset() {
 </script>
 
 <template>
-  <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+  <q-form @submit="onSubmit" @reset="onReset">
     <q-input
       filled
       v-model="username"
       label="Username"
-      hint="Insert your username"
       lazy-rules
+      :input-style="{ fontSize: '2em' }"
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
     />
 
@@ -47,45 +51,41 @@ function onReset() {
       type="password"
       v-model="password"
       label="Your password"
-      hint="Insert your password"
       lazy-rules
+      :input-style="{ fontSize: '1.5em' }"
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
         (val) => (val && val.length > 7) || 'Password must be at least 8 characters long'
       ]"
     />
+
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" />
-      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      <q-btn label="Submit" type="submit" color="primary" class="text-h5" :disable="error" />
+      <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
+
+    <Transition>
+      <FormError v-if="error" :error-message="errorMessage" />
+    </Transition>
   </q-form>
-  <Transition>
-    <q-banner inline-actions class="text-white bg-red error-banner" v-if="error">
-      Login error: {{ userStore.error }}.
-    </q-banner>
-  </Transition>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .buttons {
   display: flex;
   justify-content: right;
 }
 
-.error-banner {
-  position: absolute;
-  bottom: 5px;
-  width: 50%;
-  border-radius: 1em;
+:deep(.q-field__control) {
+  margin-top: 2em;
+  height: 6em;
 }
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
+:deep(.q-field__messages) {
+  font-size: 1.4em;
 }
 
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
+:deep(.q-field__label) {
+  font-size: 1.5em;
 }
 </style>
