@@ -24,7 +24,7 @@ console.log(messages)
         ref="page-scroller"
         reverse
         position="top"
-        :scroll-offset="500"
+        :scroll-offset="200"
         :offset="[0, 18]"
       >
         <q-btn fab icon="keyboard_arrow_down" color="primary" />
