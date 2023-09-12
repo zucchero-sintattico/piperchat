@@ -40,12 +40,18 @@ export const useUserStore = defineStore(
           username: parameters.username,
           password: parameters.password
         })
-        if (response instanceof LoginApi.Responses.Success) {
-          isLoggedIn.value = true
-          onSuccess()
-          await whoami()
-        } else if (response instanceof LoginApi.Errors.UsernameOrPasswordIncorrect) {
-          onError('Wrong Username or Password')
+        switch (response.statusCode) {
+          case 200:
+            isLoggedIn.value = true
+            onSuccess()
+            await whoami()
+            break
+          case 401:
+            onError('Wrong Username or Password')
+            break
+          default:
+            onError('Error')
+            break
         }
       } catch (e) {
         onError(e)
@@ -62,10 +68,16 @@ export const useUserStore = defineStore(
           email: parameters.email,
           password: parameters.password
         })
-        if (response instanceof RegisterApi.Responses.Success) {
-          onSuccess()
-        } else if (response instanceof RegisterApi.Errors.UserAlreadyExists) {
-          onError('User already exists')
+        switch (response.statusCode) {
+          case 200:
+            onSuccess()
+            break
+          case 409:
+            onError('User already exists')
+            break
+          default:
+            onError('Error')
+            break
         }
       } catch (e) {
         onError(e)

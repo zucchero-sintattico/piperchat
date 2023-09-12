@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import router from '../../router/index'
 import FormError from './FormError.vue'
 
-const ERROR_ANIMATION_DURATION = 5000
+const REDIRECT_DELAY = 2000
+const ERROR_ANIMATION_DURATION = 2000
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
 const password2 = ref('')
+
+const registrationSuccess = ref(false)
+
 const error = ref(false)
 const errorMessage = ref('')
 
@@ -22,7 +25,10 @@ async function onSubmit() {
       password: password.value
     },
     () => {
-      router.push({ name: 'Login' })
+      registrationSuccess.value = true
+      setTimeout(() => {
+        location.reload()
+      }, REDIRECT_DELAY)
     },
     (e: any) => {
       error.value = true
@@ -44,6 +50,7 @@ function onReset() {
 </script>
 
 <template>
+  <!-- Form -->
   <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
     <q-input
       filled
@@ -86,13 +93,31 @@ function onReset() {
     />
 
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" />
+      <q-btn label="Submit" type="submit" color="primary" :disable="error" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
 
     <Transition>
       <FormError v-if="error" :errorMessage="errorMessage" />
     </Transition>
+
+    <!-- Banner for successful registration -->
+    <q-dialog v-model="registrationSuccess" class="success-banner">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Successful registration</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-success-banner">
+          Registration successful, you will redirected <br />
+          to the login page in a few seconds...
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-circular-progress indeterminate rounded size="30px" color="lime" class="q-ma-md" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-form>
 </template>
 

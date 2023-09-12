@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/user'
 import router from '../../router/index'
 import FormError from './FormError.vue'
 
-const ERROR_ANIMATION_DURATION = 5000
+const ERROR_ANIMATION_DURATION = 2000
 
 const username = ref('')
 const password = ref('')
@@ -58,7 +58,7 @@ function onReset() {
     />
 
     <div class="buttons">
-      <q-btn label="Submit" type="submit" color="primary" />
+      <q-btn label="Submit" type="submit" color="primary" :disable="error" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
 
