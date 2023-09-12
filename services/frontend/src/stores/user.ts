@@ -47,20 +47,28 @@ export const useUserStore = defineStore(
         } else if (response instanceof LoginApi.Errors.UsernameOrPasswordIncorrect) {
           onError('Wrong Username or Password')
         }
-      } catch (e: any) {
+      } catch (e) {
         onError(e)
       }
     }
-    async function register(parameters: { username: string; email: string; password: string }) {
+    async function register(
+      parameters: { username: string; email: string; password: string },
+      onSuccess: () => void,
+      onError: (error: any) => void
+    ) {
       try {
-        await authController.register({
+        const response = await authController.register({
           username: parameters.username,
           email: parameters.email,
           password: parameters.password
         })
+        if (response instanceof RegisterApi.Responses.Success) {
+          onSuccess()
+        } else if (response instanceof RegisterApi.Errors.UserAlreadyExists) {
+          onError('User already exists')
+        }
       } catch (e) {
-        console.log(e)
-        error.value = 'Errore nella registrazione'
+        onError(e)
       }
     }
 

@@ -4,13 +4,13 @@ import { useUserStore } from '@/stores/user'
 import router from '../../router/index'
 import FormError from './FormError.vue'
 
+const ERROR_ANIMATION_DURATION = 5000
+
 const username = ref('')
 const password = ref('')
 const userStore = useUserStore()
 const error = ref(false)
 const errorMessage = ref('')
-
-const ERROR_ANIMATION_DURATION = 2000
 
 function onSubmit() {
   userStore.login(

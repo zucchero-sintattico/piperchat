@@ -1,22 +1,45 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
+import router from '../../router/index'
+import FormError from './FormError.vue'
+
+const ERROR_ANIMATION_DURATION = 5000
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const password2 = ref('')
+const error = ref(false)
+const errorMessage = ref('')
 
 async function onSubmit() {
   const userStore = useUserStore()
-  await userStore.register({
-    username: username.value,
-    email: email.value,
-    password: password.value
-  })
+  await userStore.register(
+    {
+      username: username.value,
+      email: email.value,
+      password: password.value
+    },
+    () => {
+      router.push({ name: 'Login' })
+    },
+    (e: any) => {
+      error.value = true
+      errorMessage.value = e
+      setTimeout(() => {
+        error.value = false
+        errorMessage.value = ''
+      }, ERROR_ANIMATION_DURATION)
+    }
+  )
 }
 
 function onReset() {
-  console.log('Resetted!')
+  username.value = ''
+  email.value = ''
+  password.value = ''
+  password2.value = ''
 }
 </script>
 
@@ -26,7 +49,6 @@ function onReset() {
       filled
       v-model="username"
       label="Username"
-      hint="Insert your username"
       lazy-rules
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
     />
@@ -35,9 +57,11 @@ function onReset() {
       filled
       v-model="email"
       label="Email"
-      hint="Insert your email"
       lazy-rules
-      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+      :rules="[
+        (val) => (val && val.length > 0) || 'Please type something',
+        (val) => /.+@.+/.test(val) || 'Invalid email address'
+      ]"
     />
 
     <q-input
@@ -45,7 +69,6 @@ function onReset() {
       type="password"
       v-model="password"
       label="Your password"
-      hint="Insert your password"
       lazy-rules
       :rules="[
         (val) => (val && val.length > 0) || 'Please type something',
@@ -53,10 +76,23 @@ function onReset() {
       ]"
     />
 
+    <q-input
+      filled
+      type="password"
+      v-model="password2"
+      label="Your password"
+      lazy-rules
+      :rules="[(val) => (val && password === password2) || 'Passwords must match']"
+    />
+
     <div class="buttons">
       <q-btn label="Submit" type="submit" color="primary" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
+
+    <Transition>
+      <FormError v-if="error" :errorMessage="errorMessage" />
+    </Transition>
   </q-form>
 </template>
 
