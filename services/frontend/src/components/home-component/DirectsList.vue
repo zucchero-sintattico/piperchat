@@ -8,7 +8,7 @@
         </q-item>
 
         <div v-for="n in 60" :key="n">
-          <q-btn class="full-width" no-caps color="secondary">
+          <q-btn flat class="full-width" no-caps color="secondary">
             <q-item-section avatar>
               <q-avatar>
                 <img src="https://cdn.quasar.dev/img/avatar3.jpg" />

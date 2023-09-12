@@ -8,12 +8,12 @@
         </q-item>
 
         <div v-for="n in 3" :key="n">
-          <q-item>
+          <q-btn class="full-width" no-caps flat color="secondary">
             <q-item-section class="text-white" avatar>
               <q-icon name="chat" />
             </q-item-section>
-            <q-item-section class="text-white">Lily {{ n }}</q-item-section>
-          </q-item>
+            <q-item-section align="left" class="text-white">Chanel chat {{ n }}</q-item-section>
+          </q-btn>
         </div>
         <q-separator color="accent" inset />
         <div v-for="n in 4" :key="n" class="row">
@@ -22,18 +22,18 @@
               dark
               icon="volume_up"
               :label="'Nome ' + n"
-              caption="3 user Online"
+              caption="Online: 2"
               default-opened
             >
               <div v-for="n in 2" :key="n">
-                <q-item>
+                <q-btn class="full-width" no-caps flat color="secondary">
                   <q-item-section avatar>
                     <q-avatar size="30px">
                       <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
                     </q-avatar>
                   </q-item-section>
                   <q-item-section class="text-white">Lily {{ n }}</q-item-section>
-                </q-item>
+                </q-btn>
               </div>
             </q-expansion-item>
           </q-list>
