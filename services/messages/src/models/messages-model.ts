@@ -9,7 +9,7 @@ export interface Message {
 
 export interface Direct {
   _id: string
-  partecipants: [string]
+  participants: [string]
   messages: [Message]
 }
 
@@ -22,7 +22,7 @@ export interface MessageChannel {
 export interface Server {
   _id: string
   id: string
-  partecipants: [string]
+  participants: [string]
   messagesChannels: [MessageChannel]
 }
 
@@ -33,7 +33,7 @@ export const MessageSchema = new Schema({
 })
 
 export const DirectSchema = new Schema({
-  partecipants: { type: [String], required: true, minlength: 2, maxlength: 2 },
+  participants: { type: [String], required: true, minlength: 2, maxlength: 2 },
   messages: { type: [MessageSchema], required: true, default: [] },
 })
 
@@ -44,10 +44,9 @@ export const MessageChannelSchema = new Schema({
 
 export const ServerSchema = new Schema({
   id: { type: String, required: true },
-  partecipants: { type: [String], required: true, minlength: 1 },
+  participants: { type: [String], required: true, minlength: 1 },
   messagesChannels: { type: [MessageChannelSchema], required: true, default: [] },
 })
 
 export const Directs = model<Message>('Directs', DirectSchema)
-//export const MessageChannels = model<MessageChannel>("MessageChannels", MessageChannelSchema);
 export const Servers = model<Server>('Servers', ServerSchema)

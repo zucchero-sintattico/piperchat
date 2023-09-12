@@ -1,27 +1,26 @@
+import { AxiosController } from '@/controllers/axios-controller'
 import type { ChannelController } from './channel-controller'
+import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/channel'
 
-export class ChannelControllerImpl implements ChannelController {
-  async getChannels(serverId: string): Promise<MessageChannel[]> {
-    throw new Error('Method not implemented.')
-  }
-  async createChannel(serverId: string, channelId: string): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  async deleteChannel(channelId: string, serverId: string): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  async getChannel(channelId: string, serverId: string): Promise<MessageChannel> {
-    throw new Error('Method not implemented.')
-  }
+export class ChannelControllerImpl extends AxiosController implements ChannelController {
   async getChannelMessagesPaginated(
-    channelId: string,
-    serverId: string,
-    from: number,
-    limit: number
-  ): Promise<any> {
-    throw new Error('Method not implemented.')
+    request: GetChannelMessagesApi.Request.Type
+  ): Promise<GetChannelMessagesApi.Response> {
+    const params = request as GetChannelMessagesApi.Request.Params
+    const query = request as GetChannelMessagesApi.Request.Query
+    return await this.get<GetChannelMessagesApi.Response>(
+      `/servers/${params.serverId}/channels/${params.channelId}/messages?from=${query.from}&limit=${query.limit}`
+    )
   }
-  async sendMessage(channelId: string, serverId: string, content: string): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  async sendMessage(
+    request: SendMessageInChannelApi.Request.Type
+  ): Promise<SendMessageInChannelApi.Response> {
+    const params = request as SendMessageInChannelApi.Request.Params
+    const body = request as SendMessageInChannelApi.Request.Body
+    return await this.post<SendMessageInChannelApi.Response>(
+      `/servers/${params.serverId}/channels/${params.channelId}/messages`,
+      body
+    )
   }
 }

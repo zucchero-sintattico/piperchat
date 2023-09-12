@@ -69,3 +69,23 @@ export class UserLoggedOutMessage {
     this.username = data.username
   }
 }
+
+export class UserOnlineMessage {
+  static exchange = 'user'
+  static routingKey = 'user.online'
+
+  username: string
+  constructor(data: { username: string }) {
+    this.username = data.username
+  }
+}
+
+export class UserOfflineMessage {
+  static exchange = 'user'
+  static routingKey = 'user.offline'
+
+  username: string
+  constructor(data: { username: string }) {
+    this.username = data.username
+  }
+}

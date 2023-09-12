@@ -6,14 +6,28 @@ import router from '../../router/index'
 const username = ref('')
 const password = ref('')
 const userStore = useUserStore()
+const error = ref(true)
+
+const ERROR_ANIMATION_DURATION = 2000
 
 function onSubmit() {
-  userStore.login({ username: username.value, password: password.value })
-  router.push({ name: 'Home' })
+  userStore.login(
+    { username: username.value, password: password.value },
+    () => {
+      router.push({ name: 'Home' })
+    },
+    () => {
+      error.value = true
+      setInterval(() => {
+        error.value = false
+      }, ERROR_ANIMATION_DURATION)
+    }
+  )
 }
 
 function onReset() {
-  console.log('Resetted!')
+  username.value = ''
+  password.value = ''
 }
 </script>
 
@@ -40,15 +54,38 @@ function onReset() {
         (val) => (val && val.length > 7) || 'Password must be at least 8 characters long'
       ]"
     />
-    <div>
-      <!--login error message-->
-      <q-item v-if="userStore.error" color="red" icon="warning">
-        {{ userStore.error }}
-        <br />
-      </q-item>
-
+    <div class="buttons">
       <q-btn label="Submit" type="submit" color="primary" />
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
   </q-form>
+  <Transition>
+    <q-banner inline-actions class="text-white bg-red error-banner" v-if="error">
+      Login error: {{ userStore.error }}.
+    </q-banner>
+  </Transition>
 </template>
+
+<style scoped>
+.buttons {
+  display: flex;
+  justify-content: right;
+}
+
+.error-banner {
+  position: absolute;
+  bottom: 5px;
+  width: 50%;
+  border-radius: 1em;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

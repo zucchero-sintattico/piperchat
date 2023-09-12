@@ -17,7 +17,7 @@ export const useUserStore = defineStore(
     const error = ref('')
     async function whoami() {
       try {
-        const response = await userController.getUser()
+        const response = await userController.whoami()
         username.value = response.data.username
         email.value = response.data.email
         description.value = response.data.description
@@ -30,7 +30,11 @@ export const useUserStore = defineStore(
     const authController: AuthController = new AuthControllerImpl()
     const userController: UserController = new UserControllerImpl()
 
-    async function login(parameters: { username: string; password: string }) {
+    async function login(
+      parameters: { username: string; password: string },
+      onSuccess: () => void,
+      onError: () => void
+    ) {
       try {
         const response: LoginApi.Response = await authController.login({
           username: parameters.username,
@@ -39,12 +43,13 @@ export const useUserStore = defineStore(
         if (response instanceof LoginApi.Responses.Success) {
           isLoggedIn.value = true
           error.value = ''
-          console.log('login')
+          onSuccess()
           await whoami()
         }
       } catch (e) {
         console.log(e)
         error.value = 'Errore nel login'
+        onError()
       }
     }
     async function register(parameters: { username: string; email: string; password: string }) {

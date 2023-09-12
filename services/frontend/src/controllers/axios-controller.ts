@@ -2,7 +2,7 @@ import { BadRequest, InternalServerError } from '@api/errors'
 import axios from 'axios'
 
 export abstract class AxiosController {
-  protected async request<Response>(method: string, path: string, data: object): Promise<Response> {
+  private async request<Response>(method: string, path: string, data: object): Promise<Response> {
     try {
       const response = await axios.request<Response>({
         method: method,
@@ -23,19 +23,19 @@ export abstract class AxiosController {
     }
   }
 
-  protected async post<Success>(path: string, data: object): Promise<Success> {
+  protected async post<Success>(path: string, data: object = {}): Promise<Success> {
     return await this.request<Success>('post', path, data)
   }
 
-  protected async get<Success>(path: string, data: object): Promise<Success> {
+  protected async get<Success>(path: string, data: object = {}): Promise<Success> {
     return await this.request<Success>('get', path, data)
   }
 
-  protected async put<Success>(path: string, data: object): Promise<Success> {
+  protected async put<Success>(path: string, data: object = {}): Promise<Success> {
     return await this.request<Success>('put', path, data)
   }
 
-  protected async delete<Success>(path: string, data: object): Promise<Success> {
+  protected async delete<Success>(path: string, data: object = {}): Promise<Success> {
     return await this.request<Success>('delete', path, data)
   }
 }

@@ -76,8 +76,8 @@ export class ChannelControllerImpl implements ChannelController {
   }
 
   async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<boolean> {
-    const partecipants = await this.serverRepository.getServerPartecipants(serverId)
-    if (partecipants.includes(userId)) return true
+    const participants = await this.serverRepository.getServerParticipants(serverId)
+    if (participants.includes(userId)) return true
     else {
       throw new ChannelControllerExceptions.UserNotAuthorized()
     }

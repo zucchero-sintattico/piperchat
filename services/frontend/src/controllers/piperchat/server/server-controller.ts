@@ -1,79 +1,63 @@
+import {
+  CreateServerApi,
+  DeleteServerApi,
+  GetServerApi,
+  GetServerParticipantsApi,
+  GetServersApi,
+  JoinServerApi,
+  KickUserFromServerApi,
+  LeaveServerApi,
+  UpdateServerApi
+} from '@api/piperchat/server'
+
 export interface ServerController {
   /**
    * Get all servers of the user
    * @returns the servers of the user
-   * @throws {UserNotFound} if the user does not exist
    */
-  getServers(): Promise<any>
+  getServers(): Promise<GetServersApi.Response>
 
   /**
    * Get a server by id
-   * @param id
-   * @returns the server
-   * @throws {ServerNotFound} if the server does not exist
    */
-  getServer(id: string): Promise<any>
+  getServer(request: GetServerApi.Request.Type): Promise<GetServerApi.Response>
 
   /**
    * Create a server
-   * @param name
-   * @param description
-   * @returns the created server
    */
-  createServer(name: string, description: string): Promise<any>
+  createServer(request: CreateServerApi.Request.Type): Promise<CreateServerApi.Response>
 
   /**
    * Update a server
-   * @param id
-   * @param name? the new name of the server
-   * @param description? the new description of the server
-   * @returns the updated server
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
-  updateServer(id: string, name?: string, description?: string): Promise<any>
+  updateServer(request: UpdateServerApi.Request.Type): Promise<UpdateServerApi.Response>
 
   /**
    * Delete a server
-   * @param id
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not the owner of the server
    */
-  deleteServer(id: string): Promise<any>
+  deleteServer(request: DeleteServerApi.Request.Type): Promise<DeleteServerApi.Response>
 
   /**
    * Get all participants of a server
-   * @param id
-   * @returns the participants of the server
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not in the server
-   *
    */
-  getServerParticipants(id: string): Promise<any>
+  getServerParticipants(
+    request: GetServerParticipantsApi.Request.Type
+  ): Promise<GetServerParticipantsApi.Response>
 
   /**
    * Join a server
-   * @param id
-   * @returns the joined server
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserAlreadyJoined} if the user is already in the server
    */
-  joinServer(id: string): Promise<any>
+  joinServer(request: JoinServerApi.Request.Type): Promise<JoinServerApi.Response>
 
   /**
    * Leave a server
-   * @param id
-   * @returns the left server
-   * @throws {ServerNotFound} if the server does not exist
-   * @throws {UserNotAuthorized} if the user is not in the server
    */
-  leaveServer(id: string): Promise<any>
+  leaveServer(request: LeaveServerApi.Request.Type): Promise<LeaveServerApi.Response>
 
   /**
    * Kick a user from a server
-   * @param id
-   * @param admin the user who make the request
-   *
    */
-  kickUserFromTheServer(id: string, admin: string): Promise<any>
+  kickUserFromTheServer(
+    request: KickUserFromServerApi.Request.Type
+  ): Promise<KickUserFromServerApi.Response>
 }

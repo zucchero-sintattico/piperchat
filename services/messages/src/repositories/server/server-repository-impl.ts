@@ -2,25 +2,25 @@ import { ServerRepository } from './server-repository'
 import { Servers } from '@models/messages-model'
 
 export class ServerRepositoryImpl implements ServerRepository {
-  async addPartecipant(serverId: string, partecipantId: string): Promise<void> {
-    await Servers.updateOne({ id: serverId }, { $push: { partecipants: partecipantId } })
+  async addParticipant(serverId: string, participantId: string): Promise<void> {
+    await Servers.updateOne({ id: serverId }, { $push: { participants: participantId } })
   }
 
-  async removePartecipant(serverId: string, partecipantId: string): Promise<void> {
+  async removeParticipant(serverId: string, partecipantId: string): Promise<void> {
     await Servers.findOneAndUpdate(
       { id: serverId },
-      { $pull: { partecipants: partecipantId } }
+      { $pull: { participants: partecipantId } }
     ).orFail()
   }
 
-  async addServer(serverId: string, partecipantId: string): Promise<void> {
-    await Servers.create({ id: serverId, partecipants: [partecipantId] })
+  async addServer(serverId: string, participantId: string): Promise<void> {
+    await Servers.create({ id: serverId, participants: [participantId] })
   }
 
-  async getServerPartecipants(serverId: string): Promise<string[]> {
+  async getServerParticipants(serverId: string): Promise<string[]> {
     const server = await Servers.findOne({ id: serverId })
     if (server) {
-      return server.partecipants
+      return server.participants
     }
     throw new Error('Server not found')
   }
@@ -45,5 +45,13 @@ export class ServerRepositoryImpl implements ServerRepository {
 
   async removeMessageChannel(serverId: string, channelId: string): Promise<void> {
     await Servers.updateOne({ id: serverId }, { $pull: { channels: { id: channelId } } })
+  }
+
+  async containsMessageChannel(serverId: string, channelId: string): Promise<boolean> {
+    const server = await Servers.findOne({ id: serverId })
+    if (server) {
+      return server.messagesChannels.some((channel) => channel.id == channelId)
+    }
+    throw new Error('Server not found')
   }
 }
