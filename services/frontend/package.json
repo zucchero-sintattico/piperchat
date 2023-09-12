@@ -17,6 +17,7 @@
     "pinia-plugin-persistedstate": "^3.2.0",
     "quasar": "^2.12.6",
     "serve": "^14.2.1",
+    "socket.io-client": "^4.7.2",
     "vue": "^3.3.4",
     "vue-cookies": "^1.8.3",
     "vue-router": "^4.2.4"
