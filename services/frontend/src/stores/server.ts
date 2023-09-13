@@ -2,7 +2,7 @@ import type { ServerController } from '@/controllers/piperchat/server/server-con
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
 import type { GetServersApi } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 
 export const useServerStore = defineStore('server', () => {
   const serverController: ServerController = new ServerControllerImpl()

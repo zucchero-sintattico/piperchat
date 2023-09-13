@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useServerStore } from '@/stores/server'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const serverStore = useServerStore()
 </script>
 
 <template>
