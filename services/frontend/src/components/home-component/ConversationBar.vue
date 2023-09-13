@@ -2,22 +2,26 @@
 import ServerList from './ServerList.vue'
 import DirectsList from './DirectsList.vue'
 import ChannelsList from './ChannelsList.vue'
-import { ref } from 'vue'
+import { SelectedTab, useUserStore } from '@/stores/user'
+import { onMounted } from 'vue'
+import { useServerStore } from '@/stores/server'
 
-const areDirectVisible = ref(true)
+const userStore = useUserStore()
+const serverStore = useServerStore()
 
-function openChannel(channel: number) {
-  areDirectVisible.value = false
-  console.log(channel)
-}
+onMounted(() => {
+  serverStore.getServers()
+  userStore.selectedTab = SelectedTab.Directs
+})
 </script>
+
 <template>
   <q-drawer>
     <div class="row no-wrap left-menu bg-dark">
-      <ServerList v-on:openChannel="openChannel" v-on:openDirects="areDirectVisible = true" />
+      <ServerList />
 
-      <DirectsList v-if="areDirectVisible" />
-      <ChannelsList v-else />
+      <DirectsList v-if="userStore.selectedTab == SelectedTab.Directs" />
+      <ChannelsList v-if="userStore.selectedTab == SelectedTab.Servers" />
     </div>
   </q-drawer>
 </template>
