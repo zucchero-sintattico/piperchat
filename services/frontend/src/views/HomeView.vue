@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import ConversationBar from '@/components/home-component/left-bar/ConversationBar.vue'
+import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 
 const userStore = useUserStore()
@@ -43,7 +43,7 @@ function toggleLeftOpen() {
     </q-header>
 
     <!-- pass leftDrawopen as props -->
-    <ConversationBar show-if-above v-model="leftDrawerOpen" side="left" bordered />
+    <LeftBar show-if-above v-model="leftDrawerOpen" side="left" bordered />
 
     <!--Use the rest part of the page to show ContentArea component-->
     <q-page-container class="full-height">
