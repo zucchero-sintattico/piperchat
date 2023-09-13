@@ -4,6 +4,8 @@ import { computed, ref } from 'vue'
 import NewChannelForm from './NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
+import HorizontalChannel from './HorizontalChannel.vue'
+import HorizontalUser from './HorizontalUser.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
@@ -40,47 +42,37 @@ const selectedServer = computed(() => {
         </q-dialog>
         <!-- end Create new server -->
 
-        <q-separator color="accent" style="height: 2px" inset />
-
-        <div
+        <!-- start Message channels -->
+        <q-list
+          bordered
+          separator
+          class="text-white text-h5"
           v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
         >
-          <q-btn class="full-width" no-caps flat color="secondary">
-            <q-item-section class="text-white" avatar>
-              <q-icon name="chat" />
-            </q-item-section>
-            <q-item-section align="left" class="text-white"
-              >Chanel chat {{ channel.name }}</q-item-section
-            >
-          </q-btn>
-        </div>
+          <HorizontalChannel :name="channel.name" icon="chat" />
+        </q-list>
+        <!-- end Message channels -->
 
-        <q-separator color="accent" style="height: 2px" inset />
-
-        <div
+        <!-- start Multimedia channels -->
+        <q-list
+          bordered
+          separator
+          class="text-white text-h5"
           v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
           :key="channel._id"
         >
-          <q-list>
-            <q-expansion-item dark icon="volume_up" :label="channel.name" default-opened>
-              <div v-for="n in 2" :key="n">
-                <q-btn class="full-width" no-caps flat color="secondary">
-                  <q-item-section avatar>
-                    <q-avatar size="30px">
-                      <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section class="text-white">Lily {{ n }}</q-item-section>
-                </q-btn>
-              </div>
-            </q-expansion-item>
+          <HorizontalChannel :name="channel.name" icon="volume_up" />
+
+          <q-list dense v-for="j in 3" :key="j">
+            <HorizontalUser name="User" photo="https://cdn.quasar.dev/img/avatar3.jpg" />
           </q-list>
-        </div>
+        </q-list>
+        <!-- end Multimedia channels -->
       </div>
     </div>
   </q-scroll-area>
