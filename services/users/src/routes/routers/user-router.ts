@@ -14,7 +14,11 @@ import { WhoamiApi, GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/us
 
 const userController: UserController = new UserControllerImpl()
 
-export const usersRouter = Router()
+export const usersRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
+
 usersRouter.use(JWTAuthenticationMiddleware)
 
 usersRouter.get(

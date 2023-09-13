@@ -10,7 +10,10 @@ import { InternalServerError } from '@api/errors'
 import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/channel'
 
 const channelController: ChannelController = new ChannelControllerImpl()
-const channelRouter = Router()
+const channelRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 channelRouter.get(
   ':serverId/channels/:channelId/messages',

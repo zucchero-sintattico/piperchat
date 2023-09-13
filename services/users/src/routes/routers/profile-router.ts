@@ -10,7 +10,10 @@ import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
 
 const profileController: ProfileController = new ProfileControllerImpl()
 
-export const profileRouter = Router()
+export const profileRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 profileRouter.use(JWTAuthenticationMiddleware)
 
 profileRouter.put(

@@ -7,7 +7,10 @@ import { ClientProxy } from '@models/client-proxy'
 
 const notificationController: NotificationController = new NotificationControllerImpl()
 
-export const notificationRouter = Router()
+export const notificationRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 notificationRouter.get('/', async (req: Request, res: Response) => {
   const headers = {

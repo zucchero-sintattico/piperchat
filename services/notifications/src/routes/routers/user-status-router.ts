@@ -10,7 +10,10 @@ import { InternalServerError } from '@api/errors'
 import { GetUserStatusApi } from '@api/users/user'
 
 const userStatusController: UserStatusController = new UserStatusControllerImpl()
-export const userStatusRouter = Router()
+export const userStatusRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 userStatusRouter.get(
   '/:username/status',

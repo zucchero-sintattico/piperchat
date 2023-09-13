@@ -6,7 +6,10 @@ import {
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
 
 const serverController: ServerController = new ServerControllerImpl()
-export const serverRouter = Router()
+export const serverRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'

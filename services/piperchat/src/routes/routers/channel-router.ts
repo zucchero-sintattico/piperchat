@@ -7,7 +7,10 @@ import { ChannelControllerImpl } from '@controllers/channel/channel-controller-i
 import { ServerControllerExceptions } from '@controllers/server/server-controller'
 
 const channelController: ChannelController = new ChannelControllerImpl()
-export const channelRouter = Router()
+export const channelRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'

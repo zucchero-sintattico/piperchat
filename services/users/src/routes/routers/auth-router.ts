@@ -19,6 +19,7 @@ const authController: AuthController = new AuthControllerImpl()
 
 export const authRouter = Router({
   strict: true,
+  mergeParams: true,
 })
 
 authRouter.post(
