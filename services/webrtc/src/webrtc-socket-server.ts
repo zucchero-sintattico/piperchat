@@ -14,11 +14,15 @@ import {
   SessionRepository,
   SessionRepositoryImpl,
 } from './repositories/session-repository'
+import { EventsRepository, EventsRepositoryImpl } from './repositories/events-repository'
+import { Servers } from './models/server-model'
+import { Friendships } from './models/friendship-model'
 
 export class WebRTCSocketServer {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
   private friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()
   private sessionRepository: SessionRepository = new SessionRepositoryImpl()
+  private eventsRepository: EventsRepository = new EventsRepositoryImpl()
   private io: Server
 
   constructor(server: http.Server) {
@@ -48,6 +52,7 @@ export class WebRTCSocketServer {
 
   private async handleSession(socket: Socket, username: string, sessionId: string) {
     console.log('Joining session', sessionId)
+    await this.checkIfIsChannelOrDirectSessionAndPublishJoinEvent(sessionId, username)
     const session = await this.getSessionOrDisconnect(sessionId, socket)
     await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
     await this.validateUserNotAlreadyInSessionOrDisconnect(session, username, socket)
@@ -57,7 +62,8 @@ export class WebRTCSocketServer {
     socket.on('disconnect', async () => {
       console.log('Disconnecting user:', username)
       socket.to(sessionId).emit('user-disconnected', username)
-      this.sessionRepository.removeUserFromSession(sessionId, username)
+      await this.sessionRepository.removeUserFromSession(sessionId, username)
+      await this.checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(sessionId, username)
     })
     socket.on('offer', async (offer, to) => {
       const user = await this.sessionRepository.getUserInSession(sessionId, to)
@@ -73,6 +79,76 @@ export class WebRTCSocketServer {
         .get(user?.socketId)
         ?.emit('ice-candidate', candidate, username)
     })
+  }
+
+  private async checkIfIsChannelOrDirectSessionAndPublishJoinEvent(
+    sessionId: string,
+    username: string
+  ) {
+    try {
+      // Search a server with a channel with the given sessionId and retrieve the channel
+      const server = await Servers.findOne({
+        'channels.id': sessionId,
+      })
+      const channel = server?.channels.find((c) => c.id === sessionId)
+      if (channel) {
+        this.eventsRepository.publishUserJoinedChannelEvent(
+          server?.id,
+          channel.id,
+          username
+        )
+      }
+      return
+    } catch (e) {
+      //
+    }
+    try {
+      const friendship = await Friendships.findOne({
+        sessionId: sessionId,
+      })
+      if (friendship) {
+        const friend =
+          friendship.first === username ? friendship.second : friendship.first
+        this.eventsRepository.publishUserJoinedDirectSessionEvent(username, friend)
+      }
+    } catch (e) {
+      //
+    }
+  }
+
+  private async checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(
+    sessionId: string,
+    username: string
+  ) {
+    try {
+      // Search a server with a channel with the given sessionId and retrieve the channel
+      const server = await Servers.findOne({
+        'channels.id': sessionId,
+      })
+      const channel = server?.channels.find((c) => c.id === sessionId)
+      if (channel) {
+        this.eventsRepository.publishUserLeftChannelEvent(
+          server?.id,
+          channel.id,
+          username
+        )
+      }
+      return
+    } catch (e) {
+      //
+    }
+    try {
+      const friendship = await Friendships.findOne({
+        sessionId: sessionId,
+      })
+      if (friendship) {
+        const friend =
+          friendship.first === username ? friendship.second : friendship.first
+        this.eventsRepository.publishUserLeftChannelEvent(username, friend)
+      }
+    } catch (e) {
+      //
+    }
   }
 
   private async getSessionOrDisconnect(
