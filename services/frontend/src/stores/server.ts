@@ -4,6 +4,11 @@ import type { GetServersApi } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
+export enum ChannelType {
+  Message = 'message',
+  Multimedia = 'multimedia'
+}
+
 export const useServerStore = defineStore('server', () => {
   const serverController: ServerController = new ServerControllerImpl()
 

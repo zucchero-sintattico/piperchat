@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import ConversationBar from '@/components/home-component/ConversationBar.vue'
+import ConversationBar from '@/components/home-component/left-bar/ConversationBar.vue'
 import ContentArea from '@/components/home-component/ContentArea.vue'
 
 const userStore = useUserStore()
