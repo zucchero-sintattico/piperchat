@@ -165,14 +165,14 @@ export namespace GetServerApi {
     }
   }
   export namespace Responses {
-    interface Channel {
+    export interface Channel {
       _id: string
       name: string
       createdAt: Date
       channelType: string
       description?: string
     }
-    interface Server {
+    export interface Server {
       _id: string
       name: string
       description: string
@@ -290,14 +290,14 @@ export namespace GetServersApi {
     }
   }
   export namespace Responses {
-    interface Channel {
+    export interface Channel {
       _id: string
       name: string
       createdAt: Date
       channelType: string
       description?: string
     }
-    interface Server {
+    export interface Server {
       _id: string
       name: string
       description: string
