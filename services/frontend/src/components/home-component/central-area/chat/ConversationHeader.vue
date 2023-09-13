@@ -17,9 +17,11 @@ watch(
 )
 
 const channelName = computed(() => {
-  return serverStore.servers
-    .filter((server) => server._id == userStore.selectedChannel[0])[0]
-    .channels.filter((channel) => channel._id == userStore.selectedChannel[1])[0].name
+  const server = serverStore.servers.filter(
+    (server) => server._id == userStore.selectedServer._id
+  )[0]
+  const channel = server.channels.filter((channel) => channel._id == userStore.selectedChannel[1])
+  return channel[0].name
 })
 </script>
 <template>

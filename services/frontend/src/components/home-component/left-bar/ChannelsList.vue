@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { ContentArea, useUserStore } from '@/stores/user'
 import { ref } from 'vue'
 import NewChannelForm from './NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
@@ -7,6 +7,12 @@ import { CreateChannelApi } from '@api/piperchat/channel'
 const userStore = useUserStore()
 
 const isNewChannelFormActive = ref(false)
+
+function setChannelContent(channelId: string) {
+  console.log('Switched')
+  userStore.inContentArea = ContentArea.Channel
+  userStore.selectedChannel = [userStore.selectedServer._id, channelId]
+}
 </script>
 
 <template>
@@ -42,6 +48,7 @@ const isNewChannelFormActive = ref(false)
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
+          @click="setChannelContent(channel._id)"
         >
           <q-btn class="full-width" no-caps flat color="secondary">
             <q-item-section class="text-white" avatar>

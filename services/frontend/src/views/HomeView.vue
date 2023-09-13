@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 import ConversationBar from '@/components/home-component/left-bar/ConversationBar.vue'
@@ -20,6 +20,10 @@ function toggleLeftDrawer() {
 function toggleLeftOpen() {
   leftDrawerOpen.value = true
 }
+
+onMounted(() => {
+  userStore.inContentArea = ContentArea.Empty
+})
 </script>
 
 <template>
