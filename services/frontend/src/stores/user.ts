@@ -5,6 +5,7 @@ import { UserControllerImpl } from '@/controllers/users/user/user-controller-imp
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi } from '@api/users/auth'
+import type { WhoamiApi } from '@api/users/user'
 
 export const useUserStore = defineStore(
   'user',
@@ -17,11 +18,9 @@ export const useUserStore = defineStore(
     const error = ref('')
     async function whoami() {
       try {
-        const response = await userController.whoami()
-        username.value = response.data.username
-        email.value = response.data.email
-        description.value = response.data.description
-        photo.value = response.data.photo
+        const response = (await userController.whoami()) as WhoamiApi.Responses.Success
+        username.value = response.user.username
+        email.value = response.user.email
       } catch (e) {
         console.log(e)
       }

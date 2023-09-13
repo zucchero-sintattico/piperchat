@@ -6,10 +6,10 @@ const message = ref('')
 const messageStore = useMessageStore()
 
 async function sendMessage() {
-  if (message.value != '') {
-    await messageStore.sendMessage('me', message.value)
-    message.value = ''
-  }
+  // if (message.value != '') {
+  //   await messageStore.sendMessage('me', message.value)
+  //   message.value = ''
+  // }
 }
 
 function deleteMessage() {

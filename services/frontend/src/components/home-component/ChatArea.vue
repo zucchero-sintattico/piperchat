@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from 'vue'
 import { useMessageStore } from '../../stores/messages'
+import { useUserStore } from '@/stores/user'
 
 const messageStore = useMessageStore()
-const messages = messageStore.messages.data
+const messages = messageStore.messages
+
+const userStore = useUserStore()
 
 let originalLocation: string
 
@@ -33,7 +36,7 @@ onMounted(() => {
           :name="message.sender"
           avatar="https://cdn.quasar.dev/img/avatar1.jpg"
           :text="[message.content]"
-          :sent="message.sent"
+          :sent="userStore.username == message.sender"
         />
       </div>
       <div id="last"></div>
