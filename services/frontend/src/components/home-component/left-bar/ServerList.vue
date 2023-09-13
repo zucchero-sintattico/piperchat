@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import NewServerForm from './NewServerForm.vue'
+import NewServerForm from './form/NewServerForm.vue'
 import { SelectedTab, useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
 import type { GetServersApi } from '@api/piperchat/server'

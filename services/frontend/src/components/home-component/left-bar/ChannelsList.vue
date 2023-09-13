@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { computed, ref } from 'vue'
-import NewChannelForm from './NewChannelForm.vue'
+import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
-import HorizontalChannel from './HorizontalChannel.vue'
-import HorizontalUser from './HorizontalUser.vue'
+import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
+import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
