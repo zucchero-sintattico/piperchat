@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MessageInput from '@/components/home-component/MessageInput.vue'
+import MessageInput from '@/components/home-component/central-area/chat/MessageInput.vue'
 import ConversationHeader from './ConversationHeader.vue'
 import ChatArea from './ChatArea.vue'
 </script>

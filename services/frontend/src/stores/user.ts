@@ -13,6 +13,13 @@ export enum SelectedTab {
   Servers = 'servers'
 }
 
+export enum ContentArea {
+  Empty = 'empty',
+  Channel = 'channel',
+  Direct = 'direct',
+  Multimedie = 'multimedia'
+}
+
 export const useUserStore = defineStore(
   'user',
   () => {
@@ -29,6 +36,12 @@ export const useUserStore = defineStore(
     )
 
     const selectedTab = ref(SelectedTab.Directs)
+
+    const selectedChannel = ref(['', ''])
+
+    const selectedDirect = ref('')
+
+    const inContentArea = ref(ContentArea.Empty)
 
     async function whoami() {
       try {
@@ -116,6 +129,9 @@ export const useUserStore = defineStore(
       error,
       selectedServer,
       selectedTab,
+      selectedChannel,
+      selectedDirect,
+      inContentArea,
       login,
       register,
       logout

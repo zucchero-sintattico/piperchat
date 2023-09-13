@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from 'vue'
-import { useMessageStore } from '../../stores/messages'
+import { useMessageStore } from '@/stores/messages'
 import { useUserStore } from '@/stores/user'
 
 const messageStore = useMessageStore()
@@ -8,23 +8,32 @@ const messages = messageStore.messages
 
 const userStore = useUserStore()
 
-let originalLocation: string
+//watch selectedDirect
+watch(
+  () => userStore.selectedDirect,
+  (newVal, oldVal) => {
+    if (newVal != oldVal) {
+      messageStore.getMessagesFromDirect({
+        username: newVal,
+        from: 0,
+        limit: 1000
+      })
+    }
+  }
+)
 
-const anchor = document.getElementById('last')
-const content = document.getElementById('content')
-
-function scrollToBottom() {
-  content?.scrollTo(0, content.scrollHeight)
-}
-
-// // Scrolla in fondo al contenitore dei messaggi quando i messaggi cambiano
-watch(messages, () => {
-  scrollToBottom()
+watch(userStore.selectedChannel, () => {
+  messageStore.getMessagesFromChannel({
+    serverId: userStore.selectedChannel[0],
+    channelId: userStore.selectedChannel[1],
+    from: 0,
+    limit: 1000
+  })
 })
 
 onMounted(() => {
-  originalLocation = location.href
-  scrollToBottom()
+  // originalLocation = location.href
+  // scrollToBottom()
 })
 </script>
 
