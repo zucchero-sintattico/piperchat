@@ -18,7 +18,7 @@ function checkFields<T extends Record<string, unknown>>(
   schema: Record<string, string>
 ): BadRequestError[] {
   const errors = []
-  for (const [key, value] of Object.entries(schema.Params)) {
+  for (const [key, value] of Object.entries(schema)) {
     const param = object[key]
     if (value.endsWith('?')) {
       if (param === undefined) {
