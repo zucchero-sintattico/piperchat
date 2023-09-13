@@ -310,7 +310,7 @@ paths:
         content:
           application/json:
             schema:
-              '$ref': '#/components/schemas/message'
+              '$ref': '#/components/schemas/messageWithoutId'
       responses:
         '200':
           description: Ok
@@ -803,7 +803,7 @@ paths:
         content:
           application/json:
             schema:
-              '$ref': '#/components/schemas/message'
+              '$ref': '#/components/schemas/messageWithoutId'
       responses:
         '200':
           description: Ok
@@ -911,6 +911,16 @@ components:
       oneOf:
         - '$ref': '#/components/schemas/messageChannel'
         - '$ref': '#/components/schemas/multimediaChannel'
+
+    messageWithoutId:
+      type: object
+      properties:
+        sender:
+          type: string
+          example: user1
+        content:
+          type: string
+          example: Hello World
 
     message:
       type: object

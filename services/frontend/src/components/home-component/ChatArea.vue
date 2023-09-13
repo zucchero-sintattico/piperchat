@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from 'vue'
 import { useMessageStore } from '../../stores/messages'
+
 const messageStore = useMessageStore()
 const messages = messageStore.messages.data
+
 let originalLocation: string
 
 const anchor = document.getElementById('last')
