@@ -1,11 +1,8 @@
-import {
-  DefaultMiddlewares,
-  EmptyRouter,
-  MicroserviceConfiguration,
-} from '@commons/service'
+import { DefaultMiddlewares, MicroserviceConfiguration } from '@commons/service'
 import { WebRtcServiceEventsConfiguration } from './events-configuration'
 import { WebRTCSocketServer } from './webrtc-socket-server'
 import http from 'http'
+import { serviceRouter } from './routes/router'
 
 const WebRTCService = (server: http.Server) => {
   new WebRTCSocketServer(server)
@@ -18,7 +15,7 @@ export const WebRtcServiceConfiguration: MicroserviceConfiguration = {
   eventsConfiguration: new WebRtcServiceEventsConfiguration(),
   expressConfiguration: {
     middlewares: DefaultMiddlewares,
-    serviceRouter: EmptyRouter,
+    serviceRouter: serviceRouter,
     serverBasedServices: [WebRTCService],
   },
 }

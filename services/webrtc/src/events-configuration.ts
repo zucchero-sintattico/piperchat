@@ -22,7 +22,7 @@ import {
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
-} from './repositories/server-repository'
+} from './repositories/channel-repository'
 export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
   private sessionRepository: SessionRepository = new SessionRepositoryImpl()
   private friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()

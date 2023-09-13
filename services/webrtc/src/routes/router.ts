@@ -9,7 +9,7 @@ import {
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
-} from '@/repositories/server-repository'
+} from '@/repositories/channel-repository'
 import { InternalServerError } from '@api/errors'
 
 export const serviceRouter = Router()
