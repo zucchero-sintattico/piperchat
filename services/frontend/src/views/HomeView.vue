@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import ServerList from '../components/home-component/ServerList.vue'
-import DirectsList from '../components/home-component/DirectsList.vue'
+import ConversationBar from '@/components/home-component/ConversationBar.vue'
+import ContentArea from '@/components/home-component/ContentArea.vue'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
@@ -23,16 +23,16 @@ function toggleLeftOpen() {
 </script>
 
 <template>
-  <q-layout view="hHh lpR lFf" class="bg-accent">
+  <q-layout view="hHh Lpr lff" class="bg-accent">
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-avatar>
+          <img src="src/assets/piperchat-logo.jpg" />
+        </q-avatar>
 
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="src/assets/piperchat-logo.jpg" />
-          </q-avatar>
-          PiperChat
+        <q-toolbar-title align="center" class="title">
+          <h1>Piperchat</h1>
         </q-toolbar-title>
       </q-toolbar>
 
@@ -42,15 +42,13 @@ function toggleLeftOpen() {
       </q-tabs>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <div class="row no-wrap left-menu bg-dark">
-        <ServerList />
-        <DirectsList />
-      </div>
-    </q-drawer>
+    <!-- pass leftDrawopen as props -->
+    <ConversationBar show-if-above v-model="leftDrawerOpen" side="left" bordered />
 
-    <q-page-container>
-      <router-view />
+    <!--Use the rest part of the page to show ContentArea component-->
+    <q-page-container class="full-height">
+      <ContentArea />
+      <!-- <router-view /> -->
     </q-page-container>
   </q-layout>
 </template>
@@ -58,5 +56,14 @@ function toggleLeftOpen() {
 <style>
 .left-menu {
   height: 100%;
+}
+
+.content-area {
+  height: 100%;
+}
+h1 {
+  font-size: x-large !important;
+  line-height: normal !important;
+  font-weight: 500 !important;
 }
 </style>
