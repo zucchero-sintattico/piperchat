@@ -16,7 +16,10 @@ import {
 
 const friendsController: FriendsController = new FriendsControllerImpl()
 
-export const friendsRouter = Router()
+export const friendsRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 friendsRouter.use(JWTAuthenticationMiddleware)
 
 friendsRouter.get(

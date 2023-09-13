@@ -7,7 +7,10 @@ import { InternalServerError } from '@api/errors'
 import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/direct'
 
 const directController: DirectController = new DirectControllerImpl()
-const directRouter = Router()
+const directRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 directRouter.get(
   '/:username/messages',

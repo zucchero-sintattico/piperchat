@@ -6,7 +6,10 @@ import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
 import { GetServicesStatusApi } from '@api/monitoring/status'
 
-const monitoringRouter: Router = Router()
+const monitoringRouter: Router = Router({
+  strict: true,
+  mergeParams: true,
+})
 const monitoringController: MonitoringController = new MonitoringControllerImpl()
 
 monitoringRouter.get(
