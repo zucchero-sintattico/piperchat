@@ -6,39 +6,36 @@ import {
   GetDirectSessionIdApi,
   GetUsersInSession
 } from '@api/webrtc/session'
-export interface WebRTCController {
+export interface SessionController {
   getUsersInSession(sessionId: string): Promise<string[]>
   joinChannel(serverId: string, channelId: string): Promise<SessionHandler>
   joinDirectSession(username: string): Promise<SessionHandler>
 }
 
-export class WebRTCControllerImpl extends AxiosController implements WebRTCController {
-  private socket: Socket
+export class SessionControllerImpl extends AxiosController implements SessionController {
+  private token: string
 
   constructor(token: string) {
     super()
-    this.socket = io('http://localhost:3000', {
-      transports: ['websocket'],
-      auth: {
-        token: token
-      }
-    })
+    this.token = token
   }
 
-  private connect(): Promise<void> {
+  private createSocket(): Promise<Socket> {
     return new Promise((resolve, reject) => {
-      if (this.socket.connected) {
-        resolve()
-        return
-      }
-      this.socket.on('connect', () => {
-        console.log('Connected to webrtc service')
-        resolve()
+      const socket = io('http://localhost:3000', {
+        transports: ['websocket'],
+        auth: {
+          token: this.token
+        }
       })
-      this.socket.on('connect_error', (err) => {
+      socket.on('connect', () => {
+        console.log('Connected to webrtc service')
+        resolve(socket)
+      })
+      socket.on('connect_error', (err) => {
         reject(err)
       })
-      this.socket.connect()
+      socket.connect()
     })
   }
 
@@ -54,9 +51,9 @@ export class WebRTCControllerImpl extends AxiosController implements WebRTCContr
   }
 
   async joinChannel(serverId: string, channelId: string): Promise<SessionHandler> {
-    await this.connect()
+    const socket = await this.createSocket()
     const sessionId = await this.getChannelSessionId(serverId, channelId)
-    return new SessionHandlerImpl(this.socket, sessionId)
+    return new SessionHandlerImpl(socket, sessionId)
   }
 
   private async getDirectSessionId(username: string): Promise<string> {
@@ -69,9 +66,9 @@ export class WebRTCControllerImpl extends AxiosController implements WebRTCContr
   }
 
   async joinDirectSession(username: string): Promise<SessionHandler> {
-    await this.connect()
+    const socket = await this.createSocket()
     const sessionId = await this.getDirectSessionId(username)
-    return new SessionHandlerImpl(this.socket, sessionId)
+    return new SessionHandlerImpl(socket, sessionId)
   }
 
   async getUsersInSession(sessionId: string): Promise<string[]> {
