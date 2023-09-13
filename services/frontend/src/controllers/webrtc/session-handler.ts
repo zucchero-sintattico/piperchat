@@ -3,7 +3,7 @@ import type { Socket } from 'socket.io-client'
 type UserJoinCallback = (username: string, stream: MediaStream) => void
 type UserLeaveCallback = (username: string) => void
 
-export interface ChannelCallHandler {
+export interface SessionHandler {
   start(myStream: MediaStream, onUserJoin: UserJoinCallback, onUserLeave: UserLeaveCallback): void
 }
 
@@ -20,9 +20,8 @@ const WebRtcConfiguration: RTCConfiguration = {
   ]
 }
 
-export class ChannelCallHandlerImpl implements ChannelCallHandler {
-  private serverId: string
-  private channelId: string
+export class SessionHandlerImpl implements SessionHandler {
+  private sessionId: string
   private socket: Socket
 
   private myStream?: MediaStream
@@ -31,10 +30,9 @@ export class ChannelCallHandlerImpl implements ChannelCallHandler {
 
   private peers: Record<string, RTCPeerConnection> = {}
 
-  constructor(socket: Socket, serverId: string, channelId: string) {
+  constructor(socket: Socket, sessionid: string) {
     this.socket = socket
-    this.serverId = serverId
-    this.channelId = channelId
+    this.sessionId = sessionid
   }
 
   start(myStream: MediaStream, onUserJoin: UserJoinCallback, onUserLeave: UserLeaveCallback): void {
@@ -42,7 +40,7 @@ export class ChannelCallHandlerImpl implements ChannelCallHandler {
     this.onUserJoin = onUserJoin
     this.onUserLeave = onUserLeave
     this.setupProtocolListener()
-    this.socket.emit('join-channel', this.serverId, this.channelId)
+    this.socket.emit('join-session', this.sessionId)
   }
 
   private setupProtocolListener() {

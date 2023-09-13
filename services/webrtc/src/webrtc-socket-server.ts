@@ -4,7 +4,7 @@ import http from 'http'
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
-} from './repositories/server-repository'
+} from './repositories/channel-repository'
 import {
   FriendshipRepository,
   FriendshipRepositoryImpl,
