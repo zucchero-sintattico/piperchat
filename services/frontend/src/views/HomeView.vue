@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 import ConversationBar from '@/components/home-component/left-bar/ConversationBar.vue'
-import ContentArea from '@/components/home-component/ContentArea.vue'
+import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)

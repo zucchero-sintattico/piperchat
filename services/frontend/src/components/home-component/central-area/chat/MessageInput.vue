@@ -1,15 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMessageStore } from '@/stores/messages'
+import { ContentArea, useUserStore } from '@/stores/user'
 
 const message = ref('')
 const messageStore = useMessageStore()
+const userStore = useUserStore()
 
 async function sendMessage() {
-  // if (message.value != '') {
-  //   await messageStore.sendMessage('me', message.value)
-  //   message.value = ''
-  // }
+  if (userStore.inContentArea == ContentArea.Direct) {
+    await messageStore.sendMessageOnDirect(
+      {
+        content: message.value,
+        username: userStore.selectedDirect
+      },
+      () => console.log('Sent'),
+      () => console.log('Error')
+    )
+  } else if (userStore.inContentArea == ContentArea.Channel) {
+    await messageStore.sendMessageOnChannel(
+      {
+        serverId: userStore.selectedChannel[0],
+        channelId: userStore.selectedChannel[1],
+        content: message.value
+      },
+      () => console.log('Sent'),
+      () => console.log('Error')
+    )
+  }
 }
 
 function deleteMessage() {
