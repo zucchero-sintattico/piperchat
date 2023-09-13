@@ -1,4 +1,4 @@
-import { Servers, Channel, UserInChannel } from '@/models/channels-model'
+import { Servers, Channel, UserInChannel } from '@/models/server-model'
 
 export interface ChannelRepository {
   getUsersInChannel(serverId: string, channelId: string): Promise<UserInChannel[]>
