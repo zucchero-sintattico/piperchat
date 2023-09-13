@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { ChannelType } from '@/stores/server'
+import { ref } from 'vue'
+import NewChannelForm from './NewChannelForm.vue'
+import { CreateChannelApi } from '@api/piperchat/channel'
 
 const userStore = useUserStore()
+
+const isNewChannelFormActive = ref(false)
 </script>
 
 <template>
@@ -11,15 +15,31 @@ const userStore = useUserStore()
       <div class="col">
         <h4 class="q-ma-md text-white">{{ userStore.selectedServer.name }}</h4>
 
-        <div class="q-ma-md q-flex q-items-center q-justify-center">
-          <q-btn color="primary" label="Create channel" />
+        <!-- start Create new server -->
+        <div class="q-ma-md" style="text-align: center">
+          <q-btn
+            color="primary"
+            label="Create channel"
+            icon="add"
+            style="justify-content: space-between"
+            @click="isNewChannelFormActive = true"
+          />
         </div>
+        <q-dialog
+          v-model="isNewChannelFormActive"
+          persistent
+          transition-show="scale"
+          transition-hide="scale"
+        >
+          <NewChannelForm @close="isNewChannelFormActive = false" />
+        </q-dialog>
+        <!-- end Create new server -->
 
         <q-separator color="accent" style="height: 2px" inset />
 
         <div
           v-for="channel in userStore.selectedServer.channels?.filter(
-            (c) => c.channelType == ChannelType.Message
+            (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
         >
@@ -37,7 +57,7 @@ const userStore = useUserStore()
 
         <div
           v-for="channel in userStore.selectedServer.channels?.filter(
-            (c) => c.channelType == ChannelType.Multimedia
+            (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
         >

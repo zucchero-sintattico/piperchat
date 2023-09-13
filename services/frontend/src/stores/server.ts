@@ -1,16 +1,15 @@
+import type { ChannelController } from '@/controllers/piperchat/channel/channel-controller'
+import { ChannelControllerImpl } from '@/controllers/piperchat/channel/channel-controller-impl'
 import type { ServerController } from '@/controllers/piperchat/server/server-controller'
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
+import type { CreateChannelApi } from '@api/piperchat/channel'
 import type { GetServersApi } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
-export enum ChannelType {
-  Message = 'message',
-  Multimedia = 'multimedia'
-}
-
 export const useServerStore = defineStore('server', () => {
   const serverController: ServerController = new ServerControllerImpl()
+  const channelController: ChannelController = new ChannelControllerImpl()
 
   const servers = reactive<GetServersApi.Responses.Server[]>([])
 
@@ -39,9 +38,33 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function createChannel(
+    name: string,
+    description: string,
+    channelType: CreateChannelApi.ChannelType,
+    serverId: string
+  ) {
+    try {
+      const response = await channelController.createChannel({
+        name,
+        channelType,
+        description,
+        serverId
+      })
+      if (response.statusCode === 200) {
+        getServers()
+      } else {
+        console.log(response)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return {
     getServers,
     createServer,
+    createChannel,
     servers
   }
 })
