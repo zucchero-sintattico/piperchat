@@ -14,7 +14,13 @@ async function sendMessage() {
         content: message.value,
         username: userStore.selectedDirect
       },
-      () => console.log('Sent'),
+      // Refresh messages
+      () =>
+        messageStore.getMessagesFromDirect({
+          username: userStore.selectedDirect,
+          from: 0,
+          limit: 1000
+        }),
       () => console.log('Error')
     )
   } else if (userStore.inContentArea == ContentArea.Channel) {
@@ -24,7 +30,13 @@ async function sendMessage() {
         channelId: userStore.selectedChannel[1],
         content: message.value
       },
-      () => console.log('Sent'),
+      () =>
+        messageStore.getMessagesFromChannel({
+          serverId: userStore.selectedChannel[0],
+          channelId: userStore.selectedChannel[1],
+          from: 0,
+          limit: 1000
+        }),
       () => console.log('Error')
     )
   }
