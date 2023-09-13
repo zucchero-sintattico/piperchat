@@ -11,7 +11,7 @@ const serverStore = useServerStore()
 const isNewServerFormActive = ref(false)
 
 function setActiveServer(server: GetServersApi.Responses.Server) {
-  userStore.selectedServer = server
+  userStore.selectedServerId = server._id
   userStore.selectedTab = SelectedTab.Servers
 }
 </script>

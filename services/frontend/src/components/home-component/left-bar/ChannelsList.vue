@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import NewChannelForm from './NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
+import { useServerStore } from '@/stores/server'
 
 const userStore = useUserStore()
-
+const serverStore = useServerStore()
 const isNewChannelFormActive = ref(false)
+
+const selectedServer = computed(() => {
+  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+})
 </script>
 
 <template>
   <q-scroll-area visible class="col bg-secondary">
     <div class="column">
       <div class="col">
-        <h4 class="q-ma-md text-white">{{ userStore.selectedServer.name }}</h4>
+        <h4 class="q-ma-md text-white">{{ selectedServer?.name }}</h4>
 
         <!-- start Create new server -->
         <div class="q-ma-md" style="text-align: center">
@@ -38,7 +43,7 @@ const isNewChannelFormActive = ref(false)
         <q-separator color="accent" style="height: 2px" inset />
 
         <div
-          v-for="channel in userStore.selectedServer.channels?.filter(
+          v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
@@ -56,8 +61,8 @@ const isNewChannelFormActive = ref(false)
         <q-separator color="accent" style="height: 2px" inset />
 
         <div
-          v-for="channel in userStore.selectedServer.channels?.filter(
-            (c) => c.channelType == CreateChannelApi.ChannelType.Messages
+          v-for="channel in selectedServer?.channels?.filter(
+            (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
           :key="channel._id"
         >
