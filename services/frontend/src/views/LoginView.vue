@@ -57,6 +57,7 @@ img {
 
 h1 {
   font-weight: normal;
+  font-size: 5em !important;
 }
 
 a {
