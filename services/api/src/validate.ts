@@ -7,6 +7,51 @@ interface RequestFacade<Params, Body, Query> {
   query: Query
 }
 
+interface BadRequestError {
+  field: string
+  expected: string
+  received: string
+}
+
+function checkFields<T extends Record<string, unknown>>(
+  object: T,
+  schema: Record<string, string>
+): BadRequestError[] {
+  const errors = []
+  for (const [key, value] of Object.entries(schema.Params)) {
+    const param = object[key]
+    if (value.endsWith('?')) {
+      if (param === undefined) {
+        continue
+      } else {
+        if (typeof param !== value.replace('?', '')) {
+          errors.push({
+            field: key,
+            expected: value,
+            received: typeof param,
+          })
+        }
+      }
+    } else {
+      if (param === undefined) {
+        errors.push({
+          field: key,
+          expected: value,
+          received: 'undefined',
+        })
+      } else {
+        if (typeof param !== value) {
+          errors.push({
+            field: key,
+            expected: value,
+            received: typeof param,
+          })
+        }
+      }
+    }
+  }
+  return errors
+}
 export function Validate<
   P extends Record<string, unknown>,
   B extends Record<string, unknown>,
@@ -21,65 +66,9 @@ export function Validate<
     const body = req.body
 
     // Build a response with all the errors
-    const paramsError = []
-    for (const [key, value] of Object.entries(schema.Params)) {
-      if (params[key] === undefined) {
-        if (value.endsWith('?')) {
-          continue
-        }
-        paramsError.push({
-          field: key,
-          expected: value,
-          received: 'undefined',
-        })
-      } else if (typeof params[key] !== value) {
-        paramsError.push({
-          field: key,
-          expected: value,
-          received: typeof params[key],
-        })
-      }
-    }
-
-    const bodyError = []
-    for (const [key, value] of Object.entries(schema.Body)) {
-      if (body[key] === undefined) {
-        if (value.endsWith('?')) {
-          continue
-        }
-        bodyError.push({
-          field: key,
-          expected: value,
-          received: 'undefined',
-        })
-      } else if (typeof body[key] !== value) {
-        bodyError.push({
-          field: key,
-          expected: value,
-          received: typeof body[key],
-        })
-      }
-    }
-
-    const queryError = []
-    for (const [key, value] of Object.entries(schema.Query ?? {})) {
-      if (req.query[key] === undefined) {
-        if (value.endsWith('?')) {
-          continue
-        }
-        queryError.push({
-          field: key,
-          expected: value,
-          received: 'undefined',
-        })
-      } else if (typeof req.query[key] !== value) {
-        queryError.push({
-          field: key,
-          expected: value,
-          received: typeof req.query[key],
-        })
-      }
-    }
+    const paramsError = checkFields(params, schema.Params)
+    const bodyError = checkFields(body, schema.Body)
+    const queryError = checkFields(req.query, schema.Query ?? {})
 
     if (paramsError.length > 0 || bodyError.length > 0 || queryError.length > 0) {
       const response = new BadRequest(paramsError, bodyError, queryError)
