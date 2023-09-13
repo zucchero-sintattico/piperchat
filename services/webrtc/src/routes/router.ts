@@ -1,6 +1,10 @@
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 import { Request, Response, Router } from 'express'
-import { GetChannelSessionIdApi, GetDirectSessionIdApi } from '@api/webrtc/session'
+import {
+  GetChannelSessionIdApi,
+  GetDirectSessionIdApi,
+  GetUsersInSession,
+} from '@api/webrtc/session'
 import { Validate } from '@api/validate'
 import {
   FriendshipRepository,
@@ -11,6 +15,10 @@ import {
   ChannelRepositoryImpl,
 } from '@/repositories/channel-repository'
 import { InternalServerError } from '@api/errors'
+import {
+  SessionRepository,
+  SessionRepositoryImpl,
+} from '@/repositories/session-repository'
 
 export const serviceRouter = Router()
 
@@ -18,6 +26,7 @@ serviceRouter.use(JWTAuthenticationMiddleware)
 
 const friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()
 const channelRepository: ChannelRepository = new ChannelRepositoryImpl()
+const sessionRepository: SessionRepository = new SessionRepositoryImpl()
 
 serviceRouter.get(
   '/users/:username/session',
@@ -70,6 +79,26 @@ serviceRouter.get(
       response.send(res)
     } catch (error) {
       const response = new InternalServerError(error)
+      response.send(res)
+    }
+  }
+)
+
+serviceRouter.get(
+  '/sessions/:sessionId',
+  Validate(GetUsersInSession.Request.Schema),
+  async (
+    req: Request<GetUsersInSession.Request.Params, GetUsersInSession.Response>,
+    res: Response<GetUsersInSession.Response>
+  ) => {
+    try {
+      const session = await sessionRepository.getSession(req.params.sessionId)
+      const response = new GetUsersInSession.Responses.Success({
+        users: session.participants.map((p) => p.username),
+      })
+      response.send(res)
+    } catch (e) {
+      const response = new InternalServerError(e)
       response.send(res)
     }
   }
