@@ -101,9 +101,8 @@ function onReset() {
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
 
-    <Transition>
-      <FormError v-if="error" :errorMessage="errorMessage" />
-    </Transition>
+    <!-- Error message -->
+    <FormError v-if="error" :errorMessage="errorMessage" />
 
     <!-- Banner for successful registration -->
     <q-dialog v-model="registrationSuccess" class="success-banner text-h6">

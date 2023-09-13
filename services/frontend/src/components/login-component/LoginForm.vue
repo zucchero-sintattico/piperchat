@@ -64,9 +64,8 @@ function onReset() {
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm text-h5" />
     </div>
 
-    <Transition>
-      <FormError v-if="error" :error-message="errorMessage" />
-    </Transition>
+    <!-- Error message -->
+    <FormError v-if="error" :error-message="errorMessage" />
   </q-form>
 </template>
 
