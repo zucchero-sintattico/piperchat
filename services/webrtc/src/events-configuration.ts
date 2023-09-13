@@ -6,14 +6,18 @@ import {
   UserKickedFromServer,
   UserLeftServer,
 } from '@messages-api/servers'
+import { UserDeletedMessage } from '@messages-api/users'
+import { FriendRequestAcceptedMessage } from '@messages-api/friends'
 import { ChannelCreated, ChannelDeleted } from '@messages-api/channels'
-import { Servers } from './models/channels-model'
+import { Servers } from './models/server-model'
+import { Friendships } from './models/users-model'
 export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
   constructor() {
     super()
     this.listenToServersUpdates()
     this.listenToServerParticipants()
     this.listenToChannelsUpdates()
+    this.listenToFriendsUpdates()
   }
 
   listenToServersUpdates() {
@@ -66,6 +70,25 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
         { id: event.serverId },
         { $pull: { channels: { id: event.channelId } } }
       )
+    })
+  }
+
+  listenToFriendsUpdates() {
+    this.on(UserDeletedMessage, async (event: UserDeletedMessage) => {
+      await Friendships.deleteMany({
+        $or: [{ 'user1.username': event.username }, { 'user2.username': event.username }],
+      })
+    })
+
+    this.on(FriendRequestAcceptedMessage, async (event: FriendRequestAcceptedMessage) => {
+      await Friendships.create({
+        user1: {
+          username: event.from,
+        },
+        user2: {
+          username: event.to,
+        },
+      })
     })
   }
 }
