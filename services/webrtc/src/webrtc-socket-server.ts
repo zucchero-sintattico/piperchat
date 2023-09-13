@@ -4,15 +4,21 @@ import http from 'http'
 import {
   ChannelRepository,
   ChannelRepositoryImpl,
-} from './repositories/channels/channel-repository'
+} from './repositories/server-repository'
 import {
   FriendshipRepository,
   FriendshipRepositoryImpl,
-} from './repositories/friendships/friendship-repository'
+} from './repositories/friendship-repository'
+import { Session } from '@models/session-model'
+import {
+  SessionRepository,
+  SessionRepositoryImpl,
+} from './repositories/session-repository'
 
 export class WebRTCSocketServer {
   private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
   private friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()
+  private sessionRepository: SessionRepository = new SessionRepositoryImpl()
   private io: Server
 
   constructor(server: http.Server) {
@@ -21,178 +27,90 @@ export class WebRTCSocketServer {
         origin: '*',
       },
     })
-    this.io.on('connection', (socket) => {
-      if (!isAccessTokenValid(socket.handshake.auth.token)) {
-        console.log('Invalid token')
-        socket.disconnect()
-        return
-      }
+    this.io.on('connection', async (socket) => {
+      await this.validateTokenOrDisconnect(socket.handshake.auth.token, socket)
       const username = decodeAccessToken(socket.handshake.auth.token)?.username
       if (username) {
-        this.handleSocket(socket, username)
+        socket.on('join-session', async (sessionId: string) =>
+          this.handleSession(socket, username, sessionId)
+        )
       }
     })
   }
 
-  async handleSocket(socket: Socket, username: string) {
-    console.log('Socket connected', socket.id, username)
-
-    socket.on('join-channel', async (serverId: string, channelId: string) =>
-      this.handleMultimediaChannelProtocol(socket, username, serverId, channelId)
-    )
-
-    socket.on('join-user', async (username2: string) =>
-      this.handleInfraUserProtocol(socket, username, username2)
-    )
+  private async validateTokenOrDisconnect(token: string, socket: Socket): Promise<void> {
+    if (!isAccessTokenValid(token)) {
+      console.log('Invalid token')
+      socket.disconnect()
+      return
+    }
   }
 
-  async handleInfraUserProtocol(
-    socket: Socket,
-    myUsername: string,
-    friendUsername: string
-  ) {
-    try {
-      if (
-        !(await this.friendshipRepository.areUsersFriends(myUsername, friendUsername))
-      ) {
-        console.log('Users are not friends')
-        socket.disconnect()
-        return
-      }
-    } catch (e) {
-      console.log('User not found')
-      socket.disconnect()
-      return
-    }
-
-    const userInFriendship = await this.friendshipRepository.getUserInFriendship(
-      myUsername,
-      friendUsername
-    )
-    if (userInFriendship.socketId) {
-      console.log('User already in session, disconnecting')
-      socket.disconnect()
-      return
-    }
-
-    await this.friendshipRepository.addSocketIdToFriendship(
-      myUsername,
-      friendUsername,
-      socket.id
-    )
-
-    const friendship = await this.friendshipRepository.getFriendship(
-      myUsername,
-      friendUsername
-    )
-
-    socket.to(friendship._id).emit('user-connected', myUsername)
-    socket.join(friendship._id)
-
+  private async handleSession(socket: Socket, username: string, sessionId: string) {
+    console.log('Joining session', sessionId)
+    const session = await this.getSessionOrDisconnect(sessionId, socket)
+    await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
+    await this.validateUserNotAlreadyInSessionOrDisconnect(session, username, socket)
+    await this.sessionRepository.addUserToSession(sessionId, username, socket.id)
+    socket.to(sessionId).emit('user-connected', username)
+    socket.join(sessionId)
     socket.on('disconnect', async () => {
-      console.log('Disconnecting user:', myUsername)
-      socket.to(friendship._id).emit('user-disconnected', myUsername)
-
-      await this.friendshipRepository.removeSocketIdFromFriendship(
-        myUsername,
-        friendUsername
-      )
+      console.log('Disconnecting user:', username)
+      socket.to(sessionId).emit('user-disconnected', username)
+      this.sessionRepository.removeUserFromSession(sessionId, username)
     })
-
     socket.on('offer', async (offer, to) => {
-      const user = await this.friendshipRepository.getUserInFriendship(to, myUsername)
-      this.io.sockets.sockets.get(user.socketId)?.emit('offer', offer, myUsername)
+      const user = await this.sessionRepository.getUserInSession(sessionId, to)
+      this.io.sockets.sockets.get(user?.socketId)?.emit('offer', offer, username)
     })
-
     socket.on('answer', async (answer, to) => {
-      const user = await this.friendshipRepository.getUserInFriendship(to, myUsername)
-      this.io.sockets.sockets.get(user.socketId)?.emit('answer', answer, myUsername)
+      const user = await this.sessionRepository.getUserInSession(sessionId, to)
+      this.io.sockets.sockets.get(user?.socketId)?.emit('answer', answer, username)
     })
-
     socket.on('ice-candidate', async (candidate, to) => {
-      const user = await this.friendshipRepository.getUserInFriendship(to, myUsername)
+      const user = await this.sessionRepository.getUserInSession(sessionId, to)
       this.io.sockets.sockets
-        .get(user.socketId)
-        ?.emit('ice-candidate', candidate, myUsername)
+        .get(user?.socketId)
+        ?.emit('ice-candidate', candidate, username)
     })
   }
 
-  async handleMultimediaChannelProtocol(
-    socket: Socket,
-    username: string,
-    serverId: string,
-    channelId: string
-  ) {
-    console.log('Joining channel', channelId, 'on server', serverId)
+  private async getSessionOrDisconnect(
+    sessionId: string,
+    socket: Socket
+  ): Promise<Session> {
     try {
-      if (!(await this.channelRepository.isUserParticipantInServer(serverId, username))) {
-        console.log('User not allowed in session')
-        socket.disconnect()
-        return
-      }
+      return await this.sessionRepository.getSession(sessionId)
     } catch (e) {
-      console.log('Channel not found')
+      console.log('Session not found')
+      socket.disconnect()
+      throw e
+    }
+  }
+
+  private async validateUserAllowedInSessionOrDisconnect(
+    session: Session,
+    username: string,
+    socket: Socket
+  ) {
+    if (!session.allowedUsers.includes(username)) {
+      console.log('User not allowed in session')
       socket.disconnect()
       return
     }
+  }
 
-    const userAlreadyInSession = await this.channelRepository.getUserInChannel(
-      serverId,
-      channelId,
-      username
-    )
-
+  private async validateUserNotAlreadyInSessionOrDisconnect(
+    session: Session,
+    username: string,
+    socket: Socket
+  ) {
+    const userAlreadyInSession = session.participants.find((p) => p.username === username)
     const isUserAlreadyInSession = userAlreadyInSession !== undefined
-
     if (isUserAlreadyInSession) {
       console.log('User already in session, disconnecting')
       socket.disconnect()
       return
     }
-
-    await this.channelRepository.addUserToChannel(serverId, username, socket.id)
-
-    socket.to(channelId).emit('user-connected', username)
-    socket.join(channelId)
-
-    // TODO: Change names
-    // this.sessionEventsRepository.publishUserJoinedSessionEvent(channelId, username)
-
-    socket.on('disconnect', async () => {
-      console.log('Disconnecting user:', username)
-      socket.to(channelId).emit('user-disconnected', username)
-
-      this.channelRepository.removeUserFromChannel(serverId, channelId, username)
-
-      // TODO: Change names
-      // this.sessionEventsRepository.publishUserLeftSessionEvent(channelId, username)
-
-      const usersInSession = await this.channelRepository.getUsersInChannel(
-        serverId,
-        channelId
-      )
-
-      if (usersInSession.length === 0) {
-        // TODO: Change names
-        // this.sessionEventsRepository.publishSessionEndedEvent(channelId)
-      }
-    })
-
-    socket.on('offer', async (offer, to) => {
-      const user = await this.channelRepository.getUserInChannel(serverId, channelId, to)
-      this.io.sockets.sockets.get(user.socketId)?.emit('offer', offer, username)
-    })
-
-    socket.on('answer', async (answer, to) => {
-      const user = await this.channelRepository.getUserInChannel(serverId, channelId, to)
-      this.io.sockets.sockets.get(user.socketId)?.emit('answer', answer, username)
-    })
-
-    socket.on('ice-candidate', async (candidate, to) => {
-      const user = await this.channelRepository.getUserInChannel(serverId, channelId, to)
-      this.io.sockets.sockets
-        .get(user.socketId)
-        ?.emit('ice-candidate', candidate, username)
-    })
   }
 }
