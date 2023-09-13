@@ -1,20 +1,25 @@
 <script setup lang="ts">
+import { useServerStore } from '@/stores/server'
 import { ref } from 'vue'
+
+const event = defineEmits<{
+  (e: 'close'): void
+}>()
+
+const serverStore = useServerStore()
 
 const name = ref('')
 const description = ref('')
 
-function onSubmit() {}
-
-function onReset() {
-  name.value = ''
-  description.value = ''
+async function onSubmit() {
+  await serverStore.createServer(name.value, description.value)
+  event('close')
 }
 </script>
 
 <template>
   <div class="q-pa-xl bg-white">
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+    <q-form class="q-gutter-md" @submit="onSubmit">
       <h2 class="text-h3">Create a new server</h2>
 
       <q-input
@@ -42,7 +47,7 @@ function onReset() {
           color="primary"
           flat
           class="q-ml-sm"
-          @click="$emit('close')"
+          @click="event('close')"
         />
       </div>
     </q-form>
