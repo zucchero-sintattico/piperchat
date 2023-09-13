@@ -144,7 +144,7 @@ export class WebRTCSocketServer {
       if (friendship) {
         const friend =
           friendship.first === username ? friendship.second : friendship.first
-        this.eventsRepository.publishUserLeftChannelEvent(username, friend)
+        this.eventsRepository.publishUserLeftDirectSessionEvent(username, friend)
       }
     } catch (e) {
       //

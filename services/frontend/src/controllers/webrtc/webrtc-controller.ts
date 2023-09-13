@@ -1,8 +1,13 @@
 import io, { Socket } from 'socket.io-client'
 import { type SessionHandler, SessionHandlerImpl } from './session-handler'
 import { AxiosController } from '../axios-controller'
-import { GetChannelSessionIdApi, GetDirectSessionIdApi } from '@api/webrtc/session'
+import {
+  GetChannelSessionIdApi,
+  GetDirectSessionIdApi,
+  GetUsersInSession
+} from '@api/webrtc/session'
 export interface WebRTCController {
+  getUsersInSession(sessionId: string): Promise<string[]>
   joinChannel(serverId: string, channelId: string): Promise<SessionHandler>
   joinDirectSession(username: string): Promise<SessionHandler>
 }
@@ -67,5 +72,14 @@ export class WebRTCControllerImpl extends AxiosController implements WebRTCContr
     await this.connect()
     const sessionId = await this.getDirectSessionId(username)
     return new SessionHandlerImpl(this.socket, sessionId)
+  }
+
+  async getUsersInSession(sessionId: string): Promise<string[]> {
+    const response = await this.get<GetUsersInSession.Response>(`/sessions/${sessionId}`)
+    if (response.statusCode !== 200) {
+      throw new Error('Session not found')
+    }
+    const typed = response as GetUsersInSession.Responses.Success
+    return typed.users
   }
 }

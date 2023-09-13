@@ -76,3 +76,41 @@ export namespace GetDirectSessionIdApi {
 
   export type Response = Responses.Type | Errors.Type
 }
+
+export namespace GetUsersInSession {
+  export namespace Request {
+    export type Type = Params
+    export type Params = {
+      sessionId: string
+    }
+    export const Schema: RequestSchema = {
+      Params: {
+        sessionId: 'string',
+      },
+      Body: {},
+    }
+  }
+
+  export namespace Responses {
+    export class Success extends Response {
+      statusCode = 200
+      message = 'Users retrieved successfully' as const
+      users: string[]
+      constructor(data: { users: string[] }) {
+        super()
+        this.users = data.users
+      }
+    }
+    export type Type = Success
+  }
+
+  export namespace Errors {
+    export class SessionNotFound extends Response {
+      statusCode = 404
+      message = 'Session not found' as const
+    }
+    export type Type = SessionNotFound
+  }
+
+  export type Response = Responses.Type | Errors.Type
+}
