@@ -1,11 +1,17 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
+import type { GetServersApi } from '@api/piperchat/server'
 import { LoginApi } from '@api/users/auth'
 import type { WhoamiApi } from '@api/users/user'
+
+export enum SelectedTab {
+  Directs = 'directs',
+  Servers = 'servers'
+}
 
 export const useUserStore = defineStore(
   'user',
@@ -16,6 +22,14 @@ export const useUserStore = defineStore(
     const description = ref('')
     const photo = ref('')
     const error = ref('')
+
+    // reactive objects do not persist
+    const selectedServer = reactive<GetServersApi.Responses.Server>(
+      {} as GetServersApi.Responses.Server
+    )
+
+    const selectedTab = ref(SelectedTab.Directs)
+
     async function whoami() {
       try {
         const response = (await userController.whoami()) as WhoamiApi.Responses.Success
@@ -100,6 +114,8 @@ export const useUserStore = defineStore(
       description,
       photo,
       error,
+      selectedServer,
+      selectedTab,
       login,
       register,
       logout
