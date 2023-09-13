@@ -1,24 +1,8 @@
 import { Schema, model } from 'mongoose'
 
-export interface UserInChannel {
-  username: string
-  socketId: string
-}
-
-export const UserInChannelSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  socketId: {
-    type: String,
-    required: true,
-  },
-})
-
 export interface Channel {
   id: string
-  participants: UserInChannel[]
+  sessionId: string
 }
 
 export const ChannelSchema = new Schema({
@@ -26,12 +10,10 @@ export const ChannelSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    auto: true,
   },
-  participants: {
-    type: [UserInChannelSchema],
+  sessionId: {
+    type: String,
     required: true,
-    default: [],
   },
 })
 
@@ -46,7 +28,6 @@ export const ServerSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    auto: true,
   },
   participants: {
     type: [String],

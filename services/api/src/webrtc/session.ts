@@ -1,14 +1,14 @@
-import { Empty, Response } from '../response'
+import { Response } from '../response'
 import { RequestSchema } from '../schema'
 
 /* eslint-disable @typescript-eslint/no-namespace */
-export namespace JoinMultimediaChannelApi {
+export namespace GetChannelSessionIdApi {
   export namespace Request {
+    export type Type = Params
     export type Params = {
       serverId: string
       channelId: string
     }
-    export type Body = Empty
     export const Schema: RequestSchema = {
       Params: {
         serverId: 'string',
@@ -20,28 +20,59 @@ export namespace JoinMultimediaChannelApi {
   export namespace Responses {
     export class Success extends Response {
       statusCode = 200
+      message = 'Session id retrieved successfully' as const
       sessionId: string
-      constructor(sessionId: string) {
+      constructor(data: { sessionId: string }) {
         super()
-        this.sessionId = sessionId
+        this.sessionId = data.sessionId
       }
     }
     export type Type = Success
   }
   export namespace Errors {
-    export class SessionNotFound extends Response {
+    export class ChannelNotFound extends Response {
       statusCode = 404
-      constructor() {
-        super()
-      }
+      message = 'Channel not found' as const
     }
-    export class UserNotAllowed extends Response {
-      statusCode = 403
-      constructor() {
-        super()
-      }
-    }
-    export type Type = SessionNotFound | UserNotAllowed
+    export type Type = ChannelNotFound
   }
+  export type Response = Responses.Type | Errors.Type
+}
+
+export namespace GetDirectSessionIdApi {
+  export namespace Request {
+    export type Type = Params
+    export type Params = {
+      username: string
+    }
+    export const Schema: RequestSchema = {
+      Params: {
+        username: 'string',
+      },
+      Body: {},
+    }
+  }
+
+  export namespace Responses {
+    export class Success extends Response {
+      statusCode = 200
+      message = 'Session id retrieved successfully' as const
+      sessionId: string
+      constructor(data: { sessionId: string }) {
+        super()
+        this.sessionId = data.sessionId
+      }
+    }
+    export type Type = Success
+  }
+
+  export namespace Errors {
+    export class FriendshipNotFound extends Response {
+      statusCode = 404
+      message = 'Friendship not found' as const
+    }
+    export type Type = FriendshipNotFound
+  }
+
   export type Response = Responses.Type | Errors.Type
 }

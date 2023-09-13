@@ -6,12 +6,28 @@ import {
   UserKickedFromServer,
   UserLeftServer,
 } from '@messages-api/servers'
-import { UserDeletedMessage } from '@messages-api/users'
 import { FriendRequestAcceptedMessage } from '@messages-api/friends'
 import { ChannelCreated, ChannelDeleted } from '@messages-api/channels'
 import { Servers } from './models/server-model'
-import { Friendships } from './models/users-model'
+
+import { CreateChannelApi } from '@api/piperchat/channel'
+import {
+  SessionRepository,
+  SessionRepositoryImpl,
+} from './repositories/session-repository'
+import {
+  FriendshipRepository,
+  FriendshipRepositoryImpl,
+} from './repositories/friendship-repository'
+import {
+  ChannelRepository,
+  ChannelRepositoryImpl,
+} from './repositories/server-repository'
 export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
+  private sessionRepository: SessionRepository = new SessionRepositoryImpl()
+  private friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()
+  private channelRepository: ChannelRepository = new ChannelRepositoryImpl()
+
   constructor() {
     super()
     this.listenToServersUpdates()
@@ -22,73 +38,60 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
 
   listenToServersUpdates() {
     this.on(ServerCreated, async (event: ServerCreated) => {
-      await Servers.create({
-        id: event.id,
-        participants: [event.owner],
-        channels: [],
-      })
+      await this.channelRepository.createServer(event.id, event.owner)
     })
 
     this.on(ServerDeleted, async (event: ServerDeleted) => {
-      await Servers.deleteOne({ id: event.id })
+      await this.channelRepository.deleteServer(event.id)
     })
   }
 
   listenToServerParticipants() {
     this.on(UserJoinedServer, async (event: UserJoinedServer) => {
-      await Servers.updateOne(
-        { id: event.serverId },
-        { $push: { participants: event.username } }
-      )
+      await this.channelRepository.addServerParticipant(event.serverId, event.username)
     })
 
     this.on(UserLeftServer, async (event: UserLeftServer) => {
-      await Servers.updateOne(
-        { id: event.serverId },
-        { $pull: { participants: event.username } }
-      )
+      await this.channelRepository.removeServerParticipant(event.serverId, event.username)
     })
 
     this.on(UserKickedFromServer, async (event: UserKickedFromServer) => {
-      await Servers.updateOne(
-        { id: event.serverId },
-        { $pull: { participants: event.username } }
-      )
+      await this.channelRepository.removeServerParticipant(event.serverId, event.username)
     })
   }
 
   listenToChannelsUpdates() {
     this.on(ChannelCreated, async (event: ChannelCreated) => {
-      await Servers.updateOne(
-        { id: event.serverId },
-        { $push: { channels: { id: event.channelId, participants: [] } } }
+      if (event.channelType !== CreateChannelApi.ChannelType.Messages) {
+        return
+      }
+
+      const server = await Servers.findOne({ id: event.serverId }).orFail()
+      const sessionId = await this.sessionRepository.createSession(server.participants)
+
+      await this.channelRepository.createChannelInServer(
+        event.serverId,
+        event.channelId,
+        sessionId
       )
     })
 
     this.on(ChannelDeleted, async (event: ChannelDeleted) => {
-      await Servers.updateOne(
-        { id: event.serverId },
-        { $pull: { channels: { id: event.channelId } } }
-      )
+      try {
+        await this.channelRepository.deleteChannelInServer(
+          event.serverId,
+          event.channelId
+        )
+      } catch (error) {
+        // do nothing
+      }
     })
   }
 
   listenToFriendsUpdates() {
-    this.on(UserDeletedMessage, async (event: UserDeletedMessage) => {
-      await Friendships.deleteMany({
-        $or: [{ 'user1.username': event.username }, { 'user2.username': event.username }],
-      })
-    })
-
     this.on(FriendRequestAcceptedMessage, async (event: FriendRequestAcceptedMessage) => {
-      await Friendships.create({
-        user1: {
-          username: event.from,
-        },
-        user2: {
-          username: event.to,
-        },
-      })
+      const sessionId = await this.sessionRepository.createSession([event.from, event.to])
+      await this.friendshipRepository.createFriendship(event.from, event.to, sessionId)
     })
   }
 }
