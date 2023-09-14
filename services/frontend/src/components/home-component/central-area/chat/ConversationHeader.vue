@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { ContentArea, useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
 
@@ -10,7 +10,7 @@ const serverStore = useServerStore()
 watch(
   () => userStore.selectedDirect,
   (newVal) => {
-    console.log('changed direct')
+    console.log('update header')
     if (newVal !== '') {
       title.value = newVal
     }
@@ -33,6 +33,26 @@ watch(
     }
   }
 )
+
+onMounted(() => {
+  if (userStore.inContentArea == ContentArea.Direct) {
+    title.value = userStore.selectedDirect
+  } else if (userStore.inContentArea == ContentArea.Channel) {
+    const server = serverStore.servers.filter(
+      (server) => server._id == userStore.selectedChannel[0]
+    )[0]
+
+    if (server) {
+      const channel = server.channels.filter(
+        (channel) => channel._id == userStore.selectedChannel[1]
+      )
+
+      if (channel.length > 0) {
+        title.value = channel[0].name
+      }
+    }
+  }
+})
 </script>
 <template>
   <q-header>
