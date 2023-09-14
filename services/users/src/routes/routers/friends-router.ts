@@ -1,92 +1,75 @@
-import { Request, Response, Router } from 'express'
 import {
   FriendsController,
   FriendsControllerExceptions,
 } from '@controllers/friends/friends-controller'
 import { FriendsControllerImpl } from '@controllers/friends/friends-controller-impl'
-import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
-
-import { InternalServerError } from '@api/errors'
-import { Validate } from '@api/validate'
 import {
   GetFriendsRequestsApi,
   SendFriendRequestApi,
   GetFriendsApi,
 } from '@api/users/friends'
+import { ApiRouter, Route } from '@commons/router'
+
+const friendsApiRouter = new ApiRouter()
+export const friendsRouter = friendsApiRouter.getRouter()
 
 const friendsController: FriendsController = new FriendsControllerImpl()
 
-export const friendsRouter = Router({
-  strict: true,
-  mergeParams: true,
+export const GetFriendsApiRoute = new Route<
+  GetFriendsApi.Response,
+  GetFriendsApi.Request.Params,
+  GetFriendsApi.Request.Body
+>({
+  method: 'get',
+  path: '/',
+  schema: GetFriendsApi.Request.Schema,
+  handler: async (req, res) => {
+    const friends = await friendsController.getFriends(req.user.username)
+    const response = new GetFriendsApi.Responses.Success(friends)
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: FriendsControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetFriendsApi.Errors.UserNotFound())
+      },
+    },
+  ],
 })
-friendsRouter.use(JWTAuthenticationMiddleware)
 
-friendsRouter.get(
-  '/',
-  Validate(GetFriendsApi.Request.Schema),
-  async (
-    req: Request<
-      GetFriendsApi.Request.Params,
-      GetFriendsApi.Response,
-      GetFriendsApi.Request.Body
-    >,
-    res: Response<GetFriendsApi.Response | InternalServerError>
-  ) => {
-    try {
-      const friends = await friendsController.getFriends(req.user.username)
-      const response = new GetFriendsApi.Responses.Success(friends)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof FriendsControllerExceptions.UserNotFound) {
-        const response = new GetFriendsApi.Errors.UserNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+export const GetFriendsRequestsApiRoute = new Route<
+  GetFriendsRequestsApi.Response,
+  GetFriendsRequestsApi.Request.Params,
+  GetFriendsRequestsApi.Request.Body
+>({
+  method: 'get',
+  path: '/requests',
+  schema: GetFriendsRequestsApi.Request.Schema,
+  handler: async (req, res) => {
+    const requests = await friendsController.getFriendsRequests(req.user.username)
+    const response = new GetFriendsRequestsApi.Responses.Success(requests)
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: FriendsControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetFriendsRequestsApi.Errors.UserNotFound())
+      },
+    },
+  ],
+})
 
-friendsRouter.get(
-  '/requests',
-  Validate(GetFriendsRequestsApi.Request.Schema),
-  async (
-    req: Request<
-      GetFriendsRequestsApi.Request.Params,
-      GetFriendsRequestsApi.Response,
-      GetFriendsRequestsApi.Request.Body
-    >,
-    res: Response<GetFriendsRequestsApi.Response | InternalServerError>
-  ) => {
-    try {
-      const requests = await friendsController.getFriendsRequests(req.user.username)
-      const response = new GetFriendsRequestsApi.Responses.Success(requests)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof FriendsControllerExceptions.UserNotFound) {
-        const response = new GetFriendsRequestsApi.Errors.UserNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
-
-friendsRouter.post(
-  '/requests',
-  Validate(SendFriendRequestApi.Request.Schema),
-  async (
-    req: Request<
-      SendFriendRequestApi.Request.Params,
-      SendFriendRequestApi.Response,
-      SendFriendRequestApi.Request.Body
-    >,
-    res: Response<SendFriendRequestApi.Response | InternalServerError>
-  ) => {
+export const SendFriendRequestApiRoute = new Route<
+  SendFriendRequestApi.Response,
+  SendFriendRequestApi.Request.Params,
+  SendFriendRequestApi.Request.Body
+>({
+  method: 'post',
+  path: '/requests',
+  schema: SendFriendRequestApi.Request.Schema,
+  handler: async (req, res) => {
     if (
       !Object.values(SendFriendRequestApi.Request.FriendRequestAction).includes(
         req.body.action
@@ -95,61 +78,49 @@ friendsRouter.post(
       const response = new SendFriendRequestApi.Errors.InvalidAction(req.body.action)
       response.send(res)
     }
-
     switch (req.body.action) {
-      case SendFriendRequestApi.Request.FriendRequestAction.send:
-        try {
-          await friendsController.sendFriendRequest(req.user.username, req.body.to)
-          const response = new SendFriendRequestApi.Responses.Success()
-          response.send(res)
-        } catch (e) {
-          if (e instanceof FriendsControllerExceptions.UserNotFound) {
-            const response = new SendFriendRequestApi.Errors.UserNotFound()
-            response.send(res)
-          } else if (e instanceof FriendsControllerExceptions.FriendRequestAlreadySent) {
-            const response = new SendFriendRequestApi.Errors.FriendRequestAlreadySent()
-            response.send(res)
-          } else {
-            const response = new InternalServerError(e)
-            response.send(res)
-          }
-        }
+      case SendFriendRequestApi.Request.FriendRequestAction.send: {
+        await friendsController.sendFriendRequest(req.user.username, req.body.to)
+        const response = new SendFriendRequestApi.Responses.Success()
+        response.send(res)
         break
-      case SendFriendRequestApi.Request.FriendRequestAction.accept:
-        try {
-          await friendsController.acceptFriendRequest(req.user.username, req.body.to)
-          const response = new SendFriendRequestApi.Responses.FriendRequestAccepted()
-          response.send(res)
-        } catch (e) {
-          if (e instanceof FriendsControllerExceptions.UserNotFound) {
-            const response = new SendFriendRequestApi.Errors.UserNotFound()
-            response.send(res)
-          } else if (e instanceof FriendsControllerExceptions.FriendRequestNotPresent) {
-            const response = new SendFriendRequestApi.Errors.FriendRequestNotFound()
-            response.send(res)
-          } else {
-            const response = new InternalServerError(e)
-            response.send(res)
-          }
-        }
+      }
+      case SendFriendRequestApi.Request.FriendRequestAction.accept: {
+        await friendsController.acceptFriendRequest(req.user.username, req.body.to)
+        const response = new SendFriendRequestApi.Responses.FriendRequestAccepted()
+        response.send(res)
         break
-      case SendFriendRequestApi.Request.FriendRequestAction.deny:
-        try {
-          await friendsController.denyFriendRequest(req.user.username, req.body.to)
-          const response = new SendFriendRequestApi.Responses.FriendRequestDenied()
-          response.send(res)
-        } catch (e) {
-          if (e instanceof FriendsControllerExceptions.UserNotFound) {
-            const response = new SendFriendRequestApi.Errors.UserNotFound()
-            response.send(res)
-          } else if (e instanceof FriendsControllerExceptions.FriendRequestNotPresent) {
-            const response = new SendFriendRequestApi.Errors.FriendRequestNotFound()
-            response.send(res)
-          } else {
-            const response = new InternalServerError(e)
-            response.send(res)
-          }
-        }
+      }
+      case SendFriendRequestApi.Request.FriendRequestAction.deny: {
+        await friendsController.denyFriendRequest(req.user.username, req.body.to)
+        const response = new SendFriendRequestApi.Responses.FriendRequestDenied()
+        response.send(res)
+        break
+      }
     }
-  }
-)
+  },
+  exceptions: [
+    {
+      exception: FriendsControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new SendFriendRequestApi.Errors.UserNotFound())
+      },
+    },
+    {
+      exception: FriendsControllerExceptions.FriendRequestAlreadySent,
+      onException: (e, req, res) => {
+        res.sendResponse(new SendFriendRequestApi.Errors.FriendRequestAlreadySent())
+      },
+    },
+    {
+      exception: FriendsControllerExceptions.FriendRequestNotPresent,
+      onException: (e, req, res) => {
+        res.sendResponse(new SendFriendRequestApi.Errors.FriendRequestNotFound())
+      },
+    },
+  ],
+})
+
+friendsApiRouter.register(GetFriendsApiRoute)
+friendsApiRouter.register(GetFriendsRequestsApiRoute)
+friendsApiRouter.register(SendFriendRequestApiRoute)

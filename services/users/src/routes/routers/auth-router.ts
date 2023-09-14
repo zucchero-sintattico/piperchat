@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-import { Request, Response } from 'express'
 import {
   AuthController,
   AuthControllerExceptions,
@@ -9,18 +7,15 @@ import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
 } from '@commons/utils/jwt'
-import { ApiRouter } from '@commons/router'
-// Import specific interfaces from the API
-import { Validate } from '@api/validate'
-import { InternalServerError } from '@api/errors'
+import { Route } from '@commons/router'
 import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
+import { Router } from 'express'
 
 const authController: AuthController = new AuthControllerImpl()
 
-const authApiRouter = new ApiRouter()
-export const authRouter = authApiRouter.getRouter()
+export const authRouter = Router()
 
-authApiRouter.route<
+export const RegisterApiRoute = new Route<
   RegisterApi.Response,
   RegisterApi.Request.Params,
   RegisterApi.Request.Body
@@ -28,14 +23,6 @@ authApiRouter.route<
   method: 'post',
   path: '/register',
   schema: RegisterApi.Request.Schema,
-  exceptions: [
-    {
-      exception: AuthControllerExceptions.UserAlreadyExists,
-      onException: (e, req, res) => {
-        res.sendResponse(new RegisterApi.Errors.UserAlreadyExists())
-      },
-    },
-  ],
   handler: async (req, res) => {
     const user = await authController.register(
       req.body.username,
@@ -52,126 +39,91 @@ authApiRouter.route<
     })
     res.sendResponse(response)
   },
+  exceptions: [
+    {
+      exception: AuthControllerExceptions.UserAlreadyExists,
+      onException: (e, req, res) => {
+        res.sendResponse(new RegisterApi.Errors.UserAlreadyExists())
+      },
+    },
+  ],
 })
 
-/*
-authRouter.post(
-  '/register',
-  Validate(RegisterApi.Request.Schema),
-  async (
-    req: Request<
-      RegisterApi.Request.Params,
-      RegisterApi.Response,
-      RegisterApi.Request.Body
-    >,
-    res: Response<RegisterApi.Response | InternalServerError>
-  ) => {
-    try {
-      const user = await authController.register(
-        req.body.username,
-        req.body.email,
-        req.body.password,
-        req.body.description ?? '',
-        req.body.photo ?? null
-      )
-      const response = new RegisterApi.Responses.Success({
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        photo: user.profilePicture,
-      })
-      return response.send(res)
-    } catch (e) {
-      if (e instanceof AuthControllerExceptions.UserAlreadyExists) {
-        const response = new RegisterApi.Errors.UserAlreadyExists()
-        response.send(res)
-      } else {
-        console.log(e)
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
-*/
+export const LoginApiRoute = new Route<
+  LoginApi.Response,
+  LoginApi.Request.Params,
+  LoginApi.Request.Body
+>({
+  method: 'post',
+  path: '/login',
+  schema: LoginApi.Request.Schema,
+  handler: async (req, res) => {
+    const token = await authController.login(req.body.username, req.body.password)
+    res.sendResponse(new LoginApi.Responses.Success(token))
+  },
+  exceptions: [
+    {
+      exception: AuthControllerExceptions.InvalidUsernameOrPassword,
+      onException: (e, req, res) => {
+        res.sendResponse(new LoginApi.Errors.UsernameOrPasswordIncorrect())
+      },
+    },
+  ],
+})
 
-authRouter.post(
-  '/login',
-  Validate(LoginApi.Request.Schema),
-  async (
-    req: Request<LoginApi.Request.Params, LoginApi.Response, LoginApi.Request.Body>,
-    res: Response<LoginApi.Response | InternalServerError>
-  ) => {
-    try {
-      const token = await authController.login(req.body.username, req.body.password)
-      const response = new LoginApi.Responses.Success(token)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof AuthControllerExceptions.InvalidUsernameOrPassword) {
-        const response = new LoginApi.Errors.UsernameOrPasswordIncorrect()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+export const LogoutApiRoute = new Route<
+  LogoutApi.Response,
+  LogoutApi.Request.Params,
+  LogoutApi.Request.Body
+>({
+  method: 'post',
+  path: '/logout',
+  schema: LogoutApi.Request.Schema,
+  middlewares: [JWTAuthenticationMiddleware],
+  handler: async (req, res) => {
+    await authController.logout(req.user.username)
+    res.sendResponse(new LogoutApi.Responses.Success())
+  },
+  exceptions: [
+    {
+      exception: AuthControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new LogoutApi.Errors.UserNotFound())
+      },
+    },
+  ],
+})
 
-authRouter.post(
-  '/logout',
-  JWTAuthenticationMiddleware,
-  Validate(LogoutApi.Request.Schema),
-  async (
-    req: Request<LogoutApi.Request.Params, LogoutApi.Response>,
-    res: Response<LogoutApi.Response | InternalServerError>
-  ) => {
-    try {
-      if (!req.user) {
-        const response = new LogoutApi.Errors.NotLoggedIn()
-        response.send(res)
-      }
-      await authController.logout(req.user.username)
-      const response = new LogoutApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof AuthControllerExceptions.UserNotFound) {
-        const response = new LogoutApi.Errors.UserNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+export const RefreshTokenApiRoute = new Route<
+  RefreshTokenApi.Response,
+  RefreshTokenApi.Request.Params,
+  RefreshTokenApi.Request.Body
+>({
+  method: 'post',
+  path: '/refresh-token',
+  schema: RefreshTokenApi.Request.Schema,
+  middlewares: [JWTRefreshTokenMiddleware],
+  handler: async (req, res) => {
+    const token = await authController.refreshToken(req.user.username)
+    res.sendResponse(new RefreshTokenApi.Responses.Success(token))
+  },
+  exceptions: [
+    {
+      exception: AuthControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new RefreshTokenApi.Errors.UserNotFound())
+      },
+    },
+    {
+      exception: AuthControllerExceptions.InvalidRefreshToken,
+      onException: (e, req, res) => {
+        res.sendResponse(new RefreshTokenApi.Errors.InvalidRefreshToken())
+      },
+    },
+  ],
+})
 
-authRouter.post(
-  '/refresh-token',
-  JWTRefreshTokenMiddleware,
-  Validate(RefreshTokenApi.Request.Schema),
-  async (
-    req: Request<RefreshTokenApi.Request.Params, RefreshTokenApi.Response>,
-    res: Response<RefreshTokenApi.Response | InternalServerError>
-  ) => {
-    try {
-      const token = await authController.refreshToken(req.user.username)
-      const response = new RefreshTokenApi.Responses.Success(token)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof AuthControllerExceptions.UserNotFound) {
-        const response = new RefreshTokenApi.Errors.UserNotFound()
-        response.send(res)
-      } else if (e instanceof AuthControllerExceptions.InvalidRefreshToken) {
-        const response = new RefreshTokenApi.Errors.InvalidRefreshToken()
-        response.send(res)
-      } else if (e instanceof AuthControllerExceptions.RefreshTokenNotPresent) {
-        const response = new RefreshTokenApi.Errors.RefreshTokenNotPresent()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+RegisterApiRoute.attachToRouter(authRouter)
+LoginApiRoute.attachToRouter(authRouter)
+LogoutApiRoute.attachToRouter(authRouter)
+RefreshTokenApiRoute.attachToRouter(authRouter)

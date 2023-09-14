@@ -108,7 +108,7 @@ export namespace GetUserPhotoApi {
       statusCode = 404
       error = 'User not found' as const
     }
-    export type Type = Error
+    export type Type = UserNotFound
   }
   export type Response = Responses.Type | Errors.Type
 }

@@ -1,64 +1,39 @@
-import { Request, Response, Router } from 'express'
-import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
-
-// Import specific interfaces from the API
-import { InternalServerError } from '@api//errors'
-import { Validate } from '@api/validate'
 import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
+import { ApiRouter, Route } from '@commons/router'
 
 const profileController: ProfileController = new ProfileControllerImpl()
 
-export const profileRouter = Router({
-  strict: true,
-  mergeParams: true,
+const profileApiRouter = new ApiRouter()
+export const profileRouter = profileApiRouter.getRouter()
+
+export const UpdatePhotoApiRoute = new Route<
+  UpdatePhotoApi.Response,
+  UpdatePhotoApi.Request.Params,
+  UpdatePhotoApi.Request.Body
+>({
+  method: 'put',
+  path: '/photo',
+  schema: UpdatePhotoApi.Request.Schema,
+  handler: async (req, res) => {
+    await profileController.updateUserPhoto(req.user.username, req.body.photo)
+    const response = new UpdatePhotoApi.Responses.Success()
+    res.sendResponse(response)
+  },
 })
-profileRouter.use(JWTAuthenticationMiddleware)
 
-profileRouter.put(
-  '/photo',
-  Validate(UpdatePhotoApi.Request.Schema),
-  async (
-    req: Request<
-      UpdatePhotoApi.Request.Params,
-      UpdatePhotoApi.Response,
-      UpdatePhotoApi.Request.Body
-    >,
-    res: Response<UpdatePhotoApi.Response | InternalServerError>
-  ) => {
-    try {
-      await profileController.updateUserPhoto(req.user.username, req.body.photo)
-      const response = new UpdatePhotoApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      const response = new InternalServerError(e)
-      response.send(res)
-    }
-  }
-)
-
-profileRouter.put(
-  '/description',
-  Validate(UpdateDescriptionApi.Request.Schema),
-  async (
-    req: Request<
-      UpdateDescriptionApi.Request.Params,
-      UpdateDescriptionApi.Response,
-      UpdateDescriptionApi.Request.Body
-    >,
-    res: Response<UpdateDescriptionApi.Response | InternalServerError>
-  ) => {
-    try {
-      await profileController.updateUserDescription(
-        req.user.username,
-        req.body.description
-      )
-      const response = new UpdateDescriptionApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      const response = new InternalServerError(e)
-      response.send(res)
-    }
-  }
-)
+export const UpdateDescriptionApiRoute = new Route<
+  UpdateDescriptionApi.Response,
+  UpdateDescriptionApi.Request.Params,
+  UpdateDescriptionApi.Request.Body
+>({
+  method: 'put',
+  path: '/description',
+  schema: UpdateDescriptionApi.Request.Schema,
+  handler: async (req, res) => {
+    await profileController.updateUserDescription(req.user.username, req.body.description)
+    const response = new UpdateDescriptionApi.Responses.Success()
+    res.sendResponse(response)
+  },
+})
