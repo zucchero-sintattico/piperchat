@@ -11,8 +11,12 @@ const userStore = useUserStore()
         <q-list bordered separator class="text-white text-h5">
           <HorizontalChannel name="Directs" icon="chat" />
           <q-list bordered separator class="text-white text-h5" v-for="user in 10" :key="user">
-            <HorizontalUser :name="user" :photo=userStore.photo icon="chat"
-              @click="userStore.selectedDirect = String(user)" />
+            <HorizontalUser
+              :name="user"
+              :photo="userStore.photo"
+              icon="chat"
+              @click="userStore.selectedDirect = String(user)"
+            />
           </q-list>
         </q-list>
       </div>
