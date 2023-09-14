@@ -11,12 +11,11 @@ import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/ch
 
 const channelController: ChannelController = new ChannelControllerImpl()
 const channelRouter = Router({
-  strict: true,
   mergeParams: true,
 })
 
 channelRouter.get(
-  ':serverId/channels/:channelId/messages',
+  '/:serverId/channels/:channelId/messages',
   Validate(GetChannelMessagesApi.Request.Schema),
   async (
     req: Request<
@@ -52,7 +51,7 @@ channelRouter.get(
 )
 
 channelRouter.post(
-  ':serverId/channels/:channelId/messages',
+  '/:serverId/channels/:channelId/messages',
   Validate(SendMessageInChannelApi.Request.Schema),
   async (
     req: Request<
