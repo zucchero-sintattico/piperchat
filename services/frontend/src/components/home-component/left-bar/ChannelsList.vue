@@ -52,7 +52,7 @@ const selectedServer = computed(() => {
           )"
           :key="channel._id"
         >
-          <HorizontalChannel :name="channel.name" icon="chat" />
+          <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>
         <!-- end Message channels -->
 
@@ -66,7 +66,7 @@ const selectedServer = computed(() => {
           )"
           :key="channel._id"
         >
-          <HorizontalChannel :name="channel.name" icon="volume_up" />
+          <HorizontalChannel :name="channel.name" icon="volume_up" clickable />
 
           <q-list dense v-for="j in 3" :key="j">
             <HorizontalUser name="User" photo="https://cdn.quasar.dev/img/avatar3.jpg" />
