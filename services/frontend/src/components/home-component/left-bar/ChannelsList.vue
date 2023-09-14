@@ -6,13 +6,20 @@ import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import ServerMenu from './ServerMenu.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
+
 const isNewChannelFormActive = ref(false)
+const serverSettingMenuActive = ref(false)
 
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+})
+
+const amITheOwner = computed(() => {
+  return selectedServer.value?.owner == userStore.username
 })
 </script>
 
@@ -20,7 +27,14 @@ const selectedServer = computed(() => {
   <q-scroll-area visible class="col bg-secondary">
     <div class="column">
       <div class="col">
-        <h4 class="q-ma-md text-white">{{ selectedServer?.name }}</h4>
+        <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
+          <h4 class="q-ma-none text-white">
+            <q-icon v-if="amITheOwner == true" name="settings" class="q-mr-sm" />
+            {{ selectedServer?.name }}
+          </h4>
+        </q-item>
+
+        <ServerMenu v-model:active="serverSettingMenuActive" />
 
         <!-- start Create new server -->
         <div class="q-ma-md" style="text-align: center">

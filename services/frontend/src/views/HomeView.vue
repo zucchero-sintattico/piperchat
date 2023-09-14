@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
@@ -22,6 +22,10 @@ function toggleLeftDrawer() {
 function toggleLeftOpen() {
   leftDrawerOpen.value = true
 }
+
+onMounted(() => {
+  userStore.whoami()
+})
 </script>
 
 <template>
