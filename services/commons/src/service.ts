@@ -1,12 +1,12 @@
 import express from 'express'
 import http from 'http'
 import { healthCheckRouter } from './healthcheck/router'
-import mongoose from 'mongoose'
 import { MongooseUtils } from './utils/mongoose'
 import { RabbitMQ } from './utils/rabbit-mq'
 import { EventsConfiguration } from './events/events-configuration'
 import { ServiceEvents } from './events/service-events'
 import cookieParser from 'cookie-parser'
+import mongoose, { Mongoose } from 'mongoose'
 
 type GeneralService = {
   start: () => Promise<void>
@@ -27,6 +27,7 @@ export interface MicroserviceConfiguration {
   expressConfiguration: ExpressConfiguration
   eventsConfiguration?: EventsConfiguration
   otherServices?: GeneralService[]
+  mongoose?: Mongoose
 }
 
 class ExpressService {
@@ -86,11 +87,14 @@ export class Microservice {
   }
 
   async clearDatabase(): Promise<void> {
-    await MongooseUtils.clear(mongoose)
+    await MongooseUtils.clear(this.configuration.mongoose || mongoose)
   }
 
   async start(): Promise<void> {
-    await MongooseUtils.initialize(mongoose, this.configuration.mongoUri)
+    await MongooseUtils.initialize(
+      this.configuration.mongoose || mongoose,
+      this.configuration.mongoUri
+    )
     await RabbitMQ.initialize(this.configuration.amqpUri)
     if (this.configuration.eventsConfiguration) {
       await ServiceEvents.initialize(
@@ -109,9 +113,10 @@ export class Microservice {
       console.log(`Started on port: ${this.configuration.port}`)
     })
   }
+
   async stop(): Promise<void> {
     await this.app?.stop()
-    await MongooseUtils.close(mongoose)
+    await MongooseUtils.close(this.configuration.mongoose || mongoose)
     await RabbitMQ.disconnect()
     for (const service of this.configuration.otherServices || []) {
       await service.stop()

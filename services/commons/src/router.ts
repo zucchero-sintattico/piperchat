@@ -70,15 +70,17 @@ export class Route<
     router[this.method](
       this.path,
       (req, res, next) => {
-        this.middlewares?.forEach((middleware) => {
-          middleware(req, res, next)
-        })
+        res.sendResponse = (response: R) => {
+          res.status(response.statusCode).json(response)
+        }
+        next()
       },
       Validate(this.schema),
       async (req: Request<P, R, B, Q>, res: EnrichedResponse<R>) => {
         try {
           await this.handler(req, res)
         } catch (e) {
+          console.log(e)
           if (this.exceptions) {
             const exception = this.exceptions.find((exception) => {
               return e instanceof exception.exception

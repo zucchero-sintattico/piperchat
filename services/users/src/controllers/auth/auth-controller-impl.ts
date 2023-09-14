@@ -31,7 +31,8 @@ export class AuthControllerImpl implements AuthController {
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
     const user = await this.userRepository
       .createUser(username, email, hashedPassword, description, photo)
-      .catch(() => {
+      .catch((e) => {
+        console.log(e)
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
     await RabbitMQ.getInstance().publish(

@@ -9,9 +9,9 @@ export class RabbitMQ {
 
   static async initialize(connectionUri: string) {
     if (!RabbitMQ.instance) {
-      console.log('Initializing RabbitMQ')
       RabbitMQ.instance = new RabbitMQ(connectionUri)
       await RabbitMQ.instance.connect()
+      console.log('Connected to RabbitMQ')
     }
   }
 

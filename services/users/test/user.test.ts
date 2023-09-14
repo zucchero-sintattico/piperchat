@@ -4,10 +4,9 @@ import { Microservice } from '@commons/service'
 import { UserServiceConfiguration } from '@/configuration'
 
 let userApi: UserApi
-let userMicroservice: Microservice
+const userMicroservice: Microservice = new Microservice(UserServiceConfiguration)
 
 beforeAll(async () => {
-  userMicroservice = new Microservice(UserServiceConfiguration)
   await userMicroservice.start()
   userApi = new UserApi(supertest(userMicroservice.getServer()))
 })
