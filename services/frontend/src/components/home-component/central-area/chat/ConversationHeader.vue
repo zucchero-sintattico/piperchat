@@ -21,7 +21,9 @@ const channelName = computed(() => {
   const server = serverStore.servers.filter((server) => server._id == userStore.selectedServerId)[0]
   if (server) {
     const channel = server.channels.filter((channel) => channel._id == userStore.selectedChannel[1])
-    return channel[0].name
+    if (channel.length > 0) {
+      return channel[0].name
+    }
   }
   return ''
 })
