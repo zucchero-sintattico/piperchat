@@ -1,12 +1,29 @@
 <script setup lang="ts">
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted, computed } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 const messageStore = useMessageStore()
 
 const userStore = useUserStore()
 
-//watch selectedDirect
+/**
+ * Shows the chat if the user is in a valid content area
+ */
+const showChat = computed(() => {
+  if (
+    userStore.inContentArea == ContentArea.Direct ||
+    userStore.inContentArea == ContentArea.Channel
+  ) {
+    return true
+  } else {
+    return false
+  }
+})
+
+/**
+ * When the user changes the selected direct,
+ * refresh the messages
+ */
 watch(
   () => userStore.selectedDirect,
   (newVal, oldVal) => {
@@ -20,27 +37,25 @@ watch(
   }
 )
 
-watch(userStore.selectedChannel, () => {
-  messageStore.getMessagesFromChannel({
-    serverId: userStore.selectedChannel[0],
-    channelId: userStore.selectedChannel[1],
-    from: 0,
-    limit: 1000
-  })
-})
-
-//watch messages
+/**
+ * When the user changes the selected channel,
+ * refresh the messages
+ */
 watch(
-  () => messageStore.messages,
-  (newVal) => {
-    console.log(newVal)
+  () => userStore.selectedChannel,
+  () => {
+    console.log('New channel: ' + userStore.selectedChannel)
+    messageStore.getMessagesFromChannel({
+      serverId: userStore.selectedChannel[0],
+      channelId: userStore.selectedChannel[1],
+      from: 0,
+      limit: 1000
+    })
   }
 )
 
 onMounted(() => {
-  console.log(messageStore)
   // console.log(messages.forEach((message) => console.log(message.content)))
-  console.log(userStore.inContentArea)
   // originalLocation = location.href
   // scrollToBottom()
 })
@@ -49,7 +64,7 @@ onMounted(() => {
 <template>
   <q-page-container>
     <q-page padding>
-      <div v-if="messageStore.messages.length > 0">
+      <div v-if="showChat">
         <div v-for="(message, index) in messageStore.messages" :key="index">
           <q-chat-message
             :name="message.sender"

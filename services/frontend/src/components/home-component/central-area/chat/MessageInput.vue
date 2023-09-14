@@ -1,13 +1,30 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 
-const message = ref('')
 const messageStore = useMessageStore()
 const userStore = useUserStore()
-const shown = ref(false)
+const message = ref('')
 
+/**
+ * Checks if the user is in a valid content area (direct or channel)
+ */
+const shown = computed(() => {
+  if (
+    userStore.inContentArea == ContentArea.Direct ||
+    userStore.inContentArea == ContentArea.Channel
+  ) {
+    return true
+  } else {
+    return false
+  }
+})
+
+/**
+ * Sends a message to the server,
+ * then refreshes the messages
+ */
 async function sendMessage() {
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
@@ -47,17 +64,6 @@ async function sendMessage() {
 function deleteMessage() {
   message.value = ''
 }
-
-watch(
-  () => userStore.inContentArea,
-  (newVal) => {
-    if (newVal == ContentArea.Direct || newVal == ContentArea.Channel) {
-      shown.value = true
-    } else {
-      shown.value = false
-    }
-  }
-)
 </script>
 
 <template>
@@ -66,7 +72,6 @@ watch(
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
-
       <template v-slot:after>
         <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
       </template>

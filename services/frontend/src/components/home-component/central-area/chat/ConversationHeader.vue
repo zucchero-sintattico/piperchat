@@ -1,57 +1,34 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { computed } from 'vue'
 import { ContentArea, useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
 
-const title = ref('')
 const userStore = useUserStore()
 const serverStore = useServerStore()
 
-watch(
-  () => userStore.selectedDirect,
-  (newVal) => {
-    console.log('update header')
-    if (newVal !== '') {
-      title.value = newVal
-    }
-  }
-)
-
-watch(
-  () => userStore.selectedChannel,
-  (newVal) => {
-    if (newVal[1] !== '') {
-      const server = serverStore.servers.filter((server) => server._id == newVal[0])[0]
-
-      if (server) {
-        const channel = server.channels.filter((channel) => channel._id == newVal[1])
-
-        if (channel.length > 0) {
-          title.value = channel[0].name
-        }
-      }
-    }
-  }
-)
-
-onMounted(() => {
+/**
+ * Returns the title of the conversation
+ * (either the username of the direct conversation
+ * or the name of the channel)
+ */
+const title = computed(() => {
   if (userStore.inContentArea == ContentArea.Direct) {
-    title.value = userStore.selectedDirect
+    console.log('update header')
+    return userStore.selectedDirect
   } else if (userStore.inContentArea == ContentArea.Channel) {
     const server = serverStore.servers.filter(
       (server) => server._id == userStore.selectedChannel[0]
     )[0]
-
     if (server) {
       const channel = server.channels.filter(
         (channel) => channel._id == userStore.selectedChannel[1]
       )
-
       if (channel.length > 0) {
-        title.value = channel[0].name
+        return channel[0].name
       }
     }
   }
+  return ''
 })
 </script>
 <template>
