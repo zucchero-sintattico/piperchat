@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Request, Response, Router } from 'express'
+import { Request, Response } from 'express'
 import {
   AuthController,
   AuthControllerExceptions,
@@ -9,7 +9,7 @@ import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
 } from '@commons/utils/jwt'
-
+import { ApiRouter } from '@commons/router'
 // Import specific interfaces from the API
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
@@ -17,11 +17,44 @@ import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/au
 
 const authController: AuthController = new AuthControllerImpl()
 
-export const authRouter = Router({
-  strict: true,
-  mergeParams: true,
+const authApiRouter = new ApiRouter()
+export const authRouter = authApiRouter.getRouter()
+
+authApiRouter.route<
+  RegisterApi.Response,
+  RegisterApi.Request.Params,
+  RegisterApi.Request.Body
+>({
+  method: 'post',
+  path: '/register',
+  schema: RegisterApi.Request.Schema,
+  exceptions: [
+    {
+      exception: AuthControllerExceptions.UserAlreadyExists,
+      onException: (e, req, res) => {
+        res.sendResponse(new RegisterApi.Errors.UserAlreadyExists())
+      },
+    },
+  ],
+  handler: async (req, res) => {
+    const user = await authController.register(
+      req.body.username,
+      req.body.email,
+      req.body.password,
+      req.body.description ?? '',
+      req.body.photo ?? null
+    )
+    const response = new RegisterApi.Responses.Success({
+      username: user.username,
+      email: user.email,
+      description: user.description,
+      photo: user.profilePicture,
+    })
+    res.sendResponse(response)
+  },
 })
 
+/*
 authRouter.post(
   '/register',
   Validate(RegisterApi.Request.Schema),
@@ -60,6 +93,7 @@ authRouter.post(
     }
   }
 )
+*/
 
 authRouter.post(
   '/login',

@@ -1,28 +1,19 @@
-import { Request, Response, Router } from 'express'
 import { MonitoringController } from '@/controllers/monitoring-controller'
 import { MonitoringControllerImpl } from '@/controllers/monitoring-controller-impl'
 
-import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
 import { GetServicesStatusApi } from '@api/monitoring/status'
+import { LoginApi } from '@api/users/auth'
+import { ApiRouter } from '@commons/router'
 
-const monitoringRouter: Router = Router({
-  strict: true,
-  mergeParams: true,
-})
+const monitoringRouter: ApiRouter = new ApiRouter()
+
 const monitoringController: MonitoringController = new MonitoringControllerImpl()
 
-monitoringRouter.get(
+monitoringRouter.get<LoginApi.Request.Params, LoginApi.Request.Body, LoginApi.Response>(
   '/',
-  Validate(GetServicesStatusApi.Request.Schema),
-  async (
-    req: Request<
-      GetServicesStatusApi.Request.Params,
-      GetServicesStatusApi.Response,
-      GetServicesStatusApi.Request.Body
-    >,
-    res: Response<GetServicesStatusApi.Response | InternalServerError>
-  ) => {
+  LoginApi.Request.Schema,
+  async (req, res) => {
     try {
       const monitoring = await monitoringController.getServiceStatus()
       const response = new GetServicesStatusApi.Responses.Success(monitoring)

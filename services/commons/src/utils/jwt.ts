@@ -23,7 +23,8 @@ type UserInfo = {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
-    interface Request {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    interface Request<P = unknown, ResBody = any, ReqBody = any, ReqQuery = qs.ParsedQs> {
       user: UserJWTInfo
     }
   }
