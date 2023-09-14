@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 
 const message = ref('')
 const messageStore = useMessageStore()
 const userStore = useUserStore()
+const shown = ref(false)
 
 async function sendMessage() {
   if (userStore.inContentArea == ContentArea.Direct) {
@@ -24,6 +25,7 @@ async function sendMessage() {
       () => console.log('Error')
     )
   } else if (userStore.inContentArea == ContentArea.Channel) {
+    console.log('sending message on channel')
     await messageStore.sendMessageOnChannel(
       {
         serverId: userStore.selectedChannel[0],
@@ -45,10 +47,21 @@ async function sendMessage() {
 function deleteMessage() {
   message.value = ''
 }
+
+watch(
+  () => userStore.inContentArea,
+  (newVal) => {
+    if (newVal == ContentArea.Direct || newVal == ContentArea.Channel) {
+      shown.value = true
+    } else {
+      shown.value = false
+    }
+  }
+)
 </script>
 
 <template>
-  <div class="foot blurred">
+  <div class="foot blurred" v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
