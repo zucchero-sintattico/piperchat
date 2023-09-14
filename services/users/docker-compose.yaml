@@ -26,7 +26,7 @@ services:
         (Method(`PUT`) && Path(`/profile/{p:(photo|description)}`)) ||
         (Method(`GET`) && Path(`/friends`)) ||
         (Method(`GET`, `POST`) && Path(`/friends/requests`)) ||
-        (Method(`GET`) && Path(`/users/whoami`)) ||
+        (Method(`GET`) && Path(`/whoami`)) ||
         (Method(`GET`) && Path(`/users/{username:[^/]+}/{i:(photo|description)}`))
 
   db-users-service:

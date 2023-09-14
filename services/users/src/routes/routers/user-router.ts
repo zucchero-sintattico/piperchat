@@ -8,9 +8,9 @@ import { UserControllerImpl } from '@controllers/user/user-controller-impl'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 // Import specific interfaces from the API
-import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
-import { WhoamiApi, GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/user'
+import { GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/user'
+import { Validate } from '@api/validate'
 
 const userController: UserController = new UserControllerImpl()
 
@@ -22,28 +22,8 @@ export const usersRouter = Router({
 usersRouter.use(JWTAuthenticationMiddleware)
 
 usersRouter.get(
-  '/whoami',
-  Validate(WhoamiApi.Request.Schema),
-  async (
-    req: Request<WhoamiApi.Request.Params, WhoamiApi.Response, WhoamiApi.Request.Body>,
-    res: Response<WhoamiApi.Response | InternalServerError>
-  ) => {
-    try {
-      const user = await userController.getUser(req.user.username)
-      const response = new WhoamiApi.Responses.Success({
-        username: user.username,
-        email: user.email,
-      })
-      response.send(res)
-    } catch (e) {
-      const response = new InternalServerError(e)
-      response.send(res)
-    }
-  }
-)
-
-usersRouter.get(
   '/:username/photo',
+  Validate(GetUserPhotoApi.Request.Schema),
   async (
     req: Request<
       GetUserPhotoApi.Request.Params,
@@ -70,6 +50,7 @@ usersRouter.get(
 
 usersRouter.get(
   '/:username/description',
+  Validate(GetUserDescriptionApi.Request.Schema),
   async (
     req: Request<
       GetUserDescriptionApi.Request.Params,
