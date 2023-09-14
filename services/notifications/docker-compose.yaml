@@ -3,7 +3,7 @@ services:
     image: piperchat
     command: ['npm', 'run', '--workspace', './services/notifications', 'start']
     expose:
-      - '3000'
+      - '${NOTIFICATIONS_SERVICE_PORT}'
     depends_on:
       db-notifications-service:
         condition: service_healthy
@@ -22,7 +22,8 @@ services:
     labels:
       - |
         traefik.http.routers.notifications-service.rule=
-        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`))
+        (Method(`GET`) && Path(`/users/{username:[^/]+}/{i:(status)}`)) ||
+        (Method(`GET`) && Path(`/notification`))
 
   db-notifications-service:
     image: mongo
