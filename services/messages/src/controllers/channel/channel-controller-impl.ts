@@ -37,6 +37,7 @@ export class ChannelControllerImpl implements ChannelController {
     from: number,
     limit: number
   ): Promise<Message[]> {
+    await this.checkIfChannelExists(channelId, serverId)
     return await this.channelRepository.getChannelMessagesPaginated(
       channelId,
       serverId,
