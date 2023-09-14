@@ -35,11 +35,6 @@ function toggleLeftOpen() {
           <h1>Piperchat</h1>
         </q-toolbar-title>
       </q-toolbar>
-
-      <q-tabs align="left">
-        <q-route-tab label="Friends" @click="toggleLeftOpen" />
-        <q-route-tab label="Pending" @click="toggleLeftOpen" />
-      </q-tabs>
     </q-header>
 
     <!-- pass leftDrawopen as props -->
