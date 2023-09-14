@@ -29,16 +29,19 @@ export const useUserStore = defineStore(
     const photo = ref('')
     const error = ref('')
 
-    // reactive objects do not persist
+    // Display direct or channel in left bar
+    const selectedTab = ref(SelectedTab.Directs)
+    // Display channel of selected server in left bar
     const selectedServerId = ref('')
 
-    const selectedTab = ref(SelectedTab.Directs)
-
     const selectedChannel = ref(['', ''])
-
     const selectedDirect = ref('')
-
     const inContentArea = ref(ContentArea.Empty)
+
+    function setActiveChannel(channelId: string) {
+      selectedChannel.value[0] = selectedServerId.value
+      selectedChannel.value[1] = channelId
+    }
 
     async function whoami() {
       try {
@@ -129,6 +132,7 @@ export const useUserStore = defineStore(
       selectedChannel,
       selectedDirect,
       inContentArea,
+      setActiveChannel,
       login,
       register,
       logout

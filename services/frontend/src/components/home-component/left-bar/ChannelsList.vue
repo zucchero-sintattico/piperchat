@@ -66,7 +66,12 @@ const selectedServer = computed(() => {
           )"
           :key="channel._id"
         >
-          <HorizontalChannel :name="channel.name" icon="volume_up" clickable />
+          <HorizontalChannel
+            :name="channel.name"
+            icon="volume_up"
+            clickable
+            @click="userStore.setActiveChannel(channel._id)"
+          />
 
           <q-list dense v-for="j in 3" :key="j">
             <HorizontalUser name="User" photo="https://cdn.quasar.dev/img/avatar3.jpg" />
@@ -77,5 +82,3 @@ const selectedServer = computed(() => {
     </div>
   </q-scroll-area>
 </template>
-
-<style lang="sass"></style>
