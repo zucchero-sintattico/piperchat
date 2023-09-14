@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from 'vue'
 import { useMessageStore } from '@/stores/messages'
-import { useUserStore } from '@/stores/user'
-
+import { ContentArea, useUserStore } from '@/stores/user'
 const messageStore = useMessageStore()
-const messages = messageStore.messages
+const messages = ref({
+  data: [
+    {
+      sender: 'test',
+      content: 'test'
+    }
+  ]
+})
 
 const userStore = useUserStore()
 
@@ -13,6 +19,7 @@ watch(
   () => userStore.selectedDirect,
   (newVal, oldVal) => {
     if (newVal != oldVal) {
+      console.log(newVal)
       messageStore.getMessagesFromDirect({
         username: newVal,
         from: 0,
@@ -31,7 +38,18 @@ watch(userStore.selectedChannel, () => {
   })
 })
 
+//watch messages
+watch(
+  () => messageStore.messages,
+  (newVal) => {
+    console.log(newVal)
+  }
+)
+
 onMounted(() => {
+  console.log(messageStore)
+  // console.log(messages.forEach((message) => console.log(message.content)))
+  console.log(userStore.inContentArea)
   // originalLocation = location.href
   // scrollToBottom()
 })
@@ -40,13 +58,15 @@ onMounted(() => {
 <template>
   <q-page-container>
     <q-page padding>
-      <div v-for="(message, index) in messages" :key="index">
-        <q-chat-message
-          :name="message.sender"
-          avatar="https://cdn.quasar.dev/img/avatar1.jpg"
-          :text="[message.content]"
-          :sent="userStore.username == message.sender"
-        />
+      <div v-if="messages.data.length > 0">
+        <div v-for="(message, index) in messages.data" :key="index">
+          <q-chat-message
+            :name="message.sender"
+            avatar="https://cdn.quasar.dev/img/avatar1.jpg"
+            :text="[message.content]"
+            :sent="userStore.username == message.sender"
+          />
+        </div>
       </div>
       <div id="last"></div>
       <!-- place QPageScroller at end of page -->

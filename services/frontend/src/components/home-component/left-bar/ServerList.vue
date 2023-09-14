@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import NewServerForm from './NewServerForm.vue'
+import NewServerForm from './form/NewServerForm.vue'
 import { SelectedTab, useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
 import type { GetServersApi } from '@api/piperchat/server'
@@ -11,7 +11,7 @@ const serverStore = useServerStore()
 const isNewServerFormActive = ref(false)
 
 function setActiveServer(server: GetServersApi.Responses.Server) {
-  userStore.selectedServer = server
+  userStore.selectedServerId = server._id
   userStore.selectedTab = SelectedTab.Servers
 }
 </script>

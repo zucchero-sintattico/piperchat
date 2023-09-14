@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
-import type { GetServersApi } from '@api/piperchat/server'
 import { LoginApi } from '@api/users/auth'
 import type { WhoamiApi } from '@api/users/user'
 
@@ -30,18 +29,19 @@ export const useUserStore = defineStore(
     const photo = ref('')
     const error = ref('')
 
-    // reactive objects do not persist
-    const selectedServer = reactive<GetServersApi.Responses.Server>(
-      {} as GetServersApi.Responses.Server
-    )
-
+    // Display direct or channel in left bar
     const selectedTab = ref(SelectedTab.Directs)
+    // Display channel of selected server in left bar
+    const selectedServerId = ref('')
 
     const selectedChannel = ref(['', ''])
-
     const selectedDirect = ref('')
-
     const inContentArea = ref(ContentArea.Empty)
+
+    function setActiveChannel(channelId: string) {
+      selectedChannel.value[0] = selectedServerId.value
+      selectedChannel.value[1] = channelId
+    }
 
     async function whoami() {
       try {
@@ -127,11 +127,13 @@ export const useUserStore = defineStore(
       description,
       photo,
       error,
-      selectedServer,
+      selectedServerId,
       selectedTab,
       selectedChannel,
       selectedDirect,
       inContentArea,
+      setActiveChannel,
+      whoami,
       login,
       register,
       logout

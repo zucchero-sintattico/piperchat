@@ -1,31 +1,38 @@
 <script setup lang="ts">
-import { ContentArea, useUserStore } from '@/stores/user'
-import { ref } from 'vue'
-import NewChannelForm from './NewChannelForm.vue'
+import { useUserStore, ContentArea } from '@/stores/user'
+import { computed, ref } from 'vue'
+import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
+import { useServerStore } from '@/stores/server'
+import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
+import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 
 const userStore = useUserStore()
-
+const serverStore = useServerStore()
 const isNewChannelFormActive = ref(false)
 
 function setChannelContent(channelId: string) {
   console.log('Switched')
   userStore.inContentArea = ContentArea.Channel
-  userStore.selectedChannel = [userStore.selectedServer._id, channelId]
+  userStore.selectedChannel = [userStore.selectedServerId, channelId]
 }
+const selectedServer = computed(() => {
+  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+})
 </script>
 
 <template>
   <q-scroll-area visible class="col bg-secondary">
     <div class="column">
       <div class="col">
-        <h4 class="q-ma-md text-white">{{ userStore.selectedServer.name }}</h4>
+        <h4 class="q-ma-md text-white">{{ selectedServer?.name }}</h4>
 
         <!-- start Create new server -->
         <div class="q-ma-md" style="text-align: center">
           <q-btn
             color="primary"
-            label="Create channel"
+            label="channel"
+            :rounded="true"
             icon="add"
             style="justify-content: space-between"
             @click="isNewChannelFormActive = true"
@@ -41,51 +48,44 @@ function setChannelContent(channelId: string) {
         </q-dialog>
         <!-- end Create new server -->
 
-        <q-separator color="accent" style="height: 2px" inset />
-
-        <div
-          v-for="channel in userStore.selectedServer.channels?.filter(
+        <!-- start Message channels -->
+        <q-list
+          bordered
+          separator
+          class="text-white text-h5"
+          v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
           @click="setChannelContent(channel._id)"
         >
-          <q-btn class="full-width" no-caps flat color="secondary">
-            <q-item-section class="text-white" avatar>
-              <q-icon name="chat" />
-            </q-item-section>
-            <q-item-section align="left" class="text-white"
-              >Chanel chat {{ channel.name }}</q-item-section
-            >
-          </q-btn>
-        </div>
+          <HorizontalChannel :name="channel.name" icon="chat" clickable />
+        </q-list>
+        <!-- end Message channels -->
 
-        <q-separator color="accent" style="height: 2px" inset />
-
-        <div
-          v-for="channel in userStore.selectedServer.channels?.filter(
-            (c) => c.channelType == CreateChannelApi.ChannelType.Messages
+        <!-- start Multimedia channels -->
+        <q-list
+          bordered
+          separator
+          class="text-white text-h5"
+          v-for="channel in selectedServer?.channels?.filter(
+            (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
           :key="channel._id"
         >
-          <q-list>
-            <q-expansion-item dark icon="volume_up" :label="channel.name" default-opened>
-              <div v-for="n in 2" :key="n">
-                <q-btn class="full-width" no-caps flat color="secondary">
-                  <q-item-section avatar>
-                    <q-avatar size="30px">
-                      <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section class="text-white">Lily {{ n }}</q-item-section>
-                </q-btn>
-              </div>
-            </q-expansion-item>
+          <HorizontalChannel
+            :name="channel.name"
+            icon="volume_up"
+            clickable
+            @click="userStore.setActiveChannel(channel._id)"
+          />
+
+          <q-list dense v-for="j in 3" :key="j">
+            <HorizontalUser name="User" photo="" />
           </q-list>
-        </div>
+        </q-list>
+        <!-- end Multimedia channels -->
       </div>
     </div>
   </q-scroll-area>
 </template>
-
-<style lang="sass"></style>

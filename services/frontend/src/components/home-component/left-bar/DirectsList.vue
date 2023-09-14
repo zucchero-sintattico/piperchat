@@ -1,22 +1,29 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
+import { ContentArea, useUserStore } from '@/stores/user'
+const userStore = useUserStore()
+
+function setActiveDirect(directUsarname: string) {
+  userStore.inContentArea = ContentArea.Direct
+  userStore.selectedDirect = directUsarname
+}
+</script>
 <template>
   <q-scroll-area visible class="col bg-secondary">
     <div class="column">
       <div class="col">
-        <q-item>
-          <q-item-label size="50px" class="text-white text-bold">Directs</q-item-label>
-        </q-item>
-
-        <div v-for="n in 60" :key="n">
-          <q-btn flat class="full-width" no-caps color="secondary">
-            <q-item-section avatar>
-              <q-avatar>
-                <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section align="left" class="text-white">Lily {{ n }}</q-item-section>
-          </q-btn>
-        </div>
+        <q-list bordered separator class="text-white text-h5">
+          <HorizontalChannel name="Directs" icon="chat" />
+          <q-list bordered separator class="text-white text-h5" v-for="user in 10" :key="user">
+            <HorizontalUser
+              :name="user"
+              photo=""
+              icon="chat"
+              @click="setActiveDirect(user.toString())"
+            />
+          </q-list>
+        </q-list>
       </div>
     </div>
   </q-scroll-area>

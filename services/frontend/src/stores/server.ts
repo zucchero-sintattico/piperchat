@@ -5,20 +5,20 @@ import { ServerControllerImpl } from '@/controllers/piperchat/server/server-cont
 import type { CreateChannelApi } from '@api/piperchat/channel'
 import type { GetServersApi } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
 export const useServerStore = defineStore('server', () => {
   const serverController: ServerController = new ServerControllerImpl()
   const channelController: ChannelController = new ChannelControllerImpl()
 
-  const servers = reactive<GetServersApi.Responses.Server[]>([])
+  const servers = ref<GetServersApi.Responses.Server[]>([])
 
   async function getServers() {
     const response = await serverController.getServers()
 
     if (response.statusCode === 200) {
       const typed = response as GetServersApi.Responses.Success
-      servers.splice(0, servers.length, ...typed.servers)
+      servers.value = typed.servers
     }
   }
 
