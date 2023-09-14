@@ -6,6 +6,9 @@ import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi } from '@api/users/auth'
 import type { WhoamiApi } from '@api/users/user'
+import type { FriendsController } from '@/controllers/users/friends/friends-controller'
+import { FriendsControllerImpl } from '@/controllers/users/friends/friends-controller-impl'
+import type { GetFriendsApi } from '@api/users/friends'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -28,6 +31,9 @@ export const useUserStore = defineStore(
     const description = ref('')
     const photo = ref('')
     const error = ref('')
+
+    // friends username
+    const friends = ref<string[]>([])
 
     // Display direct or channel in left bar
     const selectedTab = ref(SelectedTab.Directs)
@@ -54,6 +60,7 @@ export const useUserStore = defineStore(
     }
 
     const authController: AuthController = new AuthControllerImpl()
+    const friendsController: FriendsController = new FriendsControllerImpl()
     const userController: UserController = new UserControllerImpl()
 
     async function login(
@@ -120,6 +127,20 @@ export const useUserStore = defineStore(
       }
     }
 
+    async function fetchFriends() {
+      try {
+        const response = (await friendsController.getFriends()) as GetFriendsApi.Response
+        if (response.statusCode === 200) {
+          const typed = response as GetFriendsApi.Responses.Success
+          friends.value = typed.friends
+        } else {
+          console.log(response)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
     return {
       isLoggedIn,
       username,
@@ -132,10 +153,12 @@ export const useUserStore = defineStore(
       selectedChannel,
       selectedDirect,
       inContentArea,
+      friends,
       setActiveChannel,
       login,
       register,
-      logout
+      logout,
+      fetchFriends
     }
   },
   { persist: true }

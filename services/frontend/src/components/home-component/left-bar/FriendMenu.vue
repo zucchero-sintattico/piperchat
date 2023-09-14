@@ -91,11 +91,7 @@ function sendFriendRequest() {
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup @click="friendUsername = ''" />
-          <q-btn
-            color="primary"
-            label="Send friend request"
-            @click="sendFriendRequest"
-          />
+          <q-btn color="primary" label="Send friend request" @click="sendFriendRequest" />
         </q-card-actions>
       </q-card>
     </q-dialog>

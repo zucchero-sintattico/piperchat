@@ -3,11 +3,15 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import FriendMenu from './FriendMenu.vue'
 import { useUserStore } from '@/stores/user'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const userStore = useUserStore()
 
-const friendTabOpened = ref(true)
+const friendTabOpened = ref(false)
+
+onMounted(() => {
+  userStore.fetchFriends()
+})
 </script>
 
 <template>
@@ -21,12 +25,14 @@ const friendTabOpened = ref(true)
             clickable
             @click="friendTabOpened = true"
           />
-          <q-list bordered separator class="text-white text-h5" v-for="user in 10" :key="user">
-            <HorizontalUser
-              :name="user"
-              icon="chat"
-              @click="userStore.selectedDirect = String(user)"
-            />
+          <q-list
+            bordered
+            separator
+            class="text-white text-h5"
+            v-for="friend in userStore.friends"
+            :key="friend"
+          >
+            <HorizontalUser :name="friend" icon="chat" @click="userStore.selectedDirect = friend" />
           </q-list>
         </q-list>
 
