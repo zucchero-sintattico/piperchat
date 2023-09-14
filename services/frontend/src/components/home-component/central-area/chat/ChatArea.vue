@@ -3,14 +3,6 @@ import { watch, ref, onMounted } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 const messageStore = useMessageStore()
-const messages = ref({
-  data: [
-    {
-      sender: 'test',
-      content: 'test'
-    }
-  ]
-})
 
 const userStore = useUserStore()
 
@@ -19,9 +11,8 @@ watch(
   () => userStore.selectedDirect,
   (newVal, oldVal) => {
     if (newVal != oldVal) {
-      console.log(newVal)
       messageStore.getMessagesFromDirect({
-        username: newVal,
+        username: newVal.toString(),
         from: 0,
         limit: 1000
       })
@@ -58,8 +49,8 @@ onMounted(() => {
 <template>
   <q-page-container>
     <q-page padding>
-      <div v-if="messages.data.length > 0">
-        <div v-for="(message, index) in messages.data" :key="index">
+      <div v-if="messageStore.messages.length > 0">
+        <div v-for="(message, index) in messageStore.messages" :key="index">
           <q-chat-message
             :name="message.sender"
             avatar="https://cdn.quasar.dev/img/avatar1.jpg"
