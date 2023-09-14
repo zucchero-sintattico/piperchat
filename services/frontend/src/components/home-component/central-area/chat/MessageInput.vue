@@ -59,6 +59,7 @@ async function sendMessage() {
       () => console.log('Error')
     )
   }
+  deleteMessage()
 }
 
 function deleteMessage() {
