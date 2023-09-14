@@ -1,4 +1,4 @@
-export type Empty = object
+export type Empty = any
 
 export interface ResponseFacade {
   status(status: number): ResponseFacade
