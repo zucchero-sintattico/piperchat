@@ -18,10 +18,9 @@ export class ServerRepositoryImpl implements ServerRepository {
   }
 
   async getServers(username: string) {
-    // get servers where username is participant
     return await Servers.find({
       participants: { $elemMatch: { $eq: username } },
-    }).orFail()
+    })
   }
 
   async updateServerById(id: string, name?: string, description?: string) {
