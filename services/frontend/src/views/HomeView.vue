@@ -45,21 +45,13 @@ function toggleLeftOpen() {
           <img src="src/assets/user-avatar.png" class="cursor-pointer" />
           <q-menu align="right">
             <q-list>
-              <q-item clickable v-close-popu @click="isSettingsFormActive = true">
+              <q-item clickable v-close-popup @click="isSettingsFormActive = true">
                 <!--Add settings icon on left and 'Settings' text on right-->
                 <q-item-section avatar>
                   <q-icon name="settings" />
                 </q-item-section>
                 <q-item-section> Settings </q-item-section>
               </q-item>
-              <q-dialog
-                v-model="isSettingsFormActive"
-                persistent
-                transition-show="scale"
-                transition-hide="scale"
-              >
-                <SettingsForm @close="isSettingsFormActive = false" />
-              </q-dialog>
               <q-item clickable v-close-popup @click="logout">
                 <q-item-section avatar>
                   <q-icon name="logout" />
@@ -70,7 +62,14 @@ function toggleLeftOpen() {
           </q-menu>
         </q-avatar>
       </q-toolbar>
-
+      <q-dialog
+        v-model="isSettingsFormActive"
+        persistent
+        transition-show="scale"
+        transition-hide="scale"
+      >
+        <SettingsForm @close="isSettingsFormActive = false" />
+      </q-dialog>
       <q-tabs align="left">
         <q-route-tab label="Friends" @click="toggleLeftOpen" />
         <q-route-tab label="Pending" @click="toggleLeftOpen" />
