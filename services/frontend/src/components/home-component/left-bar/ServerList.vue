@@ -28,7 +28,7 @@ function setActiveServer(server: GetServersApi.Responses.Server) {
       />
     </q-item>
 
-    <q-separator color="accent" style="height: 2px;" inset />
+    <q-separator color="accent" style="height: 2px" inset />
 
     <!-- start Create new server -->
     <q-item>
@@ -45,8 +45,7 @@ function setActiveServer(server: GetServersApi.Responses.Server) {
     </q-dialog>
     <!-- end Create new server -->
 
-    <q-separator color="accent" style="height: 1px;" inset />
-
+    <q-separator color="accent" style="height: 1px" inset />
 
     <q-scroll-area visible class="col bg-dark">
       <div v-for="server in serverStore.servers" :key="server._id" class="col">
