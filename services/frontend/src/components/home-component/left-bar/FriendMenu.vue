@@ -5,6 +5,8 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
+const BANNER_TIMEOUT = 3000
+
 const props = defineProps(['active'])
 const emit = defineEmits(['update:active'])
 
@@ -23,12 +25,20 @@ const friendUsername = ref('')
 
 enum Banner {
   OK = 'bg-green',
-  ERROR = 'bg-red'
+  ERROR = 'bg-red',
+  WARNING = 'bg-orange'
 }
 
 const resultBanner = ref(false)
 const colorBanner = ref(Banner.OK)
 const contentBanner = ref('')
+
+function popUpBanner() {
+  resultBanner.value = true
+  setTimeout(() => {
+    resultBanner.value = false
+  }, BANNER_TIMEOUT)
+}
 
 async function sendFriendRequest() {
   await userStore.sendFriendRequest(
@@ -43,20 +53,41 @@ async function sendFriendRequest() {
       contentBanner.value = e
     }
   )
-  resultBanner.value = true
-  setTimeout(() => {
-    resultBanner.value = false
-  }, 2000)
+  popUpBanner()
   friendUsername.value = ''
   friendRequestPopup.value = false
 }
 
 async function acceptRequest(sender: string) {
-  // TODO
+  await userStore.acceptFriendRequest(
+    sender,
+    () => {
+      colorBanner.value = Banner.OK
+      contentBanner.value = 'Friend request accepted'
+      resultBanner.value = true
+    },
+    (e) => {
+      colorBanner.value = Banner.ERROR
+      contentBanner.value = e
+    }
+  )
+  popUpBanner()
 }
 
 async function denyRequest(sender: string) {
-  // TODO
+  await userStore.denyFriendRequest(
+    sender,
+    () => {
+      colorBanner.value = Banner.WARNING
+      contentBanner.value = 'Friend request denied'
+      resultBanner.value = true
+    },
+    (e) => {
+      colorBanner.value = Banner.ERROR
+      contentBanner.value = e
+    }
+  )
+  popUpBanner()
 }
 
 onMounted(async () => {

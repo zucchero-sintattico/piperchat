@@ -178,6 +178,45 @@ export const useUserStore = defineStore(
       }
     }
 
+    async function acceptFriendRequest(
+      username: string,
+      onSuccess: () => void,
+      onError: (error: any) => void
+    ) {
+      try {
+        const response = await friendsController.acceptFriendRequest(username)
+        if (response.statusCode === 200) {
+          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
+          friends.value.push(username)
+          onSuccess()
+        } else {
+          const typed = response as SendFriendRequestApi.Errors.Type
+          onError(typed.error)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    async function denyFriendRequest(
+      username: string,
+      onSuccess: () => void,
+      onError: (error: any) => void
+    ) {
+      try {
+        const response = await friendsController.denyFriendRequest(username)
+        if (response.statusCode === 200) {
+          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
+          onSuccess()
+        } else {
+          const typed = response as SendFriendRequestApi.Errors.Type
+          onError(typed.error)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
     return {
       isLoggedIn,
       username,
@@ -198,7 +237,9 @@ export const useUserStore = defineStore(
       logout,
       fetchFriends,
       sendFriendRequest,
-      fetchFriendRequest
+      fetchFriendRequest,
+      acceptFriendRequest,
+      denyFriendRequest
     }
   },
   { persist: true }
