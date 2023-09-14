@@ -132,6 +132,7 @@ export const useUserStore = defineStore(
       selectedChannel,
       selectedDirect,
       inContentArea,
+      whoami,
       login,
       register,
       logout
