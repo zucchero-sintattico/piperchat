@@ -53,10 +53,13 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     from: number,
     limit: number
   ): Promise<Message[]> {
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    const server = await Servers.findOne({ id: serverId })
+    if (!server) {
+      throw new Error('Server not found')
+    }
     const channel = server.messagesChannels.find((channel) => channel.id === channelId)
-    if (!channel) {
-      throw new Error('Channel not found')
+    if (!channel?.messages) {
+      return []
     }
     return channel.messages.slice(from, from + limit)
   }
