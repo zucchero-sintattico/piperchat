@@ -19,7 +19,8 @@ const isNewChannelFormActive = ref(false)
         <div class="q-ma-md" style="text-align: center">
           <q-btn
             color="primary"
-            label="Create channel"
+            label="channel"
+            :rounded="true"
             icon="add"
             style="justify-content: space-between"
             @click="isNewChannelFormActive = true"

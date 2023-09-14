@@ -34,6 +34,29 @@ function toggleLeftOpen() {
         <q-toolbar-title align="center" class="title">
           <h1>Piperchat</h1>
         </q-toolbar-title>
+
+        <!--Avatar image that toggle dropdown menu with logout and settings option-->
+        <q-avatar>
+          <!-- add hover effect to image -->
+          <img src="src/assets/user-avatar.png" class="cursor-pointer" />
+          <q-menu align="right">
+            <q-list>
+              <q-item clickable v-close-popup>
+                <!--Add settings icon on left and 'Settings' text on right-->
+                <q-item-section avatar>
+                  <q-icon name="settings" />
+                </q-item-section>
+                <q-item-section> Settings </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="logout">
+                <q-item-section avatar>
+                  <q-icon name="logout" />
+                </q-item-section>
+                <q-item-section> Logout </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
       </q-toolbar>
 
       <q-tabs align="left">
@@ -54,6 +77,12 @@ function toggleLeftOpen() {
 </template>
 
 <style>
+.item-text {
+  max-width: 150px; /* Adjust the max-width as needed to prevent text overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .left-menu {
   height: 100%;
 }
