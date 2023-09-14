@@ -4,9 +4,11 @@ import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
+import SettingsForm from '@/components/home-component/SettingsForm.vue'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
+const isSettingsFormActive = ref(false)
 
 function logout() {
   userStore.logout()
@@ -27,13 +29,46 @@ function toggleLeftOpen() {
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-avatar>
-          <img src="src/assets/piperchat-logo.jpg" />
-        </q-avatar>
 
         <q-toolbar-title align="center" class="title">
-          <h1>Piperchat</h1>
+          <div class="avatar-and-title">
+            <q-avatar>
+              <img src="src/assets/piperchat-logo.jpg" />
+            </q-avatar>
+            <h1>Piperchat</h1>
+          </div>
         </q-toolbar-title>
+
+        <!--Avatar image that toggle dropdown menu with logout and settings option-->
+        <q-avatar>
+          <!-- add hover effect to image -->
+          <img src="src/assets/user-avatar.png" class="cursor-pointer" />
+          <q-menu align="right">
+            <q-list>
+              <q-item clickable v-close-popu @click="isSettingsFormActive = true">
+                <!--Add settings icon on left and 'Settings' text on right-->
+                <q-item-section avatar>
+                  <q-icon name="settings" />
+                </q-item-section>
+                <q-item-section> Settings </q-item-section>
+              </q-item>
+              <q-dialog
+                v-model="isSettingsFormActive"
+                persistent
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <SettingsForm @close="isSettingsFormActive = false" />
+              </q-dialog>
+              <q-item clickable v-close-popup @click="logout">
+                <q-item-section avatar>
+                  <q-icon name="logout" />
+                </q-item-section>
+                <q-item-section> Logout </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
       </q-toolbar>
 
       <q-tabs align="left">
@@ -54,6 +89,16 @@ function toggleLeftOpen() {
 </template>
 
 <style>
+.title {
+  display: flex;
+  justify-content: center; /* Center horizontally within q-toolbar-title */
+}
+
+.avatar-and-title {
+  display: flex;
+  align-items: center; /* Vertical alignment in the center */
+}
+
 .left-menu {
   height: 100%;
 }
