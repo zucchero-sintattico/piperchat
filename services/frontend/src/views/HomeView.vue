@@ -74,10 +74,6 @@ onMounted(() => {
       >
         <SettingsForm @close="isSettingsFormActive = false" />
       </q-dialog>
-      <q-tabs align="left">
-        <q-route-tab label="Friends" @click="toggleLeftOpen" />
-        <q-route-tab label="Pending" @click="toggleLeftOpen" />
-      </q-tabs>
     </q-header>
 
     <!-- pass leftDrawopen as props -->

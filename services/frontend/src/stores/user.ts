@@ -56,6 +56,7 @@ export const useUserStore = defineStore(
     const authController: AuthController = new AuthControllerImpl()
     const userController: UserController = new UserControllerImpl()
 
+    // ==================== AUTH ==================== //
     async function login(
       parameters: { username: string; password: string },
       onSuccess: () => void,
