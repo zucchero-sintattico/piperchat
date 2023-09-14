@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 const props = defineProps(['active'])
 const emit = defineEmits(['update:active'])
@@ -18,13 +21,47 @@ const friendTab = ref('friend')
 const friendRequestPopup = ref(false)
 const friendUsername = ref('')
 
-const resultBanner = ref(false)
+enum Banner {
+  OK = 'bg-green',
+  ERROR = 'bg-red'
+}
 
-function sendFriendRequest() {
-  console.log(friendUsername.value)
+const resultBanner = ref(false)
+const colorBanner = ref(Banner.OK)
+const contentBanner = ref('')
+
+async function sendFriendRequest() {
+  await userStore.sendFriendRequest(
+    friendUsername.value,
+    () => {
+      colorBanner.value = Banner.OK
+      contentBanner.value = 'Friend request sent'
+      resultBanner.value = true
+    },
+    (e) => {
+      colorBanner.value = Banner.ERROR
+      contentBanner.value = e
+    }
+  )
+  resultBanner.value = true
+  setTimeout(() => {
+    resultBanner.value = false
+  }, 2000)
   friendUsername.value = ''
   friendRequestPopup.value = false
 }
+
+async function acceptRequest(sender: string) {
+  // TODO
+}
+
+async function denyRequest(sender: string) {
+  // TODO
+}
+
+onMounted(async () => {
+  userStore.fetchFriendRequest()
+})
 </script>
 
 <template>
@@ -55,15 +92,37 @@ function sendFriendRequest() {
         <q-tab-panels v-model="friendTab" animated>
           <q-tab-panel name="friend">
             <div class="text-h4">All friends</div>
-            <q-list v-for="user in 10" :key="user">
-              <HorizontalUser name="user" icon="chat" clickable class="q-pa-sm" />
+            <q-list v-for="friend in userStore.friends" :key="friend">
+              <HorizontalUser :name="friend" icon="chat" clickable class="q-pa-sm" />
             </q-list>
           </q-tab-panel>
 
           <q-tab-panel name="request">
             <div class="text-h4">Pending requests</div>
-            <q-list v-for="user in 10" :key="user">
-              <HorizontalUser name="user" icon="chat" clickable class="q-pa-sm" />
+            <q-list v-for="sender in userStore.pendingRequests" :key="sender">
+              <q-item>
+                <q-item-section>
+                  <HorizontalUser :name="sender" icon="chat" class="q-pa-sm" />
+                </q-item-section>
+
+                <!-- start Accept button -->
+                <q-btn
+                  style="width: fit-content"
+                  icon="check"
+                  class="bg-green text-white"
+                  @click="acceptRequest(sender)"
+                />
+                <!-- end Accept button -->
+
+                <!-- start Deny button -->
+                <q-btn
+                  style="width: fit-content"
+                  icon="close"
+                  class="bg-red text-white"
+                  @click="denyRequest(sender)"
+                />
+                <!-- start Deny button -->
+              </q-item>
             </q-list>
           </q-tab-panel>
         </q-tab-panels>
@@ -97,15 +156,13 @@ function sendFriendRequest() {
     </q-dialog>
     <!-- end Friend request pop up -->
 
-    <!-- start Request up -->
+    <!-- start Request Ok -->
     <q-dialog v-model="resultBanner" seamless position="bottom">
-      <q-card class="bg-green text-h6 text-white q-px-xl q-py-md">
-        <!-- <q-banner class="text-white bg-green error-banner q-pa-lg text-h1"> -->
-        OK tutto a buon fine
-        <!-- </q-banner> -->
+      <q-card :class="colorBanner" class="text-h6 text-white q-px-xl q-py-md">
+        {{ contentBanner }}
       </q-card>
     </q-dialog>
-    <!-- end Request up -->
+    <!-- end Request Ok -->
   </div>
 </template>
 
