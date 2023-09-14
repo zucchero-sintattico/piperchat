@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useFriendStore } from '@/stores/friend'
 

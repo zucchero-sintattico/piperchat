@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
-import FriendMenu from './FriendMenu.vue'
+import FriendMenu from './menu/FriendMenu.vue'
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from '@/stores/friend'
 import { onMounted, ref } from 'vue'

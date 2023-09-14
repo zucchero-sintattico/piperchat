@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
-import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import HorizontalChannel from '../horizontal-component/HorizontalChannel.vue'
+import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'

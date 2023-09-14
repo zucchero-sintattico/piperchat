@@ -6,7 +6,7 @@ import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
-import ServerMenu from './ServerMenu.vue'
+import ServerMenu from './menu/ServerMenu.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
