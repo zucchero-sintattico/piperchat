@@ -6,9 +6,6 @@ import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi } from '@api/users/auth'
 import type { WhoamiApi } from '@api/users/user'
-import type { FriendsController } from '@/controllers/users/friends/friends-controller'
-import { FriendsControllerImpl } from '@/controllers/users/friends/friends-controller-impl'
-import type { GetFriendsApi, SendFriendRequestApi, GetFriendsRequestsApi } from '@api/users/friends'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -31,12 +28,6 @@ export const useUserStore = defineStore(
     const description = ref('')
     const photo = ref('')
     const error = ref('')
-
-    // friends username
-    const friends = ref<string[]>([])
-
-    // username of pending requests
-    const pendingRequests = ref<string[]>([])
 
     // Display direct or channel in left bar
     const selectedTab = ref(SelectedTab.Directs)
@@ -63,7 +54,6 @@ export const useUserStore = defineStore(
     }
 
     const authController: AuthController = new AuthControllerImpl()
-    const friendsController: FriendsController = new FriendsControllerImpl()
     const userController: UserController = new UserControllerImpl()
 
     // ==================== AUTH ==================== //
@@ -131,92 +121,6 @@ export const useUserStore = defineStore(
       }
     }
 
-    // ==================== FRIENDS ==================== //
-    async function fetchFriends() {
-      try {
-        const response = (await friendsController.getFriends()) as GetFriendsApi.Response
-        if (response.statusCode === 200) {
-          const typed = response as GetFriendsApi.Responses.Success
-          friends.value = typed.friends
-        } else {
-          console.log(response)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function sendFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.sendFriendRequest(username)
-        if (response.statusCode === 200) {
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function fetchFriendRequest() {
-      try {
-        const response = await friendsController.getFriendsRequests()
-        if (response.statusCode === 200) {
-          const typed = response as GetFriendsRequestsApi.Responses.Success
-          pendingRequests.value = typed.requests
-        } else {
-          console.log(response)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function acceptFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.acceptFriendRequest(username)
-        if (response.statusCode === 200) {
-          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
-          friends.value.push(username)
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function denyFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.denyFriendRequest(username)
-        if (response.statusCode === 200) {
-          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
     return {
       isLoggedIn,
       username,
@@ -229,17 +133,10 @@ export const useUserStore = defineStore(
       selectedChannel,
       selectedDirect,
       inContentArea,
-      friends,
-      pendingRequests,
       setActiveChannel,
       login,
       register,
-      logout,
-      fetchFriends,
-      sendFriendRequest,
-      fetchFriendRequest,
-      acceptFriendRequest,
-      denyFriendRequest
+      logout
     }
   },
   { persist: true }

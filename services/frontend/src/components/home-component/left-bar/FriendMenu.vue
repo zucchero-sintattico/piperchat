@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import { computed, onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user'
+import { useFriendStore } from '@/stores/friend'
 
-const userStore = useUserStore()
+const friendStore = useFriendStore()
 
 const BANNER_TIMEOUT = 3000
 
@@ -41,7 +41,7 @@ function popUpBanner() {
 }
 
 async function sendFriendRequest() {
-  await userStore.sendFriendRequest(
+  await friendStore.sendFriendRequest(
     friendUsername.value,
     () => {
       colorBanner.value = Banner.OK
@@ -59,7 +59,7 @@ async function sendFriendRequest() {
 }
 
 async function acceptRequest(sender: string) {
-  await userStore.acceptFriendRequest(
+  await friendStore.acceptFriendRequest(
     sender,
     () => {
       colorBanner.value = Banner.OK
@@ -75,7 +75,7 @@ async function acceptRequest(sender: string) {
 }
 
 async function denyRequest(sender: string) {
-  await userStore.denyFriendRequest(
+  await friendStore.denyFriendRequest(
     sender,
     () => {
       colorBanner.value = Banner.WARNING
@@ -91,7 +91,7 @@ async function denyRequest(sender: string) {
 }
 
 onMounted(async () => {
-  userStore.fetchFriendRequest()
+  friendStore.fetchFriendRequest()
 })
 </script>
 
@@ -123,14 +123,14 @@ onMounted(async () => {
         <q-tab-panels v-model="friendTab" animated>
           <q-tab-panel name="friend">
             <div class="text-h4">All friends</div>
-            <q-list v-for="friend in userStore.friends" :key="friend">
+            <q-list v-for="friend in friendStore.friends" :key="friend">
               <HorizontalUser :name="friend" icon="chat" clickable class="q-pa-sm" />
             </q-list>
           </q-tab-panel>
 
           <q-tab-panel name="request">
             <div class="text-h4">Pending requests</div>
-            <q-list v-for="sender in userStore.pendingRequests" :key="sender">
+            <q-list v-for="sender in friendStore.pendingRequests" :key="sender">
               <q-item>
                 <q-item-section>
                   <HorizontalUser :name="sender" icon="chat" class="q-pa-sm" />

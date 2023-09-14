@@ -3,14 +3,16 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import FriendMenu from './FriendMenu.vue'
 import { useUserStore } from '@/stores/user'
+import { useFriendStore } from '@/stores/friend'
 import { onMounted, ref } from 'vue'
 
 const userStore = useUserStore()
+const friendStore = useFriendStore()
 
 const friendTabOpened = ref(false)
 
 onMounted(() => {
-  userStore.fetchFriends()
+  friendStore.fetchFriends()
 })
 </script>
 
@@ -29,7 +31,7 @@ onMounted(() => {
             bordered
             separator
             class="text-white text-h5"
-            v-for="friend in userStore.friends"
+            v-for="friend in friendStore.friends"
             :key="friend"
           >
             <HorizontalUser :name="friend" icon="chat" @click="userStore.selectedDirect = friend" />
