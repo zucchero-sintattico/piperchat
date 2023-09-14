@@ -8,7 +8,7 @@ const props = defineProps(['name', 'photo'])
       <img v-if="props.photo == ''" src="src/assets/default-user-photo.png" />
       <img v-else :src="props.photo" />
     </q-avatar>
-    <q-item-section>
+    <q-item-section class="ellipsis">
       {{ props.name }}
     </q-item-section>
   </q-item>

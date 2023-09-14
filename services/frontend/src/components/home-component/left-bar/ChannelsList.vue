@@ -17,10 +17,14 @@ const selectedServer = computed(() => {
 </script>
 
 <template>
-  <q-scroll-area visible class="col bg-secondary">
+  <q-scroll-area
+    class="col bg-secondary fit"
+    content-style="position: relative !important"
+    content-active-style="position: relative !important"
+  >
     <div class="column">
-      <div class="col">
-        <h4 class="q-ma-md text-white">{{ selectedServer?.name }}</h4>
+      <div class="col fit">
+        <h4 class="q-ma-md text-white ellipsis">{{ selectedServer?.name }}</h4>
 
         <!-- start Create new server -->
         <div class="q-ma-md" style="text-align: center">
