@@ -14,7 +14,7 @@ const directRouter = Router({
 
 directRouter.get(
   '/:username/messages',
-  //Validate(GetDirectMessagesApi.Request.Schema),
+  Validate(GetDirectMessagesApi.Request.Schema),
   async (
     req: Request<
       GetDirectMessagesApi.Request.Params,
