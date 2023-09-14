@@ -13,7 +13,7 @@ const userStore = useUserStore()
           <q-list bordered separator class="text-white text-h5" v-for="user in 10" :key="user">
             <HorizontalUser
               :name="user"
-              :photo="userStore.photo"
+              photo=""
               icon="chat"
               @click="userStore.selectedDirect = String(user)"
             />
