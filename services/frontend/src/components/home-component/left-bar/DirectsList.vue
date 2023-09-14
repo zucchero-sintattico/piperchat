@@ -38,7 +38,7 @@ onMounted(() => {
             v-for="friend in friendStore.friends"
             :key="friend"
           >
-            <HorizontalUser :name="friend" icon="chat" @click="userStore.selectedDirect = friend" />
+            <HorizontalUser :name="friend" icon="chat" @click="setActiveDirect(friend)" />
           </q-list>
         </q-list>
 
