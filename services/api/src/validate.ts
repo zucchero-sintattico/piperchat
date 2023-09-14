@@ -7,51 +7,22 @@ interface RequestFacade<Params, Body, Query> {
   query: Query
 }
 
-interface BadRequestError {
-  field: string
-  expected: string
-  received: string
-}
-
 function checkFields<T extends Record<string, unknown>>(
   object: T,
   schema: Record<string, string>
-): BadRequestError[] {
-  const errors = []
+): string[] {
+  // Return all missing fields in the object that are required by the schema
+  console.log('Validating', object, schema)
+  const missing = []
   for (const [key, value] of Object.entries(schema)) {
-    const param = object[key]
-    if (value.endsWith('?')) {
-      if (param === undefined) {
-        continue
-      } else {
-        if (typeof param !== value.replace('?', '')) {
-          errors.push({
-            field: key,
-            expected: value,
-            received: typeof param,
-          })
-        }
-      }
-    } else {
-      if (param === undefined) {
-        errors.push({
-          field: key,
-          expected: value,
-          received: 'undefined',
-        })
-      } else {
-        if (typeof param !== value) {
-          errors.push({
-            field: key,
-            expected: value,
-            received: typeof param,
-          })
-        }
-      }
+    console.log('Checking', key, value)
+    if (!(key in object)) {
+      missing.push(key)
     }
   }
-  return errors
+  return missing
 }
+
 export function Validate<
   P extends Record<string, unknown>,
   B extends Record<string, unknown>,
