@@ -23,18 +23,67 @@ const active = computed({
   }
 })
 
+const selectedChannel = ref<{ id: string; name: string }>({ id: '', name: '' })
+const confirmDeleteChannel = ref(false)
+
+const confirmKickUser = ref(false)
+const userToKick = ref('')
+
 const serverTab = ref('setting')
+
+enum Banner {
+  OK = 'bg-green',
+  ERROR = 'bg-red'
+}
+
+const resultBanner = ref(false)
+const colorBanner = ref(Banner.OK)
+const contentBanner = ref('')
+function popUpBanner() {
+  resultBanner.value = true
+  setTimeout(() => {
+    resultBanner.value = false
+  }, BANNER_TIMEOUT)
+}
 
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
 })
 
-async function deleteChannel(channel: string) {
-  // TODO
+function setChannelToDelete(channel: { id: string; name: string }) {
+  selectedChannel.value = channel
+  confirmDeleteChannel.value = true
 }
 
-async function kickUser(user: string) {
-  // TODO
+async function deleteSelectedChannel() {
+  try {
+    await serverStore.deleteChannel(selectedServer.value!._id, selectedChannel.value.id)
+    contentBanner.value = 'Channel deleted'
+    colorBanner.value = Banner.OK
+    popUpBanner()
+  } catch (error) {
+    contentBanner.value = String(error)
+    colorBanner.value = Banner.ERROR
+    popUpBanner()
+  }
+}
+
+function setUserToKick(user: string) {
+  userToKick.value = user
+  confirmKickUser.value = true
+}
+
+async function kickSelectedUser() {
+  try {
+    await serverStore.kickUser(selectedServer.value!._id, userToKick.value)
+    contentBanner.value = 'Channel deleted'
+    colorBanner.value = Banner.OK
+    popUpBanner()
+  } catch (error) {
+    contentBanner.value = String(error)
+    colorBanner.value = Banner.ERROR
+    popUpBanner()
+  }
 }
 </script>
 
@@ -74,6 +123,7 @@ async function kickUser(user: string) {
               <q-item>
                 <q-item-section style="font-size: 1.5em">
                   <HorizontalChannel
+                    clickable
                     :name="channel.name"
                     :icon="
                       channel.channelType == CreateChannelApi.ChannelType.Messages
@@ -88,7 +138,7 @@ async function kickUser(user: string) {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
-                  @click="deleteChannel(channel._id)"
+                  @click="setChannelToDelete({ id: channel._id, name: channel.name })"
                 />
                 <!-- start Cancel button -->
               </q-item>
@@ -113,7 +163,7 @@ async function kickUser(user: string) {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
-                  @click="kickUser(user)"
+                  @click="setUserToKick(user)"
                 />
                 <!-- start Kick button -->
               </q-item>
@@ -124,6 +174,62 @@ async function kickUser(user: string) {
       </q-card>
     </q-dialog>
     <!-- end Friends pop up -->
+
+    <!-- start Confirm pop up -->
+    <q-dialog v-model="confirmDeleteChannel">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="delete" color="black" text-color="white" />
+          <span class="q-ml-sm"
+            >Are you sure to delete
+            <strong>{{ selectedChannel.name }}</strong>
+            channel?
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="center">
+          <q-btn
+            label="I want to delete the channel"
+            color="red"
+            v-close-popup
+            @click="deleteSelectedChannel"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- end Confirm pop up -->
+
+    <!-- start Confirm pop up -->
+    <q-dialog v-model="confirmKickUser">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="delete" color="black" text-color="white" />
+          <span class="q-ml-sm">
+            Are you sure to kick
+            <strong>{{ userToKick }}</strong>
+            ?
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="center">
+          <q-btn
+            label="I want to delete the channel"
+            color="red"
+            v-close-popup
+            @click="kickSelectedUser"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- end Confirm pop up -->
+
+    <!-- start Request Ok -->
+    <q-dialog v-model="resultBanner" seamless position="bottom">
+      <q-card :class="colorBanner" class="text-h6 text-white q-px-xl q-py-md">
+        {{ contentBanner }}
+      </q-card>
+    </q-dialog>
+    <!-- end Request Ok -->
   </div>
 </template>
 
