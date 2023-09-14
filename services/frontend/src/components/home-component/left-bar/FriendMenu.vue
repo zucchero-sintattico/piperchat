@@ -23,6 +23,7 @@ const resultBanner = ref(false)
 function sendFriendRequest() {
   console.log(friendUsername.value)
   friendUsername.value = ''
+  friendRequestPopup.value = false
 }
 </script>
 
@@ -93,7 +94,6 @@ function sendFriendRequest() {
           <q-btn
             color="primary"
             label="Send friend request"
-            v-close-popup
             @click="sendFriendRequest"
           />
         </q-card-actions>
