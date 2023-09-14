@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Router, Request, Response as ExpressResponse } from 'express'
+import { Router, Request, Response as ExpressResponse, Response } from 'express'
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
 import { Response as ApiResponse } from '@api/response'

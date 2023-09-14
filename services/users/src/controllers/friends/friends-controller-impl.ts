@@ -7,6 +7,7 @@ import {
   FriendRequestSentMessage,
 } from '@messages-api/friends'
 export class FriendsControllerImpl implements FriendsController {
+  private broker: RabbitMQ = RabbitMQ.getInstance()
   private userRepository = new UserRepositoryImpl()
 
   async getFriendsRequests(username: string): Promise<string[]> {
@@ -21,7 +22,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async sendFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.sendFriendRequest(username, friendUsername)
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       FriendRequestSentMessage,
       new FriendRequestSentMessage({
         from: username,
@@ -32,7 +33,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.acceptFriendRequest(username, friendUsername)
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       FriendRequestAcceptedMessage,
       new FriendRequestAcceptedMessage({
         from: username,
@@ -43,7 +44,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.denyFriendRequest(username, friendUsername)
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       FriendRequestDeniedMessage,
       new FriendRequestDeniedMessage({
         from: username,

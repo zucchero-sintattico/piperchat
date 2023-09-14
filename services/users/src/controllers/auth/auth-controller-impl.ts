@@ -19,6 +19,7 @@ import {
 } from '@messages-api/users'
 
 export class AuthControllerImpl implements AuthController {
+  private broker: RabbitMQ = RabbitMQ.getInstance()
   private userRepository: UserRepository = new UserRepositoryImpl()
 
   async register(
@@ -31,11 +32,10 @@ export class AuthControllerImpl implements AuthController {
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
     const user = await this.userRepository
       .createUser(username, email, hashedPassword, description, photo)
-      .catch((e) => {
-        console.log(e)
+      .catch(() => {
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       UserCreatedMessage,
       new UserCreatedMessage({
         username: user.username,
@@ -62,7 +62,7 @@ export class AuthControllerImpl implements AuthController {
 
     await this.userRepository.login(user.username, refreshToken)
 
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       UserLoggedInMessage,
       new UserLoggedInMessage({
         username: user.username,
@@ -93,7 +93,7 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
-    await RabbitMQ.getInstance().publish(
+    await this.broker.publish(
       UserLoggedOutMessage,
       new UserLoggedOutMessage({
         username: username,
