@@ -1,12 +1,11 @@
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
 import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
-import { ApiRouter, Route } from '@commons/router'
+import { Route } from '@commons/router'
+import { Router } from 'express'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 const profileController: ProfileController = new ProfileControllerImpl()
-
-const profileApiRouter = new ApiRouter()
-export const profileRouter = profileApiRouter.getRouter()
 
 export const UpdatePhotoApiRoute = new Route<
   UpdatePhotoApi.Response,
@@ -37,3 +36,9 @@ export const UpdateDescriptionApiRoute = new Route<
     res.sendResponse(response)
   },
 })
+
+export const profileRouter = Router()
+profileRouter.use(JWTAuthenticationMiddleware)
+
+UpdatePhotoApiRoute.attachToRouter(profileRouter)
+UpdateDescriptionApiRoute.attachToRouter(profileRouter)

@@ -1,4 +1,4 @@
-import supertest, { Response } from 'supertest'
+import supertest from 'supertest'
 import { Microservice } from '@commons/service'
 import { UserServiceConfiguration } from '@/configuration'
 import { generateAccessToken } from '@commons/utils/jwt'
@@ -78,7 +78,7 @@ describe('Send friend request', () => {
   it('A user should not be able to send a friend request if he is not logged in', async () => {
     const response = await request
       .post('/friends/requests')
-      .send({ username: user2.username })
+      .send({ to: user2.username, action: 'send' })
     expect(response.status).toBe(401)
   })
 
@@ -97,7 +97,114 @@ describe('Send friend request', () => {
     const response = await request
       .post('/friends/requests')
       .set('Cookie', `jwt=${jwt1}`)
-      .send({ username: user1.username })
+      .send({ to: user1.username, action: 'send' })
     expect(response.status).toBe(400)
+  })
+
+  it('A user should not be able to send a friend request to a user that does not exist', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: 'invalid', action: 'send' })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to send a friend request to a user that already sent a friend request', async () => {
+    await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'send' })
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'send' })
+    expect(response.status).toBe(409)
+  })
+})
+
+describe('Accept friend request', () => {
+  it('A user should not be able to accept a friend request if he is not logged in', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .send({ to: user2.username, action: 'accept' })
+    expect(response.status).toBe(401)
+  })
+
+  it('A user should be able to accept a friend request', async () => {
+    await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'send' })
+    let response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ to: user1.username, action: 'accept' })
+    expect(response.status).toBe(200)
+    response = await request.get('/friends').set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(200)
+    expect(response.body.friends).toEqual([user2.username])
+    response = await request.get('/friends').set('Cookie', `jwt=${jwt2}`)
+    expect(response.status).toBe(200)
+    expect(response.body.friends).toEqual([user1.username])
+  })
+
+  it('A user should not be able to accept a friend request if he did not receive a friend request', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'accept' })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to accept a friend request if the user does not exist', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: 'invalid', action: 'accept' })
+    expect(response.status).toBe(404)
+  })
+})
+
+describe('Decline friend request', () => {
+  it('A user should not be able to decline a friend request if he is not logged in', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .send({ to: user2.username, action: 'deny' })
+    expect(response.status).toBe(401)
+  })
+
+  it('A user should be able to decline a friend request', async () => {
+    await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'send' })
+    let response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ to: user1.username, action: 'deny' })
+    console.log(response.body)
+    expect(response.status).toBe(200)
+    response = await request.get('/friends').set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(200)
+    expect(response.body.friends).toEqual([])
+    response = await request.get('/friends').set('Cookie', `jwt=${jwt2}`)
+    expect(response.status).toBe(200)
+    expect(response.body.friends).toEqual([])
+  })
+
+  it('A user should not be able to decline a friend request if he did not receive a friend request', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: user2.username, action: 'deny' })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to decline a friend request if the user does not exist', async () => {
+    const response = await request
+      .post('/friends/requests')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ to: 'invalid', action: 'deny' })
+    expect(response.status).toBe(404)
   })
 })

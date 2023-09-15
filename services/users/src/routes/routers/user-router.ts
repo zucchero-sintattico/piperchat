@@ -4,12 +4,11 @@ import {
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
 import { GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/user'
-import { ApiRouter, Route } from '@commons/router'
+import { Route } from '@commons/router'
+import { Router } from 'express'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 const userController: UserController = new UserControllerImpl()
-
-const usersApiRouter = new ApiRouter()
-export const usersRouter = usersApiRouter.getRouter()
 
 export const GetUserPhotoApiRoute = new Route<
   GetUserPhotoApi.Response,
@@ -57,5 +56,7 @@ export const GetUserDescriptionApiRoute = new Route<
   ],
 })
 
-usersApiRouter.register(GetUserPhotoApiRoute)
-usersApiRouter.register(GetUserDescriptionApiRoute)
+export const usersRouter = Router()
+usersRouter.use(JWTAuthenticationMiddleware)
+GetUserPhotoApiRoute.attachToRouter(usersRouter)
+GetUserDescriptionApiRoute.attachToRouter(usersRouter)

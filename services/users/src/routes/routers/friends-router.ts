@@ -68,32 +68,38 @@ export const SendFriendRequestApiRoute = new Route<
   method: 'post',
   path: '/requests',
   schema: SendFriendRequestApi.Request.Schema,
+  middlewares: [
+    (req, res, next) => {
+      if (
+        !Object.values(SendFriendRequestApi.Request.FriendRequestAction).includes(
+          req.body.action
+        )
+      ) {
+        const response = new SendFriendRequestApi.Errors.InvalidAction(req.body.action)
+        res.sendResponse(response)
+      } else {
+        next()
+      }
+    },
+  ],
   handler: async (req, res) => {
-    if (
-      !Object.values(SendFriendRequestApi.Request.FriendRequestAction).includes(
-        req.body.action
-      )
-    ) {
-      const response = new SendFriendRequestApi.Errors.InvalidAction(req.body.action)
-      response.send(res)
-    }
     switch (req.body.action) {
       case SendFriendRequestApi.Request.FriendRequestAction.send: {
         await friendsController.sendFriendRequest(req.user.username, req.body.to)
         const response = new SendFriendRequestApi.Responses.Success()
-        response.send(res)
+        res.sendResponse(response)
         break
       }
       case SendFriendRequestApi.Request.FriendRequestAction.accept: {
         await friendsController.acceptFriendRequest(req.user.username, req.body.to)
         const response = new SendFriendRequestApi.Responses.FriendRequestAccepted()
-        response.send(res)
+        res.sendResponse(response)
         break
       }
       case SendFriendRequestApi.Request.FriendRequestAction.deny: {
         await friendsController.denyFriendRequest(req.user.username, req.body.to)
         const response = new SendFriendRequestApi.Responses.FriendRequestDenied()
-        response.send(res)
+        res.sendResponse(response)
         break
       }
     }
@@ -115,6 +121,14 @@ export const SendFriendRequestApiRoute = new Route<
       exception: FriendsControllerExceptions.FriendRequestNotPresent,
       onException: (e, req, res) => {
         res.sendResponse(new SendFriendRequestApi.Errors.FriendRequestNotFound())
+      },
+    },
+    {
+      exception: FriendsControllerExceptions.CannotSendFriendRequestToYourself,
+      onException: (e, req, res) => {
+        res.sendResponse(
+          new SendFriendRequestApi.Errors.CannotSendFriendRequestToYourself()
+        )
       },
     },
   ],

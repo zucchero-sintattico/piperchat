@@ -2,6 +2,7 @@ import { UserController } from '@/controllers/user/user-controller'
 import { UserControllerImpl } from '@/controllers/user/user-controller-impl'
 import { WhoamiApi } from '@api/users/user'
 import { Route } from '@commons/router'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 import { Router } from 'express'
 
 const userController: UserController = new UserControllerImpl()
@@ -25,4 +26,6 @@ const WhoamiApiRoute = new Route<
 })
 
 export const whoamiRouter = Router()
+whoamiRouter.use(JWTAuthenticationMiddleware)
+
 WhoamiApiRoute.attachToRouter(whoamiRouter)
