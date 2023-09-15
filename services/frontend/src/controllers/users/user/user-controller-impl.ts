@@ -8,7 +8,7 @@ import type { UserController } from './user-controller'
 import { AxiosController } from '@/controllers/axios-controller'
 export class UserControllerImpl extends AxiosController implements UserController {
   async whoami(): Promise<WhoamiApi.Response> {
-    return await this.get<WhoamiApi.Response>('/users/whoami')
+    return await this.get<WhoamiApi.Response>('/whoami')
   }
 
   async getUserStatus(request: GetUserStatusApi.Request.Type): Promise<GetUserStatusApi.Response> {
