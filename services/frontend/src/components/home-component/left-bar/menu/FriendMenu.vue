@@ -2,8 +2,8 @@
 import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useFriendStore } from '@/stores/friend'
-import { BannerColor } from '@/components/utils/BannerColor';
-import BottomPopUp from '@/components/utils/BottomPopUp.vue';
+import { BannerColor } from '@/components/utils/BannerColor'
+import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 
 const friendStore = useFriendStore()
 
@@ -171,11 +171,7 @@ onMounted(async () => {
     </q-dialog>
     <!-- end Friend request pop up -->
 
-    <BottomPopUp
-      :active="resultBanner"
-      :color="colorBanner"
-      :content="contentBanner"
-    />
+    <BottomPopUp :active="resultBanner" :color="colorBanner" :content="contentBanner" />
   </div>
 </template>
 
