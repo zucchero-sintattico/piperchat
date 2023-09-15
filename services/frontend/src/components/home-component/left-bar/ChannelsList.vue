@@ -75,7 +75,7 @@ const selectedServer = computed(() => {
           />
 
           <q-list dense v-for="j in 3" :key="j">
-            <HorizontalUser name="User" photo="https://cdn.quasar.dev/img/avatar3.jpg" />
+            <HorizontalUser name="User" photo="" />
           </q-list>
         </q-list>
         <!-- end Multimedia channels -->
