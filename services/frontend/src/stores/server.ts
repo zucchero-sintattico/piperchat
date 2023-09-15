@@ -27,7 +27,7 @@ export const useServerStore = defineStore('server', () => {
       description
     })
     if (response.statusCode === 200) {
-      getServers()
+      getServers() // TODO: adjust using notification
     } else {
       const typed = response as CreateServerApi.Errors.Type
       throw new Error(String(typed.error))
@@ -40,20 +40,17 @@ export const useServerStore = defineStore('server', () => {
     channelType: CreateChannelApi.ChannelType,
     serverId: string
   ) {
-    try {
-      const response = await channelController.createChannel({
-        name,
-        channelType,
-        description,
-        serverId
-      })
-      if (response.statusCode === 200) {
-        getServers()
-      } else {
-        console.log(response)
-      }
-    } catch (e) {
-      console.log(e)
+    const response = await channelController.createChannel({
+      name,
+      channelType,
+      description,
+      serverId
+    })
+    if (response.statusCode === 200) {
+      getServers() // TODO: adjust using notification
+    } else {
+      const typed = response as CreateChannelApi.Errors.Type
+      throw new Error(String(typed.error))
     }
   }
 
