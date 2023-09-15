@@ -22,7 +22,7 @@ services:
     labels:
       - |
         traefik.http.routers.notifications-service.rule=
-        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`)) || (Method('GET') && Path('/notification'))
+        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`)) || (Method(`GET`) && Path(`/notification`))
 
   db-notifications-service:
     image: mongo
