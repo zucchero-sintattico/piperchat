@@ -20,11 +20,15 @@ export class ServiceEvents {
         queue.queue,
         (message) => {
           if (message) {
-            const data = JSON.parse(message.content.toString())
-            const routingKey = message.fields.routingKey
-            const event = exchangeConfig.events[routingKey]
-            if (event) {
-              event(data)
+            try {
+              const data = JSON.parse(message.content.toString())
+              const routingKey = message.fields.routingKey
+              const event = exchangeConfig.events[routingKey]
+              if (event) {
+                event(data)
+              }
+            } catch (error) {
+              console.error(error)
             }
           }
         },
