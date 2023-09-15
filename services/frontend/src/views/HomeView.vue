@@ -19,12 +19,9 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-function toggleLeftOpen() {
-  leftDrawerOpen.value = true
-}
-
 onMounted(() => {
   userStore.inContentArea = ContentArea.Empty
+  userStore.whoami()
 })
 </script>
 

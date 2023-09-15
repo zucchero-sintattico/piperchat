@@ -2,15 +2,25 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../../router/index'
-import FormError from './FormError.vue'
-
-const ERROR_ANIMATION_DURATION = 2000
+import BottomPopUp from '../utils/BottomPopUp.vue'
+import { BannerColor } from '../utils/BannerColor'
 
 const username = ref('')
 const password = ref('')
 const userStore = useUserStore()
+
+const BANNER_TIMEOUT = 3000
 const error = ref(false)
 const errorMessage = ref('')
+const colorBanner = ref(BannerColor.OK)
+function popUpBanner(content: string, color: BannerColor) {
+  errorMessage.value = content
+  colorBanner.value = color
+  error.value = true
+  setTimeout(() => {
+    error.value = false
+  }, BANNER_TIMEOUT)
+}
 
 function onSubmit() {
   userStore.login(
@@ -19,12 +29,7 @@ function onSubmit() {
       router.push({ name: 'Home' })
     },
     (e: any) => {
-      error.value = true
-      errorMessage.value = e
-      setTimeout(() => {
-        error.value = false
-        errorMessage.value = ''
-      }, ERROR_ANIMATION_DURATION)
+      popUpBanner(e, BannerColor.ERROR)
     }
   )
 }
@@ -65,7 +70,7 @@ function onReset() {
     </div>
 
     <!-- Error message -->
-    <FormError v-if="error" :error-message="errorMessage" />
+    <BottomPopUp :active="error" :color="colorBanner" :content="errorMessage" />
   </q-form>
 </template>
 

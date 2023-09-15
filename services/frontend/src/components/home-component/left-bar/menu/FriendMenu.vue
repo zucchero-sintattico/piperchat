@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useFriendStore } from '@/stores/friend'
+import { BannerColor } from '@/components/utils/BannerColor'
+import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 
 const friendStore = useFriendStore()
-
-const BANNER_TIMEOUT = 3000
 
 const props = defineProps(['active'])
 const emit = defineEmits(['update:active'])
@@ -23,17 +23,13 @@ const friendTab = ref('friend')
 const friendRequestPopup = ref(false)
 const friendUsername = ref('')
 
-enum Banner {
-  OK = 'bg-green',
-  ERROR = 'bg-red',
-  WARNING = 'bg-orange'
-}
-
+const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
-const colorBanner = ref(Banner.OK)
+const colorBanner = ref(BannerColor.OK)
 const contentBanner = ref('')
-
-function popUpBanner() {
+function popUpBanner(content: string, color: BannerColor) {
+  contentBanner.value = content
+  colorBanner.value = color
   resultBanner.value = true
   setTimeout(() => {
     resultBanner.value = false
@@ -44,16 +40,12 @@ async function sendFriendRequest() {
   await friendStore.sendFriendRequest(
     friendUsername.value,
     () => {
-      colorBanner.value = Banner.OK
-      contentBanner.value = 'Friend request sent'
-      resultBanner.value = true
+      popUpBanner('Friend request sent', BannerColor.OK)
     },
     (e) => {
-      colorBanner.value = Banner.ERROR
-      contentBanner.value = e
+      popUpBanner(e, BannerColor.ERROR)
     }
   )
-  popUpBanner()
   friendUsername.value = ''
   friendRequestPopup.value = false
 }
@@ -62,32 +54,24 @@ async function acceptRequest(sender: string) {
   await friendStore.acceptFriendRequest(
     sender,
     () => {
-      colorBanner.value = Banner.OK
-      contentBanner.value = 'Friend request accepted'
-      resultBanner.value = true
+      popUpBanner('Friend request accepted', BannerColor.OK)
     },
     (e) => {
-      colorBanner.value = Banner.ERROR
-      contentBanner.value = e
+      popUpBanner(e, BannerColor.ERROR)
     }
   )
-  popUpBanner()
 }
 
 async function denyRequest(sender: string) {
   await friendStore.denyFriendRequest(
     sender,
     () => {
-      colorBanner.value = Banner.WARNING
-      contentBanner.value = 'Friend request denied'
-      resultBanner.value = true
+      popUpBanner('Friend request denied', BannerColor.OK)
     },
     (e) => {
-      colorBanner.value = Banner.ERROR
-      contentBanner.value = e
+      popUpBanner(e, BannerColor.ERROR)
     }
   )
-  popUpBanner()
 }
 
 onMounted(async () => {
@@ -187,13 +171,7 @@ onMounted(async () => {
     </q-dialog>
     <!-- end Friend request pop up -->
 
-    <!-- start Request Ok -->
-    <q-dialog v-model="resultBanner" seamless position="bottom">
-      <q-card :class="colorBanner" class="text-h6 text-white q-px-xl q-py-md">
-        {{ contentBanner }}
-      </q-card>
-    </q-dialog>
-    <!-- end Request Ok -->
+    <BottomPopUp :active="resultBanner" :color="colorBanner" :content="contentBanner" />
   </div>
 </template>
 
