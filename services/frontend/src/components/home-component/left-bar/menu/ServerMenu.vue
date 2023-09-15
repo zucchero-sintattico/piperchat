@@ -5,11 +5,11 @@ import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
+import BottomPopUp from '@/components/utils/BottomPopUp.vue'
+import { BannerColor } from '@/components/utils/BannerColor'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
-
-const BANNER_TIMEOUT = 3000
 
 const props = defineProps(['active'])
 const emit = defineEmits(['update:active'])
@@ -23,6 +23,10 @@ const active = computed({
   }
 })
 
+const selectedServer = computed(() => {
+  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+})
+
 const selectedChannel = ref<{ id: string; name: string }>({ id: '', name: '' })
 const confirmDeleteChannel = ref(false)
 
@@ -31,24 +35,18 @@ const userToKick = ref('')
 
 const serverTab = ref('setting')
 
-enum Banner {
-  OK = 'bg-green',
-  ERROR = 'bg-red'
-}
-
+const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
-const colorBanner = ref(Banner.OK)
+const colorBanner = ref(BannerColor.OK)
 const contentBanner = ref('')
-function popUpBanner() {
+function popUpBanner(content: string, color: BannerColor) {
+  contentBanner.value = content
+  colorBanner.value = color
   resultBanner.value = true
   setTimeout(() => {
     resultBanner.value = false
   }, BANNER_TIMEOUT)
 }
-
-const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
-})
 
 function setChannelToDelete(channel: { id: string; name: string }) {
   selectedChannel.value = channel
@@ -58,13 +56,9 @@ function setChannelToDelete(channel: { id: string; name: string }) {
 async function deleteSelectedChannel() {
   try {
     await serverStore.deleteChannel(selectedServer.value!._id, selectedChannel.value.id)
-    contentBanner.value = 'Channel deleted'
-    colorBanner.value = Banner.OK
-    popUpBanner()
+    popUpBanner('Channel deleted', BannerColor.OK)
   } catch (error) {
-    contentBanner.value = String(error)
-    colorBanner.value = Banner.ERROR
-    popUpBanner()
+    popUpBanner(String(error), BannerColor.ERROR)
   }
 }
 
@@ -76,13 +70,9 @@ function setUserToKick(user: string) {
 async function kickSelectedUser() {
   try {
     await serverStore.kickUser(selectedServer.value!._id, userToKick.value)
-    contentBanner.value = 'Channel deleted'
-    colorBanner.value = Banner.OK
-    popUpBanner()
+    popUpBanner('User kicked', BannerColor.OK)
   } catch (error) {
-    contentBanner.value = String(error)
-    colorBanner.value = Banner.ERROR
-    popUpBanner()
+    popUpBanner(String(error), BannerColor.ERROR)
   }
 }
 </script>
@@ -223,13 +213,7 @@ async function kickSelectedUser() {
     </q-dialog>
     <!-- end Confirm pop up -->
 
-    <!-- start Request Ok -->
-    <q-dialog v-model="resultBanner" seamless position="bottom">
-      <q-card :class="colorBanner" class="text-h6 text-white q-px-xl q-py-md">
-        {{ contentBanner }}
-      </q-card>
-    </q-dialog>
-    <!-- end Request Ok -->
+    <BottomPopUp v-model:active="resultBanner" :content="contentBanner" :color="colorBanner" />
   </div>
 </template>
 
