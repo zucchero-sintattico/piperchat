@@ -23,12 +23,19 @@ const GetChannelMessagesApiRoute = new Route<
       req.params.channelId,
       req.params.serverId,
       req.query.from,
-      req.query.limit
+      req.query.limit,
+      req.user.username
     )
     const response = new GetChannelMessagesApi.Responses.Success(messages)
     res.sendResponse(response)
   },
   exceptions: [
+    {
+      exception: ChannelControllerExceptions.UserNotAuthorized,
+      onException(e, req, res) {
+        res.sendResponse(new GetChannelMessagesApi.Errors.UserNotAuthorized())
+      },
+    },
     {
       exception: ChannelControllerExceptions.ServerNotFound,
       onException(e, req, res) {

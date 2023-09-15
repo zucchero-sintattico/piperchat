@@ -61,7 +61,6 @@ describe('Send channel message', () => {
       .post(`/servers/${serverId}/channels/${channelId}/messages`)
       .set('Cookie', `jwt=${jwt1}`)
       .send({ content: 'test' })
-    console.log(response.body)
     expect(response.status).toBe(200)
   })
 
@@ -104,6 +103,80 @@ describe('Send channel message', () => {
       .post(`/servers/${serverId}/channels/${channelId}/messages`)
       .set('Cookie', `jwt=${jwt2}`)
       .send({ content: 'test' })
+    expect(response2.status).toBe(200)
+  })
+})
+
+describe('Get channel messages', () => {
+  it('A user should be able to get channel messages', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ content: 'test' })
+    const response = await request
+      .get(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(200)
+    expect(response.body.messages.length).toBe(1)
+    expect(response.body.messages[0].content).toBe('test')
+    expect(response.body.messages[0].sender).toBe(user1.username)
+  })
+
+  it('A user should not be able to get channel messages if he is not logged in', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ content: 'test' })
+    const response = await request
+      .get(`/servers/${serverId}/channels/${channelId}/messages`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(401)
+  })
+
+  it('A user should not be able to get channel messages if the server does not exist', async () => {
+    const response = await request
+      .get(`/servers/invalid/channels/invalid/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to get channel messages if the channel does not exist', async () => {
+    const serverId = await createServer(user1.username)
+    const response = await request
+      .get(`/servers/${serverId}/channels/invalid/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to get channel messages if the user is not authenticated', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    const response = await request
+      .get(`/servers/${serverId}/channels/${channelId}/messages`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(401)
+  })
+
+  it('A user should not be able to get channel messages if the user is not a participant of the server', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    const response = await request
+      .get(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .query({ from: 0, limit: 1 })
+    expect(response.status).toBe(401)
+    await addParticipant(serverId, user2.username)
+    const response2 = await request
+      .get(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .query({ from: 0, limit: 1 })
     expect(response2.status).toBe(200)
   })
 })

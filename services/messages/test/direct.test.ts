@@ -53,6 +53,13 @@ describe('Send direct message', () => {
     expect(response.status).toBe(200)
   })
 
+  it('A user should not be able to send a direct message if the user is not authenticated', async () => {
+    const response = await request
+      .post(`/users/${user2.username}/messages`)
+      .send({ message: 'test' })
+    expect(response.status).toBe(401)
+  })
+
   it('A user should not be able to send a direct message if the user does not exist', async () => {
     const response = await request
       .post(`/users/invalid/messages`)
