@@ -102,6 +102,9 @@ export class ServerControllerImpl implements ServerController {
 
   async joinServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id)
+    if (server.participants.includes(username)) {
+      throw new ServerControllerExceptions.UserAlreadyJoined()
+    }
     const serverUpdated = await this.serverRepository.addServerParticipant(
       server.id,
       username

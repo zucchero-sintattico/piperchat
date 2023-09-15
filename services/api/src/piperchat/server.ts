@@ -35,7 +35,7 @@ export namespace KickUserFromServerApi {
       error = 'User not authorized' as const
     }
     export class OwnerCannotLeave extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'Owner cannot leave the server' as const
     }
     export type Type = ServerNotFound | UserNotAuthorized | OwnerCannotLeave
@@ -106,7 +106,11 @@ export namespace JoinServerApi {
       statusCode = 404
       error = 'Server not found' as const
     }
-    export type Type = ServerNotFound
+    export class UserAlreadyJoined extends ErrorResponse {
+      statusCode = 403
+      error = 'User already joined' as const
+    }
+    export type Type = ServerNotFound | UserAlreadyJoined
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -138,11 +142,11 @@ export namespace LeaveServerApi {
       error = 'Server not found' as const
     }
     export class UserNotInServer extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'User not in server' as const
     }
     export class OwnerCannotLeave extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'Owner cannot leave the server' as const
     }
     export type Type = ServerNotFound | UserNotInServer | OwnerCannotLeave

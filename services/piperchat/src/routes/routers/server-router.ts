@@ -25,135 +25,140 @@ export const serverRouter = Router({
   mergeParams: true,
 })
 
-serverRouter.delete(
-  '/:serverId/participants/:username',
-  Validate(KickUserFromServerApi.Request.Schema),
-  async (
-    req: Request<
-      KickUserFromServerApi.Request.Params,
-      KickUserFromServerApi.Response,
-      KickUserFromServerApi.Request.Body
-    >,
-    res: Response<KickUserFromServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      await serverController.kickUserFromTheServer(
-        req.params.serverId,
-        req.params.username,
-        req.user.username
-      )
-      const response = new KickUserFromServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new KickUserFromServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new KickUserFromServerApi.Errors.UserNotAuthorized()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
-        const response = new KickUserFromServerApi.Errors.OwnerCannotLeave()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const GetServerParticipantsApiRoute = new Route<
+  GetServerParticipantsApi.Response,
+  GetServerParticipantsApi.Request.Params,
+  GetServerParticipantsApi.Request.Body
+>({
+  method: 'get',
+  path: '/:serverId/participants',
+  schema: GetServerParticipantsApi.Request.Schema,
+  handler: async (req, res) => {
+    const participants = await serverController.getServerParticipants(
+      req.params.serverId,
+      req.user.username
+    )
+    const response = new GetServerParticipantsApi.Responses.Success(participants)
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetServerParticipantsApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetServerParticipantsApi.Errors.UserNotAuthorized())
+      },
+    },
+  ],
+})
 
-serverRouter.get(
-  '/:serverId/participants',
-  Validate(GetServerParticipantsApi.Request.Schema),
-  async (
-    req: Request<
-      GetServerParticipantsApi.Request.Params,
-      GetServerParticipantsApi.Response,
-      GetServerParticipantsApi.Request.Body
-    >,
-    res: Response<GetServerParticipantsApi.Response | InternalServerError>
-  ) => {
-    try {
-      const participants = await serverController.getServerParticipants(
-        req.params.serverId,
-        req.user.username
-      )
-      const response = new GetServerParticipantsApi.Responses.Success(participants)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new GetServerParticipantsApi.Errors.ServerNotFound()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new GetServerParticipantsApi.Errors.UserNotAuthorized()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const JoinServerApiRoute = new Route<
+  JoinServerApi.Response,
+  JoinServerApi.Request.Params,
+  JoinServerApi.Request.Body
+>({
+  method: 'post',
+  path: '/:serverId/participants',
+  schema: JoinServerApi.Request.Schema,
+  handler: async (req, res) => {
+    await serverController.joinServer(req.params.serverId, req.user.username)
+    const response = new JoinServerApi.Responses.Success()
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new JoinServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserAlreadyJoined,
+      onException: (e, req, res) => {
+        res.sendResponse(new JoinServerApi.Errors.UserAlreadyJoined())
+      },
+    },
+  ],
+})
 
-serverRouter.post(
-  '/:serverId/participants',
-  Validate(JoinServerApi.Request.Schema),
-  async (
-    req: Request<
-      JoinServerApi.Request.Params,
-      JoinServerApi.Response,
-      JoinServerApi.Request.Body
-    >,
-    res: Response<JoinServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      await serverController.joinServer(req.params.serverId, req.user.username)
-      const response = new JoinServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new JoinServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const LeaveServerApiRoute = new Route<
+  LeaveServerApi.Response,
+  LeaveServerApi.Request.Params,
+  LeaveServerApi.Request.Body
+>({
+  method: 'delete',
+  path: '/:serverId/participants',
+  schema: LeaveServerApi.Request.Schema,
+  handler: async (req, res) => {
+    await serverController.leaveServer(req.params.serverId, req.user.username)
+    const response = new LeaveServerApi.Responses.Success()
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new LeaveServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new LeaveServerApi.Errors.UserNotInServer())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.OwnerCannotLeave,
+      onException: (e, req, res) => {
+        res.sendResponse(new LeaveServerApi.Errors.OwnerCannotLeave())
+      },
+    },
+  ],
+})
 
-serverRouter.delete(
-  '/:serverId/participants',
-  Validate(LeaveServerApi.Request.Schema),
-  async (
-    req: Request<
-      LeaveServerApi.Request.Params,
-      LeaveServerApi.Response,
-      LeaveServerApi.Request.Body
-    >,
-    res: Response<LeaveServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      await serverController.leaveServer(req.params.serverId, req.user.username)
-      const response = new LeaveServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new LeaveServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new LeaveServerApi.Errors.UserNotInServer()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.OwnerCannotLeave) {
-        const response = new LeaveServerApi.Errors.OwnerCannotLeave()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const KickUserFromServerApiRoute = new Route<
+  KickUserFromServerApi.Response,
+  KickUserFromServerApi.Request.Params,
+  KickUserFromServerApi.Request.Body
+>({
+  method: 'delete',
+  path: '/:serverId/participants/:username',
+  schema: KickUserFromServerApi.Request.Schema,
+  handler: async (req, res) => {
+    await serverController.kickUserFromTheServer(
+      req.params.serverId,
+      req.params.username,
+      req.user.username
+    )
+    const response = new KickUserFromServerApi.Responses.Success()
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new KickUserFromServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new KickUserFromServerApi.Errors.UserNotAuthorized())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.OwnerCannotLeave,
+      onException: (e, req, res) => {
+        res.sendResponse(new KickUserFromServerApi.Errors.OwnerCannotLeave())
+      },
+    },
+  ],
+})
 
 const GetServerApiRoute = new Route<
   GetServerApi.Response,
@@ -165,7 +170,6 @@ const GetServerApiRoute = new Route<
   schema: GetServerApi.Request.Schema,
   handler: async (req, res) => {
     const server = await serverController.getServer(req.params.serverId)
-    console.log(server)
     if (!server.participants.includes(req.user.username)) {
       throw new ServerControllerExceptions.UserNotAuthorized()
     }
@@ -291,6 +295,11 @@ const CreateServerApiRoute = new Route<
     res.sendResponse(response)
   },
 })
+
+GetServerParticipantsApiRoute.attachToRouter(serverRouter)
+JoinServerApiRoute.attachToRouter(serverRouter)
+LeaveServerApiRoute.attachToRouter(serverRouter)
+KickUserFromServerApiRoute.attachToRouter(serverRouter)
 
 GetServerApiRoute.attachToRouter(serverRouter)
 UpdateServerApiRoute.attachToRouter(serverRouter)

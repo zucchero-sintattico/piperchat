@@ -215,3 +215,210 @@ describe('Get server', () => {
     expect(getServerResponse.status).toBe(404)
   })
 })
+
+describe('Get server participants', () => {
+  it('A user should be able to get a server participants if he is a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(200)
+    expect(getServerParticipantsResponse.body.participants).toEqual([user1.username])
+  })
+
+  it('A user should not be able to get a server participants if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to get a server participants if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request.get(
+      `/servers/${serverId}/participants`
+    )
+    expect(getServerParticipantsResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to get a server participants if the server does not exist', async () => {
+    const getServerParticipantsResponse = await request
+      .get(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(404)
+  })
+})
+
+describe('Join server', () => {
+  it('A user should be able to join a server if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(200)
+    expect(getServerParticipantsResponse.body.participants).toContain(user1.username)
+  })
+
+  it('A user should not be able to join a server if he is already a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to join a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request.post(`/servers/${serverId}/participants`)
+    expect(joinServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to join a server if the server does not exist', async () => {
+    const joinServerResponse = await request
+      .post(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(404)
+  })
+})
+
+describe('Leave server', () => {
+  it('A user should not be able to leave a server if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(403)
+  })
+
+  it('A user should be able to leave a server if he is a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to leave a server if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to leave a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request.delete(`/servers/${serverId}/participants`)
+    expect(leaveServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to leave a server if the server does not exist', async () => {
+    const leaveServerResponse = await request
+      .delete(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(404)
+  })
+})
+
+describe('Kick participant', () => {
+  it('A user should not be able to kick himself if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(kickParticipantResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to kick a participant if he is not the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(kickParticipantResponse.status).toBe(403)
+  })
+
+  it('A user should be able to kick a participant if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(kickParticipantResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to kick a participant if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request.delete(
+      `/servers/${serverId}/participants/${user1.username}`
+    )
+    expect(kickParticipantResponse.status).toBe(401)
+  })
+})
