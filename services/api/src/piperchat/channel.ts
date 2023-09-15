@@ -203,6 +203,10 @@ export namespace UpdateChannelApi {
     export type Type = Success
   }
   export namespace Errors {
+    export class ServerNotFound extends ErrorResponse {
+      statusCode = 404
+      error = 'Server not found' as const
+    }
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -211,7 +215,16 @@ export namespace UpdateChannelApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ChannelNotFound | UserNotAuthorized
+
+    export class ChannelAlreadyExists extends ErrorResponse {
+      statusCode = 409
+      error = 'Channel already exists' as const
+    }
+    export type Type =
+      | ServerNotFound
+      | ChannelNotFound
+      | UserNotAuthorized
+      | ChannelAlreadyExists
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -240,6 +253,10 @@ export namespace DeleteChannelApi {
     export type Type = Success
   }
   export namespace Errors {
+    export class ServerNotFound extends ErrorResponse {
+      statusCode = 404
+      error = 'Server not found' as const
+    }
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -248,7 +265,7 @@ export namespace DeleteChannelApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ChannelNotFound | UserNotAuthorized
+    export type Type = ServerNotFound | ChannelNotFound | UserNotAuthorized
   }
   export type Response = Responses.Type | Errors.Type
 }

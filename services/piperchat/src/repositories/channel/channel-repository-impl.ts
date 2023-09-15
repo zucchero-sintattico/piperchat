@@ -66,18 +66,14 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   async deleteChannel(serverId: string, channelId: string) {
-    await Servers.findByIdAndUpdate(
-      serverId,
+    await Servers.findOneAndUpdate(
+      { _id: serverId },
       {
         $pull: {
-          channels: {
-            id: channelId,
-          },
+          channels: { _id: channelId },
         },
       },
-      {
-        new: true,
-      }
+      { new: true }
     ).orFail()
   }
 }

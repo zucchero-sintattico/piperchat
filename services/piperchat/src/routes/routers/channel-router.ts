@@ -158,15 +158,27 @@ export const UpdateChannelApiRoute = new Route<
   },
   exceptions: [
     {
-      exception: ChannelControllerExceptions.ChannelNotFound,
+      exception: ServerControllerExceptions.ServerNotFound,
       onException: (e, req, res) => {
-        res.sendResponse(new UpdateChannelApi.Errors.ChannelNotFound())
+        res.sendResponse(new UpdateChannelApi.Errors.ServerNotFound())
       },
     },
     {
-      exception: UpdateChannelApi.Errors.UserNotAuthorized,
+      exception: ServerControllerExceptions.UserNotAuthorized,
       onException: (e, req, res) => {
         res.sendResponse(new UpdateChannelApi.Errors.UserNotAuthorized())
+      },
+    },
+    {
+      exception: ChannelControllerExceptions.ChannelAlreadyExists,
+      onException: (e, req, res) => {
+        res.sendResponse(new UpdateChannelApi.Errors.ChannelAlreadyExists())
+      },
+    },
+    {
+      exception: ChannelControllerExceptions.ChannelNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new UpdateChannelApi.Errors.ChannelNotFound())
       },
     },
   ],
@@ -191,15 +203,21 @@ export const DeleteChannelApiRoute = new Route<
   },
   exceptions: [
     {
-      exception: ChannelControllerExceptions.ChannelNotFound,
+      exception: ServerControllerExceptions.ServerNotFound,
       onException: (e, req, res) => {
-        res.sendResponse(new DeleteChannelApi.Errors.ChannelNotFound())
+        res.sendResponse(new DeleteChannelApi.Errors.ServerNotFound())
       },
     },
     {
-      exception: DeleteChannelApi.Errors.UserNotAuthorized,
+      exception: ServerControllerExceptions.UserNotAuthorized,
       onException: (e, req, res) => {
         res.sendResponse(new DeleteChannelApi.Errors.UserNotAuthorized())
+      },
+    },
+    {
+      exception: ChannelControllerExceptions.ChannelNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new DeleteChannelApi.Errors.ChannelNotFound())
       },
     },
   ],

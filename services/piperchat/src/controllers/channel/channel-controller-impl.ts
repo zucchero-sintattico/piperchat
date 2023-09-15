@@ -64,7 +64,8 @@ export class ChannelControllerImpl implements ChannelController {
   ): Promise<Channel> {
     const server = await this.checker.getServerIfExists(serverId)
     this.checker.checkIfUserIsTheOwner(server, username)
-    if (name) {
+    const channel = server.channels.find((channel) => channel.id === channelId)
+    if (name && channel?.name !== name) {
       await this.checker.checkIfChannelAlreadyExists(serverId, name)
     }
     try {

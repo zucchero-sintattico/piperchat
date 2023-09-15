@@ -202,4 +202,129 @@ describe('Get channel', () => {
     expect(response.status).toBe(200)
     expect(response.body.channel.name).toBe('test')
   })
+
+  it('A user should not be able to get a channel of a server if the server does not exist', async () => {
+    const response = await request
+      .get(`/servers/123/channels/123`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to get a channel of a server if the channel does not exist', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const response = await request
+      .get(`/servers/${serverId}/channels/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(404)
+  })
+})
+
+describe('Update channel', () => {
+  it('A user should be able to update a channel if he is the owner', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .put(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'test2' })
+    expect(response.status).toBe(200)
+  })
+
+  it('A user should not be able to update a channel if he is not in the server', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .put(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'test2' })
+    expect(response.status).toBe(403)
+  })
+
+  it('A user should not be able to update a channel if the server does not exist', async () => {
+    const response = await request
+      .put(`/servers/123/channels/123`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'test2' })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to update a channel if the channel does not exist', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const response = await request
+      .put(`/servers/${serverId}/channels/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'test2' })
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to update a channel if the channel name already exists', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    await createChannel(serverId, jwt1, 'test2', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .put(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'test2' })
+    expect(response.status).toBe(409)
+  })
+
+  it('A user should be able to update a channel if the channel name is the same', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .put(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'test' })
+    expect(response.status).toBe(200)
+  })
+})
+
+describe('Delete channel', () => {
+  it('A user should be able to delete a channel if he is the owner', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .delete(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(200)
+  })
+
+  it('A user should not be able to delete a channel if he is not in the server', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const createResponse = await createChannel(serverId, jwt1, 'test', 'messages')
+    const channelId = createResponse.body.channel.id
+    const response = await request
+      .delete(`/servers/${serverId}/channels/${channelId}`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(response.status).toBe(403)
+  })
+
+  it('A user should not be able to delete a channel if the server does not exist', async () => {
+    const response = await request
+      .delete(`/servers/123/channels/123`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(response.status).toBe(404)
+  })
+
+  it('A user should not be able to delete a channel if the channel does not exist', async () => {
+    const serverResponse = await createServer('test', jwt1)
+    const serverId = serverResponse.body.serverId
+    const response = await request
+      .delete(`/servers/${serverId}/channels/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(404)
+  })
 })
