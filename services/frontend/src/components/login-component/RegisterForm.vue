@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import FormError from './FormError.vue'
+import BottomPopUp from '../utils/BottomPopUp.vue'
+import { BannerColor } from '../utils/BannerColor'
 
 const REDIRECT_DELAY = 2000
-const ERROR_ANIMATION_DURATION = 2000
 
 const username = ref('')
 const email = ref('')
@@ -13,8 +13,18 @@ const password2 = ref('')
 
 const registrationSuccess = ref(false)
 
+const BANNER_TIMEOUT = 3000
 const error = ref(false)
 const errorMessage = ref('')
+const colorBanner = ref(BannerColor.OK)
+function popUpBanner(content: string, color: BannerColor) {
+  errorMessage.value = content
+  colorBanner.value = color
+  error.value = true
+  setTimeout(() => {
+    error.value = false
+  }, BANNER_TIMEOUT)
+}
 
 async function onSubmit() {
   const userStore = useUserStore()
@@ -31,12 +41,7 @@ async function onSubmit() {
       }, REDIRECT_DELAY)
     },
     (e: any) => {
-      error.value = true
-      errorMessage.value = e
-      setTimeout(() => {
-        error.value = false
-        errorMessage.value = ''
-      }, ERROR_ANIMATION_DURATION)
+      popUpBanner(e, BannerColor.ERROR)
     }
   )
 }
@@ -102,7 +107,7 @@ function onReset() {
     </div>
 
     <!-- Error message -->
-    <FormError v-if="error" :errorMessage="errorMessage" />
+    <BottomPopUp :active="error" :color="colorBanner" :content="errorMessage" />
 
     <!-- Banner for successful registration -->
     <q-dialog v-model="registrationSuccess" class="success-banner text-h6">

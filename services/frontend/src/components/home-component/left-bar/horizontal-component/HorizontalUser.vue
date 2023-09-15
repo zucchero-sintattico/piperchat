@@ -6,6 +6,7 @@ const props = defineProps(['name', 'photo'])
   <q-item clickable style="font-size: large">
     <q-avatar size="30px" class="q-mr-md q-mb-sm">
       <img v-if="props.photo == ''" src="src/assets/default-user-photo.png" />
+      <img v-else-if="props.photo == undefined" src="src/assets/default-user-photo.png" />
       <img v-else :src="props.photo" />
     </q-avatar>
     <q-item-section>

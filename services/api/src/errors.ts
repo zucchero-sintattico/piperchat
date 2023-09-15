@@ -10,22 +10,16 @@ export class InternalServerError extends ErrorResponse {
   }
 }
 
-interface BadFieldError {
-  field: string
-  expected: string
-  received: string
-}
-
 export class BadRequest extends ErrorResponse {
   statusCode = 400
   error = 'Bad Request' as const
-  params: BadFieldError[]
-  body: BadFieldError[]
-  query?: BadFieldError[]
-  constructor(params: BadFieldError[], body: BadFieldError[], query?: BadFieldError[]) {
+  missingParams: string[]
+  missingBody: string[]
+  missingQuery?: string[]
+  constructor(params: string[], body: string[], query?: string[]) {
     super()
-    this.params = params
-    this.body = body
-    this.query = query
+    this.missingParams = params
+    this.missingBody = body
+    this.missingQuery = query
   }
 }

@@ -1,18 +1,30 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { useUserStore, ContentArea } from '@/stores/user'
 import { computed, ref } from 'vue'
 import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
+import ServerMenu from './menu/ServerMenu.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
-const isNewChannelFormActive = ref(false)
 
+const isNewChannelFormActive = ref(false)
+const serverSettingMenuActive = ref(false)
+
+function setChannelContent(channelId: string) {
+  console.log('Switched')
+  userStore.inContentArea = ContentArea.Channel
+  userStore.selectedChannel = [userStore.selectedServerId, channelId]
+}
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+})
+
+const amITheOwner = computed(() => {
+  return selectedServer.value?.owner == userStore.username
 })
 </script>
 
@@ -24,7 +36,14 @@ const selectedServer = computed(() => {
   >
     <div class="column">
       <div class="col fit">
-        <h4 class="q-ma-md text-white ellipsis">{{ selectedServer?.name }}</h4>
+        <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
+          <h4 class="q-ma-none text-white ellipsis">
+            <q-icon v-if="amITheOwner == true" name="settings" class="q-mr-sm" />
+            {{ selectedServer?.name }}
+          </h4>
+        </q-item>
+
+        <ServerMenu v-model:active="serverSettingMenuActive" />
 
         <!-- start Create new server -->
         <div class="q-ma-md" style="text-align: center">
@@ -56,6 +75,7 @@ const selectedServer = computed(() => {
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
+          @click="setChannelContent(channel._id)"
         >
           <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>

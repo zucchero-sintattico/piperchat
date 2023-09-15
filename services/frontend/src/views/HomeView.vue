@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
@@ -19,9 +19,10 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-function toggleLeftOpen() {
-  leftDrawerOpen.value = true
-}
+onMounted(() => {
+  userStore.inContentArea = ContentArea.Empty
+  userStore.whoami()
+})
 </script>
 
 <template>
@@ -45,21 +46,13 @@ function toggleLeftOpen() {
           <img src="src/assets/user-avatar.png" class="cursor-pointer" />
           <q-menu align="right">
             <q-list>
-              <q-item clickable v-close-popu @click="isSettingsFormActive = true">
+              <q-item clickable v-close-popup @click="isSettingsFormActive = true">
                 <!--Add settings icon on left and 'Settings' text on right-->
                 <q-item-section avatar>
                   <q-icon name="settings" />
                 </q-item-section>
                 <q-item-section> Settings </q-item-section>
               </q-item>
-              <q-dialog
-                v-model="isSettingsFormActive"
-                persistent
-                transition-show="scale"
-                transition-hide="scale"
-              >
-                <SettingsForm @close="isSettingsFormActive = false" />
-              </q-dialog>
               <q-item clickable v-close-popup @click="logout">
                 <q-item-section avatar>
                   <q-icon name="logout" />
@@ -70,11 +63,14 @@ function toggleLeftOpen() {
           </q-menu>
         </q-avatar>
       </q-toolbar>
-
-      <q-tabs align="left">
-        <q-route-tab label="Friends" @click="toggleLeftOpen" />
-        <q-route-tab label="Pending" @click="toggleLeftOpen" />
-      </q-tabs>
+      <q-dialog
+        v-model="isSettingsFormActive"
+        persistent
+        transition-show="scale"
+        transition-hide="scale"
+      >
+        <SettingsForm @close="isSettingsFormActive = false" />
+      </q-dialog>
     </q-header>
 
     <!-- pass leftDrawopen as props -->

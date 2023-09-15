@@ -109,6 +109,7 @@ export const useMessageStore = defineStore(
       from: number
       limit: number
     }) {
+      console.log('Getting messages')
       const response = await channelController.getChannelMessagesPaginated({
         serverId: parameters.serverId,
         channelId: parameters.channelId,
@@ -118,6 +119,7 @@ export const useMessageStore = defineStore(
       switch (response.statusCode) {
         case 200: {
           const typedResponse = response as GetDirectMessagesApi.Responses.Success
+          console.log('Updating messages')
           messages.value = typedResponse.messages
           break
         }
