@@ -4,13 +4,6 @@ import {
   ServerControllerExceptions,
 } from '@controllers/server/server-controller'
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
-
-const serverController: ServerController = new ServerControllerImpl()
-export const serverRouter = Router({
-  strict: true,
-  mergeParams: true,
-})
-
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
 import {
@@ -24,6 +17,13 @@ import {
   GetServerParticipantsApi,
   KickUserFromServerApi,
 } from '@api/piperchat/server'
+import { Route } from '@commons/router'
+
+const serverController: ServerController = new ServerControllerImpl()
+export const serverRouter = Router({
+  strict: true,
+  mergeParams: true,
+})
 
 serverRouter.delete(
   '/:serverId/participants/:username',
@@ -155,151 +155,145 @@ serverRouter.delete(
   }
 )
 
-serverRouter.get(
-  '/:serverId',
-  Validate(GetServerApi.Request.Schema),
-  async (
-    req: Request<
-      GetServerApi.Request.Params,
-      GetServerApi.Response,
-      GetServerApi.Request.Body
-    >,
-    res: Response<GetServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      const server = await serverController.getServer(req.params.serverId)
-      const response = new GetServerApi.Responses.Success(server)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new GetServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
+const GetServerApiRoute = new Route<
+  GetServerApi.Response,
+  GetServerApi.Request.Params,
+  GetServerApi.Request.Body
+>({
+  method: 'get',
+  path: '/:serverId',
+  schema: GetServerApi.Request.Schema,
+  handler: async (req, res) => {
+    const server = await serverController.getServer(req.params.serverId)
+    console.log(server)
+    if (!server.participants.includes(req.user.username)) {
+      throw new ServerControllerExceptions.UserNotAuthorized()
     }
-  }
-)
+    const response = new GetServerApi.Responses.Success(server)
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetServerApi.Errors.UserNotAuthorized())
+      },
+    },
+  ],
+})
 
-serverRouter.put(
-  '/:serverId',
-  Validate(UpdateServerApi.Request.Schema),
-  async (
-    req: Request<
-      UpdateServerApi.Request.Params,
-      UpdateServerApi.Response,
-      UpdateServerApi.Request.Body
-    >,
-    res: Response<UpdateServerApi.Response | InternalServerError>
-  ) => {
-    if (req.body.name == undefined && req.body.description == undefined) {
-      const response = new UpdateServerApi.Errors.NameOrDescriptionRequired()
-      response.send(res)
-    }
-    try {
-      await serverController.updateServer(
-        req.params.serverId,
-        req.user.username,
-        req.body.name,
-        req.body.description
-      )
-      const response = new UpdateServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new UpdateServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new UpdateServerApi.Errors.UserNotAuthorized()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const UpdateServerApiRoute = new Route<
+  UpdateServerApi.Response,
+  UpdateServerApi.Request.Params,
+  UpdateServerApi.Request.Body
+>({
+  method: 'put',
+  path: '/:serverId',
+  schema: UpdateServerApi.Request.Schema,
+  handler: async (req, res) => {
+    await serverController.updateServer(
+      req.params.serverId,
+      req.user.username,
+      req.body.name,
+      req.body.description
+    )
+    const response = new UpdateServerApi.Responses.Success()
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new UpdateServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new UpdateServerApi.Errors.UserNotAuthorized())
+      },
+    },
+  ],
+})
 
-serverRouter.delete(
-  '/:serverId',
-  Validate(DeleteServerApi.Request.Schema),
-  async (
-    req: Request<
-      DeleteServerApi.Request.Params,
-      DeleteServerApi.Response,
-      DeleteServerApi.Request.Body
-    >,
-    res: Response<DeleteServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      await serverController.deleteServer(req.params.serverId, req.user.username)
-      const response = new DeleteServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.ServerNotFound) {
-        const response = new DeleteServerApi.Errors.ServerNotFound()
-        response.send(res)
-      } else if (e instanceof ServerControllerExceptions.UserNotAuthorized) {
-        const response = new DeleteServerApi.Errors.UserNotAuthorized()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const DeleteServerApiRoute = new Route<
+  DeleteServerApi.Response,
+  DeleteServerApi.Request.Params,
+  DeleteServerApi.Request.Body
+>({
+  method: 'delete',
+  path: '/:serverId',
+  schema: DeleteServerApi.Request.Schema,
+  handler: async (req, res) => {
+    await serverController.deleteServer(req.params.serverId, req.user.username)
+    res.sendResponse(new DeleteServerApi.Responses.Success())
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new DeleteServerApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
+      onException: (e, req, res) => {
+        res.sendResponse(new DeleteServerApi.Errors.UserNotAuthorized())
+      },
+    },
+  ],
+})
 
-serverRouter.get(
-  '/',
-  Validate(GetServersApi.Request.Schema),
-  async (
-    req: Request<
-      GetServersApi.Request.Params,
-      GetServersApi.Response,
-      GetServersApi.Request.Body
-    >,
-    res: Response<GetServersApi.Response | InternalServerError>
-  ) => {
-    try {
-      const servers = await serverController.getServers(req.user.username)
-      const response = new GetServersApi.Responses.Success(servers)
-      response.send(res)
-    } catch (e) {
-      if (e instanceof ServerControllerExceptions.UserNotFound) {
-        const response = new GetServersApi.Errors.UserNotFound()
-        response.send(res)
-      } else {
-        const response = new InternalServerError(e)
-        response.send(res)
-      }
-    }
-  }
-)
+const GetServersApiRoute = new Route<
+  GetServersApi.Response,
+  GetServersApi.Request.Params,
+  GetServersApi.Request.Body
+>({
+  method: 'get',
+  path: '/',
+  schema: GetServersApi.Request.Schema,
+  handler: async (req, res) => {
+    const servers = await serverController.getServers(req.user.username)
+    const response = new GetServersApi.Responses.Success(servers)
+    res.sendResponse(response)
+  },
+  exceptions: [
+    {
+      exception: ServerControllerExceptions.UserNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetServersApi.Errors.UserNotFound())
+      },
+    },
+  ],
+})
 
-serverRouter.post(
-  '/',
-  Validate(CreateServerApi.Request.Schema),
-  async (
-    req: Request<
-      CreateServerApi.Request.Params,
-      CreateServerApi.Response,
-      CreateServerApi.Request.Body
-    >,
-    res: Response<CreateServerApi.Response | InternalServerError>
-  ) => {
-    try {
-      await serverController.createServer(
-        req.body.name,
-        req.body.description,
-        req.user.username
-      )
-      const response = new CreateServerApi.Responses.Success()
-      response.send(res)
-    } catch (e) {
-      const response = new InternalServerError(e)
-      response.send(res)
-    }
-  }
-)
+const CreateServerApiRoute = new Route<
+  CreateServerApi.Response,
+  CreateServerApi.Request.Params,
+  CreateServerApi.Request.Body
+>({
+  method: 'post',
+  path: '/',
+  schema: CreateServerApi.Request.Schema,
+  handler: async (req, res) => {
+    const server = await serverController.createServer(
+      req.body.name,
+      req.body.description,
+      req.user.username
+    )
+    const response = new CreateServerApi.Responses.Success(server.id)
+    res.sendResponse(response)
+  },
+})
+
+GetServerApiRoute.attachToRouter(serverRouter)
+UpdateServerApiRoute.attachToRouter(serverRouter)
+DeleteServerApiRoute.attachToRouter(serverRouter)
+GetServersApiRoute.attachToRouter(serverRouter)
+CreateServerApiRoute.attachToRouter(serverRouter)

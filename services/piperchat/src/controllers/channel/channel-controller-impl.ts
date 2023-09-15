@@ -46,7 +46,7 @@ export class ChannelControllerImpl implements ChannelController {
       ChannelCreated,
       new ChannelCreated({
         serverId: serverId.toString(),
-        channelId: channel._id.toString(),
+        channelId: channel.id.toString(),
         name: channel.name,
         channelType: channel.channelType,
         description: channel.description,

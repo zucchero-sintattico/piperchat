@@ -89,6 +89,7 @@ export const GetUsersInSessionRoute = new Route<
 
 export const serviceRouter = Router()
 serviceRouter.use(JWTAuthenticationMiddleware)
+
 GetDirectSessionIdApiRoute.attachToRouter(serviceRouter)
 GetChannelSessionIdApiRoute.attachToRouter(serviceRouter)
 GetUsersInSessionRoute.attachToRouter(serviceRouter)

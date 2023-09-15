@@ -3,7 +3,7 @@ import { Servers } from '@models/server-model'
 
 export class ChannelRepositoryImpl implements ChannelRepository {
   async getChannels(serverId: string) {
-    const server = await Servers.findOne({ _id: serverId }).orFail()
+    const server = await Servers.findOne({ id: serverId }).orFail()
     return server.channels
   }
 
@@ -14,7 +14,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     description?: string | undefined
   ) {
     const server = await Servers.findOneAndUpdate(
-      { _id: serverId },
+      { id: serverId },
       {
         $push: {
           channels: {
@@ -31,7 +31,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
 
   async getChannelById(serverId: string, channelId: string) {
     const server = await Servers.findOne({ id: serverId }).orFail()
-    const channel = server.channels.find((c) => c._id === channelId)
+    const channel = server.channels.find((c) => c.id === channelId)
     if (!channel) {
       throw new Error('Channel not found')
     }
@@ -46,7 +46,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   ) {
     // find and update channel by _id
     const server = await Servers.findOneAndUpdate(
-      { _id: serverId, 'channels._id': channelId },
+      { id: serverId, 'channels.id': channelId },
       {
         $set: {
           'channels.$.name': name,
@@ -58,7 +58,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
 
     // const server = await Servers.findOne({ _id: serverId }).orFail();
     const channels = server.channels
-    const channel = channels.find((chan) => chan._id.toString() === channelId)
+    const channel = channels.find((chan) => chan.id.toString() === channelId)
     if (!channel) {
       throw new Error('Channel not found')
     }
@@ -71,7 +71,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
       {
         $pull: {
           channels: {
-            _id: channelId,
+            id: channelId,
           },
         },
       },

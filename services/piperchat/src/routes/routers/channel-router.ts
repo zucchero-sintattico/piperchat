@@ -24,12 +24,17 @@ export const GetChannelsApiRoute = new Route<
   path: '/',
   schema: GetChannelsApi.Request.Schema,
   handler: async (req, res) => {
-    const channels = await channelController.getChannels(
-      req.params.serverId,
-      req.user.username
-    )
-    const response = new GetChannelsApi.Responses.Success(channels)
-    res.sendResponse(response)
+    try {
+      const channels = await channelController.getChannels(
+        req.params.serverId,
+        req.user.username
+      )
+      const response = new GetChannelsApi.Responses.Success(channels)
+      res.sendResponse(response)
+    } catch (e) {
+      console.log(e)
+      res.sendResponse(new GetChannelsApi.Errors.ServerNotFound())
+    }
   },
   exceptions: [
     {

@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose'
 
 export interface Channel {
-  _id: string
+  id: string
   name: string
   createdAt: Date
   channelType: string

@@ -18,7 +18,7 @@ export namespace GetChannelsApi {
   }
   export namespace Responses {
     interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string
@@ -65,7 +65,7 @@ export namespace GetChannelByIdApi {
   }
   export namespace Responses {
     interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string

@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { Channel, ChannelSchema } from './channel-model'
 
 export interface Server {
-  _id: string
+  id: string
   name: string
   description: string
   owner: string

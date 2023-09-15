@@ -21,6 +21,7 @@ export class Checker {
     try {
       return await this.serverRepository.getServerById(serverId)
     } catch (e) {
+      console.log((e as Error).message)
       throw new ServerControllerExceptions.ServerNotFound()
     }
   }
