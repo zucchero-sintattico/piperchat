@@ -12,6 +12,11 @@ export const useFriendStore = defineStore(
 
     const friendsController: FriendsController = new FriendsControllerImpl()
 
+    function removeRequestOf(username: string) {
+      pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
+    }
+
+    // ================ Fetching ================ //
     async function fetchFriends() {
       try {
         const response = (await friendsController.getFriends()) as GetFriendsApi.Response
@@ -20,24 +25,6 @@ export const useFriendStore = defineStore(
           friends.value = typed.friends
         } else {
           console.log(response)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function sendFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.sendFriendRequest(username)
-        if (response.statusCode === 200) {
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
         }
       } catch (e) {
         console.log(e)
@@ -58,42 +45,33 @@ export const useFriendStore = defineStore(
       }
     }
 
-    async function acceptFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.acceptFriendRequest(username)
-        if (response.statusCode === 200) {
-          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
-          friends.value.push(username)
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
-        }
-      } catch (e) {
-        console.log(e)
+    // ================ Request ================ //
+    async function sendFriendRequest(username: string) {
+      const response = await friendsController.sendFriendRequest(username)
+      if (response.statusCode !== 200) {
+        const typed = response as SendFriendRequestApi.Errors.Type
+        throw new Error(typed.error)
       }
     }
 
-    async function denyFriendRequest(
-      username: string,
-      onSuccess: () => void,
-      onError: (error: any) => void
-    ) {
-      try {
-        const response = await friendsController.denyFriendRequest(username)
-        if (response.statusCode === 200) {
-          pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
-          onSuccess()
-        } else {
-          const typed = response as SendFriendRequestApi.Errors.Type
-          onError(typed.error)
-        }
-      } catch (e) {
-        console.log(e)
+    async function acceptFriendRequest(username: string) {
+      const response = await friendsController.acceptFriendRequest(username)
+      if (response.statusCode === 200) {
+        removeRequestOf(username)
+        friends.value.push(username)
+      } else {
+        const typed = response as SendFriendRequestApi.Errors.Type
+        throw new Error(typed.error)
+      }
+    }
+
+    async function denyFriendRequest(username: string) {
+      const response = await friendsController.denyFriendRequest(username)
+      if (response.statusCode === 200) {
+        removeRequestOf(username)
+      } else {
+        const typed = response as SendFriendRequestApi.Errors.Type
+        throw new Error(typed.error)
       }
     }
 

@@ -27,6 +27,7 @@ const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
 const colorBanner = ref(BannerColor.OK)
 const contentBanner = ref('')
+
 function popUpBanner(content: string, color: BannerColor) {
   contentBanner.value = content
   colorBanner.value = color
@@ -37,41 +38,32 @@ function popUpBanner(content: string, color: BannerColor) {
 }
 
 async function sendFriendRequest() {
-  await friendStore.sendFriendRequest(
-    friendUsername.value,
-    () => {
-      popUpBanner('Friend request sent', BannerColor.OK)
-    },
-    (e) => {
-      popUpBanner(e, BannerColor.ERROR)
-    }
-  )
+  try {
+    await friendStore.sendFriendRequest(friendUsername.value)
+    popUpBanner('Friend request sent', BannerColor.OK)
+  } catch (e) {
+    popUpBanner(String(e), BannerColor.ERROR)
+  }
   friendUsername.value = ''
   friendRequestPopup.value = false
 }
 
 async function acceptRequest(sender: string) {
-  await friendStore.acceptFriendRequest(
-    sender,
-    () => {
-      popUpBanner('Friend request accepted', BannerColor.OK)
-    },
-    (e) => {
-      popUpBanner(e, BannerColor.ERROR)
-    }
-  )
+  try {
+    await friendStore.acceptFriendRequest(sender)
+    popUpBanner('Friend request accepted', BannerColor.OK)
+  } catch (e) {
+    popUpBanner(String(e), BannerColor.ERROR)
+  }
 }
 
 async function denyRequest(sender: string) {
-  await friendStore.denyFriendRequest(
-    sender,
-    () => {
-      popUpBanner('Friend request denied', BannerColor.OK)
-    },
-    (e) => {
-      popUpBanner(e, BannerColor.ERROR)
-    }
-  )
+  try {
+    await friendStore.denyFriendRequest(sender)
+    popUpBanner('Friend request denied', BannerColor.OK)
+  } catch (e) {
+    popUpBanner(String(e), BannerColor.ERROR)
+  }
 }
 
 onMounted(async () => {
