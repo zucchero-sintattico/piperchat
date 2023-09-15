@@ -16,7 +16,7 @@ const userStore = useUserStore()
           <HorizontalChannel name="Directs" icon="chat" />
           <q-list bordered separator class="text-white text-h5" v-for="user in 100" :key="user">
             <HorizontalUser
-              :name="user + 'wfewrfewrfewrfwrfvrf'"
+              :name="user"
               photo=""
               icon="chat"
               @click="userStore.selectedDirect = String(user)"
