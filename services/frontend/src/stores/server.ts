@@ -58,8 +58,8 @@ export const useServerStore = defineStore('server', () => {
     const response = await channelController.deleteChannel({ serverId, channelId })
     if (response.statusCode === 200) {
       servers.value = servers.value.map((server) => {
-        if (server._id === serverId) {
-          server.channels = server.channels.filter((channel) => channel._id !== channelId)
+        if (server.id === serverId) {
+          server.channels = server.channels.filter((channel) => channel.id !== channelId)
         }
         return server
       })
@@ -73,7 +73,7 @@ export const useServerStore = defineStore('server', () => {
     const response = await serverController.kickUserFromTheServer({ serverId, username })
     if (response.statusCode === 200) {
       servers.value = servers.value.map((server) => {
-        if (server._id === serverId) {
+        if (server.id === serverId) {
           server.participants = server.participants.filter(
             (participant) => participant !== username
           )

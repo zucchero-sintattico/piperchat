@@ -22,7 +22,7 @@ function setChannelContent(channelId: string) {
   userStore.selectedChannel = [userStore.selectedServerId, channelId]
 }
 const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+  return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
 })
 
 const amITheOwner = computed(() => {
@@ -98,8 +98,8 @@ function popUpBanner(error?: string) {
           v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
-          :key="channel._id"
-          @click="setChannelContent(channel._id)"
+          :key="channel.id"
+          @click="setChannelContent(channel.id)"
         >
           <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>
@@ -113,13 +113,13 @@ function popUpBanner(error?: string) {
           v-for="channel in selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
-          :key="channel._id"
+          :key="channel.id"
         >
           <HorizontalChannel
             :name="channel.name"
             icon="volume_up"
             clickable
-            @click="userStore.setActiveChannel(channel._id)"
+            @click="userStore.setActiveChannel(channel.id)"
           />
 
           <q-list dense v-for="j in 3" :key="j">

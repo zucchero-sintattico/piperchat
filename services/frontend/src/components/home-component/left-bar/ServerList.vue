@@ -13,7 +13,7 @@ const serverStore = useServerStore()
 const isNewServerFormActive = ref(false)
 
 function setActiveServer(server: GetServersApi.Responses.Server) {
-  userStore.selectedServerId = server._id
+  userStore.selectedServerId = server.id
   userStore.selectedTab = SelectedTab.Servers
 }
 
@@ -71,7 +71,7 @@ function popUpBanner(error?: string) {
     <q-separator color="accent" style="height: 1px" inset />
 
     <q-scroll-area visible class="col bg-dark">
-      <div v-for="server in serverStore.servers" :key="server._id" class="col">
+      <div v-for="server in serverStore.servers" :key="server.id" class="col">
         <q-item>
           <q-btn
             size="20px"

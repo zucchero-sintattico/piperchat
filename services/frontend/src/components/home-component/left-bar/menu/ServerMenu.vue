@@ -24,7 +24,7 @@ const active = computed({
 })
 
 const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+  return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
 })
 
 const selectedChannel = ref<{ id: string; name: string }>({ id: '', name: '' })
@@ -55,7 +55,7 @@ function setChannelToDelete(channel: { id: string; name: string }) {
 
 async function deleteSelectedChannel() {
   try {
-    await serverStore.deleteChannel(selectedServer.value!._id, selectedChannel.value.id)
+    await serverStore.deleteChannel(selectedServer.value!.id, selectedChannel.value.id)
     popUpBanner('Channel deleted', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
@@ -69,7 +69,7 @@ function setUserToKick(user: string) {
 
 async function kickSelectedUser() {
   try {
-    await serverStore.kickUser(selectedServer.value!._id, userToKick.value)
+    await serverStore.kickUser(selectedServer.value!.id, userToKick.value)
     popUpBanner('User kicked', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
@@ -109,7 +109,7 @@ async function kickSelectedUser() {
           <!-- start Channels Tab -->
           <q-tab-panel name="channels">
             <div class="text-h4">Channels</div>
-            <q-list v-for="channel in selectedServer?.channels" :key="channel._id">
+            <q-list v-for="channel in selectedServer?.channels" :key="channel.id">
               <q-item>
                 <q-item-section style="font-size: 1.5em">
                   <HorizontalChannel
@@ -128,7 +128,7 @@ async function kickSelectedUser() {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
-                  @click="setChannelToDelete({ id: channel._id, name: channel.name })"
+                  @click="setChannelToDelete({ id: channel.id, name: channel.name })"
                 />
                 <!-- start Cancel button -->
               </q-item>
