@@ -49,4 +49,5 @@ export class FriendsControllerExceptions {
   static UserNotFound = class extends Error {}
   static FriendRequestNotPresent = class extends Error {}
   static FriendRequestAlreadySent = class extends Error {}
+  static CannotSendFriendRequestToYourself = class extends Error {}
 }

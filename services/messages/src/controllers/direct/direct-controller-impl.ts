@@ -1,4 +1,4 @@
-import { DirectController } from './direct-controller'
+import { DirectController, DirectControllerExceptions } from './direct-controller'
 
 import { DirectRepository } from '@repositories/direct/direct-repository'
 import { Message } from '@models/messages-model'
@@ -14,12 +14,16 @@ export class DirectControllerImpl implements DirectController {
     from: number,
     limit: number
   ): Promise<Message[]> {
-    return await this.directRepository.getDirectMessagesPaginated(
-      username1,
-      username2,
-      from,
-      limit
-    )
+    try {
+      return await this.directRepository.getDirectMessagesPaginated(
+        username1,
+        username2,
+        from,
+        limit
+      )
+    } catch (e) {
+      throw new DirectControllerExceptions.DirectNotFound()
+    }
   }
 
   async sendDirectMessage(
@@ -27,7 +31,14 @@ export class DirectControllerImpl implements DirectController {
     username2: string,
     message: string
   ): Promise<void> {
-    await this.directRepository.sendDirectMessage(username1, username2, message)
+    if (username1 === username2) {
+      throw new DirectControllerExceptions.CannotSendDirectMessageToYourself()
+    }
+    try {
+      await this.directRepository.sendDirectMessage(username1, username2, message)
+    } catch (e) {
+      throw new DirectControllerExceptions.DirectNotFound()
+    }
 
     await RabbitMQ.getInstance().publish(
       NewMessageOnDirect,

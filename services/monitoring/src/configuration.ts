@@ -12,7 +12,7 @@ const EventListenerService = {
 export const MonitoringServiceConfiguration: MicroserviceConfiguration = {
   port: Number.parseInt(process.env.PORT!) || 3000,
   amqpUri: process.env.AMQP_URI || 'amqp://localhost:5672',
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/messages',
+  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/monitoring',
   expressConfiguration: {
     middlewares: DefaultMiddlewares,
     serviceRouter: serviceRouter,

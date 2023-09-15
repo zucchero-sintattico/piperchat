@@ -20,7 +20,6 @@ export interface MessageChannel {
 }
 
 export interface Server {
-  _id: string
   id: string
   participants: [string]
   messagesChannels: [MessageChannel]
@@ -43,7 +42,7 @@ export const MessageChannelSchema = new Schema({
 })
 
 export const ServerSchema = new Schema({
-  id: { type: String, required: true },
+  id: { type: String, required: true, unique: true },
   participants: { type: [String], required: true, minlength: 1 },
   messagesChannels: { type: [MessageChannelSchema], required: true, default: [] },
 })

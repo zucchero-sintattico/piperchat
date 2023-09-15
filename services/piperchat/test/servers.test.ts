@@ -1,183 +1,424 @@
-import { PiperchatServiceConfiguration } from '@/configuration'
+import supertest from 'supertest'
 import { Microservice } from '@commons/service'
-import {
-  ServerController,
-  ServerControllerExceptions,
-} from '@controllers/server/server-controller'
-import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
-import { Servers } from '@models/server-model'
-
-let controller: ServerController
+import { PiperchatServiceConfiguration } from '@/configuration'
+import { generateAccessToken } from '@commons/utils/jwt'
 
 const piperchatMicroservice: Microservice = new Microservice(
   PiperchatServiceConfiguration
 )
+let request: supertest.SuperTest<supertest.Test>
+
+const user1 = {
+  username: 'test1',
+  email: 'test1',
+  password: 'test1',
+}
+const jwt1 = generateAccessToken(user1)
+
+const user2 = {
+  username: 'test2',
+  email: 'test2',
+  password: 'test2',
+}
+const jwt2 = generateAccessToken(user2)
 
 beforeAll(async () => {
   await piperchatMicroservice.start()
-  controller = new ServerControllerImpl()
-})
-
-afterEach(async () => {
-  await piperchatMicroservice.clearDatabase()
+  request = supertest(piperchatMicroservice.getServer())
 })
 
 afterAll(async () => {
   await piperchatMicroservice.stop()
 })
 
-describe('ServersCrudOps', () => {
-  describe('Get', () => {
-    it('A new user should not be is any servers', async () => {
-      await expect(controller.getServers('user')).rejects.toThrow(
-        ServerControllerExceptions.UserNotFound
-      )
-    })
-    // check if getServerById works
-    it('A user should be able to get a server by its id', async () => {
-      const server = await controller.createServer('server1', 'server1', 'user1')
-      const serverById = await controller.getServer(server._id)
-      expect(serverById._id.toString).toBe(server._id.toString)
-    })
+afterEach(async () => {
+  await piperchatMicroservice.clearDatabase()
+})
 
-    it('A user should not be able to get a server by its id if it does not exist', async () => {
-      await expect(controller.getServer('123')).rejects.toThrow(
-        ServerControllerExceptions.ServerNotFound
-      )
-    })
+describe('Get servers', () => {
+  it('A user should be able to get his servers', async () => {
+    const response = await request.get('/servers').set('Cookie', `jwt=${jwt1}`)
+    expect(response.status).toBe(200)
+    expect(response.body.servers).toEqual([])
   })
 
-  describe('Create', () => {
-    it('A new user should be able to create multiple server', async () => {
-      await controller.createServer('server1', 'server1', 'user1')
-      await controller.createServer('server2', 'server2', 'user1')
-      const servers = await controller.getServers('user1')
-      expect(servers.length).toBe(2)
-    })
-  })
-
-  describe('Update', () => {
-    //A user should not be able to update a server if it's not the owner
-    it("A user should not be able to update a server if it's not the owner", async () => {
-      const server = await controller.createServer('server1', 'server1', 'user1')
-      await expect(controller.updateServer(server._id, 'user2')).rejects.toThrow(
-        ServerControllerExceptions.UserNotAuthorized
-      )
-    })
-
-    //A user should be able to update a server if it's the owner
-    it("A user should be able to update a server if it's the owner", async () => {
-      const server = await controller.createServer('server1', 'server1', 'user1')
-      const updatedServer = await controller.updateServer(
-        server._id,
-        'user1',
-        'server2',
-        'server2'
-      )
-      expect(updatedServer.name).toBe('server2')
-      expect(updatedServer.description).toBe('server2')
-    })
-  })
-
-  describe('Delete', () => {
-    // A user should not be able to delete a server if it's not the owner
-    it("A user should not be able to delete a server if it's not the owner", async () => {
-      const server = await controller.createServer('server1', 'server1', 'user1')
-      await expect(controller.deleteServer(server._id, 'user2')).rejects.toThrow(
-        ServerControllerExceptions.UserNotAuthorized
-      )
-    })
-
-    // A user should be able to delete a server if it's the owner
-    it("A user should be able to delete a server if it's the owner", async () => {
-      const server = await controller.createServer('server1', 'server1', 'user1')
-      await controller.createServer('server2', 'server2', 'user1')
-      await expect(controller.getServers('user1')).resolves.toHaveLength(2)
-      await controller.deleteServer(server._id, 'user1')
-      await expect(controller.getServers('user1')).resolves.toHaveLength(1)
-    })
+  it('A user should not be able to get his servers if he is not logged in', async () => {
+    const response = await request.get('/servers')
+    expect(response.status).toBe(401)
   })
 })
 
-describe('ServerParticipantsCrudOps', () => {
-  describe('Get', () => {
-    it("A user should not be able to get the participants of a server if it's not in the server", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await expect(controller.getServerParticipants(server._id, 'user2')).rejects.toThrow(
-        ServerControllerExceptions.UserNotAuthorized
-      )
-    })
-
-    it("A user should be able to get the participants of a server if it's in the server", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      const participants = await controller.getServerParticipants(server._id, 'user1')
-      expect(participants.length).toBe(1)
-    })
+describe('Create server', () => {
+  it('A user should be able to create a server', async () => {
+    const response = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    expect(response.status).toBe(200)
+    expect(response.body.serverId).toBeDefined()
   })
 
-  describe('Create', () => {
-    it("A user should not be able to enter a server if it doesn't exists", async () => {
-      await expect(controller.joinServer('user1', 'server1')).rejects.toThrow(
-        ServerControllerExceptions.ServerNotFound
-      )
-    })
-
-    it('A user should be able to enter a server if it exists', async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await controller.joinServer(server._id, 'user2')
-      const participants = await controller.getServerParticipants(server._id, 'user2')
-      expect(participants.length).toBe(2)
-    })
+  it('A user should not be able to create a server if he is not logged in', async () => {
+    const response = await request
+      .post('/servers')
+      .send({ name: 'server1', description: 'server1' })
+    expect(response.status).toBe(401)
   })
 
-  describe('Remove', () => {
-    it("A user should not be able to remove a participant if it's not the owner", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await controller.joinServer(server._id, 'user2')
-      await expect(
-        controller.kickUserFromTheServer(server._id, 'user1', 'user2')
-      ).rejects.toThrow(ServerControllerExceptions.UserNotAuthorized)
-    })
+  it('A user should not be able to create a server if the name is not provided', async () => {
+    const response = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ description: 'server1' })
+    expect(response.status).toBe(400)
+  })
 
-    it("A user should be able to remove a participant if it's the owner", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await controller.joinServer(server._id, 'user2')
-      await controller.kickUserFromTheServer(server._id, 'user2', 'user1')
-      const participants = await controller.getServerParticipants(server._id, 'user1')
-      expect(participants.length).toBe(1)
-    })
-
-    it("A user should not be able to leave a server if it's not in the server", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await controller.joinServer(server._id, 'user2')
-      await expect(controller.leaveServer(server._id, 'user3')).rejects.toThrow(
-        ServerControllerExceptions.UserNotAuthorized
-      )
-    })
-
-    it("A user should be able to leave a server if it's in the server", async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await controller.joinServer(server._id, 'user2')
-      await controller.leaveServer(server._id, 'user2')
-      const participants = await controller.getServerParticipants(server._id, 'user1')
-      expect(participants.length).toBe(1)
-    })
-
-    it('A user should not be able to remove the owner of the server', async () => {
-      const server = await createServer('server1', 'server1', 'user1')
-      await expect(controller.leaveServer(server._id, 'user1')).rejects.toThrow(
-        ServerControllerExceptions.OwnerCannotLeave
-      )
-    })
+  it('A user should not be able to create a server if the description is not provided', async () => {
+    const response = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1' })
+    expect(response.status).toBe(400)
   })
 })
 
-async function createServer(name: string, description: string, owner: string) {
-  const server = await Servers.create({
-    name,
-    description,
-    owner,
-    participants: [owner],
+describe('Delete server', () => {
+  it('A user should be able to delete a server if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const deleteServerResponse = await request
+      .delete(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(deleteServerResponse.status).toBe(200)
   })
-  return server
-}
+
+  it('A user should not be able to delete a server if he is not the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const deleteServerResponse = await request
+      .delete(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(deleteServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to delete a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const deleteServerResponse = await request.delete(`/servers/${serverId}`)
+    expect(deleteServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to delete a server if the server does not exist', async () => {
+    const deleteServerResponse = await request
+      .delete(`/servers/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(deleteServerResponse.status).toBe(404)
+  })
+})
+
+describe('Update server', () => {
+  it('A user should be able to update a server if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const updateServerResponse = await request
+      .put(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server2', description: 'server2' })
+    expect(updateServerResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to update a server if he is not the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const updateServerResponse = await request
+      .put(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server2', description: 'server2' })
+    expect(updateServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to update a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const updateServerResponse = await request
+      .put(`/servers/${serverId}`)
+      .send({ name: 'server2', description: 'server2' })
+    expect(updateServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to update a server if the server does not exist', async () => {
+    const updateServerResponse = await request
+      .put(`/servers/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server2', description: 'server2' })
+    expect(updateServerResponse.status).toBe(404)
+  })
+})
+
+describe('Get server', () => {
+  it('A user should be able to get a server if he is a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerResponse = await request
+      .get(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to get a server if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerResponse = await request
+      .get(`/servers/${serverId}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to get a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerResponse = await request.get(`/servers/${serverId}`)
+    expect(getServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to get a server if the server does not exist', async () => {
+    const getServerResponse = await request
+      .get(`/servers/123`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerResponse.status).toBe(404)
+  })
+})
+
+describe('Get server participants', () => {
+  it('A user should be able to get a server participants if he is a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(200)
+    expect(getServerParticipantsResponse.body.participants).toEqual([user1.username])
+  })
+
+  it('A user should not be able to get a server participants if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to get a server participants if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const getServerParticipantsResponse = await request.get(
+      `/servers/${serverId}/participants`
+    )
+    expect(getServerParticipantsResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to get a server participants if the server does not exist', async () => {
+    const getServerParticipantsResponse = await request
+      .get(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(404)
+  })
+})
+
+describe('Join server', () => {
+  it('A user should be able to join a server if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const getServerParticipantsResponse = await request
+      .get(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(getServerParticipantsResponse.status).toBe(200)
+    expect(getServerParticipantsResponse.body.participants).toContain(user1.username)
+  })
+
+  it('A user should not be able to join a server if he is already a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to join a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request.post(`/servers/${serverId}/participants`)
+    expect(joinServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to join a server if the server does not exist', async () => {
+    const joinServerResponse = await request
+      .post(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(404)
+  })
+})
+
+describe('Leave server', () => {
+  it('A user should not be able to leave a server if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(403)
+  })
+
+  it('A user should be able to leave a server if he is a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to leave a server if he is not a participant', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request
+      .delete(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to leave a server if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const leaveServerResponse = await request.delete(`/servers/${serverId}/participants`)
+    expect(leaveServerResponse.status).toBe(401)
+  })
+
+  it('A user should not be able to leave a server if the server does not exist', async () => {
+    const leaveServerResponse = await request
+      .delete(`/servers/123/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(leaveServerResponse.status).toBe(404)
+  })
+})
+
+describe('Kick participant', () => {
+  it('A user should not be able to kick himself if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(kickParticipantResponse.status).toBe(403)
+  })
+
+  it('A user should not be able to kick a participant if he is not the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(kickParticipantResponse.status).toBe(403)
+  })
+
+  it('A user should be able to kick a participant if he is the owner', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const joinServerResponse = await request
+      .post(`/servers/${serverId}/participants`)
+      .set('Cookie', `jwt=${jwt1}`)
+    expect(joinServerResponse.status).toBe(200)
+    const kickParticipantResponse = await request
+      .delete(`/servers/${serverId}/participants/${user1.username}`)
+      .set('Cookie', `jwt=${jwt2}`)
+    expect(kickParticipantResponse.status).toBe(200)
+  })
+
+  it('A user should not be able to kick a participant if he is not logged in', async () => {
+    const createServerResponse = await request
+      .post('/servers')
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ name: 'server1', description: 'server1' })
+    const serverId = createServerResponse.body.serverId
+    const kickParticipantResponse = await request.delete(
+      `/servers/${serverId}/participants/${user1.username}`
+    )
+    expect(kickParticipantResponse.status).toBe(401)
+  })
+})

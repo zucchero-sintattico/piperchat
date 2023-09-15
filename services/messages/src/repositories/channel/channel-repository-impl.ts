@@ -1,7 +1,11 @@
+import { ServerRepository } from '../server/server-repository'
+import { ServerRepositoryImpl } from '../server/server-repository-impl'
 import { ChannelRepository } from './channel-repository'
 import { Servers, MessageChannel, Message } from '@models/messages-model'
 
 export class ChannelRepositoryImpl implements ChannelRepository {
+  private serverRepository: ServerRepository = new ServerRepositoryImpl()
+
   async getChannels(serverId: string): Promise<MessageChannel[]> {
     const server = await Servers.findOne({ id: serverId }).orFail()
     return server.messagesChannels
@@ -10,36 +14,22 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   async createChannel(serverId: string, channelId: string): Promise<void> {
     await Servers.findOneAndUpdate(
       { id: serverId },
-      {
-        $push: {
-          messagesChannels: {
-            id: channelId,
-            messages: [],
-          },
-        },
-      },
-      { new: true }
+      { $push: { messagesChannels: { id: channelId, messages: [] } } }
     ).orFail()
   }
 
   async deleteChannel(channelId: string, serverId: string): Promise<void> {
-    await Servers.findByIdAndUpdate(
-      serverId,
-      {
-        $pull: {
-          channels: {
-            id: channelId,
-          },
-        },
-      },
-      {
-        new: true,
-      }
+    await Servers.findOneAndUpdate(
+      { id: serverId },
+      { $pull: { messagesChannels: { id: channelId } } }
     ).orFail()
   }
 
   async getChannel(channelId: string, serverId: string): Promise<MessageChannel> {
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    const server = await Servers.findOne({ id: serverId })
+    if (!server) {
+      throw new Error('Server not found')
+    }
     const channel = server.messagesChannels.find((channel) => channel.id === channelId)
     if (!channel) {
       throw new Error('Channel not found')
@@ -53,14 +43,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     from: number,
     limit: number
   ): Promise<Message[]> {
-    const server = await Servers.findOne({ id: serverId })
-    if (!server) {
-      throw new Error('Server not found')
-    }
-    const channel = server.messagesChannels.find((channel) => channel.id === channelId)
-    if (!channel?.messages) {
-      return []
-    }
+    const channel = await this.getChannel(channelId, serverId)
     return channel.messages.slice(from, from + limit)
   }
 
@@ -70,17 +53,9 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     sender: string,
     content: string
   ): Promise<void> {
-    await Servers.findOneAndUpdate(
+    await Servers.updateOne(
       { id: serverId, 'messagesChannels.id': channelId },
-      {
-        $push: {
-          'messagesChannels.$.messages': {
-            sender,
-            content,
-          },
-        },
-      },
-      { new: true }
-    ).orFail()
+      { $push: { 'messagesChannels.$.messages': { sender, content } } }
+    )
   }
 }

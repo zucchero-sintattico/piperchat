@@ -66,7 +66,7 @@ export namespace RegisterApi {
 export namespace LoginApi {
   export namespace Request {
     export type Type = Body & Params
-    export type Params = Empty
+    export type Params = Record<string, unknown>
     export type Body = {
       username: string
       password: string

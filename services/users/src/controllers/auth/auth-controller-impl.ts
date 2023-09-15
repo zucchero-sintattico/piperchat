@@ -11,14 +11,14 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from '@commons/utils/jwt'
-import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import {
   UserCreatedMessage,
   UserLoggedInMessage,
   UserLoggedOutMessage,
 } from '@messages-api/users'
+import { BrokerController } from '@commons/utils/broker-controller'
 
-export class AuthControllerImpl implements AuthController {
+export class AuthControllerImpl extends BrokerController implements AuthController {
   private userRepository: UserRepository = new UserRepositoryImpl()
 
   async register(
@@ -34,7 +34,8 @@ export class AuthControllerImpl implements AuthController {
       .catch(() => {
         throw new AuthControllerExceptions.UserAlreadyExists()
       })
-    await RabbitMQ.getInstance().publish(
+
+    await this.publish(
       UserCreatedMessage,
       new UserCreatedMessage({
         username: user.username,
@@ -61,7 +62,7 @@ export class AuthControllerImpl implements AuthController {
 
     await this.userRepository.login(user.username, refreshToken)
 
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserLoggedInMessage,
       new UserLoggedInMessage({
         username: user.username,
@@ -92,7 +93,7 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserLoggedOutMessage,
       new UserLoggedOutMessage({
         username: username,

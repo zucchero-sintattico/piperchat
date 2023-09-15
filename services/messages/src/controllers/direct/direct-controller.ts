@@ -24,3 +24,8 @@ export interface DirectController {
    */
   sendDirectMessage(username1: string, username2: string, message: string): Promise<void>
 }
+
+export class DirectControllerExceptions {
+  static DirectNotFound = class extends Error {}
+  static CannotSendDirectMessageToYourself = class extends Error {}
+}

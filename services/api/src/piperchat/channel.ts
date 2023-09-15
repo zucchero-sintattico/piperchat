@@ -18,7 +18,7 @@ export namespace GetChannelsApi {
   }
   export namespace Responses {
     interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string
@@ -54,7 +54,6 @@ export namespace GetChannelByIdApi {
       serverId: string
       channelId: string
     }
-    export type Body = Empty
     export const Schema: RequestSchema = {
       Params: {
         serverId: 'string',
@@ -65,7 +64,7 @@ export namespace GetChannelByIdApi {
   }
   export namespace Responses {
     interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string
@@ -89,7 +88,13 @@ export namespace GetChannelByIdApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ChannelNotFound | UserNotAuthorized
+
+    export class ServerNotFound extends ErrorResponse {
+      statusCode = 404
+      error = 'Server not found' as const
+    }
+
+    export type Type = ChannelNotFound | UserNotAuthorized | ServerNotFound
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -121,9 +126,21 @@ export namespace CreateChannelApi {
     }
   }
   export namespace Responses {
+    interface Channel {
+      id: string
+      name: string
+      createdAt: Date
+      channelType: string
+      description?: string
+    }
     export class Success extends Response {
       statusCode = 200
       message = 'Channel created successfully'
+      channel: Channel
+      constructor(channel: Channel) {
+        super()
+        this.channel = channel
+      }
     }
     export type Type = Success
   }
@@ -136,7 +153,22 @@ export namespace CreateChannelApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ServerNotFound | UserNotAuthorized
+
+    export class ChannelAlreadyExists extends ErrorResponse {
+      statusCode = 409
+      error = 'Channel already exists' as const
+    }
+
+    export class InvalidChannelType extends ErrorResponse {
+      statusCode = 400
+      error = 'Invalid channel type' as const
+    }
+
+    export type Type =
+      | ServerNotFound
+      | UserNotAuthorized
+      | ChannelAlreadyExists
+      | InvalidChannelType
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -171,6 +203,10 @@ export namespace UpdateChannelApi {
     export type Type = Success
   }
   export namespace Errors {
+    export class ServerNotFound extends ErrorResponse {
+      statusCode = 404
+      error = 'Server not found' as const
+    }
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -179,7 +215,16 @@ export namespace UpdateChannelApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ChannelNotFound | UserNotAuthorized
+
+    export class ChannelAlreadyExists extends ErrorResponse {
+      statusCode = 409
+      error = 'Channel already exists' as const
+    }
+    export type Type =
+      | ServerNotFound
+      | ChannelNotFound
+      | UserNotAuthorized
+      | ChannelAlreadyExists
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -208,6 +253,10 @@ export namespace DeleteChannelApi {
     export type Type = Success
   }
   export namespace Errors {
+    export class ServerNotFound extends ErrorResponse {
+      statusCode = 404
+      error = 'Server not found' as const
+    }
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -216,7 +265,7 @@ export namespace DeleteChannelApi {
       statusCode = 403
       error = 'User not authorized' as const
     }
-    export type Type = ChannelNotFound | UserNotAuthorized
+    export type Type = ServerNotFound | ChannelNotFound | UserNotAuthorized
   }
   export type Response = Responses.Type | Errors.Type
 }
