@@ -4,6 +4,8 @@ import { useUserStore } from '@/stores/user'
 import BottomPopUp from '../utils/BottomPopUp.vue'
 import { BannerColor } from '../utils/BannerColor'
 
+const userStore = useUserStore()
+
 const REDIRECT_DELAY = 2000
 
 const username = ref('')
@@ -27,23 +29,19 @@ function popUpBanner(content: string, color: BannerColor) {
 }
 
 async function onSubmit() {
-  const userStore = useUserStore()
-  await userStore.register(
-    {
+  try {
+    await userStore.register({
       username: username.value,
       email: email.value,
       password: password.value
-    },
-    () => {
-      registrationSuccess.value = true
-      setTimeout(() => {
-        location.reload()
-      }, REDIRECT_DELAY)
-    },
-    (e: any) => {
-      popUpBanner(e, BannerColor.ERROR)
-    }
-  )
+    })
+    registrationSuccess.value = true
+    setTimeout(() => {
+      location.reload()
+    }, REDIRECT_DELAY)
+  } catch (e) {
+    popUpBanner(String(e), BannerColor.ERROR)
+  }
 }
 
 function onReset() {

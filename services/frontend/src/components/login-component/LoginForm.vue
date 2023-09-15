@@ -22,16 +22,13 @@ function popUpBanner(content: string, color: BannerColor) {
   }, BANNER_TIMEOUT)
 }
 
-function onSubmit() {
-  userStore.login(
-    { username: username.value, password: password.value },
-    () => {
-      router.push({ name: 'Home' })
-    },
-    (e: any) => {
-      popUpBanner(e, BannerColor.ERROR)
-    }
-  )
+async function onSubmit() {
+  try {
+    await userStore.login({ username: username.value, password: password.value })
+    router.push({ name: 'Home' })
+  } catch (e) {
+    popUpBanner(String(e), BannerColor.ERROR)
+  }
 }
 
 function onReset() {
