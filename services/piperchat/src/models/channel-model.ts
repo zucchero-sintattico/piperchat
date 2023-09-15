@@ -4,7 +4,7 @@ export interface Channel {
   id: string
   name: string
   createdAt: Date
-  channelType: string
+  channelType: 'messages' | 'multimedia'
   description?: string
 }
 
@@ -16,6 +16,7 @@ export const ChannelSchema = new Schema<Channel>({
   channelType: {
     type: String,
     required: true,
+    enum: ['messages', 'multimedia'],
   },
   createdAt: {
     type: Date,
@@ -27,4 +28,8 @@ export const ChannelSchema = new Schema<Channel>({
     required: false,
     default: '',
   },
+})
+
+ChannelSchema.set('toJSON', {
+  virtuals: true,
 })

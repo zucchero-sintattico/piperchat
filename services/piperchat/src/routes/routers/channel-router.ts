@@ -24,17 +24,12 @@ export const GetChannelsApiRoute = new Route<
   path: '/',
   schema: GetChannelsApi.Request.Schema,
   handler: async (req, res) => {
-    try {
-      const channels = await channelController.getChannels(
-        req.params.serverId,
-        req.user.username
-      )
-      const response = new GetChannelsApi.Responses.Success(channels)
-      res.sendResponse(response)
-    } catch (e) {
-      console.log(e)
-      res.sendResponse(new GetChannelsApi.Errors.ServerNotFound())
-    }
+    const channels = await channelController.getChannels(
+      req.params.serverId,
+      req.user.username
+    )
+    const response = new GetChannelsApi.Responses.Success(channels)
+    res.sendResponse(response)
   },
   exceptions: [
     {
@@ -70,7 +65,13 @@ export const GetChannelByIdApiRoute = new Route<
   },
   exceptions: [
     {
-      exception: ChannelControllerExceptions.UserNotAuthorized,
+      exception: ServerControllerExceptions.ServerNotFound,
+      onException: (e, req, res) => {
+        res.sendResponse(new GetChannelByIdApi.Errors.ServerNotFound())
+      },
+    },
+    {
+      exception: ServerControllerExceptions.UserNotAuthorized,
       onException: (e, req, res) => {
         res.sendResponse(new GetChannelByIdApi.Errors.UserNotAuthorized())
       },
@@ -92,15 +93,26 @@ export const CreateChannelApiRoute = new Route<
   method: 'post',
   path: '/',
   schema: CreateChannelApi.Request.Schema,
+  middlewares: [
+    async (req, res, next) => {
+      if (
+        req.body.channelType != CreateChannelApi.ChannelType.Messages &&
+        req.body.channelType != CreateChannelApi.ChannelType.Multimedia
+      ) {
+        return res.sendResponse(new CreateChannelApi.Errors.InvalidChannelType())
+      }
+      next()
+    },
+  ],
   handler: async (req, res) => {
-    await channelController.createChannel(
+    const channel = await channelController.createChannel(
       req.params.serverId,
       req.user.username,
       req.body.name,
       req.body.channelType,
       req.body.description
     )
-    const response = new CreateChannelApi.Responses.Success()
+    const response = new CreateChannelApi.Responses.Success(channel)
     res.sendResponse(response)
   },
   exceptions: [
@@ -114,6 +126,12 @@ export const CreateChannelApiRoute = new Route<
       exception: ServerControllerExceptions.UserNotAuthorized,
       onException: (e, req, res) => {
         res.sendResponse(new CreateChannelApi.Errors.UserNotAuthorized())
+      },
+    },
+    {
+      exception: ChannelControllerExceptions.ChannelAlreadyExists,
+      onException: (e, req, res) => {
+        res.sendResponse(new CreateChannelApi.Errors.ChannelAlreadyExists())
       },
     },
   ],
@@ -191,6 +209,7 @@ export const channelRouter = Router({
   mergeParams: true,
   strict: true,
 })
+
 GetChannelsApiRoute.attachToRouter(channelRouter)
 GetChannelByIdApiRoute.attachToRouter(channelRouter)
 CreateChannelApiRoute.attachToRouter(channelRouter)

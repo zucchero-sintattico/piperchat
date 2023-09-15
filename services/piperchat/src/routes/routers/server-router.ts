@@ -1,11 +1,9 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import {
   ServerController,
   ServerControllerExceptions,
 } from '@controllers/server/server-controller'
 import { ServerControllerImpl } from '@controllers/server/server-controller-impl'
-import { Validate } from '@api/validate'
-import { InternalServerError } from '@api/errors'
 import {
   GetServersApi,
   CreateServerApi,

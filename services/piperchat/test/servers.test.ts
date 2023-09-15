@@ -1,4 +1,4 @@
-import supertest, { Response } from 'supertest'
+import supertest from 'supertest'
 import { Microservice } from '@commons/service'
 import { PiperchatServiceConfiguration } from '@/configuration'
 import { generateAccessToken } from '@commons/utils/jwt'
