@@ -8,10 +8,9 @@ import {
   SendFriendRequestApi,
   GetFriendsApi,
 } from '@api/users/friends'
-import { ApiRouter, Route } from '@commons/router'
-
-const friendsApiRouter = new ApiRouter()
-export const friendsRouter = friendsApiRouter.getRouter()
+import { Route } from '@commons/router'
+import { Router } from 'express'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 
 const friendsController: FriendsController = new FriendsControllerImpl()
 
@@ -121,6 +120,9 @@ export const SendFriendRequestApiRoute = new Route<
   ],
 })
 
-friendsApiRouter.register(GetFriendsApiRoute)
-friendsApiRouter.register(GetFriendsRequestsApiRoute)
-friendsApiRouter.register(SendFriendRequestApiRoute)
+export const friendsRouter = Router()
+friendsRouter.use(JWTAuthenticationMiddleware)
+
+GetFriendsApiRoute.attachToRouter(friendsRouter)
+GetFriendsRequestsApiRoute.attachToRouter(friendsRouter)
+SendFriendRequestApiRoute.attachToRouter(friendsRouter)

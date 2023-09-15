@@ -1,4 +1,3 @@
-import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { FriendsController } from './friends-controller'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
@@ -6,8 +5,8 @@ import {
   FriendRequestDeniedMessage,
   FriendRequestSentMessage,
 } from '@messages-api/friends'
-export class FriendsControllerImpl implements FriendsController {
-  private broker: RabbitMQ = RabbitMQ.getInstance()
+import { BrokerController } from '@commons/utils/broker-controller'
+export class FriendsControllerImpl extends BrokerController implements FriendsController {
   private userRepository = new UserRepositoryImpl()
 
   async getFriendsRequests(username: string): Promise<string[]> {
@@ -22,7 +21,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async sendFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.sendFriendRequest(username, friendUsername)
-    await this.broker.publish(
+    await this.publish(
       FriendRequestSentMessage,
       new FriendRequestSentMessage({
         from: username,
@@ -33,7 +32,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.acceptFriendRequest(username, friendUsername)
-    await this.broker.publish(
+    await this.publish(
       FriendRequestAcceptedMessage,
       new FriendRequestAcceptedMessage({
         from: username,
@@ -44,7 +43,7 @@ export class FriendsControllerImpl implements FriendsController {
 
   async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
     await this.userRepository.denyFriendRequest(username, friendUsername)
-    await this.broker.publish(
+    await this.publish(
       FriendRequestDeniedMessage,
       new FriendRequestDeniedMessage({
         from: username,

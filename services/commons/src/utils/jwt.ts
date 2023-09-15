@@ -142,13 +142,7 @@ export const JWTRefreshTokenMiddleware = (
     res.status(401).json({ message: 'JWT Token Missing - Unauthorized' })
     return
   }
-  try {
-    jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as UserJWTInfo
-    res.status(400).json({
-      message: 'In order to refresh the token, you must have an expired Access Token',
-    })
-  } catch (e) {
-    next()
-  }
+  req.user = jwt.decode(accessToken) as UserJWTInfo
+  next()
   return
 }

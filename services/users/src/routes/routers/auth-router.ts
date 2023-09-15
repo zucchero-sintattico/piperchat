@@ -81,7 +81,12 @@ export const LogoutApiRoute = new Route<
   schema: LogoutApi.Request.Schema,
   middlewares: [JWTAuthenticationMiddleware],
   handler: async (req, res) => {
-    await authController.logout(req.user.username)
+    try {
+      await authController.logout(req.user.username)
+    } catch (e) {
+      console.log(e)
+    }
+    //await authController.logout(req.user.username)
     res.sendResponse(new LogoutApi.Responses.Success())
   },
   exceptions: [
@@ -118,6 +123,12 @@ export const RefreshTokenApiRoute = new Route<
       exception: AuthControllerExceptions.InvalidRefreshToken,
       onException: (e, req, res) => {
         res.sendResponse(new RefreshTokenApi.Errors.InvalidRefreshToken())
+      },
+    },
+    {
+      exception: AuthControllerExceptions.RefreshTokenNotPresent,
+      onException: (e, req, res) => {
+        res.sendResponse(new RefreshTokenApi.Errors.RefreshTokenNotPresent())
       },
     },
   ],

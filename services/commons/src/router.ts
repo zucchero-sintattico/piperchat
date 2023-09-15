@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Router, Request, Response as ExpressResponse, Response } from 'express'
+import {
+  Router,
+  Request,
+  Response as ExpressResponse,
+  Response,
+  NextFunction,
+} from 'express'
 import { Validate } from '@api/validate'
 import { InternalServerError } from '@api/errors'
 import { Response as ApiResponse } from '@api/response'
@@ -29,6 +35,11 @@ type Exception<P, R extends ApiResponse, B, Q> = {
   exception: any
   onException: (e: any, req: Request<P, R, B, Q>, res: EnrichedResponse<R>) => void
 }
+type Middleware<P, R extends ApiResponse, B, Q> = (
+  req: Request<P, R, B, Q>,
+  res: EnrichedResponse<R>,
+  next: () => void
+) => void
 
 export class Route<
   R extends ApiResponse = ApiResponse,
@@ -39,22 +50,14 @@ export class Route<
   method: 'get' | 'post' | 'put' | 'delete'
   path: string
   schema: RequestSchema
-  middlewares?: ((
-    req: Request<P, R, B, Q>,
-    res: EnrichedResponse<R>,
-    next: () => void
-  ) => void)[]
+  middlewares?: Middleware<any, any, any, any>[]
   handler: (req: Request<P, R, B, Q>, res: EnrichedResponse<R>) => Promise<void>
   exceptions?: Exception<P, R, B, Q>[]
   constructor(route: {
     method: 'get' | 'post' | 'put' | 'delete'
     path: string
     schema: RequestSchema
-    middlewares?: ((
-      req: Request<any, any, any, any>,
-      res: EnrichedResponse<any>,
-      next: () => void
-    ) => void)[]
+    middlewares?: Middleware<any, any, any, any>[]
     handler: (req: Request<P, R, B, Q>, res: EnrichedResponse<R>) => Promise<void>
     exceptions?: Exception<P, R, B, Q>[]
   }) {
@@ -69,18 +72,18 @@ export class Route<
   attachToRouter(router: Router): void {
     router[this.method](
       this.path,
-      (req, res, next) => {
+      (req: Request<P, R, B, Q>, res: EnrichedResponse<R>, next: NextFunction) => {
         res.sendResponse = (response: R) => {
-          res.status(response.statusCode).json(response)
+          response.send(res)
         }
         next()
       },
+      ...(this.middlewares || []),
       Validate(this.schema),
       async (req: Request<P, R, B, Q>, res: EnrichedResponse<R>) => {
         try {
           await this.handler(req, res)
         } catch (e) {
-          console.log(e)
           if (this.exceptions) {
             const exception = this.exceptions.find((exception) => {
               return e instanceof exception.exception
