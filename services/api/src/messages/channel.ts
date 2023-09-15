@@ -92,7 +92,11 @@ export namespace SendMessageInChannelApi {
       statusCode = 404
       error = 'Server not found' as const
     }
-    export type Type = ChannelNotFound | ServerNotFound
+    export class UserNotAuthorized extends ErrorResponse {
+      statusCode = 401
+      error = 'User not authorized' as const
+    }
+    export type Type = ChannelNotFound | ServerNotFound | UserNotAuthorized
   }
   export type Response = Responses.Type | Errors.Type
 }

@@ -41,11 +41,11 @@ export namespace GetDirectMessagesApi {
     export type Type = Success
   }
   export namespace Errors {
-    export class UserNotFound extends ErrorResponse {
+    export class DirectNotFound extends ErrorResponse {
       statusCode = 404
-      error = 'User not found' as const
+      error = 'Direct not found' as const
     }
-    export type Type = UserNotFound
+    export type Type = DirectNotFound
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -77,11 +77,15 @@ export namespace SendDirectMessageApi {
     export type Type = Success
   }
   export namespace Errors {
-    export class UserNotFound extends ErrorResponse {
+    export class DirectNotFound extends ErrorResponse {
       statusCode = 404
-      error = 'User not found' as const
+      error = 'Direct not found' as const
     }
-    export type Type = UserNotFound
+    export class CannotSendDirectMessageToYourself extends ErrorResponse {
+      statusCode = 400
+      error = 'Cannot send direct message to yourself' as const
+    }
+    export type Type = DirectNotFound | CannotSendDirectMessageToYourself
   }
   export type Response = Responses.Type | Errors.Type
 }

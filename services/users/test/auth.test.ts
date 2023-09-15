@@ -115,7 +115,6 @@ describe('Logout', () => {
     let response = await createUserAndLogin('test', 'test', 'test')
     const cookie = response.header['set-cookie']
     response = await request.post('/auth/logout').set('Cookie', cookie)
-    console.log(response.body, response.text)
     expect(response.status).toBe(200)
   })
 

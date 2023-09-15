@@ -182,7 +182,6 @@ describe('Decline friend request', () => {
       .post('/friends/requests')
       .set('Cookie', `jwt=${jwt2}`)
       .send({ to: user1.username, action: 'deny' })
-    console.log(response.body)
     expect(response.status).toBe(200)
     response = await request.get('/friends').set('Cookie', `jwt=${jwt1}`)
     expect(response.status).toBe(200)

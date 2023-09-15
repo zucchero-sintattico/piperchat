@@ -15,8 +15,7 @@ export class DirectRepositoryImpl implements DirectRepository {
       ],
     })
     if (!direct) {
-      await this.createDirect(username1, username2)
-      return []
+      throw new Error('Direct not found')
     }
     return direct.get('messages').slice(from, from + limit)
   }
@@ -39,7 +38,7 @@ export class DirectRepositoryImpl implements DirectRepository {
       ],
     })
     if (!direct) {
-      await this.createDirect(username1, username2)
+      throw new Error('Direct not found')
     }
     await Directs.updateOne(
       {

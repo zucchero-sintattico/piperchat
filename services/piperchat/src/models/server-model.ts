@@ -39,4 +39,8 @@ export const ServerSchema = new Schema<Server>({
   },
 })
 
+ServerSchema.set('toJSON', {
+  virtuals: true,
+})
+
 export const Servers = model<Server>('Server', ServerSchema)

@@ -1,100 +1,109 @@
-import mongoose from 'mongoose'
-import { ChannelControllerImpl } from '@controllers/channel/channel-controller-impl'
-import { ChannelControllerExceptions } from '@controllers/channel/channel-controller'
-import { Servers } from '@models/messages-model'
-import { ServiceEvents } from '@commons/events/service-events'
-import { RabbitMQ } from '@commons/utils/rabbit-mq'
-import { MongooseUtils } from '@commons/utils/mongoose'
-import { ServerRepositoryImpl } from '@repositories/server/server-repository-impl'
-import { ServerRepository } from '@repositories/server/server-repository'
-import { MessagesServiceEventsConfiguration } from '@/events-configuration'
+import supertest from 'supertest'
+import { Microservice } from '@commons/service'
+import { MessagesServiceConfiguration } from '@/configuration'
+import { generateAccessToken } from '@commons/utils/jwt'
+import { ServerRepository } from '@/repositories/server/server-repository'
+import { ServerRepositoryImpl } from '@/repositories/server/server-repository-impl'
 
-const channelController = new ChannelControllerImpl()
-const serverRepository: ServerRepository = new ServerRepositoryImpl()
+const messagesMicroservice: Microservice = new Microservice(MessagesServiceConfiguration)
+let serverRepository: ServerRepository
+
+let request: supertest.SuperTest<supertest.Test>
 
 beforeAll(async () => {
-  await MongooseUtils.initialize(mongoose, 'mongodb://localhost:27017')
-  await RabbitMQ.initialize('amqp://localhost:5672')
-  const eventsConfig = new MessagesServiceEventsConfiguration()
-  await ServiceEvents.initialize(RabbitMQ.getInstance(), eventsConfig)
+  await messagesMicroservice.start()
+  request = supertest(messagesMicroservice.getServer())
+  serverRepository = new ServerRepositoryImpl()
 })
 
 afterAll(async () => {
-  await MongooseUtils.close(mongoose)
-  await RabbitMQ.disconnect()
+  await messagesMicroservice.stop()
 })
 
 afterEach(async () => {
-  //await MessageChannels.deleteMany({});
-  await Servers.deleteMany({})
+  await messagesMicroservice.clearDatabase()
 })
 
-//channel tests
-describe('CREATE operation', () => {
-  it('create 4 channel in the server', async () => {
-    await serverRepository.addServer('serverId', 'owner')
-    await channelController.createChannel('serverId', 'channelType')
-    await channelController.createChannel('serverId', 'channelType2')
-    await channelController.createChannel('serverId', 'channelType3')
-    await channelController.createChannel('serverId', 'channelType4')
-    const channels = await channelController.getChannels('serverId')
-    expect(channels.length).toBe(4)
+const user1 = {
+  username: 'test1',
+  email: 'test1',
+  password: 'test1',
+}
+const jwt1 = generateAccessToken(user1)
+
+const user2 = {
+  username: 'test2',
+  email: 'test2',
+  password: 'test2',
+}
+
+const jwt2 = generateAccessToken(user2)
+
+async function createServer(owner: string): Promise<string> {
+  await serverRepository.addServer('serverId', owner)
+  return 'serverId'
+}
+
+async function createChannel(serverId: string): Promise<string> {
+  await serverRepository.addMessageChannel(serverId, 'channelId')
+  return 'channelId'
+}
+
+async function addParticipant(serverId: string, participantId: string): Promise<void> {
+  await serverRepository.addParticipant(serverId, participantId)
+}
+
+describe('Send channel message', () => {
+  it('A user should be able to send a channel message', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    const response = await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ content: 'test' })
+    console.log(response.body)
+    expect(response.status).toBe(200)
   })
 
-  it('should not create channel if server does not exist', async () => {
-    await expect(
-      channelController.createChannel('serverId', 'channelType')
-    ).rejects.toThrow(new ChannelControllerExceptions.ServerNotFound())
-  })
-})
-
-describe('chat tests', () => {
-  it('should send a message', async () => {
-    await serverRepository.addServer('serverId', 'owner')
-    await channelController.createChannel('serverId', 'channelType')
-    const channelId = (await channelController.getChannels('serverId'))[0].id
-    await channelController.sendMessage(channelId, 'serverId', 'owner', 'message')
-    const messages = await channelController.getChannelMessagesPaginated(
-      channelId,
-      'serverId',
-      0,
-      10
-    )
-    expect(messages.length).toBe(1)
-  })
-  it('send a lot of messages from different users', async () => {
-    await serverRepository.addServer('serverId', 'owner')
-    await channelController.createChannel('serverId', 'channelType')
-    const channelId = (await channelController.getChannels('serverId'))[0].id
-    await channelController.sendMessage(channelId, 'serverId', 'owner', 'message')
-    await channelController.sendMessage(channelId, 'serverId', 'owner', 'message2')
-    await channelController.sendMessage(channelId, 'serverId', 'owner', 'message3')
-    await channelController.sendMessage(channelId, 'serverId', 'owner', 'message4')
-    const messages = await channelController.getChannelMessagesPaginated(
-      channelId,
-      'serverId',
-      0,
-      10
-    )
-    expect(messages.length).toBe(4)
+  it('A user should not be able to send a channel message if the server does not exist', async () => {
+    const response = await request
+      .post(`/servers/invalid/channels/invalid/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ content: 'test' })
+    expect(response.status).toBe(404)
   })
 
-  it('should not send a message if the user is not in the server', async () => {
-    await serverRepository.addServer('serverId', 'owner')
-    await channelController.createChannel('serverId', 'channelType')
-
-    const channelId = (await channelController.getChannels('serverId'))[0].id
-    await expect(
-      channelController.sendMessage(channelId, 'serverId', 'user', 'message')
-    ).rejects.toThrow(new ChannelControllerExceptions.UserNotAuthorized())
+  it('A user should not be able to send a channel message if the channel does not exist', async () => {
+    const serverId = await createServer(user1.username)
+    const response = await request
+      .post(`/servers/${serverId}/channels/invalid/messages`)
+      .set('Cookie', `jwt=${jwt1}`)
+      .send({ content: 'test' })
+    expect(response.status).toBe(404)
   })
 
-  it('should not send a message if the channel does not exist', async () => {
-    await serverRepository.addServer('serverId', 'owner')
-    await channelController.createChannel('serverId', 'channelType')
+  it('A user should not be able to send a channel message if the user is not authenticated', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    const response = await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .send({ content: 'test' })
+    expect(response.status).toBe(401)
+  })
 
-    await expect(
-      channelController.sendMessage('channelId', 'serverId', 'owner', 'message')
-    ).rejects.toThrow(new ChannelControllerExceptions.ChannelNotFound())
+  it('A user should not be able to send a channel message if the user is not a participant of the server', async () => {
+    const serverId = await createServer(user1.username)
+    const channelId = await createChannel(serverId)
+    const response = await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ content: 'test' })
+    expect(response.status).toBe(401)
+    await addParticipant(serverId, user2.username)
+    const response2 = await request
+      .post(`/servers/${serverId}/channels/${channelId}/messages`)
+      .set('Cookie', `jwt=${jwt2}`)
+      .send({ content: 'test' })
+    expect(response2.status).toBe(200)
   })
 })

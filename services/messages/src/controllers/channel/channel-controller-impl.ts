@@ -68,18 +68,25 @@ export class ChannelControllerImpl implements ChannelController {
   }
 
   async checkIfChannelExists(channelId: string, serverId: string): Promise<boolean> {
-    const channels = await this.channelRepository.getChannels(serverId)
-    if (channels.find((channel) => channel.id.toString() === channelId.toString()))
-      return true
-    else {
-      throw new ChannelControllerExceptions.ChannelNotFound()
+    try {
+      const channels = await this.channelRepository.getChannels(serverId)
+      if (channels.find((channel) => channel.id === channelId)) return true
+      else {
+        throw new ChannelControllerExceptions.ChannelNotFound()
+      }
+    } catch (e) {
+      throw new ChannelControllerExceptions.ServerNotFound()
     }
   }
 
-  async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<boolean> {
-    const participants = await this.serverRepository.getServerParticipants(serverId)
-    if (participants.includes(userId)) return true
-    else {
+  async checkIfUserIsInTheServer(serverId: string, userId: string): Promise<void> {
+    let participants
+    try {
+      participants = await this.serverRepository.getServerParticipants(serverId)
+    } catch (e) {
+      throw new ChannelControllerExceptions.ServerNotFound()
+    }
+    if (!participants.find((participant) => participant === userId)) {
       throw new ChannelControllerExceptions.UserNotAuthorized()
     }
   }
