@@ -7,6 +7,8 @@ import { useServerStore } from '@/stores/server'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
+import { BannerColor } from '@/components/utils/BannerColor'
+import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
@@ -26,6 +28,25 @@ const selectedServer = computed(() => {
 const amITheOwner = computed(() => {
   return selectedServer.value?.owner == userStore.username
 })
+
+const BANNER_TIMEOUT = 3000
+const resultBanner = ref(false)
+const colorBanner = ref(BannerColor.OK)
+const contentBanner = ref('')
+function popUpBanner(error?: string) {
+  if (error) {
+    colorBanner.value = BannerColor.ERROR
+    contentBanner.value = error
+  } else {
+    colorBanner.value = BannerColor.OK
+    contentBanner.value = 'Server created successfully'
+  }
+  resultBanner.value = true
+  setTimeout(() => {
+    resultBanner.value = false
+  }, BANNER_TIMEOUT)
+  isNewChannelFormActive.value = false
+}
 </script>
 
 <template>
@@ -56,13 +77,16 @@ const amITheOwner = computed(() => {
             @click="isNewChannelFormActive = true"
           />
         </div>
+
+        <BottomPopUp v-model:active="resultBanner" :content="contentBanner" :color="colorBanner" />
+
         <q-dialog
           v-model="isNewChannelFormActive"
           persistent
           transition-show="scale"
           transition-hide="scale"
         >
-          <NewChannelForm @close="isNewChannelFormActive = false" />
+          <NewChannelForm @close="isNewChannelFormActive = false" @result="popUpBanner($event)" />
         </q-dialog>
         <!-- end Create new server -->
 

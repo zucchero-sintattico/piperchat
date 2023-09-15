@@ -21,7 +21,7 @@ pinia.use(piniaPluginPersistedState)
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  console.log(userStore.isLoggedIn)
+  console.log(`Is logged in: ${userStore.isLoggedIn}`)
   if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     next('/login')
   } else {

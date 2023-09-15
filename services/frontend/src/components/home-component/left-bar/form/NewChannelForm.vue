@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 
 const event = defineEmits<{
+  (e: 'result', error?: string): void
   (e: 'close'): void
 }>()
 
@@ -16,13 +17,17 @@ const description = ref('')
 const channelType = ref(CreateChannelApi.ChannelType.Messages)
 
 async function onSubmit() {
-  await serverStore.createChannel(
-    name.value,
-    description.value,
-    channelType.value,
-    userStore.selectedServerId
-  )
-  event('close')
+  try {
+    await serverStore.createChannel(
+      name.value,
+      description.value,
+      channelType.value,
+      userStore.selectedServerId
+    )
+    event('result')
+  } catch (e) {
+    event('result', String(e))
+  }
 }
 
 const selectedServer = computed(() => {
