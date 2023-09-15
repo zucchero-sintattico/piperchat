@@ -3,6 +3,7 @@ import { useServerStore } from '@/stores/server'
 import { ref } from 'vue'
 
 const event = defineEmits<{
+  (e: 'result', error?: string): void
   (e: 'close'): void
 }>()
 
@@ -12,8 +13,12 @@ const name = ref('')
 const description = ref('')
 
 async function onSubmit() {
-  await serverStore.createServer(name.value, description.value)
-  event('close')
+  try {
+    await serverStore.createServer(name.value, description.value)
+    event('result')
+  } catch (e) {
+    event('result', String(e))
+  }
 }
 </script>
 

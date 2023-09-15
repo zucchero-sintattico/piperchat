@@ -3,7 +3,7 @@ import { ChannelControllerImpl } from '@/controllers/piperchat/channel/channel-c
 import type { ServerController } from '@/controllers/piperchat/server/server-controller'
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
 import type { CreateChannelApi } from '@api/piperchat/channel'
-import type { GetServersApi, KickUserFromServerApi } from '@api/piperchat/server'
+import type { CreateServerApi, GetServersApi, KickUserFromServerApi } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -15,7 +15,6 @@ export const useServerStore = defineStore('server', () => {
 
   async function getServers() {
     const response = await serverController.getServers()
-
     if (response.statusCode === 200) {
       const typed = response as GetServersApi.Responses.Success
       servers.value = typed.servers
@@ -23,18 +22,15 @@ export const useServerStore = defineStore('server', () => {
   }
 
   async function createServer(name: string, description: string) {
-    try {
-      const response = await serverController.createServer({
-        name,
-        description
-      })
-      if (response.statusCode === 200) {
-        getServers()
-      } else {
-        console.log(response)
-      }
-    } catch (e) {
-      console.log(e)
+    const response = await serverController.createServer({
+      name,
+      description
+    })
+    if (response.statusCode === 200) {
+      getServers()
+    } else {
+      const typed = response as CreateServerApi.Errors.Type
+      throw new Error(String(typed.error))
     }
   }
 
