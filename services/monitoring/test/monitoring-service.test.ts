@@ -9,7 +9,7 @@ let monitoringRepository: MonitoringRepository
 let monitoringEventRepository: MonitoringEventRepository
 
 const messageEvent = {
-  topic: 'messages',
+  topic: 'message',
   event: 'message.direct.sent',
   payload: {
     id: '123',
@@ -17,7 +17,7 @@ const messageEvent = {
   },
 }
 const serverEvent = {
-  topic: 'servers',
+  topic: 'server',
   event: 'server.created',
   payload: {
     id: '123',
