@@ -69,7 +69,8 @@ export class ChannelControllerImpl implements ChannelController {
 
   async checkIfChannelExists(channelId: string, serverId: string): Promise<boolean> {
     const channels = await this.channelRepository.getChannels(serverId)
-    if (channels.find((channel) => channel.id === channelId)) return true
+    if (channels.find((channel) => channel.id.toString() === channelId.toString()))
+      return true
     else {
       throw new ChannelControllerExceptions.ChannelNotFound()
     }

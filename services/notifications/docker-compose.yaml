@@ -3,7 +3,7 @@ services:
     image: piperchat
     command: ['npm', 'run', '--workspace', './services/notifications', 'start']
     expose:
-      - '3000'
+      - '${NOTIFICATIONS_SERVICE_PORT}'
     depends_on:
       db-notifications-service:
         condition: service_healthy

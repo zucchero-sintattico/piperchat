@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { useUserStore, ContentArea } from '@/stores/user'
 import { computed, ref } from 'vue'
 import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
@@ -11,6 +11,11 @@ const userStore = useUserStore()
 const serverStore = useServerStore()
 const isNewChannelFormActive = ref(false)
 
+function setChannelContent(channelId: string) {
+  console.log('Switched')
+  userStore.inContentArea = ContentArea.Channel
+  userStore.selectedChannel = [userStore.selectedServerId, channelId]
+}
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
 })
@@ -52,6 +57,7 @@ const selectedServer = computed(() => {
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel._id"
+          @click="setChannelContent(channel._id)"
         >
           <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>

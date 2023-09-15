@@ -1,12 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 
-const message = ref('')
 const messageStore = useMessageStore()
 const userStore = useUserStore()
+const message = ref('')
 
+/**
+ * Checks if the user is in a valid content area (direct or channel)
+ */
+const shown = computed(() => {
+  if (
+    userStore.inContentArea == ContentArea.Direct ||
+    userStore.inContentArea == ContentArea.Channel
+  ) {
+    return true
+  } else {
+    return false
+  }
+})
+
+/**
+ * Sends a message to the server,
+ * then refreshes the messages
+ */
 async function sendMessage() {
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
@@ -14,20 +32,34 @@ async function sendMessage() {
         content: message.value,
         username: userStore.selectedDirect
       },
-      () => console.log('Sent'),
+      // Refresh messages
+      () =>
+        messageStore.getMessagesFromDirect({
+          username: userStore.selectedDirect,
+          from: 0,
+          limit: 1000
+        }),
       () => console.log('Error')
     )
   } else if (userStore.inContentArea == ContentArea.Channel) {
+    console.log('sending message on channel')
     await messageStore.sendMessageOnChannel(
       {
         serverId: userStore.selectedChannel[0],
         channelId: userStore.selectedChannel[1],
         content: message.value
       },
-      () => console.log('Sent'),
+      () =>
+        messageStore.getMessagesFromChannel({
+          serverId: userStore.selectedChannel[0],
+          channelId: userStore.selectedChannel[1],
+          from: 0,
+          limit: 1000
+        }),
       () => console.log('Error')
     )
   }
+  deleteMessage()
 }
 
 function deleteMessage() {
@@ -36,12 +68,11 @@ function deleteMessage() {
 </script>
 
 <template>
-  <div class="foot blurred">
+  <div class="foot blurred" v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
-
       <template v-slot:after>
         <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
       </template>
