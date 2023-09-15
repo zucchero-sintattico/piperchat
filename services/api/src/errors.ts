@@ -23,3 +23,8 @@ export class BadRequest extends ErrorResponse {
     this.missingQuery = query
   }
 }
+
+export class JwtTokenMissingOrInvalid extends ErrorResponse {
+  statusCode = 401
+  error = 'JWT Token Missing or Invalid' as const
+}

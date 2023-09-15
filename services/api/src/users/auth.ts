@@ -100,7 +100,7 @@ export namespace LoginApi {
 
   export namespace Errors {
     export class UsernameOrPasswordIncorrect extends ErrorResponse {
-      statusCode = 401
+      statusCode = 403
       error = 'Username or password incorrect' as const
     }
     export type Type = UsernameOrPasswordIncorrect
