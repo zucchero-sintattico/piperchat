@@ -12,7 +12,7 @@ import {
   UpdateChannelApi,
   DeleteChannelApi,
 } from '@api/piperchat/channel'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 
 const channelController: ChannelController = new ChannelControllerImpl()
 

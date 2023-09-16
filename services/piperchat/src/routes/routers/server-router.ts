@@ -15,7 +15,7 @@ import {
   GetServerParticipantsApi,
   KickUserFromServerApi,
 } from '@api/piperchat/server'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 
 const serverController: ServerController = new ServerControllerImpl()
 export const serverRouter = Router({

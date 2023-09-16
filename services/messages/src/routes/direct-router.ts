@@ -5,7 +5,7 @@ import {
 } from '@controllers/direct/direct-controller'
 import { DirectControllerImpl } from '@controllers/direct/direct-controller-impl'
 import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/direct'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 
 const directController: DirectController = new DirectControllerImpl()
 

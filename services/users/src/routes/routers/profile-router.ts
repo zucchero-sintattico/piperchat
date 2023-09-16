@@ -1,7 +1,7 @@
 import { ProfileControllerImpl } from '@controllers/profile/profile-controller-impl'
 import { ProfileController } from '@controllers/profile/profile-controller'
 import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { Router } from 'express'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 

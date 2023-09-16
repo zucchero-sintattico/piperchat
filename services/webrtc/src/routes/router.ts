@@ -16,7 +16,7 @@ import {
   SessionRepository,
   SessionRepositoryImpl,
 } from '@/repositories/session-repository'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { Router } from 'express'
 
 const friendshipRepository: FriendshipRepository = new FriendshipRepositoryImpl()

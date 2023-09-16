@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 
 export interface Channel {
-  _id: string
+  id: string
   channelType: string
 }
 
@@ -12,8 +12,12 @@ export const ChannelSchema = new Schema<Channel>({
   },
 })
 
+ChannelSchema.set('toJSON', {
+  virtuals: true,
+})
+
 export interface Server {
-  _id: string
+  id: string
   owner: string
   participants: string[]
   channels: Channel[]
@@ -33,6 +37,10 @@ export const ServerSchema = new Schema<Server>({
     required: true,
     default: [],
   },
+})
+
+ServerSchema.set('toJSON', {
+  virtuals: true,
 })
 
 export const Servers = model<Server>('Server', ServerSchema)

@@ -54,7 +54,12 @@ export namespace RegisterApi {
       error = 'User already exists' as const
     }
 
-    export type Type = UserAlreadyExists
+    export class EmailAlreadyExists extends ErrorResponse {
+      statusCode = 409
+      error = 'Email already exists' as const
+    }
+
+    export type Type = UserAlreadyExists | EmailAlreadyExists
   }
 
   export type Response = Responses.Type | Errors.Type
