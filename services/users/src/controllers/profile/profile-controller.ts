@@ -1,13 +1,12 @@
+import { Photo } from '@/models/user-model'
+
 export interface ProfileController {
   /**
    * Set the photo of a user.
    * @param username The username of the user to update.
    * @param photo The photo of the user.
    */
-  updateUserPhoto(
-    username: string,
-    photo: { data: Buffer; contentType: string }
-  ): Promise<void>
+  updateUserPhoto(username: string, photo: Photo): Promise<void>
 
   /**
    * Set the user's description.

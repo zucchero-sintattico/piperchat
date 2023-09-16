@@ -14,7 +14,10 @@ export namespace RegisterApi {
       password: string
       email: string
       description?: string
-      photo?: Buffer
+      photo?: {
+        data: Buffer
+        contentType: string
+      }
     }
     export const Schema: RequestSchema = {
       Params: {},
@@ -33,7 +36,10 @@ export namespace RegisterApi {
       username: string
       email: string
       description?: string
-      photo?: Buffer
+      photo?: {
+        data: Buffer
+        contentType: string
+      }
     }
 
     export class Success extends Response {

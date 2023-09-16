@@ -6,7 +6,6 @@ import { Router } from 'express'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 import multer from 'multer'
 import fs from 'fs'
-import path from 'path'
 import { EmptySchema } from '@api/schema'
 
 const profileController: ProfileController = new ProfileControllerImpl()
@@ -31,8 +30,13 @@ export const UpdatePhotoApiRoute = new Route<
   schema: EmptySchema,
   middlewares: [upload.single('photo')],
   handler: async (req, res) => {
+    if (!req.file) {
+      const response = new UpdatePhotoApi.Errors.InvalidPhoto()
+      res.sendResponse(response)
+      return
+    }
     const photo = {
-      data: fs.readFileSync('/app/uploads/' + req.file!.filename),
+      data: fs.readFileSync('/app/uploads/' + req.file.filename),
       contentType: req.file!.mimetype,
     }
     await profileController.updateUserPhoto(req.user.username, photo)

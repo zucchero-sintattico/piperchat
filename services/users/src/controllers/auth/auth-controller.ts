@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 
 export interface AuthController {
   /**
@@ -15,7 +15,7 @@ export interface AuthController {
     email: string,
     password: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User>
 
   /**

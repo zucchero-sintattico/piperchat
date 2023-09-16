@@ -1,19 +1,16 @@
 import { UserRepository } from './user-repository'
-import { Users, User } from '@models/user-model'
+import { Users, User, Photo } from '@models/user-model'
 
 export class UserRepositoryImpl implements UserRepository {
   async getUserDescription(username: string): Promise<string> {
     return (await Users.findOne({ username: username }).orFail()).description
   }
 
-  async getUserPhoto(username: string): Promise<Buffer> {
+  async getUserPhoto(username: string): Promise<Photo> {
     return (await Users.findOne({ username: username }).orFail()).profilePicture
   }
 
-  async updateUserPhoto(
-    username: string,
-    photo: { data: Buffer; contentType: string }
-  ): Promise<void> {
+  async updateUserPhoto(username: string, photo: Photo): Promise<void> {
     await Users.findOneAndUpdate(
       { username: username },
       { profilePicture: photo }
@@ -51,7 +48,7 @@ export class UserRepositoryImpl implements UserRepository {
     email: string,
     hashedPassword: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User> {
     const user = await Users.create({
       username,

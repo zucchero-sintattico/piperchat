@@ -29,7 +29,7 @@ export const RegisterApiRoute = new Route<
       req.body.email,
       req.body.password,
       req.body.description ?? '',
-      req.body.photo ?? null
+      req.body.photo
     )
     const response = new RegisterApi.Responses.Success({
       username: user.username,

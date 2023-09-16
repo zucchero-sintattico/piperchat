@@ -1,11 +1,16 @@
 import { Schema, model } from 'mongoose'
 
+export type Photo = {
+  data: Buffer
+  contentType: string
+}
+
 export interface User {
   username: string
   email: string
   password: string
   description: string
-  profilePicture: Buffer
+  profilePicture: Photo
   createdAt: Date
   refreshToken: string
   friends: string[]

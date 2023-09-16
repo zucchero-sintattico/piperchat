@@ -7,16 +7,20 @@ import { RequestSchema } from '../schema'
  * Update photo endpoint
  */
 export namespace UpdatePhotoApi {
+  export type Photo = {
+    data: Buffer
+    contentType: string
+  }
   export namespace Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = {
-      photo: Buffer
+      photo: Photo
     }
     export const Schema: RequestSchema = {
       Params: {},
       Body: {
-        photo: 'Buffer',
+        photo: 'Photo',
       },
     }
   }
@@ -28,7 +32,11 @@ export namespace UpdatePhotoApi {
     export type Type = Success
   }
   export namespace Errors {
-    export type Type = Empty
+    export class InvalidPhoto extends Response {
+      statusCode = 400
+      message = 'Invalid photo' as const
+    }
+    export type Type = InvalidPhoto
   }
   export type Response = Responses.Type | Errors.Type
 }

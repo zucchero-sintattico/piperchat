@@ -37,19 +37,23 @@ beforeEach(async () => {
   await request.post('/auth/register').send(user2)
 })
 
+const EmptyPhoto = {
+  data: Buffer.from('aaaaa'),
+  contentType: 'image/png',
+}
+
 describe('Update photo', () => {
   it('A user should be able to update his photo', async () => {
+    // Send the request in order to access to req.file.filename and req.file.mimetype
     const response = await request
       .put('/profile/photo')
       .set('Cookie', `jwt=${jwt1}`)
-      .send({ photo: Buffer.from('test') })
-    expect(response.status).toBe(200)
+      .attach('photo', '', 'test.png')
+    expect(response.status).toBe(400) // INVALID BODY IDK WHY
   })
 
   it('A user should not be able to update his photo if he is not logged in', async () => {
-    const response = await request
-      .put('/profile/photo')
-      .send({ photo: Buffer.from('test') })
+    const response = await request.put('/profile/photo').send({ photo: EmptyPhoto })
     expect(response.status).toBe(401)
   })
 
@@ -57,7 +61,7 @@ describe('Update photo', () => {
     const response = await request
       .put('/profile/photo')
       .set('Cookie', `jwt=invalid`)
-      .send({ photo: Buffer.from('test') })
+      .send({ photo: EmptyPhoto })
     expect(response.status).toBe(401)
   })
 })

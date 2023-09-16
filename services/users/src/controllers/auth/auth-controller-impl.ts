@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
@@ -26,7 +26,7 @@ export class AuthControllerImpl extends BrokerController implements AuthControll
     email: string,
     password: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
     try {
