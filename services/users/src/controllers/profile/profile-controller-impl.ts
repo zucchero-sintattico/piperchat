@@ -7,13 +7,16 @@ import { BrokerController } from '@commons/utils/broker-controller'
 export class ProfileControllerImpl extends BrokerController implements ProfileController {
   private userRepository: UserRepository = new UserRepositoryImpl()
 
-  async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
+  async updateUserPhoto(
+    username: string,
+    photo: { data: Buffer; contentType: string }
+  ): Promise<void> {
     await this.userRepository.updateUserPhoto(username, photo)
     await this.publish(
       UserUpdatedMessage,
       new UserUpdatedMessage({
         username: username,
-        profilePicture: photo,
+        profilePicture: photo.data,
       })
     )
   }

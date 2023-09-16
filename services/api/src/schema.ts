@@ -7,4 +7,5 @@ export interface RequestSchema {
 export const EmptySchema: RequestSchema = {
   Params: {},
   Body: {},
+  Query: {},
 }

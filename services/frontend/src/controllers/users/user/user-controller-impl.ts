@@ -6,7 +6,13 @@ import type {
 } from '@api/users/user'
 import type { UserController } from './user-controller'
 import { AxiosController } from '@/controllers/axios-controller'
+import type { UpdatePhotoApi } from '@api/users/profile'
 export class UserControllerImpl extends AxiosController implements UserController {
+  async updateUserPhoto(request: UpdatePhotoApi.Request.Type): Promise<UpdatePhotoApi.Response> {
+    return await this.put<UpdatePhotoApi.Response>('/profile/photo', request, {
+      'Content-Type': 'multipart/form-data'
+    })
+  }
   async whoami(): Promise<WhoamiApi.Response> {
     return await this.get<WhoamiApi.Response>('/whoami')
   }

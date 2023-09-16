@@ -4,8 +4,22 @@ import { UpdatePhotoApi, UpdateDescriptionApi } from '@api/users/profile'
 import { Route } from '@commons/route'
 import { Router } from 'express'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
+import multer from 'multer'
+import fs from 'fs'
+import path from 'path'
+import { EmptySchema } from '@api/schema'
 
 const profileController: ProfileController = new ProfileControllerImpl()
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '/app/uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now())
+  },
+})
+const upload = multer({ storage: storage })
 
 export const UpdatePhotoApiRoute = new Route<
   UpdatePhotoApi.Response,
@@ -14,9 +28,14 @@ export const UpdatePhotoApiRoute = new Route<
 >({
   method: 'put',
   path: '/photo',
-  schema: UpdatePhotoApi.Request.Schema,
+  schema: EmptySchema,
+  middlewares: [upload.single('photo')],
   handler: async (req, res) => {
-    await profileController.updateUserPhoto(req.user.username, req.body.photo)
+    const photo = {
+      data: fs.readFileSync('/app/uploads/' + req.file!.filename),
+      contentType: req.file!.mimetype,
+    }
+    await profileController.updateUserPhoto(req.user.username, photo)
     const response = new UpdatePhotoApi.Responses.Success()
     res.sendResponse(response)
   },

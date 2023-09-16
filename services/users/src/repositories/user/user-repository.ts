@@ -14,7 +14,10 @@ export interface UserRepository {
    * @param username The username of the user.
    * @param photo The photo of the user.
    */
-  updateUserPhoto(username: string, photo: Buffer): Promise<void>
+  updateUserPhoto(
+    username: string,
+    photo: { data: Buffer; contentType: string }
+  ): Promise<void>
 
   /**
    * Get the user's description.

@@ -4,7 +4,10 @@ export interface ProfileController {
    * @param username The username of the user to update.
    * @param photo The photo of the user.
    */
-  updateUserPhoto(username: string, photo: Buffer): Promise<void>
+  updateUserPhoto(
+    username: string,
+    photo: { data: Buffer; contentType: string }
+  ): Promise<void>
 
   /**
    * Set the user's description.

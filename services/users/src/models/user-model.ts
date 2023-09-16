@@ -34,7 +34,7 @@ export const UserSchema = new Schema({
     default: '',
   },
   profilePicture: {
-    type: Buffer,
+    data: Buffer,
     contentType: String,
   },
   createdAt: {

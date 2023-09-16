@@ -10,7 +10,10 @@ export class UserRepositoryImpl implements UserRepository {
     return (await Users.findOne({ username: username }).orFail()).profilePicture
   }
 
-  async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
+  async updateUserPhoto(
+    username: string,
+    photo: { data: Buffer; contentType: string }
+  ): Promise<void> {
     await Users.findOneAndUpdate(
       { username: username },
       { profilePicture: photo }
