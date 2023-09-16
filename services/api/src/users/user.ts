@@ -49,7 +49,7 @@ export namespace GetUserStatusApi {
     }
   }
   export namespace Responses {
-    type UserStatusInfo = {
+    export type UserStatusInfo = {
       online: boolean
       lastActive: Date
     }

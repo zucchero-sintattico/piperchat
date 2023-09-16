@@ -3,14 +3,24 @@ import { ref } from 'vue'
 import type { FriendsController } from '@/controllers/users/friends/friends-controller'
 import { FriendsControllerImpl } from '@/controllers/users/friends/friends-controller-impl'
 import type { GetFriendsApi, SendFriendRequestApi, GetFriendsRequestsApi } from '@api/users/friends'
+import type { NotificationController } from '@/controllers/notifications/notifications-controller'
+import { NotificationControllerImpl } from '@/controllers/notifications/notifications-controller'
+import { GetUserStatusApi } from '@api/users/user'
+
+interface Friend {
+  username: string
+  status: GetUserStatusApi.Responses.UserStatusInfo
+}
 
 export const useFriendStore = defineStore(
   'friends',
   () => {
-    const friends = ref<string[]>([])
+    const friends = ref<Friend[]>([])
+
     const pendingRequests = ref<string[]>([])
 
     const friendsController: FriendsController = new FriendsControllerImpl()
+    const notificationController: NotificationController = new NotificationControllerImpl()
 
     function removeRequestOf(username: string) {
       pendingRequests.value = pendingRequests.value.filter((value) => value !== username)
@@ -21,13 +31,22 @@ export const useFriendStore = defineStore(
       try {
         const response = (await friendsController.getFriends()) as GetFriendsApi.Response
         if (response.statusCode === 200) {
+          friends.value = []
           const typed = response as GetFriendsApi.Responses.Success
-          friends.value = typed.friends
+          for (const friend of typed.friends) {
+            const statusResponse = await notificationController.getUserStatus(friend)
+            if (statusResponse.statusCode === 200) {
+              const typedStatus = await fetchUserStatus(friend)
+              friends.value.push({ username: friend, status: typedStatus.status })
+            } else {
+              console.error(statusResponse)
+            }
+          }
         } else {
-          console.log(response)
+          console.error(response)
         }
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
 
@@ -45,6 +64,15 @@ export const useFriendStore = defineStore(
       }
     }
 
+    async function fetchUserStatus(username: string): Promise<GetUserStatusApi.Responses.Success> {
+      const response = await notificationController.getUserStatus(username)
+      if (response.statusCode === 200) {
+        return response as GetUserStatusApi.Responses.Success
+      } else {
+        throw new Error('Error fetching user status for ' + username)
+      }
+    }
+
     // ================ Request ================ //
     async function sendFriendRequest(username: string) {
       const response = await friendsController.sendFriendRequest(username)
@@ -58,7 +86,8 @@ export const useFriendStore = defineStore(
       const response = await friendsController.acceptFriendRequest(username)
       if (response.statusCode === 200) {
         removeRequestOf(username)
-        friends.value.push(username)
+        const status = await fetchUserStatus(username)
+        friends.value.push({ username, status: status.status })
       } else {
         const typed = response as SendFriendRequestApi.Errors.Type
         throw new Error(typed.error)

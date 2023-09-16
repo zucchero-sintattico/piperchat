@@ -41,9 +41,13 @@ onMounted(() => {
             separator
             class="text-white text-h5"
             v-for="friend in friendStore.friends"
-            :key="friend"
+            :key="friend.username"
           >
-            <HorizontalUser :name="friend" icon="chat" @click="setActiveDirect(friend)" />
+            <HorizontalUser
+              :name="friend.username"
+              icon="chat"
+              @click="setActiveDirect(friend.username)"
+            />
           </q-list>
         </q-list>
 

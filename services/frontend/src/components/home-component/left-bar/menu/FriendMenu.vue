@@ -99,8 +99,8 @@ onMounted(async () => {
         <q-tab-panels v-model="friendTab" animated>
           <q-tab-panel name="friend">
             <div class="text-h4">All friends</div>
-            <q-list v-for="friend in friendStore.friends" :key="friend">
-              <HorizontalUser :name="friend" icon="chat" clickable class="q-pa-sm" />
+            <q-list v-for="friend in friendStore.friends" :key="friend.username">
+              <HorizontalUser :name="friend.username" icon="chat" clickable class="q-pa-sm" />
             </q-list>
           </q-tab-panel>
 
