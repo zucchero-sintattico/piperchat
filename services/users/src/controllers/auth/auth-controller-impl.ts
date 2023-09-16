@@ -47,6 +47,7 @@ export class AuthControllerImpl extends BrokerController implements AuthControll
         })
       )
       return user
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e.code === 11000) {
         if (e.keyPattern.username) {
