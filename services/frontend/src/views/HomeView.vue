@@ -5,7 +5,7 @@ import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 import SettingsForm from '@/components/home-component/SettingsForm.vue'
-import { useNotificationService } from './notification-service'
+import { useNotificationService } from '@/controllers/notifications/notification-service'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)

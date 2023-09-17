@@ -45,7 +45,7 @@ onMounted(() => {
           >
             <HorizontalUser
               :name="friend.username"
-              icon="chat"
+              :online="friend.status.online"
               @click="setActiveDirect(friend.username)"
             />
           </q-list>
