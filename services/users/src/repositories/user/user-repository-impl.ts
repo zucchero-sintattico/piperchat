@@ -1,16 +1,16 @@
 import { UserRepository } from './user-repository'
-import { Users, User } from '@models/user-model'
+import { Users, User, Photo } from '@models/user-model'
 
 export class UserRepositoryImpl implements UserRepository {
   async getUserDescription(username: string): Promise<string> {
     return (await Users.findOne({ username: username }).orFail()).description
   }
 
-  async getUserPhoto(username: string): Promise<Buffer> {
+  async getUserPhoto(username: string): Promise<Photo> {
     return (await Users.findOne({ username: username }).orFail()).profilePicture
   }
 
-  async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
+  async updateUserPhoto(username: string, photo: Photo): Promise<void> {
     await Users.findOneAndUpdate(
       { username: username },
       { profilePicture: photo }
@@ -48,7 +48,7 @@ export class UserRepositoryImpl implements UserRepository {
     email: string,
     hashedPassword: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User> {
     const user = await Users.create({
       username,
@@ -101,7 +101,12 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async acceptFriendRequest(username: string, friendUsername: string): Promise<void> {
-    const user = await this.getUserByUsername(username)
+    let user
+    try {
+      user = await this.getUserByUsername(username)
+    } catch (e) {
+      throw new Error('User not found')
+    }
     if (user.friendsRequests.includes(friendUsername)) {
       await Users.updateOne(
         { username: username },
@@ -125,15 +130,20 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async denyFriendRequest(username: string, friendUsername: string): Promise<void> {
-    const user = await this.getUserByUsername(username)
-    if (user.pendingFriendsRequests.includes(friendUsername)) {
-      await Users.updateOne(
-        { username: friendUsername },
-        { $pull: { friendsRequests: user.username } }
-      )
+    let user
+    try {
+      user = await this.getUserByUsername(username)
+    } catch (e) {
+      throw new Error('User not found')
+    }
+    if (user.friendsRequests.includes(friendUsername)) {
       await Users.updateOne(
         { username: username },
-        { $pull: { pendingFriendsRequests: friendUsername } }
+        { $pull: { friendsRequests: friendUsername } }
+      )
+      await Users.updateOne(
+        { username: friendUsername },
+        { $pull: { pendingFriendsRequests: username } }
       )
     } else {
       throw new Error('Friend request does not exist')

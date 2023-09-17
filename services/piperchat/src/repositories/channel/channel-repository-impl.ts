@@ -30,8 +30,8 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   async getChannelById(serverId: string, channelId: string) {
-    const server = await Servers.findOne({ id: serverId }).orFail()
-    const channel = server.channels.find((c) => c._id === channelId)
+    const server = await Servers.findOne({ _id: serverId }).orFail()
+    const channel = server.channels.find((c) => c.id === channelId)
     if (!channel) {
       throw new Error('Channel not found')
     }
@@ -58,7 +58,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
 
     // const server = await Servers.findOne({ _id: serverId }).orFail();
     const channels = server.channels
-    const channel = channels.find((chan) => chan._id.toString() === channelId)
+    const channel = channels.find((chan) => chan.id.toString() === channelId)
     if (!channel) {
       throw new Error('Channel not found')
     }
@@ -66,18 +66,14 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   async deleteChannel(serverId: string, channelId: string) {
-    await Servers.findByIdAndUpdate(
-      serverId,
+    await Servers.findOneAndUpdate(
+      { _id: serverId },
       {
         $pull: {
-          channels: {
-            _id: channelId,
-          },
+          channels: { _id: channelId },
         },
       },
-      {
-        new: true,
-      }
+      { new: true }
     ).orFail()
   }
 }

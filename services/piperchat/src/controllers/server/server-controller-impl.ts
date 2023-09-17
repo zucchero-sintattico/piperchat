@@ -24,7 +24,7 @@ export class ServerControllerImpl implements ServerController {
     await RabbitMQ.getInstance().publish(
       ServerCreated,
       new ServerCreated({
-        id: server._id.toString(),
+        id: server.id,
         name: server.name,
         description: server.description,
         owner: server.owner,
@@ -65,7 +65,7 @@ export class ServerControllerImpl implements ServerController {
       await RabbitMQ.getInstance().publish(
         ServerUpdated,
         new ServerUpdated({
-          id: serverUpdated._id.toString(),
+          id: serverUpdated.id.toString(),
           name: serverUpdated.name,
           description: serverUpdated.description,
         })
@@ -96,20 +96,23 @@ export class ServerControllerImpl implements ServerController {
     const server = await this.checker.getServerIfExists(id)
     // check if user is in server
     this.checker.checkIfUserIsInTheServer(server, username)
-    const participants = await this.serverRepository.getServerParticipants(server._id)
+    const participants = await this.serverRepository.getServerParticipants(server.id)
     return participants
   }
 
   async joinServer(id: string, username: string): Promise<Server> {
     const server = await this.checker.getServerIfExists(id)
+    if (server.participants.includes(username)) {
+      throw new ServerControllerExceptions.UserAlreadyJoined()
+    }
     const serverUpdated = await this.serverRepository.addServerParticipant(
-      server._id,
+      server.id,
       username
     )
     await RabbitMQ.getInstance().publish(
       UserJoinedServer,
       new UserJoinedServer({
-        serverId: serverUpdated._id.toString(),
+        serverId: serverUpdated.id.toString(),
         username: username,
       })
     )
@@ -129,7 +132,7 @@ export class ServerControllerImpl implements ServerController {
       await RabbitMQ.getInstance().publish(
         UserLeftServer,
         new UserLeftServer({
-          serverId: serverUpdated._id.toString(),
+          serverId: serverUpdated.id.toString(),
           username: username,
         })
       )
@@ -157,7 +160,7 @@ export class ServerControllerImpl implements ServerController {
       await RabbitMQ.getInstance().publish(
         UserKickedFromServer,
         new UserKickedFromServer({
-          serverId: serverUpdated._id.toString(),
+          serverId: serverUpdated.id.toString(),
           username: username,
         })
       )

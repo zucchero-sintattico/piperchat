@@ -31,28 +31,14 @@ paths:
       tags:
         - 'auth'
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: user1
-                  description: Username of the user to be logged in
-                password:
-                  type: string
-                  example: password123
-              required:
-                - username
-                - password
+        '$ref': '#/components/requestBodies/login'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/LoggedIn'
         '400':
-          description: Bad request'
-        '401':
-          description: Unauthorized
+          '$ref': '#/components/responses/BadRequest'
+        '403':
+          '$ref': '#/components/responses/UsernameOrPasswordIncorrect'
 
   /auth/register:
     post:
@@ -61,37 +47,14 @@ paths:
       tags:
         - 'auth'
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: user1
-                password:
-                  type: string
-                  example: password123
-                email:
-                  type: string
-                  example:
-                description:
-                  type: string
-                  example: 'Here to make new friends'
-                photo:
-                  type: string
-                  format: base64
-              required:
-                - username
-                - password
-                - email
+        '$ref': '#/components/requestBodies/register'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/Registered'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '409':
-          description: Username or mail already exists # this is a security issue, we should not tell the user that the username already exists
+          '$ref': '#/components/responses/UserAlreadyExists'
 
   /auth/logout:
     post:
@@ -103,9 +66,9 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/LoggedOut'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
 
   /auth/refresh-token:
     post:
@@ -117,7 +80,7 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/RefreshToken'
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
 
@@ -130,23 +93,14 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                photo:
-                  type: string
-                  format: base64
-              required:
-                - photo
+        '$ref': '#/components/requestBodies/updatePhoto'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/PhotoUpdated'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
 
   /profile/description:
     put:
@@ -157,23 +111,14 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                description:
-                  type: string
-                  example: 'Here to make new friends'
-              required:
-                - description
+        '$ref': '#/components/requestBodies/updateDescription'
       responses:
         '200':
-          description: Ok
+          '$ref': '#/components/responses/DescriptionUpdated'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
 
   /users/{username}/status:
     get:
@@ -187,20 +132,13 @@ paths:
         - $ref: '#/components/parameters/username'
       responses:
         '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  online:
-                    type: boolean
+          '$ref': '#/components/responses/UserStatus'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
         '404':
-          description: User not found
+          '$ref': '#/components/responses/UserNotFound'
 
   /users/{username}/photo:
     get:
@@ -214,21 +152,13 @@ paths:
         - $ref: '#/components/parameters/username'
       responses:
         '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  photo:
-                    type: string
-                    format: base64
+          '$ref': '#/components/responses/UserPhoto'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
         '404':
-          description: User not found
+          '$ref': '#/components/responses/UserNotFound'
 
   /users/{username}/description:
     get:
@@ -242,21 +172,13 @@ paths:
         - $ref: '#/components/parameters/username'
       responses:
         '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  description:
-                    type: string
-                    example: 'Here to make new friends'
+          '$ref': '#/components/responses/UserDescription'
         '400':
-          description: Bad request
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
         '404':
-          description: User not found
+          '$ref': '#/components/responses/UserNotFound'
 
   /users/{username}/messages:
     get:
@@ -268,35 +190,15 @@ paths:
         - bearerAuth: []
       parameters:
         - '$ref': '#/components/parameters/username'
-        - in: query
-          name: from
-          required: false
-          description: Starting index of messages to return
-          schema:
-            type: number
-          example: 0
-        - in: query
-          name: limit
-          required: false
-          description: Limit of messages to return
-          schema:
-            type: number
-          example: 10
+        - '$ref': '#/components/parameters/from'
+        - '$ref': '#/components/parameters/limit'
       responses:
         '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  '$ref': '#/components/schemas/message'
-                example:
-                  - messageId: message123
-                    sender: user1
-                    content: Hello World!
+          '$ref': '#/components/responses/DirectMessages'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
         '401':
-          '$ref': '#/components/responses/UnauthorizedError'
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
     post:
       summary: Send a message
       description: Send a message to another user
@@ -854,12 +756,305 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
+  requestBodies:
+    login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+                description: Username of the user to be logged in
+              password:
+                type: string
+                example: password123
+                description: Password of the user to be logged in
+            required:
+              - username
+              - password
+    register:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+              password:
+                type: string
+                example: password123
+              email:
+                type: string
+                example: email@email.com
+              description:
+                type: string
+                example: 'Here to make new friends'
+              photo:
+                type: string
+                format: base64
+            required:
+              - username
+              - password
+              - email
+    updatePhoto:
+      description: Update photo request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              photo:
+                type: string
+                format: base64
+            required:
+              - photo
+    updateDescription:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                example: 'Here to make new friends'
+            required:
+              - description
+
   responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              params:
+                description: List of parameters that are not validß
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              body:
+                description: List of body fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              query:
+                description: List of query fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+    JwtTokenMissingOrInvalid:
+      description: JWT token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: JWT token Missing or Invalid
     UnauthorizedError:
       description: Access token is missing or invalid
     ForbiddenError:
       description: You don't have permission to access this resource
+    UserNotFound:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User not found
 
+    # LOGIN
+    LoggedIn:
+      description: Logged in
+      content:
+        application/json:
+          schema:
+            properties:
+              jwt:
+                type: string
+                description: JWT token
+    UsernameOrPasswordIncorrect:
+      description: Username or password incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Username or password incorrect
+    # REGISTER
+    Registered:
+      description: User registered successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              createdUser:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: user1
+                  email:
+                    type: string
+                    example: email@email.com
+                  description:
+                    type: string
+                    example: 'Here to make new friends'
+                  photo:
+                    type: string
+                    format: base64
+                required:
+                  - username
+                  - email
+    UserAlreadyExists:
+      description: User already exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User already exists
+    # LOGOUT
+    LoggedOut:
+      description: Logged out
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Logged out
+
+    # REFRESH TOKEN
+    RefreshToken:
+      description: Refresh token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+                description: JWT token
+
+    # UPDATE PHOTO
+    PhotoUpdated:
+      description: Photo updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Photo updated successfully
+
+    # UPDATE DESCRIPTION
+    DescriptionUpdated:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Description updated successfully
+
+    # GET USER STATUS
+    UserStatus:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              online:
+                type: boolean
+                example: true
+              lastActive:
+                type: string
+                format: date-time
+                example: '2021-05-01T12:00:00.000Z'
+    # GET USER PHOTO
+    UserPhoto:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              photo:
+                type: string
+                format: base64
+    # GET USER DESCRIPTION
+    UserDescription:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                example: 'Here to make new friends'
+    # DIRECT MESSAGES
+    DirectMessages:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              '$ref': '#/components/schemas/message'
+            example:
+              - messageId: message123
+                sender: user1
+                content: Hello World!
   schemas:
     server:
       type: object
@@ -925,7 +1120,7 @@ components:
     message:
       type: object
       properties:
-        messageId:
+        id:
           type: string
           example: message123
         sender:
@@ -934,6 +1129,10 @@ components:
         content:
           type: string
           example: Hello World
+        timestamp:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
 
   parameters:
     username:
@@ -944,6 +1143,24 @@ components:
       schema:
         type: string
       example: user1
+
+    from:
+      name: from
+      in: query
+      required: true
+      description: Starting index of messages to return
+      schema:
+        type: number
+      example: 0
+
+    limit:
+      name: limit
+      in: query
+      required: true
+      description: Limit of messages to return
+      schema:
+        type: number
+      example: 10
 
     serverId:
       name: serverId

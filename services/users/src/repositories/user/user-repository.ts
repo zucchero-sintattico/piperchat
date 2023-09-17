@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 
 export interface UserRepository {
   /**
@@ -7,14 +7,14 @@ export interface UserRepository {
    * @returns The photo of the user.
    * @throws {UserNotFound} If the user is not found.
    */
-  getUserPhoto(username: string): Promise<Buffer>
+  getUserPhoto(username: string): Promise<Photo>
 
   /**
    * Update the user's photo.
    * @param username The username of the user.
    * @param photo The photo of the user.
    */
-  updateUserPhoto(username: string, photo: Buffer): Promise<void>
+  updateUserPhoto(username: string, photo: Photo): Promise<void>
 
   /**
    * Get the user's description.
@@ -45,7 +45,7 @@ export interface UserRepository {
     email: string,
     hashedPassword: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User>
 
   /**

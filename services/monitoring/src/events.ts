@@ -14,7 +14,7 @@ export class AllEventsListener {
   private static monitoringRepository: MonitoringRepository =
     new MonitoringRepositoryImpl()
 
-  private static exchanges = ['messages', 'users', 'servers', 'channels', 'notifications']
+  private static exchanges = ['message', 'user', 'server', 'channel', 'notification']
 
   static async initialize() {
     this.broker = RabbitMQ.getInstance()

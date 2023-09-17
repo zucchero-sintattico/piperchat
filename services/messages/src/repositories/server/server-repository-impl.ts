@@ -32,19 +32,15 @@ export class ServerRepositoryImpl implements ServerRepository {
   async addMessageChannel(serverId: string, channelId: string): Promise<void> {
     await Servers.updateOne(
       { id: serverId },
-      {
-        $push: {
-          channels: {
-            id: channelId,
-            messages: [],
-          },
-        },
-      }
+      { $push: { messagesChannels: { id: channelId, messages: [] } } }
     )
   }
 
   async removeMessageChannel(serverId: string, channelId: string): Promise<void> {
-    await Servers.updateOne({ id: serverId }, { $pull: { channels: { id: channelId } } })
+    await Servers.findOneAndUpdate(
+      { id: serverId },
+      { $pull: { messagesChannels: { id: channelId } } }
+    ).orFail()
   }
 
   async containsMessageChannel(serverId: string, channelId: string): Promise<boolean> {

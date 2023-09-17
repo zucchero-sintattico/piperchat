@@ -116,7 +116,17 @@ export namespace SendFriendRequestApi {
       statusCode = 404
       error = 'Friend request not found' as const
     }
-    export type Type = UserNotFound | InvalidAction | FriendRequestAlreadySent
+    export class CannotSendFriendRequestToYourself extends ErrorResponse {
+      statusCode = 400
+      error = 'Cannot send a friend request to yourself' as const
+    }
+
+    export type Type =
+      | UserNotFound
+      | InvalidAction
+      | FriendRequestAlreadySent
+      | FriendRequestNotFound
+      | CannotSendFriendRequestToYourself
   }
   export type Response = Responses.Type | Errors.Type
 }

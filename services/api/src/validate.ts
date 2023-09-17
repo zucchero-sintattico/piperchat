@@ -11,12 +11,9 @@ function checkFields<T extends Record<string, unknown>>(
   object: T,
   schema: Record<string, string>
 ): string[] {
-  // Return all missing fields in the object that are required by the schema
-  console.log('Validating', object, schema)
   const missing = []
   for (const [key, value] of Object.entries(schema)) {
-    console.log('Checking', key, value)
-    if (!(key in object)) {
+    if (!(key in object) && !value.endsWith('?')) {
       missing.push(key)
     }
   }

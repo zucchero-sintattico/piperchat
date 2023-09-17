@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
-import type { WhoamiApi } from '@api/users/user'
+import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
+import type { UpdatePhotoApi } from '@api/users/profile'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -26,7 +27,14 @@ export const useUserStore = defineStore(
     const username = ref('')
     const email = ref('')
     const description = ref('')
+
+    const photoLoaded = ref(false)
     const photo = ref('')
+
+    async function reload() {
+      await whoami()
+      await reloadUserPhoto()
+    }
 
     // Display direct or channel in left bar
     const selectedTab = ref(SelectedTab.Directs)
@@ -93,6 +101,47 @@ export const useUserStore = defineStore(
       }
     }
 
+    async function updatePhoto(newPhoto: string) {
+      try {
+        const response = await userController.updateUserPhoto({
+          photo: newPhoto
+        })
+        if (response.statusCode === 200) {
+          await reloadUserPhoto()
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    async function reloadUserPhoto() {
+      try {
+        console.log(username.value)
+        const response = await userController.getUserPhoto({
+          username: username.value
+        })
+        if (response.statusCode === 200) {
+          const typed = response as GetUserPhotoApi.Responses.Success
+          console.log(typed)
+          if (typed.photo.data === undefined) {
+            photo.value = 'src/assets/user-avatar.png'
+          } else {
+            photo.value =
+              'data:image/jpeg;base64,' +
+              btoa(
+                new Uint8Array(typed.photo.data.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                )
+              )
+          }
+          photoLoaded.value = true
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
     return {
       isLoggedIn,
       username,
@@ -108,7 +157,11 @@ export const useUserStore = defineStore(
       whoami,
       login,
       register,
-      logout
+      logout,
+      updatePhoto,
+      reloadUserPhoto,
+      photoLoaded,
+      reload
     }
   },
   { persist: true }

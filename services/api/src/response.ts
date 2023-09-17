@@ -1,4 +1,5 @@
-export type Empty = object
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Empty = any
 
 export interface ResponseFacade {
   status(status: number): ResponseFacade

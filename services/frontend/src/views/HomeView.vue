@@ -21,7 +21,7 @@ function toggleLeftDrawer() {
 
 onMounted(() => {
   userStore.inContentArea = ContentArea.Empty
-  userStore.whoami()
+  userStore.reload()
 })
 </script>
 
@@ -43,7 +43,7 @@ onMounted(() => {
         <!--Avatar image that toggle dropdown menu with logout and settings option-->
         <q-avatar>
           <!-- add hover effect to image -->
-          <img src="src/assets/user-avatar.png" class="cursor-pointer" />
+          <img :src="userStore.photo" class="cursor-pointer" />
           <q-menu align="right">
             <q-list>
               <q-item clickable v-close-popup @click="isSettingsFormActive = true">

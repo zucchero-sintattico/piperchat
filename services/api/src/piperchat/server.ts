@@ -35,7 +35,7 @@ export namespace KickUserFromServerApi {
       error = 'User not authorized' as const
     }
     export class OwnerCannotLeave extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'Owner cannot leave the server' as const
     }
     export type Type = ServerNotFound | UserNotAuthorized | OwnerCannotLeave
@@ -106,7 +106,11 @@ export namespace JoinServerApi {
       statusCode = 404
       error = 'Server not found' as const
     }
-    export type Type = ServerNotFound
+    export class UserAlreadyJoined extends ErrorResponse {
+      statusCode = 403
+      error = 'User already joined' as const
+    }
+    export type Type = ServerNotFound | UserAlreadyJoined
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -138,11 +142,11 @@ export namespace LeaveServerApi {
       error = 'Server not found' as const
     }
     export class UserNotInServer extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'User not in server' as const
     }
     export class OwnerCannotLeave extends ErrorResponse {
-      statusCode = 422
+      statusCode = 403
       error = 'Owner cannot leave the server' as const
     }
     export type Type = ServerNotFound | UserNotInServer | OwnerCannotLeave
@@ -166,14 +170,14 @@ export namespace GetServerApi {
   }
   export namespace Responses {
     export interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string
       description?: string
     }
     export interface Server {
-      _id: string
+      id: string
       name: string
       description: string
       owner: string
@@ -194,7 +198,11 @@ export namespace GetServerApi {
       statusCode = 404
       error = 'Server not found' as const
     }
-    export type Type = ServerNotFound
+    export class UserNotAuthorized extends ErrorResponse {
+      statusCode = 403
+      error = 'User not authorized' as const
+    }
+    export type Type = ServerNotFound | UserNotAuthorized
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -291,14 +299,14 @@ export namespace GetServersApi {
   }
   export namespace Responses {
     export interface Channel {
-      _id: string
+      id: string
       name: string
       createdAt: Date
       channelType: string
       description?: string
     }
     export interface Server {
-      _id: string
+      id: string
       name: string
       description: string
       owner: string
@@ -344,6 +352,11 @@ export namespace CreateServerApi {
     export class Success extends Response {
       statusCode = 200
       message = 'Server created successfully'
+      serverId: string
+      constructor(serverId: string) {
+        super()
+        this.serverId = serverId
+      }
     }
     export type Type = Success
   }

@@ -47,7 +47,8 @@ export interface ChannelController {
     channelId: string,
     serverId: string,
     from: number,
-    limit: number
+    limit: number,
+    username: string
   ): Promise<Message[]>
 
   /**

@@ -1,4 +1,4 @@
-import { User } from '@/models/user-model'
+import { Photo, User } from '@/models/user-model'
 
 export interface UserController {
   /**
@@ -16,7 +16,7 @@ export interface UserController {
    * @throws {UserNotFound} If the user is not found.
    * @throws {PhotoNotPresent} If the photo is not present.
    */
-  getUserPhoto(username: string): Promise<Buffer>
+  getUserPhoto(username: string): Promise<Photo>
 
   /**
    * Get the user's description.

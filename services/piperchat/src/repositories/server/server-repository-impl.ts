@@ -9,7 +9,6 @@ export class ServerRepositoryImpl implements ServerRepository {
       owner: owner,
       participants: [owner],
     })
-    await server.save()
     return server
   }
 
@@ -35,7 +34,7 @@ export class ServerRepositoryImpl implements ServerRepository {
   }
 
   async deleteServerById(id: string) {
-    await Servers.findOneAndDelete({ _id: id }, { new: true }).orFail()
+    await Servers.findOneAndDelete({ _id: id }).orFail()
   }
 
   async getServerParticipants(id: string) {

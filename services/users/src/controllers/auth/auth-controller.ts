@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 
 export interface AuthController {
   /**
@@ -15,7 +15,7 @@ export interface AuthController {
     email: string,
     password: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User>
 
   /**
@@ -47,6 +47,7 @@ export interface AuthController {
 
 export class AuthControllerExceptions {
   static UserAlreadyExists = class extends Error {}
+  static EmailAlreadyExists = class extends Error {}
   static UserNotFound = class extends Error {}
   static UserAlreadyLoggedIn = class extends Error {}
   static RefreshTokenNotPresent = class extends Error {}

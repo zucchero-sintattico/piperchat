@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
@@ -11,14 +11,14 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from '@commons/utils/jwt'
-import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import {
   UserCreatedMessage,
   UserLoggedInMessage,
   UserLoggedOutMessage,
 } from '@messages-api/users'
+import { BrokerController } from '@commons/utils/broker-controller'
 
-export class AuthControllerImpl implements AuthController {
+export class AuthControllerImpl extends BrokerController implements AuthController {
   private userRepository: UserRepository = new UserRepositoryImpl()
 
   async register(
@@ -26,24 +26,39 @@ export class AuthControllerImpl implements AuthController {
     email: string,
     password: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
-    const user = await this.userRepository
-      .createUser(username, email, hashedPassword, description, photo)
-      .catch(() => {
-        throw new AuthControllerExceptions.UserAlreadyExists()
-      })
-    await RabbitMQ.getInstance().publish(
-      UserCreatedMessage,
-      new UserCreatedMessage({
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        profilePicture: user.profilePicture,
-      })
-    )
-    return user
+    try {
+      const user = await this.userRepository.createUser(
+        username,
+        email,
+        hashedPassword,
+        description,
+        photo
+      )
+      await this.publish(
+        UserCreatedMessage,
+        new UserCreatedMessage({
+          username: user.username,
+          email: user.email,
+          description: user.description,
+          profilePicture: user.profilePicture,
+        })
+      )
+      return user
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      if (e.code === 11000) {
+        if (e.keyPattern.username) {
+          throw new AuthControllerExceptions.UserAlreadyExists()
+        }
+        if (e.keyPattern.email) {
+          throw new AuthControllerExceptions.EmailAlreadyExists()
+        }
+      }
+      throw e
+    }
   }
 
   async login(username: string, password: string): Promise<string> {
@@ -61,7 +76,7 @@ export class AuthControllerImpl implements AuthController {
 
     await this.userRepository.login(user.username, refreshToken)
 
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserLoggedInMessage,
       new UserLoggedInMessage({
         username: user.username,
@@ -92,7 +107,7 @@ export class AuthControllerImpl implements AuthController {
     await this.userRepository.logout(username).catch(() => {
       throw new AuthControllerExceptions.UserNotFound()
     })
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserLoggedOutMessage,
       new UserLoggedOutMessage({
         username: username,

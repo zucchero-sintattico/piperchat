@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { Channel, ChannelSchema } from './channel-model'
 
 export interface Server {
-  _id: string
+  id: string
   name: string
   description: string
   owner: string
@@ -37,6 +37,10 @@ export const ServerSchema = new Schema<Server>({
     required: true,
     default: [],
   },
+})
+
+ServerSchema.set('toJSON', {
+  virtuals: true,
 })
 
 export const Servers = model<Server>('Server', ServerSchema)

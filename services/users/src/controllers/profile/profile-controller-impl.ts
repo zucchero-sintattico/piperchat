@@ -1,26 +1,27 @@
-import { RabbitMQ } from '@commons/utils/rabbit-mq'
 import { ProfileController } from './profile-controller'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import { UserUpdatedMessage } from '@messages-api/users'
+import { BrokerController } from '@commons/utils/broker-controller'
+import { Photo } from '@/models/user-model'
 
-export class ProfileControllerImpl implements ProfileController {
+export class ProfileControllerImpl extends BrokerController implements ProfileController {
   private userRepository: UserRepository = new UserRepositoryImpl()
 
-  async updateUserPhoto(username: string, photo: Buffer): Promise<void> {
+  async updateUserPhoto(username: string, photo: Photo): Promise<void> {
     await this.userRepository.updateUserPhoto(username, photo)
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserUpdatedMessage,
       new UserUpdatedMessage({
         username: username,
-        profilePicture: photo,
+        profilePicture: photo.data,
       })
     )
   }
 
   async updateUserDescription(username: string, description: string): Promise<void> {
     await this.userRepository.updateUserDescription(username, description)
-    await RabbitMQ.getInstance().publish(
+    await this.publish(
       UserUpdatedMessage,
       new UserUpdatedMessage({
         username: username,

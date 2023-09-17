@@ -31,13 +31,13 @@ export class ChannelControllerImpl implements ChannelController {
     username: string,
     name: string,
     channelType: string,
-    description?: string | undefined
+    description?: string
   ) {
     const server = await this.checker.getServerIfExists(serverId)
     this.checker.checkIfUserIsTheOwner(server, username)
     await this.checker.checkIfChannelAlreadyExists(serverId, name)
     const channel = await this.channelRepository.createChannel(
-      serverId.toString(),
+      serverId,
       name,
       channelType,
       description
@@ -45,8 +45,8 @@ export class ChannelControllerImpl implements ChannelController {
     await RabbitMQ.getInstance().publish(
       ChannelCreated,
       new ChannelCreated({
-        serverId: serverId.toString(),
-        channelId: channel._id.toString(),
+        serverId: serverId,
+        channelId: channel.id,
         name: channel.name,
         channelType: channel.channelType,
         description: channel.description,
@@ -64,7 +64,8 @@ export class ChannelControllerImpl implements ChannelController {
   ): Promise<Channel> {
     const server = await this.checker.getServerIfExists(serverId)
     this.checker.checkIfUserIsTheOwner(server, username)
-    if (name) {
+    const channel = server.channels.find((channel) => channel.id === channelId)
+    if (name && channel?.name !== name) {
       await this.checker.checkIfChannelAlreadyExists(serverId, name)
     }
     try {

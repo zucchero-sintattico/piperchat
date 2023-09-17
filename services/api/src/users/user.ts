@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { EmptySchema, RequestSchema } from '../schema'
+import { UpdatePhotoApi } from './profile'
 
 /**
  * Whoami endpoint
@@ -95,8 +96,8 @@ export namespace GetUserPhotoApi {
   export namespace Responses {
     export class Success extends Response {
       statusCode = 200
-      photo: Buffer
-      constructor(photo: Buffer) {
+      photo: UpdatePhotoApi.Photo
+      constructor(photo: UpdatePhotoApi.Photo) {
         super()
         this.photo = photo
       }
@@ -108,7 +109,7 @@ export namespace GetUserPhotoApi {
       statusCode = 404
       error = 'User not found' as const
     }
-    export type Type = Error
+    export type Type = UserNotFound
   }
   export type Response = Responses.Type | Errors.Type
 }

@@ -11,7 +11,7 @@ const WebRTCService = (server: http.Server) => {
 export const WebRtcServiceConfiguration: MicroserviceConfiguration = {
   port: Number.parseInt(process.env.PORT!) || 3000,
   amqpUri: process.env.AMQP_URI || 'amqp://localhost:5672',
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/messages',
+  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/webrtc',
   eventsConfiguration: new WebRtcServiceEventsConfiguration(),
   expressConfiguration: {
     middlewares: DefaultMiddlewares,
