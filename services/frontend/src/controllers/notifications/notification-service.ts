@@ -7,6 +7,7 @@ import type {
   UserOnlineNotification
 } from '@api/notifications/messages'
 import { useUserStore } from '@/stores/user'
+import { io } from 'socket.io-client'
 
 class NotificationService {
   callbacks: { [key: string]: Function } = {}
@@ -51,15 +52,12 @@ function createNotificationService() {
 
 export function useNotificationService() {
   const notificationService = createNotificationService()
-  const ev = new EventSource('/notification')
+  const notificationSocket = io({
+    transports: ['websocket'],
+    path: '/notification'
+  })
 
-  ev.addEventListener('message', (e) => {
-    try {
-      const data = JSON.parse(e.data)
-      console.log(data)
-      notificationService.callbacks[data.type](data)
-    } catch (e) {
-      console.log(e)
-    }
+  notificationSocket.on('notification', (data: any) => {
+    notificationService.callbacks[data.type](data)
   })
 }

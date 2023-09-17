@@ -1,6 +1,12 @@
 import { DefaultMiddlewares, MicroserviceConfiguration } from '@commons/service'
 import { NotificationsServiceEventsConfiguration } from './events-configuration'
 import { serviceRouter } from './routes/router'
+import { NotificationSocketServer } from './notification-service'
+import http from 'http'
+
+const NotificationService = (server: http.Server) => {
+  new NotificationSocketServer(server)
+}
 
 export const NotificationsServiceConfiguration: MicroserviceConfiguration = {
   port: Number.parseInt(process.env.PORT!) || 3000,
@@ -10,5 +16,6 @@ export const NotificationsServiceConfiguration: MicroserviceConfiguration = {
   expressConfiguration: {
     middlewares: DefaultMiddlewares,
     serviceRouter: serviceRouter,
+    serverBasedServices: [NotificationService],
   },
 }
