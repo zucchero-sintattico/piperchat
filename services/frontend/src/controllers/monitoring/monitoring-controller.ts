@@ -6,6 +6,6 @@ export interface MonitoringController {
 
 export class MonitoringControllerImpl extends AxiosController implements MonitoringController {
   async getServicesStatus(): Promise<GetServicesStatusApi.Response> {
-    return this.get<GetServicesStatusApi.Response>('/monitoring/status')
+    return this.get<GetServicesStatusApi.Response>('/status')
   }
 }

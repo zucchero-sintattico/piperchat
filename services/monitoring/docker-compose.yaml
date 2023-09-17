@@ -24,7 +24,7 @@ services:
     labels:
       - |
         traefik.http.routers.monitoring-service.rule=
-        (Method(`GET`) && Path(`/health`))
+        (Method(`GET`) && Path(`/status`))
 
   db-monitoring-service:
     image: mongo
