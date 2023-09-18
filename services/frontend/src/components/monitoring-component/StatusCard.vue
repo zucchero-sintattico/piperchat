@@ -9,6 +9,7 @@ function updateServiceStatus() {
 }
 
 onMounted(() => {
+  monitoringStore.getServicesStatus()
   window.setInterval(updateServiceStatus, 3000)
 })
 </script>
