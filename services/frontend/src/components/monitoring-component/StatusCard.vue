@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { useMonitoringStore } from '@/stores/monitoring'
-import { onMounted } from 'vue'
 
 const monitoringStore = useMonitoringStore()
-
-onMounted(() => {
-  monitoringStore.getServicesStatus()
-})
 </script>
 <template>
   <q-item v-for="service in monitoringStore.serviceStatus" :key="service">
