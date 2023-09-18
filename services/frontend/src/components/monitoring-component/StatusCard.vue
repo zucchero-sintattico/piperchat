@@ -3,8 +3,13 @@ import { useMonitoringStore } from '@/stores/monitoring'
 import { onMounted } from 'vue'
 
 const monitoringStore = useMonitoringStore()
-onMounted(() => {
+
+function updateServiceStatus() {
   monitoringStore.getServicesStatus()
+}
+
+onMounted(() => {
+  window.setInterval(updateServiceStatus, 3000)
 })
 </script>
 <template>
