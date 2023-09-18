@@ -34,4 +34,6 @@ export class HealthCheckService {
       })
     }, this.interval)
   }
+
+  async stop() {}
 }
