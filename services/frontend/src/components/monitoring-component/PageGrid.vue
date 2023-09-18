@@ -2,8 +2,8 @@
 import StatusCard from '@/components/monitoring-component/StatusCard.vue'
 </script>
 <template>
-  <div class="q-pa-md example-col-gutter-vertical">
-    <div class="row q-col-gutter-y-md">
+  <div class="column items-center">
+    <div class="row q-ml-auto q-mr-auto" style="width: fit-content">
       <StatusCard />
     </div>
   </div>

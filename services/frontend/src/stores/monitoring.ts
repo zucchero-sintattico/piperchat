@@ -14,8 +14,6 @@ export const useMonitoringStore = defineStore('monitoring', () => {
     if (response.statusCode === 200) {
       const typed = response as GetServicesStatusApi.Responses.Success
       serviceStatus.value = typed.services
-    } else {
-      console.log(response)
     }
   }
 

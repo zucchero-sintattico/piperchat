@@ -10,7 +10,7 @@ function updateServiceStatus() {
 
 onMounted(() => {
   monitoringStore.getServicesStatus()
-  window.setInterval(updateServiceStatus, 3000)
+  window.setInterval(updateServiceStatus, 10000)
 })
 </script>
 <template>
@@ -20,8 +20,8 @@ onMounted(() => {
         <div class="text-h6">{{ service.service }}</div>
       </q-card-section>
 
-      <q-card-section class="q-pt-none">Status: {{ service.status }} </q-card-section>
-      <q-card-section class="q-pt-none">Timestamp: {{ service.timestamp }} </q-card-section>
+      <q-card-section>Status: {{ service.status }} </q-card-section>
+      <q-card-section>Timestamp: {{ service.timestamp }} </q-card-section>
     </q-card>
   </q-item>
 </template>
