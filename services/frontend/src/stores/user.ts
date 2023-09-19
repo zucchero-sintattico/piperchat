@@ -47,7 +47,7 @@ export const useUserStore = defineStore(
     const selectedDirect = ref('')
     const inContentArea = ref(ContentArea.Empty)
 
-    // Theme
+    //Stuffs for Themes
     const DefaultTheme: Theme = {
       label: ThemesList[0].label,
       primary: ThemesList[0].primary,
