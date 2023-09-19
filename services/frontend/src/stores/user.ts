@@ -108,7 +108,11 @@ export const useUserStore = defineStore(
         username.value = response.user.username
         email.value = response.user.email
       } catch (e) {
-        console.log(e)
+        isLoggedIn.value = false
+        username.value = ''
+        email.value = ''
+        logout()
+        console.log('automatic logout')
       }
     }
 
