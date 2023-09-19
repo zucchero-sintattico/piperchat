@@ -5,10 +5,16 @@ import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 import SettingsForm from '@/components/home-component/SettingsForm.vue'
+import { setCssVar } from 'quasar'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
+
+setCssVar('primary', userStore.selectedTheme.primary)
+setCssVar('secondary', userStore.selectedTheme.secondary)
+setCssVar('accent', userStore.selectedTheme.accent)
+setCssVar('dark', userStore.selectedTheme.dark)
 
 function logout() {
   userStore.logout()
@@ -87,12 +93,14 @@ onMounted(() => {
 <style>
 .title {
   display: flex;
-  justify-content: center; /* Center horizontally within q-toolbar-title */
+  justify-content: center;
+  /* Center horizontally within q-toolbar-title */
 }
 
 .avatar-and-title {
   display: flex;
-  align-items: center; /* Vertical alignment in the center */
+  align-items: center;
+  /* Vertical alignment in the center */
 }
 
 .left-menu {
@@ -102,6 +110,7 @@ onMounted(() => {
 .content-area {
   height: 100%;
 }
+
 h1 {
   font-size: x-large !important;
   line-height: normal !important;

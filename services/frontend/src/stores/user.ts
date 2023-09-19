@@ -7,6 +7,7 @@ import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
 import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
 import type { UpdatePhotoApi } from '@api/users/profile'
+import { ThemesList } from '@/assets/theme'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -30,6 +31,8 @@ export const useUserStore = defineStore(
 
     const photoLoaded = ref(false)
     const photo = ref('')
+
+    const selectedTheme = ref(ThemesList[0])
 
     async function reload() {
       await whoami()
@@ -161,7 +164,9 @@ export const useUserStore = defineStore(
       updatePhoto,
       reloadUserPhoto,
       photoLoaded,
-      reload
+      reload,
+      themeList,
+      selectedTheme
     }
   },
   { persist: true }

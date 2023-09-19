@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { computed, onMounted, ref } from 'vue'
+import { setCssVar } from 'quasar'
 
 const userStore = useUserStore()
 
@@ -27,6 +28,13 @@ function openFileInput() {
   const input = document.getElementById('fileInput')
   input?.click()
 }
+
+function updateTheme() {
+  setCssVar('primary', userStore.selectedTheme.primary)
+  setCssVar('secondary', userStore.selectedTheme.secondary)
+  setCssVar('accent', userStore.selectedTheme.accent)
+  setCssVar('dark', userStore.selectedTheme.dark)
+}
 </script>
 
 <template>
@@ -50,6 +58,14 @@ function openFileInput() {
       <q-input :model-value="userStore.username" label="Username" outlined class="q-mb-md" />
 
       <q-input :model-value="userStore.email" label="Email" outlined class="q-mb-md" />
+
+      <q-select
+        outlined
+        v-model="userStore.selectedTheme"
+        :options="userStore.themeList"
+        label="Theme"
+        @change="updateTheme"
+      />
 
       <q-btn
         label="Cancel"

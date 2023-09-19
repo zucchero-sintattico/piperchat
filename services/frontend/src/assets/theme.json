@@ -1,0 +1,15 @@
+{
+  "Classic": {
+    "primary": "#007063",
+    "secondary": "#323232",
+    "accent": "#E4F9F5",
+    "dark": "#212121"
+  },
+  "Blue": {
+    "name": "Blue",
+    "primary": "#2C3333",
+    "secondary": "#A5C9CA",
+    "accent": "#E7F6F2",
+    "dark": "#2C3333"
+  }
+}
