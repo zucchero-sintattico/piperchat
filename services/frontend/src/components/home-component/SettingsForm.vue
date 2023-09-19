@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { setCssVar } from 'quasar'
 
 const userStore = useUserStore()
@@ -62,9 +62,10 @@ function updateTheme() {
       <q-select
         outlined
         v-model="userStore.selectedTheme"
-        :options="userStore.themeList"
+        :options="userStore.ThemesList"
         label="Theme"
-        @change="updateTheme"
+        @update:model-value="updateTheme()"
+        emit-value
       />
 
       <q-btn

@@ -32,8 +32,6 @@ export const useUserStore = defineStore(
     const photoLoaded = ref(false)
     const photo = ref('')
 
-    const selectedTheme = ref(ThemesList[0])
-
     async function reload() {
       await whoami()
       await reloadUserPhoto()
@@ -48,6 +46,9 @@ export const useUserStore = defineStore(
     const selectedChannel = ref(['', ''])
     const selectedDirect = ref('')
     const inContentArea = ref(ContentArea.Empty)
+
+    // Theme
+    const selectedTheme = ref(ThemesList[0])
 
     function setActiveChannel(channelId: string) {
       selectedChannel.value[0] = selectedServerId.value
@@ -165,7 +166,7 @@ export const useUserStore = defineStore(
       reloadUserPhoto,
       photoLoaded,
       reload,
-      themeList,
+      ThemesList,
       selectedTheme
     }
   },
