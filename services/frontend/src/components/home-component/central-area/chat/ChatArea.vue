@@ -64,28 +64,34 @@ onMounted(() => {
 <template>
   <q-page-container>
     <q-page padding>
-      <div v-if="showChat">
-        <div v-for="(message, index) in messageStore.messages" :key="index">
-          <q-chat-message
-            :name="message.sender"
-            avatar="https://cdn.quasar.dev/img/avatar1.jpg"
-            :text="[message.content]"
-            :sent="userStore.username == message.sender"
-          />
+
+      <q-infinite-scroll reverse class="bottom-content">
+        <div v-if="showChat">
+          <div v-for="(message, index) in messageStore.messages" :key="index" class="justify-bottom">
+            <q-chat-message :name="message.sender" avatar="https://cdn.quasar.dev/img/avatar1.jpg"
+              :text="[message.content]" :sent="userStore.username == message.sender" />
+          </div>
         </div>
-      </div>
-      <div id="last"></div>
-      <!-- place QPageScroller at end of page -->
-      <q-page-scroller
-        ref="pageScroller"
-        reverse
-        position="top"
-        expand
-        :scroll-offset="200"
-        :offset="[0, 18]"
-      >
-        <q-btn fab icon="keyboard_arrow_down" color="primary" />
-      </q-page-scroller>
+        <div id="last"></div>
+        <!-- place QPageScroller at end of page -->
+        <q-page-scroller ref="pageScroller" reverse position="top" expand :scroll-offset="200" :offset="[0, 18]">
+          <q-btn fab icon="keyboard_arrow_down" color="primary" />
+        </q-page-scroller>
+      </q-infinite-scroll>
     </q-page>
   </q-page-container>
 </template>
+
+<style scoped lang="scss">
+.bottom-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  /* Reverse the order of displayed items */
+}
+</style>
