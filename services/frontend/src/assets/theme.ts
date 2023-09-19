@@ -23,9 +23,9 @@ export const ThemesList: Theme[] = [
   },
   {
     label: 'Yellow',
-    primary: '#395564',
-    secondary: '#A5C6CA',
-    accent: '#E7F622',
+    primary: '#3C6255',
+    secondary: '#61876E',
+    accent: '#EAE7B1',
     dark: '#2C3333'
   }
 ]

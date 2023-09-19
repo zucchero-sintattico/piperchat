@@ -7,7 +7,7 @@ import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
 import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
 import type { UpdatePhotoApi } from '@api/users/profile'
-import { ThemesList } from '@/assets/theme'
+import { ThemesList, type Theme } from '@/assets/theme'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -48,7 +48,14 @@ export const useUserStore = defineStore(
     const inContentArea = ref(ContentArea.Empty)
 
     // Theme
-    const selectedTheme = ref(ThemesList[0])
+    const DefaultTheme: Theme = {
+      label: ThemesList[0].label,
+      primary: ThemesList[0].primary,
+      secondary: ThemesList[0].secondary,
+      accent: ThemesList[0].accent,
+      dark: ThemesList[0].dark
+    }
+    const selectedTheme = ref(DefaultTheme)
 
     function setActiveChannel(channelId: string) {
       selectedChannel.value[0] = selectedServerId.value

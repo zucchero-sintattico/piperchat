@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { setCssVar } from 'quasar'
 
 const userStore = useUserStore()
@@ -45,13 +45,7 @@ function updateTheme() {
         <q-avatar class="q-mb-md" size="100px" @click="openFileInput">
           <img v-if="userStore.photoLoaded" :src="userStore.photo" />
         </q-avatar>
-        <input
-          id="fileInput"
-          type="file"
-          style="display: none"
-          accept="image/*"
-          @change="handleFileChange"
-        />
+        <input id="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileChange" />
         <h3 style="margin-left: 10px">{{ userStore.username }}</h3>
       </div>
 
@@ -59,23 +53,10 @@ function updateTheme() {
 
       <q-input :model-value="userStore.email" label="Email" outlined class="q-mb-md" />
 
-      <q-select
-        outlined
-        v-model="userStore.selectedTheme"
-        :options="userStore.ThemesList"
-        label="Theme"
-        @update:model-value="updateTheme()"
-        emit-value
-      />
+      <q-select outlined v-model="userStore.selectedTheme" :options="userStore.ThemesList" label="Theme"
+        @update:model-value="updateTheme()" />
 
-      <q-btn
-        label="Cancel"
-        type="reset"
-        color="primary"
-        flat
-        class="q-ml-sm q-mt-md"
-        @click="event('close')"
-      />
+      <q-btn label="Cancel" type="reset" color="primary" flat class="q-ml-sm q-mt-md" @click="event('close')" />
     </q-form>
   </div>
 </template>
