@@ -54,14 +54,27 @@ watch(
   }
 )
 
-/**
- * Scrolls to the bottom of the chat
- */
+const loadedMessages = ref(10)
 
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (bottomContent.scrollTop == -(bottomContent.scrollHeight - bottomContent.clientHeight)) {
     console.log('Reached bottom')
+    if (userStore.inContentArea == ContentArea.Direct) {
+      messageStore.getMessagesFromDirect({
+        username: userStore.selectedDirect.toString(),
+        from: loadedMessages.value,
+        limit: 10
+      })
+    } else if (userStore.inContentArea == ContentArea.Channel) {
+      messageStore.getMessagesFromChannel({
+        serverId: userStore.selectedChannel[0],
+        channelId: userStore.selectedChannel[1],
+        from: loadedMessages.value,
+        limit: 10
+      })
+    }
+    loadedMessages.value += 10
   }
 }
 
