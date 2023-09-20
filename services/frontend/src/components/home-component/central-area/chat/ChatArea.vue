@@ -31,7 +31,7 @@ watch(
       messageStore.getMessagesFromDirect({
         username: newVal.toString(),
         from: 0,
-        limit: 1000
+        limit: 10
       })
     }
   }
@@ -49,23 +49,51 @@ watch(
       serverId: userStore.selectedChannel[0],
       channelId: userStore.selectedChannel[1],
       from: 0,
-      limit: 1000
+      limit: 10
     })
   }
 )
 
+
+
+
+/**
+ * Scrolls to the bottom of the chat
+ */
+
+function handleScroll() {
+
+  const bottomContent = document.getElementsByClassName('scrolling-area')[0]
+  if (bottomContent.scrollTop == - (bottomContent.scrollHeight - bottomContent.clientHeight)) {
+    console.log('Reached bottom')
+    if (userStore.inContentArea == ContentArea.Direct) {
+      messageStore.getMessagesFromDirect({
+        username: userStore.selectedDirect.toString(),
+        from: messageStore.messages.length,
+        limit: 20
+      })
+    } else if (userStore.inContentArea == ContentArea.Channel) {
+      messageStore.getMessagesFromChannel({
+        serverId: userStore.selectedChannel[0],
+        channelId: userStore.selectedChannel[1],
+        from: messageStore.messages.length,
+        limit: 20
+      })
+    }
+  }
+
+}
+
+
 onMounted(() => {
-  // console.log(messages.forEach((message) => console.log(message.content)))
-  // originalLocation = location.href
-  // scrollToBottom()
+
 })
 </script>
 
 <template>
-  <q-page-container>
-    <q-page padding>
-
-      <q-infinite-scroll reverse class="bottom-content">
+  <q-page-container padding>
+    <q-page>
+      <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="showChat">
           <div v-for="(message, index) in messageStore.messages" :key="index" class="justify-bottom">
             <q-chat-message :name="message.sender" avatar="https://cdn.quasar.dev/img/avatar1.jpg"
