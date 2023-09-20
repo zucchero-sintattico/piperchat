@@ -6,6 +6,8 @@ const messageStore = useMessageStore()
 
 const userStore = useUserStore()
 
+let intitialLoadedMessages = 15
+
 /**
  * Shows the chat if the user is in a valid content area
  */
@@ -31,7 +33,7 @@ watch(
       messageStore.getMessagesFromDirect({
         username: newVal.toString(),
         from: 0,
-        limit: 10
+        limit: intitialLoadedMessages
       })
     }
   }
@@ -49,21 +51,18 @@ watch(
       serverId: userStore.selectedChannel[0],
       channelId: userStore.selectedChannel[1],
       from: 0,
-      limit: 10
+      limit: intitialLoadedMessages
     })
   }
 )
 
-const loadedMessages = ref(10)
-
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (bottomContent.scrollTop == -(bottomContent.scrollHeight - bottomContent.clientHeight)) {
-    console.log('Reached bottom')
     if (userStore.inContentArea == ContentArea.Direct) {
       messageStore.getMessagesFromDirect({
         username: userStore.selectedDirect.toString(),
-        from: loadedMessages.value,
+        from: intitialLoadedMessages,
         limit: 10
       })
     } else if (userStore.inContentArea == ContentArea.Channel) {
@@ -71,13 +70,13 @@ function handleScroll() {
         {
           serverId: userStore.selectedChannel[0],
           channelId: userStore.selectedChannel[1],
-          from: loadedMessages.value,
+          from: intitialLoadedMessages,
           limit: 10
         },
         true
       )
     }
-    loadedMessages.value += 10
+    intitialLoadedMessages += 10
   }
 }
 
