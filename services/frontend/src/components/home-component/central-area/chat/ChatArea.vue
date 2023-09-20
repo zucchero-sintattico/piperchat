@@ -67,12 +67,15 @@ function handleScroll() {
         limit: 10
       })
     } else if (userStore.inContentArea == ContentArea.Channel) {
-      messageStore.getMessagesFromChannel({
-        serverId: userStore.selectedChannel[0],
-        channelId: userStore.selectedChannel[1],
-        from: loadedMessages.value,
-        limit: 10
-      })
+      messageStore.getMessagesFromChannel(
+        {
+          serverId: userStore.selectedChannel[0],
+          channelId: userStore.selectedChannel[1],
+          from: loadedMessages.value,
+          limit: 10
+        },
+        true
+      )
     }
     loadedMessages.value += 10
   }

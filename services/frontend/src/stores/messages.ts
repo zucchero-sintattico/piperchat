@@ -103,12 +103,15 @@ export const useMessageStore = defineStore(
       }
     }
 
-    async function getMessagesFromChannel(parameters: {
-      serverId: string
-      channelId: string
-      from: number
-      limit: number
-    }) {
+    async function getMessagesFromChannel(
+      parameters: {
+        serverId: string
+        channelId: string
+        from: number
+        limit: number
+      },
+      concat: boolean = false
+    ) {
       console.log('Getting messages')
       const response = await channelController.getChannelMessagesPaginated({
         serverId: parameters.serverId,
@@ -120,7 +123,12 @@ export const useMessageStore = defineStore(
         case 200: {
           const typedResponse = response as GetDirectMessagesApi.Responses.Success
           console.log('Updating messages')
-          messages.value = typedResponse.messages
+          if (concat) {
+            messages.value = typedResponse.messages.concat(messages.value)
+          } else {
+            messages.value = typedResponse.messages
+          }
+
           break
         }
         case 403:
