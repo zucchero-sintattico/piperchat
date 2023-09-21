@@ -45,7 +45,7 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   ): Promise<Message[]> {
     const channel = await this.getChannel(channelId, serverId)
     if (channel.messages.length < from) {
-      throw new Error('No more messages')
+      return []
     }
     return channel.messages.slice(
       Math.max(channel.messages.length - limit - from, 0),

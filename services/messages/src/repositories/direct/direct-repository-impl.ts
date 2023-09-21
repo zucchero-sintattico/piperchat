@@ -19,7 +19,7 @@ export class DirectRepositoryImpl implements DirectRepository {
     }
 
     if (direct.get('messages').length < from) {
-      throw new Error('No more messages')
+      return []
     }
     return direct
       .get('messages')
