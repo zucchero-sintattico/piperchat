@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 const message = ref('')
-
+let intitialLoadedMessages = 15
 /**
  * Checks if the user is in a valid content area (direct or channel)
  */
+
 const shown = computed(() => {
   if (
     userStore.inContentArea == ContentArea.Direct ||
@@ -26,7 +27,6 @@ const shown = computed(() => {
  * then refreshes the messages
  */
 async function sendMessage() {
-  let intitialLoadedMessages = 15
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
       {
@@ -69,7 +69,7 @@ function deleteMessage() {
 </script>
 
 <template>
-  <q-footer>
+  <q-footer v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
         <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />

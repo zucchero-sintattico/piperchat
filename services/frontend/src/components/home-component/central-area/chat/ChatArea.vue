@@ -28,15 +28,14 @@ const showChat = computed(() => {
  */
 watch(
   () => userStore.selectedDirect,
-  (newVal, oldVal) => {
-    console.log('New direct: ' + newVal)
-    if (newVal != oldVal) {
-      messageStore.getMessagesFromDirect({
-        username: newVal.toString(),
-        from: 0,
-        limit: intitialLoadedMessages
-      })
-    }
+  () => {
+    console.log('New direct: ' + userStore.selectedDirect)
+    intitialLoadedMessages = 15
+    messageStore.getMessagesFromDirect({
+      username: userStore.selectedDirect,
+      from: 0,
+      limit: intitialLoadedMessages
+    })
   }
 )
 
@@ -48,6 +47,7 @@ watch(
   () => userStore.selectedChannel,
   () => {
     console.log('New channel: ' + userStore.selectedChannel)
+    intitialLoadedMessages = 15
     messageStore.getMessagesFromChannel({
       serverId: userStore.selectedChannel[0],
       channelId: userStore.selectedChannel[1],
