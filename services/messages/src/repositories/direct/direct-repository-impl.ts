@@ -17,7 +17,16 @@ export class DirectRepositoryImpl implements DirectRepository {
     if (!direct) {
       throw new Error('Direct not found')
     }
-    return direct.get('messages').slice(from, from + limit)
+
+    if (direct.get('messages').length < from) {
+      throw new Error('No more messages')
+    }
+    return direct
+      .get('messages')
+      .slice(
+        Math.max(direct.get('messages').length - limit - from, 0),
+        direct.get('messages').length - from
+      )
   }
 
   async createDirect(username1: string, username2: string): Promise<void> {
