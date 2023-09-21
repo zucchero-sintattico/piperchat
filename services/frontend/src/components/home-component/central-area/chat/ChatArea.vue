@@ -89,7 +89,7 @@ function handleScroll() {
   }
 }
 
-onMounted(() => { })
+onMounted(() => {})
 </script>
 
 <template>
@@ -97,14 +97,29 @@ onMounted(() => { })
     <q-page>
       <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="showChat">
-          <div v-for="(message, index) in messageStore.messages" :key="index" class="justify-bottom">
-            <q-chat-message :name="message.sender" avatar="https://cdn.quasar.dev/img/avatar1.jpg"
-              :text="[message.content]" :sent="userStore.username == message.sender" />
+          <div
+            v-for="(message, index) in messageStore.messages"
+            :key="index"
+            class="justify-bottom"
+          >
+            <q-chat-message
+              :name="message.sender"
+              avatar="https://cdn.quasar.dev/img/avatar1.jpg"
+              :text="[message.content]"
+              :sent="userStore.username == message.sender"
+            />
           </div>
         </div>
         <div id="last"></div>
         <!-- place QPageScroller at end of page -->
-        <q-page-scroller ref="pageScroller" reverse position="top" expand :scroll-offset="200" :offset="[0, 18]">
+        <q-page-scroller
+          ref="pageScroller"
+          reverse
+          position="top"
+          expand
+          :scroll-offset="200"
+          :offset="[0, 18]"
+        >
           <q-btn fab icon="keyboard_arrow_down" color="primary" />
         </q-page-scroller>
       </q-infinite-scroll>
@@ -124,6 +139,7 @@ onMounted(() => { })
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
+  overflow-anchor: none;
   /* Reverse the order of displayed items */
 }
 </style>
