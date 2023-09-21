@@ -120,6 +120,8 @@ onMounted(() => {})
 
 <style scoped lang="scss">
 .bottom-content {
+  padding-right: 20px;
+  padding-left: 20px;
   position: absolute;
   bottom: 0;
   left: 0;
