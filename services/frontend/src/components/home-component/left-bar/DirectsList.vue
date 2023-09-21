@@ -18,6 +18,7 @@ function setActiveDirect(directUsarname: string) {
 }
 onMounted(() => {
   friendStore.fetchFriends()
+  userStore.selectedDirect = ''
 })
 </script>
 
