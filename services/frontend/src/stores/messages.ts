@@ -123,6 +123,10 @@ export const useMessageStore = defineStore(
         case 200: {
           const typedResponse = response as GetDirectMessagesApi.Responses.Success
           console.log('Updating messages')
+          if (typedResponse.messages.length === 0) {
+            console.log('No more messages')
+            return
+          }
           if (concat) {
             messages.value = typedResponse.messages.concat(messages.value)
           } else {
