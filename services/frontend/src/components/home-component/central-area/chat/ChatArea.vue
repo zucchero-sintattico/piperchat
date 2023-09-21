@@ -56,15 +56,15 @@ watch(
   }
 )
 
-let done = true
+const done = ref(true)
 
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    done
+    done.value
   ) {
-    done = false
+    done.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
         messageStore.getMessagesFromDirect({
@@ -84,8 +84,8 @@ function handleScroll() {
         )
       }
       intitialLoadedMessages += 10
-      done = true
-    }, 700)
+      done.value = true
+    }, 500)
   }
 }
 
@@ -95,6 +95,12 @@ onMounted(() => {})
 <template>
   <q-page-container padding>
     <q-page>
+      <template v-if="!done">
+        <div class="row justify-center q-my-md">
+          <q-spinner color="primary" name="dots" size="40px" />
+        </div>
+      </template>
+
       <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="showChat">
           <div
@@ -111,17 +117,6 @@ onMounted(() => {})
           </div>
         </div>
         <div id="last"></div>
-        <!-- place QPageScroller at end of page -->
-        <q-page-scroller
-          ref="pageScroller"
-          reverse
-          position="top"
-          expand
-          :scroll-offset="200"
-          :offset="[0, 18]"
-        >
-          <q-btn fab icon="keyboard_arrow_down" color="primary" />
-        </q-page-scroller>
       </q-infinite-scroll>
     </q-page>
   </q-page-container>
