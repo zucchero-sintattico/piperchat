@@ -56,27 +56,36 @@ watch(
   }
 )
 
+let done = true
+
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
-  if (bottomContent.scrollTop == -(bottomContent.scrollHeight - bottomContent.clientHeight)) {
-    if (userStore.inContentArea == ContentArea.Direct) {
-      messageStore.getMessagesFromDirect({
-        username: userStore.selectedDirect.toString(),
-        from: intitialLoadedMessages,
-        limit: 10
-      })
-    } else if (userStore.inContentArea == ContentArea.Channel) {
-      messageStore.getMessagesFromChannel(
-        {
-          serverId: userStore.selectedChannel[0],
-          channelId: userStore.selectedChannel[1],
+  if (
+    bottomContent.scrollTop <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
+    done
+  ) {
+    done = false
+    setTimeout(() => {
+      if (userStore.inContentArea == ContentArea.Direct) {
+        messageStore.getMessagesFromDirect({
+          username: userStore.selectedDirect.toString(),
           from: intitialLoadedMessages,
           limit: 10
-        },
-        true
-      )
-    }
-    intitialLoadedMessages += 10
+        })
+      } else if (userStore.inContentArea == ContentArea.Channel) {
+        messageStore.getMessagesFromChannel(
+          {
+            serverId: userStore.selectedChannel[0],
+            channelId: userStore.selectedChannel[1],
+            from: intitialLoadedMessages,
+            limit: 10
+          },
+          true
+        )
+      }
+      intitialLoadedMessages += 10
+      done = true
+    }, 700)
   }
 }
 
@@ -120,8 +129,8 @@ onMounted(() => {})
 
 <style scoped lang="scss">
 .bottom-content {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
   position: absolute;
   bottom: 0;
   left: 0;
