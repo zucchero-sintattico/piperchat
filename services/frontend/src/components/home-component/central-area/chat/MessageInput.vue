@@ -26,6 +26,7 @@ const shown = computed(() => {
  * then refreshes the messages
  */
 async function sendMessage() {
+  let intitialLoadedMessages = 15
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
       {
@@ -37,7 +38,7 @@ async function sendMessage() {
         messageStore.getMessagesFromDirect({
           username: userStore.selectedDirect,
           from: 0,
-          limit: 1000
+          limit: intitialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -54,7 +55,7 @@ async function sendMessage() {
           serverId: userStore.selectedChannel[0],
           channelId: userStore.selectedChannel[1],
           from: 0,
-          limit: 1000
+          limit: intitialLoadedMessages
         }),
       () => console.log('Error')
     )

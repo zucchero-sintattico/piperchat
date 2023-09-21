@@ -72,15 +72,18 @@ export const useMessageStore = defineStore('message', () => {
     }
   }
 
-  async function getMessagesFromDirect({
-    username,
-    from,
-    limit
-  }: {
-    username: string
-    from: number
-    limit: number
-  }) {
+  async function getMessagesFromDirect(
+    {
+      username,
+      from,
+      limit
+    }: {
+      username: string
+      from: number
+      limit: number
+    },
+    concat: boolean = false
+  ) {
     const response = await directController.getDirectMessagesPaginated({
       username,
       from,
@@ -89,7 +92,17 @@ export const useMessageStore = defineStore('message', () => {
     switch (response.statusCode) {
       case 200: {
         const typedResponse = response as GetDirectMessagesApi.Responses.Success
-        messages.value = typedResponse.messages
+        console.log('Updating messages')
+        if (concat) {
+          messages.value = typedResponse.messages.concat(messages.value)
+          if (typedResponse.messages.length === 0) {
+            console.log('No more messages')
+            return
+          }
+        } else {
+          messages.value = typedResponse.messages
+        }
+
         break
       }
       case 403:

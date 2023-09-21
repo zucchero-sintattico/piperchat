@@ -29,6 +29,7 @@ const showChat = computed(() => {
 watch(
   () => userStore.selectedDirect,
   (newVal, oldVal) => {
+    console.log('New direct: ' + newVal)
     if (newVal != oldVal) {
       messageStore.getMessagesFromDirect({
         username: newVal.toString(),
@@ -67,11 +68,14 @@ function handleScroll() {
     done.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
-        messageStore.getMessagesFromDirect({
-          username: userStore.selectedDirect.toString(),
-          from: intitialLoadedMessages,
-          limit: 10
-        })
+        messageStore.getMessagesFromDirect(
+          {
+            username: userStore.selectedDirect.toString(),
+            from: intitialLoadedMessages,
+            limit: 10
+          },
+          true
+        )
       } else if (userStore.inContentArea == ContentArea.Channel) {
         messageStore.getMessagesFromChannel(
           {
@@ -89,7 +93,9 @@ function handleScroll() {
   }
 }
 
-onMounted(() => {})
+onMounted(() => {
+  intitialLoadedMessages = 15
+})
 </script>
 
 <template>
