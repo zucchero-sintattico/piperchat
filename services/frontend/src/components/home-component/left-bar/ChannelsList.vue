@@ -66,11 +66,18 @@ function leaveServer() {
       <div class="col fit">
         <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
-            <q-icon v-if="amITheOwner == true" name="settings" class="q-mr-sm" />
+            <q-btn
+              v-if="amITheOwner == true"
+              icon="settings"
+              color="primary"
+              round
+              class="q-mr-sm q-mb-sm"
+            />
             <q-btn
               v-if="amITheOwner != true"
               round
               icon="exit_to_app"
+              class="q-mr-sm q-mb-sm"
               color="primary"
               @click="dialogLeavesServer = true"
             />
@@ -94,10 +101,16 @@ function leaveServer() {
 
         <q-dialog v-model="dialogLeavesServer">
           <q-card>
-            <q-card-section class="row items-center q-gutter-sm">
+            <q-card-section class="items-center q-gutter-sm">
               <h5 class="q-ma-none">Are you sure you want to leave this server?</h5>
-              <q-btn no-caps label="Leave" color="red" v-close-popup @click="leaveServer" />
-              <q-btn no-caps label="Close" color="primary" v-close-popup />
+              <q-btn
+                no-caps
+                label="Leave"
+                color="red justify center"
+                v-close-popup
+                @click="leaveServer"
+              />
+              <q-btn no-caps label="Close" color="primary justify center" v-close-popup />
             </q-card-section>
           </q-card>
         </q-dialog>
