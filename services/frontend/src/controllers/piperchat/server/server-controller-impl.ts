@@ -49,12 +49,12 @@ export class ServerControllerImpl extends AxiosController implements ServerContr
 
   async joinServer(request: JoinServerApi.Request.Type): Promise<JoinServerApi.Response> {
     const params = request as JoinServerApi.Request.Params
-    return await this.post<JoinServerApi.Response>(`/servers/${params.serverId}/join`)
+    return await this.post<JoinServerApi.Response>(`/servers/${params.serverId}/participants`)
   }
 
   async leaveServer(request: LeaveServerApi.Request.Type): Promise<LeaveServerApi.Response> {
     const params = request as LeaveServerApi.Request.Params
-    return await this.post<LeaveServerApi.Response>(`/servers/${params.serverId}/leave`)
+    return await this.delete<LeaveServerApi.Response>(`/servers/${params.serverId}/participants`)
   }
 
   async kickUserFromTheServer(
@@ -62,6 +62,9 @@ export class ServerControllerImpl extends AxiosController implements ServerContr
   ): Promise<KickUserFromServerApi.Response> {
     const params = request as KickUserFromServerApi.Request.Params
     const body = request as KickUserFromServerApi.Request.Body
-    return await this.post<KickUserFromServerApi.Response>(`/servers/${params.serverId}/kick`, body)
+    return await this.delete<KickUserFromServerApi.Response>(
+      `/servers/${params.serverId}/participants/${params.username}`,
+      body
+    )
   }
 }

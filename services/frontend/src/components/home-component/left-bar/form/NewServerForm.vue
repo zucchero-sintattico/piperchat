@@ -11,11 +11,21 @@ const serverStore = useServerStore()
 
 const name = ref('')
 const description = ref('')
+const serverID = ref('')
 const newServerTab = ref('newServer')
 
 async function onSubmit() {
   try {
     await serverStore.createServer(name.value, description.value)
+    event('result')
+  } catch (e) {
+    event('result', String(e))
+  }
+}
+
+async function joinServer() {
+  try {
+    await serverStore.joinServer(serverID.value)
     event('result')
   } catch (e) {
     event('result', String(e))
@@ -77,16 +87,14 @@ async function onSubmit() {
         </q-form>
       </q-tab-panel>
       <q-tab-panel name="joinServer">
-        <q-form class="q-gutter-md" @submit="onSubmit">
+        <q-form class="q-gutter-md" @submit="joinServer">
           <h2 class="text-h3">Join in a server</h2>
 
           <q-input
             filled
-            v-model="name"
+            v-model="serverID"
             label="Server Id"
-            hint="Name of your server"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+            hint="Id of server you want to join"
           />
 
           <div>
