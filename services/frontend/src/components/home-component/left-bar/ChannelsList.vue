@@ -15,6 +15,7 @@ const serverStore = useServerStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
+const dialogLeavesServer = ref(false)
 
 function setChannelContent(channelId: string) {
   console.log('Switched')
@@ -47,6 +48,12 @@ function popUpBanner(error?: string) {
   }, BANNER_TIMEOUT)
   isNewChannelFormActive.value = false
 }
+
+function leaveServer() {
+  if (selectedServer.value?.id) {
+    serverStore.leaveServer(selectedServer.value.id as string)
+  }
+}
 </script>
 
 <template>
@@ -60,6 +67,13 @@ function popUpBanner(error?: string) {
         <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
             <q-icon v-if="amITheOwner == true" name="settings" class="q-mr-sm" />
+            <q-btn
+              v-if="amITheOwner != true"
+              round
+              icon="exit_to_app"
+              color="primary"
+              @click="dialogLeavesServer = true"
+            />
             {{ selectedServer?.name }}
           </h4>
         </q-item>
@@ -77,6 +91,16 @@ function popUpBanner(error?: string) {
             @click="isNewChannelFormActive = true"
           />
         </div>
+
+        <q-dialog v-model="dialogLeavesServer">
+          <q-card>
+            <q-card-section class="row items-center q-gutter-sm">
+              <h5 class="q-ma-none">Are you sure you want to leave this server?</h5>
+              <q-btn no-caps label="Leave" color="red" v-close-popup @click="leaveServer" />
+              <q-btn no-caps label="Close" color="primary" v-close-popup />
+            </q-card-section>
+          </q-card>
+        </q-dialog>
 
         <BottomPopUp v-model:active="resultBanner" :content="contentBanner" :color="colorBanner" />
 

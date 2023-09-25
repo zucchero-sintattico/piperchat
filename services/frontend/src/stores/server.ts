@@ -69,6 +69,16 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function leaveServer(serverId: string) {
+    const response = await serverController.leaveServer({ serverId })
+    if (response.statusCode === 200) {
+      getServers() // TODO: adjust using notification
+    } else {
+      const typed = response as JoinServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   async function deleteChannel(serverId: string, channelId: string) {
     const response = await channelController.deleteChannel({ serverId, channelId })
     if (response.statusCode === 200) {
@@ -108,6 +118,7 @@ export const useServerStore = defineStore('server', () => {
     deleteChannel,
     kickUser,
     joinServer,
+    leaveServer,
     servers
   }
 })
