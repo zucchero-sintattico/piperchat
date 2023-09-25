@@ -75,6 +75,11 @@ async function kickSelectedUser() {
     popUpBanner(String(error), BannerColor.ERROR)
   }
 }
+
+async function copyServerId() {
+  navigator.clipboard.writeText(selectedServer.value!.id)
+  popUpBanner('Server id copied', BannerColor.OK)
+}
 </script>
 
 <template>
@@ -102,7 +107,11 @@ async function kickSelectedUser() {
           <!-- start Setting Tab -->
           <q-tab-panel name="setting">
             <div class="text-h4">Settings</div>
-            <div class="text-h5">Server Id: {{ selectedServer?.id }}</div>
+            <div class="row">
+              <div class="text-h6">Server Id: {{ selectedServer?.id }}</div>
+              <q-btn round class="q-ml-md q-mb-md" icon="content_copy" @click="copyServerId" />
+            </div>
+
             <!-- TODO -->
           </q-tab-panel>
           <!-- end Setting Tab -->

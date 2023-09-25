@@ -52,6 +52,7 @@ function popUpBanner(error?: string) {
 function leaveServer() {
   if (selectedServer.value?.id) {
     serverStore.leaveServer(selectedServer.value.id as string)
+    popUpBanner('You left the server')
   }
 }
 </script>
