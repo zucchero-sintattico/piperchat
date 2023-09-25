@@ -102,6 +102,7 @@ async function kickSelectedUser() {
           <!-- start Setting Tab -->
           <q-tab-panel name="setting">
             <div class="text-h4">Settings</div>
+            <div class="text-h5">Server Id: {{ selectedServer?.id }}</div>
             <!-- TODO -->
           </q-tab-panel>
           <!-- end Setting Tab -->
