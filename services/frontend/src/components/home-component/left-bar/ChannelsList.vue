@@ -103,7 +103,7 @@ function leaveServer() {
         <q-dialog v-model="dialogLeavesServer">
           <q-card>
             <q-card-section class="items-center q-gutter-sm">
-              <h5 class="q-ma-none">Are you sure you want to leave this server?</h5>
+              <div class="q-ma-none text-h5">Are you sure you want to leave this server?</div>
               <q-btn
                 no-caps
                 label="Leave"
