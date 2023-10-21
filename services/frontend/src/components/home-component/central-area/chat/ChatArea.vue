@@ -6,7 +6,15 @@ const messageStore = useMessageStore()
 
 const userStore = useUserStore()
 
-let intitialLoadedMessages = 15
+const areMessageLoaded = ref(true)
+let loadedMessages: number
+function resetLoadedMessages() {
+  loadedMessages = 15
+}
+
+function incrementLoadedMessages() {
+  loadedMessages += 10
+}
 
 /**
  * Shows the chat if the user is in a valid content area
@@ -30,11 +38,11 @@ watch(
   () => userStore.selectedDirect,
   () => {
     console.log('New direct: ' + userStore.selectedDirect)
-    intitialLoadedMessages = 15
+    resetLoadedMessages()
     messageStore.getMessagesFromDirect({
       username: userStore.selectedDirect,
       from: 0,
-      limit: intitialLoadedMessages
+      limit: loadedMessages
     })
   }
 )
@@ -47,31 +55,29 @@ watch(
   () => userStore.selectedChannel,
   () => {
     console.log('New channel: ' + userStore.selectedChannel)
-    intitialLoadedMessages = 15
+    resetLoadedMessages()
     messageStore.getMessagesFromChannel({
       serverId: userStore.selectedChannel[0],
       channelId: userStore.selectedChannel[1],
       from: 0,
-      limit: intitialLoadedMessages
+      limit: loadedMessages
     })
   }
 )
-
-const done = ref(true)
 
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    done.value
+    areMessageLoaded.value
   ) {
-    done.value = false
+    areMessageLoaded.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
         messageStore.getMessagesFromDirect(
           {
             username: userStore.selectedDirect.toString(),
-            from: intitialLoadedMessages,
+            from: loadedMessages,
             limit: 10
           },
           true
@@ -81,27 +87,27 @@ function handleScroll() {
           {
             serverId: userStore.selectedChannel[0],
             channelId: userStore.selectedChannel[1],
-            from: intitialLoadedMessages,
+            from: loadedMessages,
             limit: 10
           },
           true
         )
       }
-      intitialLoadedMessages += 10
-      done.value = true
+      incrementLoadedMessages()
+      areMessageLoaded.value = true
     }, 500)
   }
 }
 
 onMounted(() => {
-  intitialLoadedMessages = 15
+  resetLoadedMessages()
 })
 </script>
 
 <template>
   <q-page-container padding>
     <q-page>
-      <template v-if="!done">
+      <template v-if="!areMessageLoaded">
         <div class="row justify-center q-my-md">
           <q-spinner color="primary" name="dots" size="40px" />
         </div>
@@ -114,11 +120,16 @@ onMounted(() => {
             :key="index"
             class="justify-bottom"
           >
+            <!-- if sender is the user show the image, default image otherwise -->
             <q-chat-message
               :name="message.sender"
-              avatar="https://cdn.quasar.dev/img/avatar1.jpg"
               :text="[message.content]"
               :sent="userStore.username == message.sender"
+              :avatar="
+                userStore.username == message.sender
+                  ? userStore.photo
+                  : 'https://cdn.quasar.dev/img/avatar.png'
+              "
             />
           </div>
         </div>
