@@ -27,6 +27,11 @@ const shown = computed(() => {
  * then refreshes the messages
  */
 async function sendMessage() {
+  // check if message is empty
+  if (message.value.match(/^\s*$/)) {
+    return
+  }
+
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
       {
@@ -72,7 +77,7 @@ function deleteMessage() {
   <q-footer v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
-        <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
+        <q-icon name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
       <template v-slot:after>
         <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
