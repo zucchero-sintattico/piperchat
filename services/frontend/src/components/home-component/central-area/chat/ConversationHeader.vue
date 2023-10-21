@@ -13,9 +13,11 @@ const serverStore = useServerStore()
  */
 const title = computed(() => {
   if (userStore.inContentArea == ContentArea.Direct) {
-    console.log('update header')
     return userStore.selectedDirect
-  } else if (userStore.inContentArea == ContentArea.Channel) {
+  } else if (
+    userStore.inContentArea == ContentArea.Channel ||
+    userStore.inContentArea == ContentArea.Multimedia
+  ) {
     const server = serverStore.servers.filter(
       (server) => server.id == userStore.selectedChannel[0]
     )[0]

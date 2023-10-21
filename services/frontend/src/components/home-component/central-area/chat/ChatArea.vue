@@ -2,6 +2,7 @@
 import { watch, ref, onMounted, computed } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
+import MessageInput from './MessageInput.vue'
 const messageStore = useMessageStore()
 
 const userStore = useUserStore()
@@ -11,16 +12,10 @@ let intitialLoadedMessages = 15
 /**
  * Shows the chat if the user is in a valid content area
  */
-const showChat = computed(() => {
-  if (
-    userStore.inContentArea == ContentArea.Direct ||
-    userStore.inContentArea == ContentArea.Channel
-  ) {
-    return true
-  } else {
-    return false
-  }
-})
+const showChat = computed(
+  () =>
+    userStore.inContentArea == ContentArea.Direct || userStore.inContentArea == ContentArea.Channel
+)
 
 /**
  * When the user changes the selected direct,
@@ -99,7 +94,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <q-page-container padding>
+  <q-page-container padding v-if="showChat">
     <q-page>
       <template v-if="!done">
         <div class="row justify-center q-my-md">
@@ -124,6 +119,7 @@ onMounted(() => {
         </div>
         <div id="last"></div>
       </q-infinite-scroll>
+      <MessageInput />
     </q-page>
   </q-page-container>
 </template>

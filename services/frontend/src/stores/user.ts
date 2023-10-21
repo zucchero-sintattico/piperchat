@@ -18,7 +18,7 @@ export enum ContentArea {
   Empty = 'empty',
   Channel = 'channel',
   Direct = 'direct',
-  Multimedie = 'multimedia'
+  Multimedia = 'multimedia'
 }
 
 export const useUserStore = defineStore(

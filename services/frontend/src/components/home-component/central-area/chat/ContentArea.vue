@@ -2,6 +2,7 @@
 import MessageInput from '@/components/home-component/central-area/chat/MessageInput.vue'
 import ConversationHeader from './ConversationHeader.vue'
 import ChatArea from './ChatArea.vue'
+import WebrtcArea from './WebrtcArea.vue'
 </script>
 
 <template>
@@ -10,7 +11,7 @@ import ChatArea from './ChatArea.vue'
     <q-layout view="lHh Lpr lFf" container style="min-height: inherit">
       <ConversationHeader />
       <ChatArea />
-      <MessageInput />
+      <WebrtcArea />
     </q-layout>
   </q-page>
 </template>

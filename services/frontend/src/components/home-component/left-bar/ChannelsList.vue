@@ -17,10 +17,10 @@ const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
 const dialogLeavesServer = ref(false)
 
-function setChannelContent(channelId: string) {
+function setChannelContent(channelId: string, contentArea: ContentArea) {
   console.log('Switched')
-  userStore.inContentArea = ContentArea.Channel
-  userStore.selectedChannel = [userStore.selectedServerId, channelId]
+  userStore.inContentArea = contentArea
+  userStore.setActiveChannel(channelId)
 }
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
@@ -137,7 +137,7 @@ function leaveServer() {
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel.id"
-          @click="setChannelContent(channel.id)"
+          @click="setChannelContent(channel.id, ContentArea.Channel)"
         >
           <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>
@@ -157,8 +157,9 @@ function leaveServer() {
             :name="channel.name"
             icon="volume_up"
             clickable
-            @click="userStore.setActiveChannel(channel.id)"
+            @click="setChannelContent(channel.id, ContentArea.Multimedia)"
           />
+          <!-- "userStore.setActiveChannel(channel.id)" -->
 
           <q-list dense v-for="j in 3" :key="j">
             <HorizontalUser name="User" photo="" />
