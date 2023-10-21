@@ -15,7 +15,6 @@ export class NotificationSocketServer {
   constructor(server: http.Server) {
     console.log('Starting notification socket server')
     this.io = new Server(server, {
-      transports: ['websocket'],
       path: '/notification',
     })
     this.io.on('connection', async (socket) => {

@@ -27,10 +27,10 @@ export class WebRTCSocketServer {
 
   constructor(server: http.Server) {
     this.io = new Server(server, {
-      transports: ['websocket'],
       path: '/webrtc',
     })
     this.io.on('connection', async (socket) => {
+      console.log('New connection')
       await this.validateTokenOrDisconnect(socket.handshake.auth.token, socket)
       const username = decodeAccessToken(socket.handshake.auth.token)?.username
       if (username) {

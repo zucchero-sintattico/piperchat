@@ -21,6 +21,8 @@ services:
       --api.insecure=true
       --providers.docker
       --providers.docker.network=piperchat_frontend
+      --log.level=DEBUG
+      --accesslog
     ports:
       - '80:80'
       - '8080:8080'

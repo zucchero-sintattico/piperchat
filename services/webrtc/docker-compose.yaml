@@ -24,9 +24,6 @@ services:
     labels:
       - |
         traefik.http.routers.webrtc-service.rule=
-        (Method(`GET`) && Path(`/users/{username:[^/]+}/session`)) ||
-        (Method(`GET`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}/session`)) ||
-        (Method(`GET`) && Path(`/sessions/{sessionId:[^/]+}`)) ||
         (Method(`GET`) && PathPrefix(`/webrtc`))
 
   db-webrtc-service:

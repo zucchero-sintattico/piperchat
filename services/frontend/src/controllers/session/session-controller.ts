@@ -1,4 +1,5 @@
-import io, { Socket } from 'socket.io-client'
+import io from 'socket.io-client'
+import { Socket } from 'socket.io-client'
 import { type SessionHandler, SessionHandlerImpl } from './session-handler'
 import { AxiosController } from '../axios-controller'
 import {
@@ -22,7 +23,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
 
   private createSocket(): Promise<Socket> {
     return new Promise((resolve, reject) => {
-      const socket = io('/webrtc', {
+      const socket = io({
         transports: ['websocket'],
         path: '/webrtc',
         auth: {
@@ -31,10 +32,12 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
       })
       socket.on('connect', () => {
         console.log('Connected to webrtc service')
+        console.log(socket.id)
         resolve(socket)
       })
       socket.on('connect_error', (err) => {
-        console.log(err)
+        console.log("Couldn't connect to webrtc service")
+        console.error(err)
         reject(err)
       })
       socket.connect()
