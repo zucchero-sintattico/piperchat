@@ -27,9 +27,8 @@ export class WebRTCSocketServer {
 
   constructor(server: http.Server) {
     this.io = new Server(server, {
-      cors: {
-        origin: '*',
-      },
+      transports: ['websocket'],
+      path: '/webrtc',
     })
     this.io.on('connection', async (socket) => {
       await this.validateTokenOrDisconnect(socket.handshake.auth.token, socket)

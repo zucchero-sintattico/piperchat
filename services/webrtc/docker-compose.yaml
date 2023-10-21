@@ -21,6 +21,10 @@ services:
       - 'PORT=${WEBRTC_SERVICE_PORT}'
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-webrtc-service:27017/webrtc'
+    labels:
+      - |
+        traefik.http.routers.notifications-service.rule=
+        (Method(`GET`) && PathPrefix(`/webrtc`))
 
   db-webrtc-service:
     image: mongo

@@ -22,8 +22,9 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
 
   private createSocket(): Promise<Socket> {
     return new Promise((resolve, reject) => {
-      const socket = io('http://localhost', {
+      const socket = io({
         transports: ['websocket'],
+        path: '/notification',
         auth: {
           token: this.token
         }
