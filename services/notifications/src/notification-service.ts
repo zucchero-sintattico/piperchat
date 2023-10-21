@@ -14,6 +14,13 @@ export class NotificationSocketServer {
 
   constructor(server: http.Server) {
     console.log('Starting notification socket server')
+    const test = new Server(server, {
+      path: '/webrtc',
+    })
+    test.on('connection', async (socket) => {
+      console.log('New connection on webrtc')
+      return socket
+    })
     this.io = new Server(server, {
       path: '/notification',
     })

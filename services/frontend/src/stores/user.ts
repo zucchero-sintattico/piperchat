@@ -31,6 +31,7 @@ export const useUserStore = defineStore(
 
     const photoLoaded = ref(false)
     const photo = ref('')
+    const jwt = ref('')
 
     async function reload() {
       await whoami()
@@ -73,6 +74,7 @@ export const useUserStore = defineStore(
       })
       if (response.statusCode === 200) {
         isLoggedIn.value = true
+        jwt.value = (response as LoginApi.Responses.Success).jwt
         await whoami()
       } else {
         const typed = response as LoginApi.Errors.Type
@@ -156,6 +158,7 @@ export const useUserStore = defineStore(
 
     return {
       isLoggedIn,
+      jwt,
       username,
       email,
       description,

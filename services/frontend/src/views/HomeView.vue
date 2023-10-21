@@ -7,6 +7,10 @@ import ContentArea from '@/components/home-component/central-area/chat/ContentAr
 import SettingsForm from '@/components/home-component/SettingsForm.vue'
 import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
+import {
+  SessionControllerImpl,
+  type SessionController
+} from '@/controllers/session/session-controller'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)

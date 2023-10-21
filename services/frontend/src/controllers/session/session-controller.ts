@@ -40,7 +40,6 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
         console.error(err)
         reject(err)
       })
-      socket.connect()
     })
   }
 

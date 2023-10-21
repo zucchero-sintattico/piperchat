@@ -4,12 +4,10 @@ import {
   type SessionController
 } from '@/controllers/session/session-controller'
 import { useUserStore, ContentArea } from '@/stores/user'
+import { Cookies } from 'quasar'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 const userStore = useUserStore()
 const toShow = computed(() => userStore.inContentArea == ContentArea.Multimedia)
-
-const jwtToken = localStorage.getItem('jwt')
-const sessionController: SessionController = new SessionControllerImpl(jwtToken || '')
 
 const otherStreams: Record<string, MediaStream> = {}
 
@@ -22,17 +20,20 @@ watch(toShow, async (inWebrtc) => {
       video: true,
       audio: true
     })
+    const jwtToken = userStore.jwt
+    console.log('Token: ' + jwtToken)
+    const sessionController: SessionController = new SessionControllerImpl(jwtToken || '')
     const sessionHandler = await sessionController.joinChannel(
       userStore.selectedServerId,
       userStore.selectedChannel[1]
     )
     sessionHandler.start(
       myStream.value,
-      (joinedUser, userStream) => {
-        otherStreams[joinedUser] = userStream
+      (newUser, userMediaStream) => {
+        otherStreams[newUser] = userMediaStream
       },
-      (leftUser) => {
-        delete otherStreams[leftUser]
+      (userLeaving) => {
+        delete otherStreams[userLeaving]
       }
     )
   } else {
@@ -53,3 +54,11 @@ watch(toShow, async (inWebrtc) => {
     </q-page>
   </q-page-container>
 </template>
+
+<style scoped>
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>
