@@ -14,7 +14,11 @@ export class EventsConfiguration {
       }
     }
     this.exchanges[EventType.exchange].events[EventType.routingKey] = (data: unknown) => {
-      callback(data as T)
+      try {
+        callback(data as T)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

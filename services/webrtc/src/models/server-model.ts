@@ -9,7 +9,6 @@ export const ChannelSchema = new Schema({
   id: {
     type: String,
     required: true,
-    unique: true,
   },
   sessionId: {
     type: String,

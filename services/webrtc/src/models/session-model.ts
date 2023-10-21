@@ -23,12 +23,6 @@ export interface Session {
 }
 
 export const SessionSchema = new Schema<Session>({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-    auto: true,
-  },
   allowedUsers: {
     type: [String],
     required: true,
