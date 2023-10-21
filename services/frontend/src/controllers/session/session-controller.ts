@@ -22,9 +22,9 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
 
   private createSocket(): Promise<Socket> {
     return new Promise((resolve, reject) => {
-      const socket = io({
+      const socket = io('/webrtc', {
         transports: ['websocket'],
-        path: '/notification',
+        path: '/webrtc',
         auth: {
           token: this.token
         }
@@ -34,6 +34,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
         resolve(socket)
       })
       socket.on('connect_error', (err) => {
+        console.log(err)
         reject(err)
       })
       socket.connect()

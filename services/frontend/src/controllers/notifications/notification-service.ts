@@ -57,6 +57,10 @@ export function useNotificationService() {
     path: '/notification'
   })
 
+  notificationSocket.on('connect', () => {
+    console.log('Connected to notification service')
+  })
+
   notificationSocket.on('notification', (data: any) => {
     notificationService.callbacks[data.type](data)
   })
