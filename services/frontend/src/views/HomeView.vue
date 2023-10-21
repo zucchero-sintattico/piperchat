@@ -6,6 +6,7 @@ import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 import SettingsForm from '@/components/home-component/SettingsForm.vue'
 import { setCssVar } from 'quasar'
+import { useNotificationService } from '@/controllers/notifications/notification-service'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
@@ -15,6 +16,7 @@ setCssVar('primary', userStore.selectedTheme.primary)
 setCssVar('secondary', userStore.selectedTheme.secondary)
 setCssVar('accent', userStore.selectedTheme.accent)
 setCssVar('dark', userStore.selectedTheme.dark)
+useNotificationService()
 
 function logout() {
   userStore.logout()
