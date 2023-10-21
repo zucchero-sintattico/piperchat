@@ -22,7 +22,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
 
   private createSocket(): Promise<Socket> {
     return new Promise((resolve, reject) => {
-      const socket = io('http://localhost:3000', {
+      const socket = io('http://localhost', {
         transports: ['websocket'],
         auth: {
           token: this.token
