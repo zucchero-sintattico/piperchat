@@ -25,6 +25,8 @@ export class WebRTCSocketServer {
   private eventsRepository: EventsRepository = new EventsRepositoryImpl()
   private io: Server
 
+  private sockets: Record<string, Socket> = {}
+
   constructor(server: http.Server) {
     this.io = new Server(server, {
       path: '/webrtc',
@@ -34,9 +36,13 @@ export class WebRTCSocketServer {
       await this.validateTokenOrDisconnect(socket.handshake.auth.token, socket)
       const username = decodeAccessToken(socket.handshake.auth.token)?.username
       if (username) {
-        socket.on('join-session', async (sessionId: string) =>
-          this.handleSession(socket, username, sessionId)
-        )
+        socket.on('join-session', async (sessionId: string) => {
+          try {
+            this.handleSession(socket, username, sessionId)
+          } catch (e) {
+            console.error(e)
+          }
+        })
       }
     })
   }
@@ -50,33 +56,45 @@ export class WebRTCSocketServer {
   }
 
   private async handleSession(socket: Socket, username: string, sessionId: string) {
-    console.log('Joining session', sessionId)
+    console.log('[WebRTC] ', username, 'joining session', sessionId)
     await this.checkIfIsChannelOrDirectSessionAndPublishJoinEvent(sessionId, username)
     const session = await this.getSessionOrDisconnect(sessionId, socket)
     await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
     await this.validateUserNotAlreadyInSessionOrDisconnectOther(session, username)
-    await this.sessionRepository.addUserToSession(sessionId, username, socket.id)
+    await this.sessionRepository.addUserToSession(sessionId, username)
+    this.sockets[username] = socket
+    console.log('[WebRTC] sending user-connected event to', sessionId, 'for', username)
     socket.to(sessionId).emit('user-connected', username)
+    console.log('[WebRTC] joining room', sessionId, 'for', username)
     socket.join(sessionId)
     socket.on('disconnect', async () => {
-      console.log('Disconnecting user:', username)
+      delete this.sockets[username]
+      console.log('[WebRTC] ', username, 'disconnected from session', sessionId)
+      console.log(
+        '[WebRTC] sending user-disconnected event to',
+        sessionId,
+        'for',
+        username
+      )
       socket.to(sessionId).emit('user-disconnected', username)
+      console.log('[WebRTC] leaving room', sessionId, 'for', username)
       await this.sessionRepository.removeUserFromSession(sessionId, username)
       await this.checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(sessionId, username)
     })
     socket.on('offer', async (offer, to) => {
+      console.log('[WebRTC] sending offer to', to, 'from', username)
       const user = await this.sessionRepository.getUserInSession(sessionId, to)
-      this.io.sockets.sockets.get(user?.socketId)?.emit('offer', offer, username)
+      this.sockets[user]?.emit('offer', offer, username)
     })
     socket.on('answer', async (answer, to) => {
+      console.log('[WebRTC] sending answer to', to, 'from', username)
       const user = await this.sessionRepository.getUserInSession(sessionId, to)
-      this.io.sockets.sockets.get(user?.socketId)?.emit('answer', answer, username)
+      this.sockets[user]?.emit('answer', answer, username)
     })
     socket.on('ice-candidate', async (candidate, to) => {
+      console.log('[WebRTC] sending ice-candidate to', to, 'from', username)
       const user = await this.sessionRepository.getUserInSession(sessionId, to)
-      this.io.sockets.sockets
-        .get(user?.socketId)
-        ?.emit('ice-candidate', candidate, username)
+      this.sockets[user]?.emit('ice-candidate', candidate, username)
     })
   }
 
@@ -179,11 +197,11 @@ export class WebRTCSocketServer {
     session: Session,
     username: string
   ) {
-    const userAlreadyInSession = session.participants.find((p) => p.username === username)
+    const userAlreadyInSession = session.participants.find((p) => p === username)
     const isUserAlreadyInSession = userAlreadyInSession !== undefined
     if (isUserAlreadyInSession) {
       // Disconnect the other user
-      const otherSocket = this.io.sockets.sockets.get(userAlreadyInSession?.socketId)
+      const otherSocket = this.sockets[username]
       otherSocket?.disconnect()
       this.io.sockets.to(session.id).emit('user-disconnected', username)
       await this.sessionRepository.removeUserFromSession(session.id, username)

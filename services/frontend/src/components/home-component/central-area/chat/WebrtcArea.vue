@@ -5,41 +5,70 @@ import {
 } from '@/controllers/session/session-controller'
 import { useUserStore, ContentArea } from '@/stores/user'
 import { Cookies } from 'quasar'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 const userStore = useUserStore()
 const toShow = computed(() => userStore.inContentArea == ContentArea.Multimedia)
 
-const otherStreams = ref<Record<string, MediaStream>>({})
+class StreamService {
+  constraints: MediaStreamConstraints
+  stream: Ref<MediaStream | undefined> = ref(undefined)
+  mic_on = ref(false)
+  cam_on = ref(false)
 
-let myStream = ref<MediaStream | null>(null)
-
-const allStreams = computed(() => {
-  const streams: Record<string, MediaStream> = {}
-  if (myStream.value) {
-    streams['me'] = myStream.value
+  constructor(constraints: MediaStreamConstraints) {
+    this.constraints = constraints
+    this.mic_on.value = (constraints.audio as boolean) || false
+    this.cam_on.value = (constraints.video as boolean) || false
   }
-  Object.assign(streams, otherStreams.value)
-  return streams
+
+  async start() {
+    if (!this.stream.value) {
+      this.stream.value = await navigator.mediaDevices.getUserMedia(this.constraints)
+    }
+  }
+
+  async stop() {
+    this.stream.value?.getTracks().forEach((track) => track.stop())
+  }
+
+  async toggleAudio() {
+    this.stream?.value?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled))
+    this.mic_on.value = !this.mic_on.value
+  }
+
+  async toggleVideo() {
+    this.stream?.value?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled))
+    this.cam_on.value = !this.cam_on.value
+  }
+}
+
+let streamService: StreamService = new StreamService({
+  video: true,
+  audio: true
 })
 
-let columns = computed(() => Math.min(2, Object.keys(allStreams.value).length / 2))
+const otherStreams = ref<Record<string, MediaStream>>({})
+
+const allVideos = computed(() => {
+  let videos = otherStreams.value
+  if (streamService.stream.value) videos[userStore.username] = streamService.stream.value
+  return videos
+})
+
+let columns = computed(() => Math.min(2, Object.keys(otherStreams.value).length + 1))
 
 watch(toShow, async (inWebrtc) => {
   if (inWebrtc) {
     console.log('getting stream')
-    myStream.value = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    })
     const jwtToken = userStore.jwt
-    console.log('Token: ' + jwtToken)
     const sessionController: SessionController = new SessionControllerImpl(jwtToken || '')
     const sessionHandler = await sessionController.joinChannel(
       userStore.selectedServerId,
       userStore.selectedChannel[1]
     )
+    await streamService.start()
     sessionHandler.start(
-      myStream.value,
+      streamService.stream.value!,
       (newUser, userMediaStream) => {
         console.log('new user: ' + newUser)
         otherStreams.value[newUser] = userMediaStream
@@ -51,38 +80,24 @@ watch(toShow, async (inWebrtc) => {
     )
   } else {
     console.log('closing stream')
-    myStream.value?.getTracks().forEach((track) => track.stop())
-    myStream.value = null
+    streamService.stop()
   }
 })
 
-let mic_on = ref(true)
-let cam_on = ref(true)
-
 function toggleMicrophone() {
-  if (myStream.value) {
-    myStream.value.getAudioTracks().forEach((track) => {
-      track.enabled = !track.enabled
-      mic_on.value = !mic_on.value
-    })
-  }
+  streamService.toggleAudio()
 }
 
 function toggleWebcam() {
-  if (myStream.value) {
-    myStream.value.getVideoTracks().forEach((track) => {
-      track.enabled = !track.enabled
-      cam_on.value = !cam_on.value
-    })
-  }
+  streamService.toggleVideo()
 }
 
 function exitCall() {
-  // TODO
+  streamService.stop()
 }
 
 const microphoneIcon = computed(() => {
-  if (mic_on.value) {
+  if (streamService.mic_on.value) {
     return 'mic'
   } else {
     return 'mic_off'
@@ -90,7 +105,7 @@ const microphoneIcon = computed(() => {
 })
 
 const webcamIcon = computed(() => {
-  if (cam_on.value) {
+  if (streamService.cam_on.value) {
     return 'videocam'
   } else {
     return 'videocam_off'
@@ -101,20 +116,23 @@ const webcamIcon = computed(() => {
 <template>
   <q-page-container padding v-if="toShow">
     <q-page>
-      <q-row v-if="toShow" :class="'q-cols-' + columns" class="video-grid">
-        <q-col
-          v-for="(videoSrc, index) in allStreams"
-          :key="`video-${index}`"
+      <div v-if="toShow" :class="'q-cols-' + columns" class="video-grid">
+        <div
+          v-for="(videoSrc, username) in allVideos"
+          :key="`video-${username}`"
           :span="12 / columns"
           class="q-pa-md video-col"
         >
-          <video :srcObject="videoSrc" class="video-item" autoplay></video>
-        </q-col>
-      </q-row>
-      <q-alert v-else color="warning" icon="warning" :bordered="false">
-        No videos available.
-      </q-alert>
-
+          <video
+            :srcObject="videoSrc"
+            class="video-item"
+            autoplay
+            v-if="username != userStore.username"
+          ></video>
+          <video :srcObject="videoSrc" class="video-item" autoplay muted v-else></video>
+          <div class="overlay">{{ username }}</div>
+        </div>
+      </div>
       <!-- Buttons for disabling mic, disabling webcam, and exiting the call -->
       <div class="controls">
         <q-btn @click="toggleMicrophone" :icon="microphoneIcon" label="Toggle Microphone" />
@@ -144,6 +162,30 @@ const webcamIcon = computed(() => {
 .controls {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+}
+
+.controls > * {
+  min-width: 50px;
+  min-height: 50px;
+  background-color: white;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 8px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 </style>

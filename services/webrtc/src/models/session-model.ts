@@ -5,21 +5,10 @@ export interface UserInSession {
   socketId: string
 }
 
-const UserInSessionSchema = new Schema<UserInSession>({
-  username: {
-    type: String,
-    required: true,
-  },
-  socketId: {
-    type: String,
-    required: true,
-  },
-})
-
 export interface Session {
   id: string
   allowedUsers: string[]
-  participants: UserInSession[]
+  participants: string[]
 }
 
 export const SessionSchema = new Schema<Session>({
@@ -27,7 +16,7 @@ export const SessionSchema = new Schema<Session>({
     type: [String],
     required: true,
   },
-  participants: [UserInSessionSchema],
+  participants: [String],
 })
 
 export const Sessions = model<Session>('Session', SessionSchema)

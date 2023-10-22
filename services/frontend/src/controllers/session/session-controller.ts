@@ -7,6 +7,7 @@ import {
   GetDirectSessionIdApi,
   GetUsersInSession
 } from '@api/webrtc/session'
+import type { Ref } from 'vue'
 export interface SessionController {
   getUsersInSession(sessionId: string): Promise<string[]>
   joinChannel(serverId: string, channelId: string): Promise<SessionHandler>

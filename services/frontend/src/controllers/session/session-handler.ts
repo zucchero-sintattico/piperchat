@@ -45,24 +45,49 @@ export class SessionHandlerImpl implements SessionHandler {
   }
 
   private setupProtocolListener() {
-    this.socket.on('user-connected', (username: string) => this.onUserConnected(username))
-    this.socket.on('user-disconnected', (username: string) => this.onUserDisconnected(username))
-    this.socket.on('offer', (offer: RTCSessionDescriptionInit, from: string) =>
-      this.onOffer(offer, from)
-    )
-    this.socket.on('answer', (answer: RTCSessionDescriptionInit, from: string) =>
-      this.onAnswer(answer, from)
-    )
-    this.socket.on('ice-candidate', (candidate: RTCIceCandidate, from: string) =>
-      this.onIceCandidate(candidate, from)
-    )
+    this.socket.on('user-connected', (username: string) => {
+      try {
+        this.onUserConnected(username)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    this.socket.on('user-disconnected', (username: string) => {
+      try {
+        this.onUserDisconnected(username)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    this.socket.on('offer', (offer: RTCSessionDescriptionInit, from: string) => {
+      try {
+        this.onOffer(offer, from)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    this.socket.on('answer', (answer: RTCSessionDescriptionInit, from: string) => {
+      try {
+        this.onAnswer(answer, from)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    this.socket.on('ice-candidate', (candidate: RTCIceCandidate, from: string) => {
+      try {
+        this.onIceCandidate(candidate, from)
+      } catch (e) {
+        console.error(e)
+      }
+    })
   }
 
   private async onUserConnected(username: string) {
     console.log('[SessionHandler] User connected:', username)
     this.peers[username] = new RTCPeerConnection(WebRtcConfiguration)
 
-    this.myStream?.getTracks().forEach((track) => {
+    this.myStream!.getTracks().forEach((track) => {
+      console.log('[SessionHandler] Adding track to:', username)
       this.peers[username].addTrack(track, this.myStream!)
     })
 
@@ -73,10 +98,12 @@ export class SessionHandlerImpl implements SessionHandler {
     const offer = await this.peers[username].createOffer()
     await this.peers[username].setLocalDescription(offer)
 
+    console.log('[SessionHandler] Sending offer to:', username)
     this.socket.emit('offer', offer, username)
 
     this.peers[username].onicecandidate = (event) => {
       if (event.candidate) {
+        console.log('[SessionHandler] Sending ice candidate to:', username)
         this.socket.emit('ice-candidate', event.candidate, username)
       }
     }
@@ -97,15 +124,17 @@ export class SessionHandlerImpl implements SessionHandler {
     }
     this.peers[from].onicecandidate = (event) => {
       if (event.candidate) {
+        console.log('[SessionHandler] Sending ice candidate to:', from)
         this.socket.emit('ice-candidate', event.candidate, from)
       }
     }
-    this.myStream?.getTracks().forEach((track) => {
+    this.myStream!.getTracks().forEach((track) => {
       this.peers[from].addTrack(track, this.myStream!)
     })
     await this.peers[from].setRemoteDescription(offer)
     const answer = await this.peers[from].createAnswer()
     await this.peers[from].setLocalDescription(answer)
+    console.log('[SessionHandler] Sending answer to:', from)
     this.socket.emit('answer', answer, from)
   }
 
