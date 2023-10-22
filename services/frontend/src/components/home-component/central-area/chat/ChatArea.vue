@@ -21,29 +21,23 @@ function incrementLoadedMessages() {
   loadedMessages += messagesLimit
 }
 
+/**
+ * Fetches the photos of the users in the current content area
+ */
 async function fetchUsersPhotos() {
   // If the user is in a direct, fetch the photo of the other user
   if (userStore.inContentArea == ContentArea.Direct && userStore.selectedDirect != null) {
-    console.log('Fetching photos for direct')
     if (!usersPhotos.value.has(userStore.selectedDirect)) {
-      usersPhotos.value.set(userStore.selectedDirect, '')
-      userStore.getUserPhoto(userStore.selectedDirect).then((photo) => {
-        usersPhotos.value.set(userStore.selectedDirect, photo?.toString() || '')
-      })
+      const photo = await userStore.getUserPhoto(userStore.selectedDirect)
+      usersPhotos.value.set(userStore.selectedDirect, photo?.toString() || '')
     }
   }
   // If the user is in a channel, fetch the photos of all the partecipants of the server
   if (userStore.inContentArea == ContentArea.Channel && userStore.selectedDirect != null) {
-    console.log('Fetching photos for channel')
-    console.log(
-      'Partecipants: ' + (await serverStore.getServerPartecipants(userStore.selectedServerId))
-    )
     for (const user of await serverStore.getServerPartecipants(userStore.selectedServerId)) {
       if (!usersPhotos.value.has(user)) {
-        usersPhotos.value.set(user, '')
-        userStore.getUserPhoto(user).then((photo) => {
-          usersPhotos.value.set(user, photo?.toString() || '')
-        })
+        const photo = await userStore.getUserPhoto(user)
+        usersPhotos.value.set(user, photo?.toString() || '')
       }
     }
   }
