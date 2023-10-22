@@ -5,6 +5,7 @@ import { ServerControllerImpl } from '@/controllers/piperchat/server/server-cont
 import type { CreateChannelApi } from '@api/piperchat/channel'
 import type {
   CreateServerApi,
+  GetServerParticipantsApi,
   GetServersApi,
   JoinServerApi,
   KickUserFromServerApi
@@ -111,6 +112,17 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function getServerPartecipants(serverId: string) {
+    const response = await serverController.getServerParticipants({ serverId })
+    if (response.statusCode === 200) {
+      const typed = response as GetServerParticipantsApi.Responses.Success
+      return typed.participants
+    } else {
+      const typed = response as GetServerParticipantsApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   return {
     getServers,
     createServer,
@@ -119,6 +131,7 @@ export const useServerStore = defineStore('server', () => {
     kickUser,
     joinServer,
     leaveServer,
+    getServerPartecipants,
     servers
   }
 })
