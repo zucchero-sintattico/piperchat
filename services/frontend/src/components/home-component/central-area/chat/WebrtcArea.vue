@@ -116,21 +116,25 @@ const webcamIcon = computed(() => {
 <template>
   <q-page-container padding v-if="toShow">
     <q-page>
-      <div v-if="toShow" :class="'q-cols-' + columns" class="video-grid">
-        <div
-          v-for="(videoSrc, username) in allVideos"
-          :key="`video-${username}`"
-          :span="12 / columns"
-          class="q-pa-md video-col"
-        >
-          <video
-            :srcObject="videoSrc"
-            class="video-item"
-            autoplay
-            v-if="username != userStore.username"
-          ></video>
-          <video :srcObject="videoSrc" class="video-item" autoplay muted v-else></video>
-          <div class="overlay">{{ username }}</div>
+      <div class="q-pa-md">
+        <div v-if="toShow" class="video-grid">
+          <div
+            v-for="(videoSrc, username) in allVideos"
+            :key="`video-${username}`"
+            class="video-col q-pa-md"
+            :style="{ width: `${100 / columns}%` }"
+          >
+            <div class="video-wrapper">
+              <div class="overlay">{{ username }}</div>
+              <video
+                v-if="username != userStore.username"
+                :srcObject="videoSrc"
+                autoplay
+                class="video-item"
+              ></video>
+              <video v-else :srcObject="videoSrc" autoplay muted class="video-item"></video>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Buttons for disabling mic, disabling webcam, and exiting the call -->
@@ -145,11 +149,17 @@ const webcamIcon = computed(() => {
 
 <style scoped>
 .video-grid {
-  height: 100vh;
-  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .video-col {
+  box-sizing: border-box;
+  height: 200px; /* Set a fixed height for the video columns */
+}
+
+.video-wrapper {
+  position: relative;
   height: 100%;
 }
 
