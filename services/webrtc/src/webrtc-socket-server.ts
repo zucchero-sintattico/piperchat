@@ -56,17 +56,6 @@ export class WebRTCSocketServer {
   }
 
   private async handleSession(socket: Socket, username: string, sessionId: string) {
-    console.log('[WebRTC] ', username, 'joining session', sessionId)
-    await this.checkIfIsChannelOrDirectSessionAndPublishJoinEvent(sessionId, username)
-    const session = await this.getSessionOrDisconnect(sessionId, socket)
-    await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
-    await this.validateUserNotAlreadyInSessionOrDisconnectOther(session, username)
-    await this.sessionRepository.addUserToSession(sessionId, username)
-    this.sockets[username] = socket
-    console.log('[WebRTC] sending user-connected event to', sessionId, 'for', username)
-    socket.to(sessionId).emit('user-connected', username)
-    console.log('[WebRTC] joining room', sessionId, 'for', username)
-    socket.join(sessionId)
     socket.on('disconnect', async () => {
       delete this.sockets[username]
       console.log('[WebRTC] ', username, 'disconnected from session', sessionId)
@@ -96,6 +85,17 @@ export class WebRTCSocketServer {
       const user = await this.sessionRepository.getUserInSession(sessionId, to)
       this.sockets[user]?.emit('ice-candidate', candidate, username)
     })
+    console.log('[WebRTC] ', username, 'joining session', sessionId)
+    await this.checkIfIsChannelOrDirectSessionAndPublishJoinEvent(sessionId, username)
+    const session = await this.getSessionOrDisconnect(sessionId, socket)
+    await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
+    await this.validateUserNotAlreadyInSessionOrDisconnectOther(session, username)
+    await this.sessionRepository.addUserToSession(sessionId, username)
+    this.sockets[username] = socket
+    console.log('[WebRTC] sending user-connected event to', sessionId, 'for', username)
+    socket.to(sessionId).emit('user-connected', username)
+    console.log('[WebRTC] joining room', sessionId, 'for', username)
+    socket.join(sessionId)
   }
 
   private async checkIfIsChannelOrDirectSessionAndPublishJoinEvent(

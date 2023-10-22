@@ -52,16 +52,37 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
     this.on(UserJoinedServer, async (event: UserJoinedServer) => {
       console.log('[Event] UserJoinedServer: ', event)
       await this.channelRepository.addServerParticipant(event.serverId, event.username)
+      const channels = await this.channelRepository.getChannelsInServer(event.serverId)
+      channels.forEach(async (channel) => {
+        const sessionId = channel.sessionId
+        await this.sessionRepository.addAllowedUserToSession(sessionId, event.username)
+      })
     })
 
     this.on(UserLeftServer, async (event: UserLeftServer) => {
       console.log('[Event] UserLeftServer: ', event)
       await this.channelRepository.removeServerParticipant(event.serverId, event.username)
+      const channels = await this.channelRepository.getChannelsInServer(event.serverId)
+      channels.forEach(async (channel) => {
+        const sessionId = channel.sessionId
+        await this.sessionRepository.removeAllowedUserFromSession(
+          sessionId,
+          event.username
+        )
+      })
     })
 
     this.on(UserKickedFromServer, async (event: UserKickedFromServer) => {
       console.log('[Event] UserKickedFromServer: ', event)
       await this.channelRepository.removeServerParticipant(event.serverId, event.username)
+      const channels = await this.channelRepository.getChannelsInServer(event.serverId)
+      channels.forEach(async (channel) => {
+        const sessionId = channel.sessionId
+        await this.sessionRepository.removeAllowedUserFromSession(
+          sessionId,
+          event.username
+        )
+      })
     })
   }
 
