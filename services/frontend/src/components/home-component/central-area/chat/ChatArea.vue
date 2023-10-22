@@ -9,11 +9,11 @@ const userStore = useUserStore()
 const areMessageLoaded = ref(true)
 let loadedMessages: number
 function resetLoadedMessages() {
-  loadedMessages = 15
+  loadedMessages = 50
 }
 
 function incrementLoadedMessages() {
-  loadedMessages += 10
+  loadedMessages += 25
 }
 
 /**
@@ -128,7 +128,7 @@ onMounted(() => {
               :avatar="
                 userStore.username == message.sender
                   ? userStore.photo
-                  : 'https://cdn.quasar.dev/img/avatar.png'
+                  : message.sender.charAt(0).toUpperCase()
               "
             />
           </div>

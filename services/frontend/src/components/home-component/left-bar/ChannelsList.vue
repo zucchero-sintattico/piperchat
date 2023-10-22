@@ -40,7 +40,7 @@ function popUpBanner(error?: string) {
     contentBanner.value = error
   } else {
     colorBanner.value = BannerColor.OK
-    contentBanner.value = 'Server created successfully'
+    contentBanner.value = 'Created successfully'
   }
   resultBanner.value = true
   setTimeout(() => {

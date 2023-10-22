@@ -6,7 +6,7 @@ import { ContentArea, useUserStore } from '@/stores/user'
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 const message = ref('')
-let intitialLoadedMessages = 15
+let initialLoadedMessages = 50
 /**
  * Checks if the user is in a valid content area (direct or channel)
  */
@@ -43,7 +43,7 @@ async function sendMessage() {
         messageStore.getMessagesFromDirect({
           username: userStore.selectedDirect,
           from: 0,
-          limit: intitialLoadedMessages
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -60,7 +60,7 @@ async function sendMessage() {
           serverId: userStore.selectedChannel[0],
           channelId: userStore.selectedChannel[1],
           from: 0,
-          limit: intitialLoadedMessages
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -77,7 +77,7 @@ function deleteMessage() {
   <q-footer v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
-        <q-icon name="close" @click="deleteMessage" class="cursor-pointer" />
+        <q-icon v-if="message != ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
       <template v-slot:after>
         <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
