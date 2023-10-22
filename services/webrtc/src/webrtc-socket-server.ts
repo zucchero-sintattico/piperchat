@@ -54,7 +54,7 @@ export class WebRTCSocketServer {
     await this.checkIfIsChannelOrDirectSessionAndPublishJoinEvent(sessionId, username)
     const session = await this.getSessionOrDisconnect(sessionId, socket)
     await this.validateUserAllowedInSessionOrDisconnect(session, username, socket)
-    await this.validateUserNotAlreadyInSessionOrDisconnect(session, username, socket)
+    await this.validateUserNotAlreadyInSessionOrDisconnectOther(session, username)
     await this.sessionRepository.addUserToSession(sessionId, username, socket.id)
     socket.to(sessionId).emit('user-connected', username)
     socket.join(sessionId)
@@ -175,17 +175,19 @@ export class WebRTCSocketServer {
     }
   }
 
-  private async validateUserNotAlreadyInSessionOrDisconnect(
+  private async validateUserNotAlreadyInSessionOrDisconnectOther(
     session: Session,
-    username: string,
-    socket: Socket
+    username: string
   ) {
     const userAlreadyInSession = session.participants.find((p) => p.username === username)
     const isUserAlreadyInSession = userAlreadyInSession !== undefined
     if (isUserAlreadyInSession) {
-      console.log('User already in session, disconnecting')
-      socket.disconnect()
-      return
+      // Disconnect the other user
+      const otherSocket = this.io.sockets.sockets.get(userAlreadyInSession?.socketId)
+      otherSocket?.disconnect()
+      this.io.sockets.to(session.id).emit('user-disconnected', username)
+      await this.sessionRepository.removeUserFromSession(session.id, username)
+      await this.checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(session.id, username)
     }
   }
 }
