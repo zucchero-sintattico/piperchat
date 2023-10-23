@@ -17,7 +17,7 @@ export const useWebRTCStore = defineStore(
       video: true
     })
     const myStream = streamService.stream
-    const otherStream = ref<Record<string, MediaStream>>({})
+    const otherStream: Ref<Record<string, MediaStream>> = ref({})
 
     const sessionController: SessionController = new SessionControllerImpl(userStore.jwt)
     const sessionHandler: Ref<SessionHandler | null> = ref(null)

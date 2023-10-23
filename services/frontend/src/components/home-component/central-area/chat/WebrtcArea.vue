@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore, ContentArea } from '@/stores/user'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
@@ -20,7 +20,7 @@ async function stop() {
   joined.value = false
 }
 
-const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream.value).length + 1))
+const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).length + 1))
 </script>
 
 <template>
@@ -28,9 +28,15 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream.v
     <q-page v-if="joined">
       <div class="q-pa-md">
         <div class="video-grid">
-          <div class="video-wrapper" v-if="webrtcStore.myStream">
-            <div class="overlay">{{ userStore.username }}</div>
-            <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
+          <div
+            :key="`video-${userStore.username}`"
+            class="video-col q-pa-md"
+            :style="{ width: `${100 / columns}%` }"
+          >
+            <div class="video-wrapper">
+              <div class="overlay">{{ userStore.username }}</div>
+              <video :srcObject="webrtcStore.myStream" autoplay class="video-item"></video>
+            </div>
           </div>
           <div
             v-for="(videoSrc, username) in webrtcStore.otherStream"
