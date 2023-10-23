@@ -28,7 +28,9 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
             :style="{ width: `${100 / columns}%` }"
           >
             <div class="video-wrapper">
-              <div class="overlay">{{ userStore.username }}</div>
+              <div class="overlay">
+                <div class="username">{{ userStore.username }}</div>
+              </div>
               <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
             </div>
           </div>
@@ -39,7 +41,9 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
             :style="{ width: `${100 / columns}%` }"
           >
             <div class="video-wrapper">
-              <div class="overlay">{{ username }}</div>
+              <div class="overlay">
+                <div class="username">{{ username }}</div>
+              </div>
               <video :srcObject="videoSrc" autoplay class="video-item"></video>
             </div>
           </div>
@@ -61,7 +65,9 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
       </div>
     </q-page>
     <q-page v-if="!webrtcStore.joined">
-      <q-btn @click="join" label="Join Call" class="join-button" />
+      <div class="join-button-wrapper">
+        <q-btn @click="join" label="Join Call" class="join-button" />
+      </div>
     </q-page>
   </q-page-container>
 </template>
@@ -77,6 +83,17 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
   height: 100%;
 }
 
+.video-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.video-col {
+  box-sizing: border-box;
+  flex: 1 0 calc(25% - 16px); /* Adjust width and gap as needed */
+}
+
 .video-wrapper {
   position: relative;
   height: 100%;
@@ -86,6 +103,8 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .controls {
@@ -94,7 +113,6 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 20px;
@@ -105,6 +123,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
   min-width: 50px;
   min-height: 50px;
   background-color: white;
+  border-radius: 10px;
 }
 
 .overlay {
@@ -112,13 +131,29 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   text-align: center;
-  padding: 8px;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0); /* Adjust transparency */
+  padding: 8px;
 }
 
-.join-button {
+.username {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust transparency */
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 10px;
+}
+
+.join-button-wrapper {
   position: absolute;
   top: 50%;
   left: 50%;
