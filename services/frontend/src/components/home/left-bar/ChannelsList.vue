@@ -9,7 +9,6 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
-import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
@@ -24,7 +23,8 @@ function setChannelContent(channelId: string, contentArea: ContentArea) {
   userStore.setActiveChannel(channelId)
 }
 const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
+  const servers = serverStore.servers.find((s) => s.id == userStore.selectedServerId)
+  return servers
 })
 
 const amITheOwner = computed(() => {

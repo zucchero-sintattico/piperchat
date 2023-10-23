@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import StatusCard from '@/components/monitoring-component/StatusCard.vue'
+import StatusCard from '@/components/monitoring/StatusCard.vue'
 </script>
+
 <template>
+  <!-- Template for the grid of status cards -->
   <div class="main-container">
     <div class="state-grid">
       <StatusCard />

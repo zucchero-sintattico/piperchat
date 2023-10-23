@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { useUserStore, ContentArea } from '@/stores/user'
-import { computed, onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { computed, ref } from 'vue'
 import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const webrtcStore = useWebRTCStore()
-
-const toShow = computed(() => userStore.inContentArea == ContentArea.Multimedia)
 
 const joined = ref(false)
 
@@ -24,7 +22,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
 </script>
 
 <template>
-  <q-page-container padding v-if="toShow">
+  <q-page-container padding>
     <q-page v-if="joined">
       <div class="q-pa-md">
         <div class="video-grid">
