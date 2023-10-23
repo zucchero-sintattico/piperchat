@@ -48,6 +48,10 @@ export const useUserStore = defineStore(
     const selectedDirect = ref('')
     const inContentArea = ref(ContentArea.Empty)
 
+    function setContentArea(area: ContentArea) {
+      inContentArea.value = area
+    }
+
     //Stuffs for Themes
     const DefaultTheme: Theme = {
       label: ThemesList[0].label,
@@ -193,6 +197,7 @@ export const useUserStore = defineStore(
       selectedChannelId,
       selectedDirect,
       inContentArea,
+      setContentArea,
       setActiveChannel,
       whoami,
       login,

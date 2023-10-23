@@ -11,11 +11,12 @@ const friendStore = useFriendStore()
 
 const friendTabOpened = ref(false)
 
-function setActiveDirect(directUsarname: string) {
-  userStore.inContentArea = ContentArea.Direct
-  userStore.selectedDirect = directUsarname
+function setActiveDirect(directUsername: string) {
+  userStore.setContentArea(ContentArea.Direct)
+  userStore.selectedDirect = directUsername
   console.log('changed direct', userStore.selectedDirect)
 }
+
 onMounted(() => {
   friendStore.fetchFriends()
   userStore.selectedDirect = ''

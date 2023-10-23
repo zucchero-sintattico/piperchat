@@ -48,10 +48,11 @@ async function fetchUsersPhotos() {
 /**
  * Shows the chat if the user is in a valid content area
  */
-const showChat = computed(
-  () =>
+const showChat = computed(() => {
+  return (
     userStore.inContentArea == ContentArea.Direct || userStore.inContentArea == ContentArea.Channel
-)
+  )
+})
 
 /**
  * When the user changes the selected direct,
