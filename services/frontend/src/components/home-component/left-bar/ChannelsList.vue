@@ -13,7 +13,6 @@ import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
-const webrtcStore = useWebRTCStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
@@ -23,9 +22,6 @@ function setChannelContent(channelId: string, contentArea: ContentArea) {
   console.log('Switched')
   userStore.inContentArea = contentArea
   userStore.setActiveChannel(channelId)
-  if (contentArea == ContentArea.Multimedia) {
-    webrtcStore.joinChannel(userStore.selectedServerId, channelId)
-  }
 }
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
@@ -45,7 +41,7 @@ function popUpBanner(error?: string) {
     contentBanner.value = error
   } else {
     colorBanner.value = BannerColor.OK
-    contentBanner.value = 'Server created successfully'
+    contentBanner.value = 'Created successfully'
   }
   resultBanner.value = true
   setTimeout(() => {

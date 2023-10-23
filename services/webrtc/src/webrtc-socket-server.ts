@@ -105,7 +105,7 @@ export class WebRTCSocketServer {
     try {
       // Search a server with a channel with the given sessionId and retrieve the channel
       const server = await Servers.findOne({
-        'channels.id': sessionId,
+        'channels.sessionId': sessionId,
       })
       const channel = server?.channels.find((c) => c.id === sessionId)
       if (channel) {

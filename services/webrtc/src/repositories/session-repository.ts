@@ -12,11 +12,10 @@ export interface SessionRepository {
 
 export class SessionRepositoryImpl implements SessionRepository {
   async createSession(allowedUsers: string[]): Promise<string> {
-    const session = new Sessions({
+    const session = await Sessions.create({
       allowedUsers,
       participants: [],
     })
-    await session.save()
     return session.id
   }
 
@@ -25,30 +24,27 @@ export class SessionRepositoryImpl implements SessionRepository {
   }
 
   async addAllowedUserToSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne(
-      { id: sessionId },
-      { $addToSet: { allowedUsers: username } }
-    ).orFail()
+    await Sessions.findByIdAndUpdate(sessionId, {
+      $addToSet: { allowedUsers: username },
+    }).orFail()
   }
 
   async removeAllowedUserFromSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne(
-      { id: sessionId },
-      { $pull: { allowedUsers: username } }
-    ).orFail()
+    await Sessions.findByIdAndUpdate(sessionId, {
+      $pull: { allowedUsers: username },
+    }).orFail()
   }
 
   async addUserToSession(sessionId: string, username: string): Promise<void> {
-    const session = await Sessions.findById(sessionId).orFail()
-    session.participants.push(username)
-    await session.save()
+    await Sessions.findByIdAndUpdate(sessionId, {
+      $addToSet: { participants: username },
+    }).orFail()
   }
 
   async removeUserFromSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne(
-      { id: sessionId },
-      { $pull: { participants: username } }
-    ).orFail()
+    await Sessions.findByIdAndUpdate(sessionId, {
+      $pull: { participants: username },
+    }).orFail()
   }
 
   async getUserInSession(sessionId: string, username: string): Promise<string> {

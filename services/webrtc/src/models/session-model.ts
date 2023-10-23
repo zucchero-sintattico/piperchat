@@ -6,7 +6,7 @@ export interface UserInSession {
 }
 
 export interface Session {
-  id: string
+  _id: string
   allowedUsers: string[]
   participants: string[]
 }

@@ -11,7 +11,7 @@ const toShow = computed(() => userStore.inContentArea == ContentArea.Multimedia)
 const joined = ref(false)
 
 async function join() {
-  webrtcStore.joinChannel(userStore.selectedServerId, userStore.selectedChannelId)
+  await webrtcStore.joinChannel(userStore.selectedServerId, userStore.selectedChannelId)
   joined.value = true
 }
 
@@ -28,7 +28,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream.v
     <q-page v-if="joined">
       <div class="q-pa-md">
         <div class="video-grid">
-          <div class="video-wrapper" v-if="webrtcStore.myStream != null">
+          <div class="video-wrapper" v-if="webrtcStore.myStream">
             <div class="overlay">{{ userStore.username }}</div>
             <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
           </div>

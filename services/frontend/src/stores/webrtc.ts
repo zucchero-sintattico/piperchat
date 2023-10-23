@@ -6,39 +6,7 @@ import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import { useUserStore } from './user'
 import type { SessionHandler } from '@/controllers/session/session-handler'
-
-class StreamService {
-  constraints: MediaStreamConstraints
-  stream: Ref<MediaStream | undefined> = ref(undefined)
-  mic_on = ref(false)
-  cam_on = ref(false)
-
-  constructor(constraints: MediaStreamConstraints) {
-    this.constraints = constraints
-    this.mic_on.value = (constraints.audio as boolean) || false
-    this.cam_on.value = (constraints.video as boolean) || false
-  }
-
-  async start() {
-    if (!this.stream.value) {
-      this.stream.value = await navigator.mediaDevices.getUserMedia(this.constraints)
-    }
-  }
-
-  async stop() {
-    this.stream.value?.getTracks().forEach((track) => track.stop())
-  }
-
-  async toggleAudio() {
-    this.stream?.value?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled))
-    this.mic_on.value = !this.mic_on.value
-  }
-
-  async toggleVideo() {
-    this.stream?.value?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled))
-    this.cam_on.value = !this.cam_on.value
-  }
-}
+import { StreamService } from './utils/stream-service'
 
 export const useWebRTCStore = defineStore(
   'webrtc',
@@ -55,6 +23,8 @@ export const useWebRTCStore = defineStore(
     const sessionHandler: Ref<SessionHandler | null> = ref(null)
 
     async function start() {
+      console.log('Starting session')
+      otherStream.value = {}
       await streamService.start()
       sessionHandler.value!.start(
         myStream.value!,

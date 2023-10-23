@@ -2,12 +2,48 @@
 import { watch, ref, onMounted, computed } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
+
 import MessageInput from './MessageInput.vue'
+import { useServerStore } from '@/stores/server'
+
 const messageStore = useMessageStore()
-
+const serverStore = useServerStore()
 const userStore = useUserStore()
+const usersPhotos = ref(new Map<string, string>())
 
-let initialLoadedMessages = 15
+const areMessagesLoaded = ref(true)
+const messagesLimit = 30
+let loadedMessages: number
+
+function resetLoadedMessages() {
+  loadedMessages = messagesLimit
+}
+
+function incrementLoadedMessages() {
+  loadedMessages += messagesLimit
+}
+
+/**
+ * Fetches the photos of the users in the current content area
+ */
+async function fetchUsersPhotos() {
+  // If the user is in a direct, fetch the photo of the other user
+  if (userStore.inContentArea == ContentArea.Direct && userStore.selectedDirect != null) {
+    if (!usersPhotos.value.has(userStore.selectedDirect)) {
+      const photo = await userStore.getUserPhoto(userStore.selectedDirect)
+      usersPhotos.value.set(userStore.selectedDirect, photo?.toString() || '')
+    }
+  }
+  // If the user is in a channel, fetch the photos of all the partecipants of the server
+  if (userStore.inContentArea == ContentArea.Channel && userStore.selectedDirect != null) {
+    for (const user of await serverStore.getServerParticipants(userStore.selectedServerId)) {
+      if (!usersPhotos.value.has(user)) {
+        const photo = await userStore.getUserPhoto(user)
+        usersPhotos.value.set(user, photo?.toString() || '')
+      }
+    }
+  }
+}
 
 /**
  * Shows the chat if the user is in a valid content area
@@ -19,55 +55,55 @@ const showChat = computed(
 
 /**
  * When the user changes the selected direct,
- * refresh the messages
+ * refresh the messages and the photos
  */
 watch(
   () => userStore.selectedDirect,
-  () => {
+  async () => {
     console.log('New direct: ' + userStore.selectedDirect)
-    initialLoadedMessages = 15
-    messageStore.getMessagesFromDirect({
+    resetLoadedMessages()
+    await messageStore.getMessagesFromDirect({
       username: userStore.selectedDirect,
       from: 0,
-      limit: initialLoadedMessages
+      limit: loadedMessages
     })
+    await fetchUsersPhotos()
   }
 )
 
 /**
  * When the user changes the selected channel,
- * refresh the messages
+ * refresh the messages and the photos
  */
 watch(
   () => userStore.selectedChannelId,
-  () => {
+  async () => {
     console.log('New channel: ' + userStore.selectedChannelId)
-    initialLoadedMessages = 15
-    messageStore.getMessagesFromChannel({
+    resetLoadedMessages()
+    await messageStore.getMessagesFromChannel({
       serverId: userStore.selectedServerId,
       channelId: userStore.selectedChannelId,
       from: 0,
-      limit: initialLoadedMessages
+      limit: loadedMessages
     })
+    await fetchUsersPhotos()
   }
 )
-
-const done = ref(true)
 
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    done.value
+    areMessagesLoaded.value
   ) {
-    done.value = false
+    areMessagesLoaded.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
         messageStore.getMessagesFromDirect(
           {
             username: userStore.selectedDirect.toString(),
-            from: initialLoadedMessages,
-            limit: 10
+            from: loadedMessages,
+            limit: messagesLimit
           },
           true
         )
@@ -76,27 +112,27 @@ function handleScroll() {
           {
             serverId: userStore.selectedServerId,
             channelId: userStore.selectedChannelId,
-            from: initialLoadedMessages,
-            limit: 10
+            from: loadedMessages,
+            limit: messagesLimit
           },
           true
         )
       }
-      initialLoadedMessages += 10
-      done.value = true
+      incrementLoadedMessages()
+      areMessagesLoaded.value = true
     }, 500)
   }
 }
 
 onMounted(() => {
-  initialLoadedMessages = 15
+  resetLoadedMessages()
 })
 </script>
 
 <template>
   <q-page-container padding v-if="showChat">
     <q-page>
-      <template v-if="!done">
+      <template v-if="!areMessagesLoaded">
         <div class="row justify-center q-my-md">
           <q-spinner color="primary" name="dots" size="40px" />
         </div>
@@ -109,11 +145,16 @@ onMounted(() => {
             :key="index"
             class="justify-bottom"
           >
+            <!-- if sender is the user show the image, default image otherwise -->
             <q-chat-message
               :name="message.sender"
-              avatar="https://cdn.quasar.dev/img/avatar1.jpg"
               :text="[message.content]"
               :sent="userStore.username == message.sender"
+              :avatar="
+                message.sender == userStore.username
+                  ? userStore.photo
+                  : usersPhotos.get(message.sender)
+              "
             />
           </div>
         </div>

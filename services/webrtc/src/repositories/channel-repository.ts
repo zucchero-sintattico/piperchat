@@ -20,12 +20,13 @@ export interface ChannelRepository {
 
 export class ChannelRepositoryImpl implements ChannelRepository {
   private sessionRepository: SessionRepository = new SessionRepositoryImpl()
+
   async createServer(serverId: string, owner: string): Promise<Server> {
-    const server = new Servers({
+    const server = await Servers.create({
       id: serverId,
       participants: [owner],
+      channels: [],
     })
-    await server.save()
     return server
   }
 

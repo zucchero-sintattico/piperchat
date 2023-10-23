@@ -127,6 +127,32 @@ export const useUserStore = defineStore(
       }
     }
 
+    async function getUserPhoto(targetUsername: string) {
+      try {
+        const response = await userController.getUserPhoto({
+          username: targetUsername
+        })
+        if (response.statusCode === 200) {
+          const typed = response as GetUserPhotoApi.Responses.Success
+          if (typed.photo.data === undefined) {
+            return 'src/assets/user-avatar.png'
+          } else {
+            return (
+              'data:image/jpeg;base64,' +
+              btoa(
+                new Uint8Array(typed.photo.data.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                )
+              )
+            )
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
     async function reloadUserPhoto() {
       try {
         console.log(username.value)
@@ -173,6 +199,7 @@ export const useUserStore = defineStore(
       register,
       logout,
       updatePhoto,
+      getUserPhoto,
       reloadUserPhoto,
       photoLoaded,
       reload,
