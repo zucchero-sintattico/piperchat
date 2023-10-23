@@ -2,15 +2,11 @@
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
-import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
-import SettingsForm from '@/components/home-component/SettingsForm.vue'
+import LeftBar from '@/components/home/left-bar/LeftBar.vue'
+import ContentArea from '@/components/home/central-area/ContentArea.vue'
+import SettingsForm from '@/components/home/settings/SettingsForm.vue'
 import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
-import {
-  SessionControllerImpl,
-  type SessionController
-} from '@/controllers/session/session-controller'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)

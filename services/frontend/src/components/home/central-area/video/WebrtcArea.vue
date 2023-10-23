@@ -33,7 +33,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
           >
             <div class="video-wrapper">
               <div class="overlay">{{ userStore.username }}</div>
-              <video :srcObject="webrtcStore.myStream" autoplay class="video-item"></video>
+              <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
             </div>
           </div>
           <div
@@ -78,7 +78,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
 
 .video-col {
   box-sizing: border-box;
-  height: 200px; /* Set a fixed height for the video columns */
+  height: 100%;
 }
 
 .video-wrapper {
