@@ -34,13 +34,13 @@ channels:
     description: A user is registered to the system
     subscribe:
       message:
-        '$ref': '#/components/messages/RichUser'
+        '$ref': '#/components/messages/UserCreated'
 
   user.updated:
     description: A user is updated
     subscribe:
       message:
-        '$ref': '#/components/messages/RichUser'
+        '$ref': '#/components/messages/UserCreated'
 
   user.deleted:
     description: A user is deleted
@@ -70,13 +70,13 @@ channels:
     description: A server is created
     subscribe:
       message:
-        '$ref': '#/components/messages/ServerAdvanced'
+        '$ref': '#/components/messages/ServerCreated'
 
   server.updated:
     description: A server has been updated
     subscribe:
       message:
-        '$ref': '#/components/messages/ServerAdvanced'
+        '$ref': '#/components/messages/ServerUpdated'
 
   server.deleted:
     description: A server has been deleted
@@ -106,13 +106,13 @@ channels:
     description: A channel is created
     subscribe:
       message:
-        '$ref': '#/components/messages/ChannelAdvanced'
+        '$ref': '#/components/messages/ChannelCreated'
 
   channel.updated:
     description: A channel has been updated
     subscribe:
       message:
-        '$ref': '#/components/messages/ChannelAdvanced'
+        '$ref': '#/components/messages/ChannelUpdated'
 
   channel.deleted:
     description: A channel has been deleted
@@ -120,41 +120,41 @@ channels:
       message:
         '$ref': '#/components/messages/Channel'
 
-  message.channel.sent:
+  channel.message.new:
     description: A new message has been sent to a channel
     subscribe:
       message:
         '$ref': '#/components/messages/MessageChannel'
 
-  message.direct.sent:
+  multimedia.user.joined:
+    description: A user joined a multimedia session
+    subscribe:
+      message:
+        '$ref': '#/components/messages/SessionChannelUser'
+
+  multimedia.user.left:
+    description: A user left a multimedia session
+    subscribe:
+      message:
+        '$ref': '#/components/messages/SessionChannelUser'
+
+  direct.message.new:
     description: A new message has been sent to a user
     subscribe:
       message:
         '$ref': '#/components/messages/MessageDirect'
 
-  session.created:
-    description: A new session has been created
+  direct.user.joined:
+    description: A user joined a direct session
     subscribe:
       message:
-        '$ref': '#/components/messages/Session'
+        '$ref': '#/components/messages/SessionJoinDirect'
 
-  session.terminated:
-    description: A session has been terminated
+  direct.user.left:
+    description: A user left a direct session
     subscribe:
       message:
-        '$ref': '#/components/messages/Session'
-
-  session.user.joined:
-    description: A user joined a session
-    subscribe:
-      message:
-        '$ref': '#/components/messages/SessionUser'
-
-  session.user.left:
-    description: A user left a session
-    subscribe:
-      message:
-        '$ref': '#/components/messages/SessionUser'
+        '$ref': '#/components/messages/SessionLeaveDirect'
 
 components:
   messages:
@@ -163,21 +163,26 @@ components:
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/UserSchema'
-    RichUser:
+    UserCreated:
       summary: A user with additional data
       contentType: application/json
       payload:
-        '$ref': '#/components/schemas/RichUserSchema'
+        '$ref': '#/components/schemas/UserCreatedSchema'
     Server:
       summary: A basic server (no additional data)
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/ServerBasicSchema'
-    ServerAdvanced:
-      summary: A server
+    ServerCreated:
+      summary: A server created
       contentType: application/json
       payload:
-        '$ref': '#/components/schemas/ServerAdvancedSchema'
+        '$ref': '#/components/schemas/ServerCreatedSchema'
+    ServerUpdated:
+      summary: A server updated
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ServerUpdatedSchema'
     ServerUser:
       summary: A server-user pair
       contentType: application/json
@@ -193,11 +198,16 @@ components:
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/ChannelBasicSchema'
-    ChannelAdvanced:
+    ChannelCreated:
       summary: A channel
       contentType: application/json
       payload:
-        '$ref': '#/components/schemas/ChannelAdvancedSchema'
+        '$ref': '#/components/schemas/ChannelCreatedSchema'
+    ChannelUpdated:
+      summary: A channel
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ChannelUpdatedSchema'
     MessageChannel:
       summary: A message
       contentType: application/json
@@ -208,16 +218,21 @@ components:
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/MessageDirectSchema'
-    Session:
-      summary: A session
-      contentType: application/json
-      payload:
-        '$ref': '#/components/schemas/SessionSchema'
-    SessionUser:
+    SessionChannelUser:
       summary: A session user
       contentType: application/json
       payload:
-        '$ref': '#/components/schemas/SessionUserSchema'
+        '$ref': '#/components/schemas/SessionChannelUserSchema'
+    SessionJoinDirect:
+      summary: A session of two users
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/SessionJoinDirectSchema'
+    SessionLeaveDirect:
+      summary: A session of two users
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/SessionLeaveDirectSchema'
 
   schemas:
     FriendRequest:
@@ -242,7 +257,7 @@ components:
           description: Unique identifier representing a specific user
           example: user1
 
-    RichUserSchema:
+    UserCreatedSchema:
       allOf:
         - '$ref': '#/components/schemas/UserSchema'
         - type: object
@@ -267,16 +282,21 @@ components:
 
     ServerBasicSchema:
       type: object
+      required:
+        - serverId
       properties:
         serverId:
           type: string
           description: Unique identifier representing a specific server
           example: server1
 
-    ServerAdvancedSchema:
+    ServerCreatedSchema:
       allOf:
         - $ref: '#/components/schemas/ServerBasicSchema'
         - type: object
+          required:
+            - name
+            - owner
           properties:
             name:
               type: string
@@ -291,10 +311,26 @@ components:
               description: Unique identifier representing a specific user
               example: user1
 
+    ServerUpdatedSchema:
+      allOf:
+        - $ref: '#/components/schemas/ServerBasicSchema'
+        - type: object
+          properties:
+            name:
+              type: string
+              description: Name of the server
+              example: My server
+            description:
+              type: string
+              description: Description of the server
+              example: My server description
+
     ServerUserSchema:
       allOf:
         - $ref: '#/components/schemas/ServerBasicSchema'
         - type: object
+          required:
+            - username
           properties:
             username:
               type: string
@@ -303,6 +339,9 @@ components:
 
     ChannelBasicSchema:
       type: object
+      required:
+        - serverId
+        - channelId
       properties:
         serverId:
           type: string
@@ -313,10 +352,13 @@ components:
           description: Unique identifier representing a specific channel
           example: channel1
 
-    ChannelAdvancedSchema:
+    ChannelCreatedSchema:
       allOf:
         - $ref: '#/components/schemas/ChannelBasicSchema'
         - type: object
+          required:
+            - name
+            - type
           properties:
             name:
               type: string
@@ -331,52 +373,81 @@ components:
               description: Description of the channel
               example: General discussion
 
+    ChannelUpdatedSchema:
+      allOf:
+        - $ref: '#/components/schemas/ChannelBasicSchema'
+        - type: object
+          properties:
+            name:
+              type: string
+              description: Name of the channel
+              example: general
+            description:
+              type: string
+              description: Description of the channel
+              example: General discussion
+
     MessageSchema:
       type: object
+      required:
+        - sender
+        - message
       properties:
-        messageId:
-          type: string
-          description: Unique identifier representing a specific message
-          example: message1
-        from:
+        sender:
           type: string
           description: Unique identifier representing a specific user
           example: user1
+        message:
+          type: string
+          description: Unique identifier representing a specific message
+          example: message1
 
     MessageDirectSchema:
       allOf:
         - '$ref': '#/components/schemas/MessageSchema'
         - type: object
           properties:
-            to:
+            receiver:
               type: string
               description: Unique identifier representing a specific user
               example: user2
 
     MessageChannelSchema:
       allOf:
+        - '$ref': '#/components/schemas/ChannelBasicSchema'
         - '$ref': '#/components/schemas/MessageSchema'
-        - type: object
-          properties:
-            channelId:
-              type: string
-              description: Unique identifier representing a specific channel
-              example: channel1
 
-    SessionSchema:
-      type: object
-      properties:
-        sessionId:
-          type: string
-          description: Unique identifier representing a specific session
-          example: session1
-
-    SessionUserSchema:
+    SessionChannelUserSchema:
       allOf:
-        - '$ref': '#/components/schemas/SessionSchema'
-        - type: object
-          properties:
-            userId:
-              type: string
-              description: Unique identifier representing a specific user
-              example: user1
+        - '$ref': '#/components/schemas/ChannelBasicSchema'
+        - '$ref': '#/components/schemas/UserSchema'
+
+    SessionJoinDirectSchema:
+      type: object
+      required:
+        - joiner
+        - other
+      properties:
+        joiner:
+          type: string
+          description: Unique identifier representing a specific user joining the call
+          example: user1
+        other:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user2
+
+    SessionLeaveDirectSchema:
+      type: object
+      required:
+        - leaver
+        - other
+      properties:
+        leaver:
+          type: string
+          description: Unique identifier representing a specific user leaving the call
+          example: user1
+        other:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user2
