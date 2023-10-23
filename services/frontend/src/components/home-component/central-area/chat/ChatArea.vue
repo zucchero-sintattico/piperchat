@@ -11,6 +11,8 @@ const usersPhotos = ref(new Map<string, string>())
 
 const areMessagesLoaded = ref(true)
 const messagesLimit = 30
+
+let tempLastScrollPosition = 0;
 let loadedMessages: number
 
 function resetLoadedMessages() {
@@ -98,8 +100,9 @@ function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 300 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    areMessagesLoaded.value
+    areMessagesLoaded.value && tempLastScrollPosition > bottomContent.scrollTop
   ) {
+    tempLastScrollPosition = bottomContent.scrollTop
     areMessagesLoaded.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
