@@ -12,7 +12,8 @@ const serverStore = useServerStore()
 
 const isNewServerFormActive = ref(false)
 
-function setActiveServer(server: GetServersApi.Responses.Server) {
+async function setActiveServer(server: GetServersApi.Responses.Server) {
+  await serverStore.selectServerId(server.id)
   userStore.selectedServerId = server.id
   userStore.selectedTab = SelectedTab.Servers
 }

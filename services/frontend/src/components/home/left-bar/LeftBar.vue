@@ -10,7 +10,7 @@ const userStore = useUserStore()
 const serverStore = useServerStore()
 
 onMounted(() => {
-  serverStore.getServers()
+  serverStore.refreshUserServers()
   userStore.selectedTab = SelectedTab.Directs
   userStore.selectedDirect = ''
 })

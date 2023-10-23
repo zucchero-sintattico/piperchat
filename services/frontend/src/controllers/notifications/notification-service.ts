@@ -1,19 +1,25 @@
-import type {
+import {
   FriendRequestAcceptedNotification,
   FriendRequestNotification,
   NewMessageOnChannelNotification,
   NewMessageOnDirectNotification,
+  ServerDeletedNotification,
+  UserJoinedServerNotification,
+  UserLeftServerNotification,
   UserOfflineNotification,
   UserOnlineNotification
 } from '@api/notifications/messages'
 import { useUserStore } from '@/stores/user'
 import { io } from 'socket.io-client'
+import { useWebRTCStore } from '@/stores/webrtc'
+import { useServerStore } from '@/stores/server'
+import { useMessageStore } from '@/stores/messages'
 
 class NotificationService {
   callbacks: { [key: string]: Function } = {}
 
-  on(type: string, callback: Function) {
-    this.callbacks[type] = callback
+  on<T>(messageClass: { type: string }, callback: (message: T) => void) {
+    this.callbacks[messageClass.type] = callback
   }
 }
 
@@ -22,29 +28,61 @@ function createNotificationService() {
   const notificationService = new NotificationService()
 
   const userStore = useUserStore()
+  const messageStore = useMessageStore()
+  const serverStore = useServerStore()
+  const webRtcStore = useWebRTCStore()
 
-  notificationService.on('new-direct-message', (data: NewMessageOnDirectNotification) => {
+  notificationService.on(
+    NewMessageOnDirectNotification.prototype,
+    async (data: NewMessageOnDirectNotification) => {
+      console.log(data)
+      if (userStore.selectedDirect === data.from) {
+        // TODO: Reload messages
+      }
+    }
+  )
+
+  notificationService.on(
+    NewMessageOnChannelNotification.prototype,
+    (data: NewMessageOnChannelNotification) => {
+      console.log(data)
+      // TODO: Reload messages
+    }
+  )
+
+  notificationService.on(FriendRequestNotification.prototype, (data: FriendRequestNotification) => {
     console.log(data)
+    // TODO: Popup and notification over the friends icon
   })
 
-  notificationService.on('new-channel-message', (data: NewMessageOnChannelNotification) => {
+  notificationService.on(
+    FriendRequestAcceptedNotification.prototype,
+    (data: FriendRequestAcceptedNotification) => {
+      console.log(data)
+      // TODO: Popup
+    }
+  )
+
+  notificationService.on(UserOnlineNotification.prototype, (data: UserOnlineNotification) => {
     console.log(data)
+    // TODO: Refresh users list
   })
 
-  notificationService.on('friend-request', (data: FriendRequestNotification) => {
+  notificationService.on(UserOfflineNotification.prototype, (data: UserOfflineNotification) => {
     console.log(data)
+    // TODO: Refresh users list
   })
 
-  notificationService.on('friend-request-accepted', (data: FriendRequestAcceptedNotification) => {
-    console.log(data)
+  notificationService.on(ServerDeletedNotification.prototype, () => {
+    serverStore.refreshUserServers()
   })
 
-  notificationService.on('user-online', (data: UserOnlineNotification) => {
-    console.log(data)
+  notificationService.on(UserJoinedServerNotification.prototype, () => {
+    serverStore.refreshUserServers()
   })
 
-  notificationService.on('user-offline', (data: UserOfflineNotification) => {
-    console.log(data)
+  notificationService.on(UserLeftServerNotification.prototype, () => {
+    serverStore.refreshUserServers()
   })
 
   return notificationService

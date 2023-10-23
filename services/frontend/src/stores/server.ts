@@ -12,15 +12,27 @@ import type {
   KickUserFromServerApi
 } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useUserStore } from './user'
 
+type Server = GetServersApi.Responses.Server
 export const useServerStore = defineStore('server', () => {
+  const userStore = useUserStore()
   const serverController: ServerController = new ServerControllerImpl()
   const channelController: ChannelController = new ChannelControllerImpl()
 
-  const servers = ref<GetServersApi.Responses.Server[]>([])
+  const servers = ref<Server[]>([])
+  const selectedServer = ref<Server | null>(null)
+  const amITheOwner = computed(() => {
+    if (selectedServer.value === null) return false
+    return selectedServer.value.owner === userStore.username
+  })
 
-  async function getServers() {
+  async function selectServerId(serverId: string) {
+    selectedServer.value = servers.value.find((server) => server.id === serverId) ?? null
+  }
+
+  async function refreshUserServers() {
     const response = await serverController.getServers()
     if (response.statusCode === 200) {
       const typed = response as GetServersApi.Responses.Success
@@ -34,7 +46,7 @@ export const useServerStore = defineStore('server', () => {
       description
     })
     if (response.statusCode === 200) {
-      getServers() // TODO: adjust using notification
+      await refreshUserServers()
     } else {
       const typed = response as CreateServerApi.Errors.Type
       throw new Error(String(typed.error))
@@ -54,7 +66,7 @@ export const useServerStore = defineStore('server', () => {
       serverId
     })
     if (response.statusCode === 200) {
-      getServers() // TODO: adjust using notification
+      await refreshUserServers()
     } else {
       const typed = response as CreateChannelApi.Errors.Type
       throw new Error(String(typed.error))
@@ -64,7 +76,7 @@ export const useServerStore = defineStore('server', () => {
   async function joinServer(serverId: string) {
     const response = await serverController.joinServer({ serverId })
     if (response.statusCode === 200) {
-      getServers() // TODO: adjust using notification
+      await refreshUserServers()
     } else {
       const typed = response as JoinServerApi.Errors.Type
       throw new Error(String(typed.error))
@@ -74,7 +86,7 @@ export const useServerStore = defineStore('server', () => {
   async function leaveServer(serverId: string) {
     const response = await serverController.leaveServer({ serverId })
     if (response.statusCode === 200) {
-      getServers() // TODO: adjust using notification
+      await refreshUserServers()
     } else {
       const typed = response as JoinServerApi.Errors.Type
       throw new Error(String(typed.error))
@@ -84,12 +96,7 @@ export const useServerStore = defineStore('server', () => {
   async function deleteChannel(serverId: string, channelId: string) {
     const response = await channelController.deleteChannel({ serverId, channelId })
     if (response.statusCode === 200) {
-      servers.value = servers.value.map((server) => {
-        if (server.id === serverId) {
-          server.channels = server.channels.filter((channel) => channel.id !== channelId)
-        }
-        return server
-      })
+      await refreshUserServers()
     } else {
       const typed = response as KickUserFromServerApi.Errors.Type
       throw new Error(String(typed.error))
@@ -125,7 +132,7 @@ export const useServerStore = defineStore('server', () => {
   }
 
   return {
-    getServers,
+    refreshUserServers,
     createServer,
     createChannel,
     deleteChannel,
@@ -133,6 +140,9 @@ export const useServerStore = defineStore('server', () => {
     joinServer,
     leaveServer,
     getServerParticipants,
+    selectedServer,
+    selectServerId,
+    amITheOwner,
     servers
   }
 })

@@ -12,6 +12,7 @@ const userStore = useUserStore()
 const usersPhotos = ref(new Map<string, string>())
 
 const areMessagesLoaded = ref(true)
+
 const messagesLimit = 30
 let loadedMessages: number
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore, ContentArea } from '@/stores/user'
-import { computed, onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, type Ref } from 'vue'
 import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
@@ -24,26 +24,20 @@ function setChannelContent(channelId: string, contentArea: ContentArea) {
   userStore.inContentArea = contentArea
   userStore.setActiveChannel(channelId)
 }
-const selectedServer = computed(() => {
-  const servers = serverStore.servers.find((s) => s.id == userStore.selectedServerId)
-  return servers
-})
-
-const amITheOwner = computed(() => {
-  return selectedServer.value?.owner == userStore.username
-})
 
 interface UserWithPhoto {
   username: string
   photo: string
 }
 const usersInMediaChannels: Ref<Record<string, UserWithPhoto[]>> = ref({})
-onMounted(() => {
+
+watch(serverStore.servers, () => {
   serverStore.servers.forEach((server) => {
     server.channels.forEach(async (channel) => {
       if (channel.channelType == CreateChannelApi.ChannelType.Multimedia) {
+        usersInMediaChannels.value = {}
         const users = await webrtcStore.getUsersInMediaChannel(
-          selectedServer.value?.id as string,
+          serverStore.selectedServer?.id as string,
           channel.id
         )
         console.log('Users in media channel', users)
@@ -78,8 +72,8 @@ function popUpBanner(error?: string) {
 }
 
 function leaveServer() {
-  if (selectedServer.value?.id) {
-    serverStore.leaveServer(selectedServer.value.id as string)
+  if (serverStore.selectedServer?.id) {
+    serverStore.leaveServer(serverStore.selectedServer?.id as string)
     popUpBanner('You left the server')
   }
 }
@@ -93,24 +87,24 @@ function leaveServer() {
   >
     <div class="column">
       <div class="col fit">
-        <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
+        <q-item :clickable="serverStore.amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
             <q-btn
-              v-if="amITheOwner == true"
+              v-if="serverStore.amITheOwner == true"
               icon="settings"
               color="primary"
               round
               class="q-mr-sm q-mb-sm"
             />
             <q-btn
-              v-if="amITheOwner != true"
+              v-if="serverStore.amITheOwner != true"
               round
               icon="exit_to_app"
               class="q-mr-sm q-mb-sm"
               color="primary"
               @click="dialogLeavesServer = true"
             />
-            {{ selectedServer?.name }}
+            {{ serverStore.selectedServer?.name }}
           </h4>
         </q-item>
 
@@ -161,7 +155,7 @@ function leaveServer() {
           bordered
           separator
           class="text-white text-h5"
-          v-for="channel in selectedServer?.channels?.filter(
+          v-for="channel in serverStore.selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel.id"
@@ -176,7 +170,7 @@ function leaveServer() {
           bordered
           separator
           class="text-white text-h5"
-          v-for="channel in selectedServer?.channels?.filter(
+          v-for="channel in serverStore.selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
           :key="channel.id"
