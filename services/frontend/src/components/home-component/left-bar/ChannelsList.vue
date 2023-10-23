@@ -68,11 +68,11 @@ function leaveServer() {
         <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
             <q-btn
-              v-if="amITheOwner == true"
               icon="settings"
               color="primary"
               round
               class="q-mr-sm q-mb-sm"
+              @click="serverSettingMenuActive = true"
             />
             <q-btn
               v-if="amITheOwner != true"

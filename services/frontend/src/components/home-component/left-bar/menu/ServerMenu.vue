@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import HorizontalChannel from '../horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
@@ -35,6 +35,8 @@ const userToKick = ref('')
 
 const serverTab = ref('setting')
 
+const updatedServerInfo = ref({ name: '', description: '' })
+
 const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
 const colorBanner = ref(BannerColor.OK)
@@ -46,6 +48,24 @@ function popUpBanner(content: string, color: BannerColor) {
   setTimeout(() => {
     resultBanner.value = false
   }, BANNER_TIMEOUT)
+}
+
+function validateText(text: string) {
+  // check if is emt or only white space
+  return text.trim().length > 0
+}
+
+async function updateServerName(serverName: string) {
+  if (!validateText(serverName)) {
+    popUpBanner('Server name cannot be empty', BannerColor.ERROR)
+    return
+  }
+  try {
+    // await serverStore.updateServerName(selectedServer.value!.id, serverName)
+    popUpBanner('Server name updated', BannerColor.OK)
+  } catch (error) {
+    popUpBanner(String(error), BannerColor.ERROR)
+  }
 }
 
 function setChannelToDelete(channel: { id: string; name: string }) {
@@ -80,6 +100,17 @@ async function copyServerId() {
   navigator.clipboard.writeText(selectedServer.value!.id)
   popUpBanner('Server id copied', BannerColor.OK)
 }
+
+const amITheOwner = computed(() => {
+  return selectedServer.value?.owner == userStore.username
+})
+
+onMounted(() => {
+  updatedServerInfo.value = {
+    name: selectedServer.value?.name ?? '',
+    description: selectedServer.value?.description ?? ''
+  }
+})
 </script>
 
 <template>
@@ -109,21 +140,40 @@ async function copyServerId() {
             <div class="text-h4">Server Settings</div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Name:</div>
-              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
-                {{ selectedServer?.name }}
-              </div>
+              <!-- make readonly if the user is't the owner -->
+              <q-input
+                :model-value="updatedServerInfo.name"
+                label="Server name"
+                outlined
+                class="q-mb-md"
+                :readonly="amITheOwner == false"
+              />
+              <q-btn
+                label="Save"
+                color="primary"
+                class="q-mb-md"
+                v-if="amITheOwner == true"
+                @click="updateServerName(updatedServerInfo.name)"
+              />
             </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Owner:</div>
-              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
+              <div class="text-to-copy q-pa-sm text-h6">
                 {{ selectedServer?.owner }}
               </div>
             </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Description:</div>
-              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
-                {{ selectedServer?.description }}
-              </div>
+              <q-input
+                :model-value="selectedServer?.description"
+                label="Server description"
+                outlined
+                class="q-mb-md"
+                type="textarea"
+                :readonly="amITheOwner == false"
+              />
+              <!-- submit button -->
+              <q-btn label="Save" color="primary" class="q-mb-md" v-if="amITheOwner == true" />
             </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Server Id:</div>
@@ -159,6 +209,7 @@ async function copyServerId() {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
+                  v-if="amITheOwner == true"
                   @click="setChannelToDelete({ id: channel.id, name: channel.name })"
                 />
                 <!-- start Cancel button -->
@@ -184,6 +235,7 @@ async function copyServerId() {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
+                  v-if="amITheOwner == true"
                   @click="setUserToKick(user)"
                 />
                 <!-- start Kick button -->
