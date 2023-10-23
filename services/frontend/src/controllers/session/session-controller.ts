@@ -10,6 +10,8 @@ import {
 import type { Ref } from 'vue'
 export interface SessionController {
   getUsersInSession(sessionId: string): Promise<string[]>
+  getChannelSessionId(serverId: string, channelId: string): Promise<string>
+  getDirectSessionId(username: string): Promise<string>
   joinChannel(serverId: string, channelId: string): Promise<SessionHandler>
   joinDirectSession(username: string): Promise<SessionHandler>
 }
@@ -44,7 +46,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
     })
   }
 
-  private async getChannelSessionId(serverId: string, channelId: string): Promise<string> {
+  async getChannelSessionId(serverId: string, channelId: string): Promise<string> {
     const response = await this.get<GetChannelSessionIdApi.Response>(
       `/servers/${serverId}/channels/${channelId}/session`
     )
@@ -61,7 +63,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
     return new SessionHandlerImpl(socket, sessionId)
   }
 
-  private async getDirectSessionId(username: string): Promise<string> {
+  async getDirectSessionId(username: string): Promise<string> {
     const response = await this.get<GetDirectSessionIdApi.Response>(`/users/${username}/session`)
     if (response.statusCode !== 200) {
       throw new Error('Friendship not found')
@@ -78,6 +80,7 @@ export class SessionControllerImpl extends AxiosController implements SessionCon
 
   async getUsersInSession(sessionId: string): Promise<string[]> {
     const response = await this.get<GetUsersInSession.Response>(`/sessions/${sessionId}`)
+    console.log(response)
     if (response.statusCode !== 200) {
       throw new Error('Session not found')
     }

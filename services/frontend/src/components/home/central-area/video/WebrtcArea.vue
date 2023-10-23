@@ -6,16 +6,12 @@ import { useWebRTCStore } from '@/stores/webrtc'
 const userStore = useUserStore()
 const webrtcStore = useWebRTCStore()
 
-const joined = ref(false)
-
 async function join() {
   await webrtcStore.joinChannel(userStore.selectedServerId, userStore.selectedChannelId)
-  joined.value = true
 }
 
 async function stop() {
   webrtcStore.stop()
-  joined.value = false
 }
 
 const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).length + 1))
@@ -23,7 +19,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
 
 <template>
   <q-page-container padding>
-    <q-page v-if="joined">
+    <q-page v-if="webrtcStore.joined">
       <div class="q-pa-md">
         <div class="video-grid">
           <div
@@ -64,7 +60,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
         <q-btn @click="stop" icon="close" label="Exit Call" />
       </div>
     </q-page>
-    <q-page v-if="!joined">
+    <q-page v-if="!webrtcStore.joined">
       <q-btn @click="join" label="Join Call" class="join-button" />
     </q-page>
   </q-page-container>

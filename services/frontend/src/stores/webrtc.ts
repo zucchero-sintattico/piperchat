@@ -3,7 +3,7 @@ import {
   type SessionController
 } from '@/controllers/session/session-controller'
 import { defineStore } from 'pinia'
-import { ref, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useUserStore } from './user'
 import type { SessionHandler } from '@/controllers/session/session-handler'
 import { StreamService } from './utils/stream-service'
@@ -21,7 +21,7 @@ export const useWebRTCStore = defineStore(
 
     const sessionController: SessionController = new SessionControllerImpl(userStore.jwt)
     const sessionHandler: Ref<SessionHandler | null> = ref(null)
-
+    const joined = computed(() => sessionHandler.value !== null)
     async function start() {
       console.log('Starting session')
       otherStream.value = {}
@@ -69,16 +69,24 @@ export const useWebRTCStore = defineStore(
 
     const mic_on = streamService.mic_on
     const cam_on = streamService.cam_on
+
+    async function getUsersInMediaChannel(serverId: string, channelId: string) {
+      const sessionId = await sessionController.getChannelSessionId(serverId, channelId)
+      return await sessionController.getUsersInSession(sessionId)
+    }
+
     return {
       myStream,
       otherStream,
+      joined,
       joinChannel,
       joinDirect,
       stop,
       toggleAudio,
       toggleVideo,
       mic_on,
-      cam_on
+      cam_on,
+      getUsersInMediaChannel
     }
   },
   {

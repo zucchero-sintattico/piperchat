@@ -2,6 +2,7 @@ import type { ChannelController } from '@/controllers/piperchat/channel/channel-
 import { ChannelControllerImpl } from '@/controllers/piperchat/channel/channel-controller-impl'
 import type { ServerController } from '@/controllers/piperchat/server/server-controller'
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
+import { SessionControllerImpl } from '@/controllers/session/session-controller'
 import type { CreateChannelApi } from '@api/piperchat/channel'
 import type {
   CreateServerApi,

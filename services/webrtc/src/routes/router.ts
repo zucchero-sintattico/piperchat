@@ -81,7 +81,7 @@ export const GetUsersInSessionRoute = new Route<
   handler: async (req, res) => {
     const session = await sessionRepository.getSession(req.params.sessionId)
     const response = new GetUsersInSession.Responses.Success({
-      users: session.participants.map((p) => p.username),
+      users: session.participants,
     })
     res.sendResponse(response)
   },

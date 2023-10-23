@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore, ContentArea } from '@/stores/user'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
@@ -9,9 +9,11 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
+import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
+const webrtcStore = useWebRTCStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
@@ -29,6 +31,31 @@ const selectedServer = computed(() => {
 
 const amITheOwner = computed(() => {
   return selectedServer.value?.owner == userStore.username
+})
+
+interface UserWithPhoto {
+  username: string
+  photo: string
+}
+const usersInMediaChannels: Ref<Record<string, UserWithPhoto[]>> = ref({})
+onMounted(() => {
+  serverStore.servers.forEach((server) => {
+    server.channels.forEach(async (channel) => {
+      if (channel.channelType == CreateChannelApi.ChannelType.Multimedia) {
+        const users = await webrtcStore.getUsersInMediaChannel(
+          selectedServer.value?.id as string,
+          channel.id
+        )
+        console.log('Users in media channel', users)
+        const usersWithPhoto: UserWithPhoto[] = []
+        for (const user of users) {
+          const photo = (await userStore.getUserPhoto(user))!
+          usersWithPhoto.push({ username: user, photo })
+        }
+        usersInMediaChannels.value[channel.id] = usersWithPhoto
+      }
+    })
+  })
 })
 
 const BANNER_TIMEOUT = 3000
@@ -162,8 +189,8 @@ function leaveServer() {
           />
           <!-- "userStore.setActiveChannel(channel.id)" -->
 
-          <q-list dense v-for="j in 3" :key="j">
-            <HorizontalUser name="User" photo="" />
+          <q-list dense v-for="user in usersInMediaChannels[channel.id]" :key="user.username">
+            <HorizontalUser :name="user.username" :photo="user.photo" />
           </q-list>
         </q-list>
         <!-- end Multimedia channels -->
