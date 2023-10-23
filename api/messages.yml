@@ -8,139 +8,151 @@ info:
 channels:
   user.logged.in:
     description: A user logged in
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/User'
 
   user.logged.out:
     description: A user logged out
-    publish:
+    subscribe:
+      message:
+        '$ref': '#/components/messages/User'
+
+  user.online:
+    description: A user is online
+    subscribe:
+      message:
+        '$ref': '#/components/messages/User'
+
+  user.offline:
+    description: A user is offline
+    subscribe:
       message:
         '$ref': '#/components/messages/User'
 
   user.created:
     description: A user is registered to the system
-    publish:
+    subscribe:
+      message:
+        '$ref': '#/components/messages/RichUser'
+
+  user.updated:
+    description: A user is updated
+    subscribe:
+      message:
+        '$ref': '#/components/messages/RichUser'
+
+  user.deleted:
+    description: A user is deleted
+    subscribe:
       message:
         '$ref': '#/components/messages/User'
 
-  user.token.refreshed:
-    description: A user refreshed his token
-    publish:
-      message:
-        '$ref': '#/components/messages/User'
-
-  user.friend.request.sent:
+  friend.request.sent:
     description: A user sent a friend request to another one
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/FriendRequest'
 
-  user.friend.request.accepted:
+  friend.request.accepted:
     description: A user accepted a friend request from another one
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/FriendRequest'
 
-  user.connected:
-    description: A user is connected to the chat
-    publish:
+  friend.request.denied:
+    description: A user denied a friend request from another one
+    subscribe:
       message:
-        '$ref': '#/components/messages/User'
-
-  user.disconnected:
-    description: A user is disconnected from the chat
-    publish:
-      message:
-        '$ref': '#/components/messages/User'
+        '$ref': '#/components/messages/FriendRequest'
 
   server.created:
     description: A server is created
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ServerAdvanced'
 
   server.updated:
     description: A server has been updated
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ServerAdvanced'
 
   server.deleted:
     description: A server has been deleted
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/Server'
 
   server.user.joined:
     description: A user joined a server
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ServerUser'
 
   server.user.left:
     description: A user left a server
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ServerUser'
 
   server.user.kicked:
     description: A user has been kicked from a server
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ServerUser'
 
   channel.created:
     description: A channel is created
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ChannelAdvanced'
 
   channel.updated:
     description: A channel has been updated
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/ChannelAdvanced'
 
   channel.deleted:
     description: A channel has been deleted
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/Channel'
 
   message.channel.sent:
     description: A new message has been sent to a channel
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/MessageChannel'
 
   message.direct.sent:
     description: A new message has been sent to a user
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/MessageDirect'
 
   session.created:
     description: A new session has been created
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/Session'
 
   session.terminated:
     description: A session has been terminated
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/Session'
 
   session.user.joined:
     description: A user joined a session
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/SessionUser'
 
   session.user.left:
     description: A user left a session
-    publish:
+    subscribe:
       message:
         '$ref': '#/components/messages/SessionUser'
 
@@ -151,6 +163,11 @@ components:
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/UserSchema'
+    RichUser:
+      summary: A user with additional data
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/RichUserSchema'
     Server:
       summary: A basic server (no additional data)
       contentType: application/json
@@ -217,11 +234,36 @@ components:
 
     UserSchema:
       type: object
+      required:
+        - username
       properties:
         username:
           type: string
           description: Unique identifier representing a specific user
           example: user1
+
+    RichUserSchema:
+      allOf:
+        - '$ref': '#/components/schemas/UserSchema'
+        - type: object
+          properties:
+            email:
+              type: string
+              description: Email of the user
+              example: user1@mail.com
+            description:
+              type: string
+              description: Description of the user
+              example: My user description
+            profilePicture:
+              type: object
+              properties:
+                data:
+                  type: string
+                contentType:
+                  type: string
+              description: Profile picture of the user
+              example: { data: '...', contentType: 'image/png' }
 
     ServerBasicSchema:
       type: object
