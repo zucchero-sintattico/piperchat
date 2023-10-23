@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import HorizontalChannel from '../horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
@@ -35,7 +35,7 @@ const userToKick = ref('')
 
 const serverTab = ref('setting')
 
-const updatedServerInfo = ref({ name: '', description: '' })
+const updatedServerInfo = reactive({ name: '', description: '' })
 
 const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
@@ -63,6 +63,19 @@ async function updateServerName(serverName: string) {
   try {
     // await serverStore.updateServerName(selectedServer.value!.id, serverName)
     popUpBanner('Server name updated', BannerColor.OK)
+  } catch (error) {
+    popUpBanner(String(error), BannerColor.ERROR)
+  }
+}
+
+async function updateServerDescription(serverDescription: string) {
+  if (!validateText(serverDescription)) {
+    popUpBanner('Server description cannot be empty', BannerColor.ERROR)
+    return
+  }
+  try {
+    // await serverStore.updateServerDescription(selectedServer.value!.id, serverDescription)
+    popUpBanner('Server description updated', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
   }
@@ -106,10 +119,9 @@ const amITheOwner = computed(() => {
 })
 
 onMounted(() => {
-  updatedServerInfo.value = {
-    name: selectedServer.value?.name ?? '',
-    description: selectedServer.value?.description ?? ''
-  }
+  // assign updatedServerInfo but don't depend on original object
+  updatedServerInfo.name = selectedServer.value?.name as string
+  updatedServerInfo.description = selectedServer.value?.description as string
 })
 </script>
 
@@ -142,7 +154,7 @@ onMounted(() => {
               <div class="text-h6 q-pa-sm">Name:</div>
               <!-- make readonly if the user is't the owner -->
               <q-input
-                :model-value="updatedServerInfo.name"
+                v-model="updatedServerInfo.name"
                 label="Server name"
                 outlined
                 class="q-mb-md"
@@ -165,7 +177,7 @@ onMounted(() => {
             <div class="row">
               <div class="text-h6 q-pa-sm">Description:</div>
               <q-input
-                :model-value="selectedServer?.description"
+                v-model="updatedServerInfo.description"
                 label="Server description"
                 outlined
                 class="q-mb-md"
@@ -173,7 +185,13 @@ onMounted(() => {
                 :readonly="amITheOwner == false"
               />
               <!-- submit button -->
-              <q-btn label="Save" color="primary" class="q-mb-md" v-if="amITheOwner == true" />
+              <q-btn
+                label="Save"
+                color="primary"
+                class="q-mb-md"
+                v-if="amITheOwner == true"
+                @click="updateServerDescription(updatedServerInfo.description)"
+              />
             </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Server Id:</div>
