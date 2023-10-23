@@ -77,11 +77,11 @@ function createNotificationService() {
     serverStore.refreshUserServers()
   })
 
-  notificationService.on(UserJoinedServerNotification.prototype, () => {
+  notificationService.on(UserJoinedServerNotification.prototype, (data) => {
     serverStore.refreshUserServers()
   })
 
-  notificationService.on(UserLeftServerNotification.prototype, () => {
+  notificationService.on(UserLeftServerNotification.prototype, (data) => {
     serverStore.refreshUserServers()
   })
 
@@ -100,6 +100,6 @@ export function useNotificationService() {
   })
 
   notificationSocket.on('notification', (data: any) => {
-    notificationService.callbacks[data.type](data)
+    notificationService.callbacks[data.type]?.(data)
   })
 }

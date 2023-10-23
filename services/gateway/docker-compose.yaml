@@ -1,20 +1,4 @@
 services:
-  # gateway:
-  #   image: nginx:alpine
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./services/gateway/conf.d:/etc/nginx/
-  #   depends_on:
-  #     - messages-service
-  #     - monitoring-service
-  #     - notifications-service
-  #     - piperchat-service
-  #     - users-service
-  #     - webrtc-service
-  #   networks:
-  #     - frontend
-
   gateway:
     image: traefik:v2.10
     command: |
