@@ -25,11 +25,17 @@ export class SessionRepositoryImpl implements SessionRepository {
   }
 
   async addAllowedUserToSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne({ id: sessionId }, { $addToSet: { allowedUsers: username } })
+    await Sessions.updateOne(
+      { id: sessionId },
+      { $addToSet: { allowedUsers: username } }
+    ).orFail()
   }
 
   async removeAllowedUserFromSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne({ id: sessionId }, { $pull: { allowedUsers: username } })
+    await Sessions.updateOne(
+      { id: sessionId },
+      { $pull: { allowedUsers: username } }
+    ).orFail()
   }
 
   async addUserToSession(sessionId: string, username: string): Promise<void> {
@@ -39,7 +45,10 @@ export class SessionRepositoryImpl implements SessionRepository {
   }
 
   async removeUserFromSession(sessionId: string, username: string): Promise<void> {
-    await Sessions.updateOne({ id: sessionId }, { $pull: { participants: { username } } })
+    await Sessions.updateOne(
+      { id: sessionId },
+      { $pull: { participants: username } }
+    ).orFail()
   }
 
   async getUserInSession(sessionId: string, username: string): Promise<string> {

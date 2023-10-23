@@ -5,6 +5,7 @@ import ChannelsList from './ChannelsList.vue'
 import { SelectedTab, useUserStore } from '@/stores/user'
 import { onMounted } from 'vue'
 import { useServerStore } from '@/stores/server'
+import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()

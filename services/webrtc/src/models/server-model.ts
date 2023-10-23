@@ -5,11 +5,7 @@ export interface Channel {
   sessionId: string
 }
 
-export const ChannelSchema = new Schema({
-  id: {
-    type: String,
-    required: true,
-  },
+export const ChannelSchema = new Schema<Channel>({
   sessionId: {
     type: String,
     required: true,
@@ -22,12 +18,7 @@ export interface Server {
   channels: Channel[]
 }
 
-export const ServerSchema = new Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+export const ServerSchema = new Schema<Server>({
   participants: {
     type: [String],
     required: true,

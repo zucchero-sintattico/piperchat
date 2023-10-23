@@ -19,12 +19,10 @@ const title = computed(() => {
     userStore.inContentArea == ContentArea.Multimedia
   ) {
     const server = serverStore.servers.filter(
-      (server) => server.id == userStore.selectedChannel[0]
+      (server) => server.id == userStore.selectedServerId
     )[0]
     if (server) {
-      const channel = server.channels.filter(
-        (channel) => channel.id == userStore.selectedChannel[1]
-      )
+      const channel = server.channels.filter((channel) => channel.id == userStore.selectedChannelId)
       if (channel.length > 0) {
         return channel[0].name
       }

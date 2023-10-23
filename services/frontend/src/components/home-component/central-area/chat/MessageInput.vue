@@ -6,7 +6,7 @@ import { ContentArea, useUserStore } from '@/stores/user'
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 const message = ref('')
-let intitialLoadedMessages = 15
+let initialLoadedMessages = 15
 /**
  * Checks if the user is in a valid content area (direct or channel)
  */
@@ -38,7 +38,7 @@ async function sendMessage() {
         messageStore.getMessagesFromDirect({
           username: userStore.selectedDirect,
           from: 0,
-          limit: intitialLoadedMessages
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -46,16 +46,16 @@ async function sendMessage() {
     console.log('sending message on channel')
     await messageStore.sendMessageOnChannel(
       {
-        serverId: userStore.selectedChannel[0],
-        channelId: userStore.selectedChannel[1],
+        serverId: userStore.selectedServerId,
+        channelId: userStore.selectedChannelId,
         content: message.value
       },
       () =>
         messageStore.getMessagesFromChannel({
-          serverId: userStore.selectedChannel[0],
-          channelId: userStore.selectedChannel[1],
+          serverId: userStore.selectedServerId,
+          channelId: userStore.selectedChannelId,
           from: 0,
-          limit: intitialLoadedMessages
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )

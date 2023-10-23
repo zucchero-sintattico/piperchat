@@ -44,7 +44,7 @@ export const useUserStore = defineStore(
     const selectedServerId = ref('')
 
     // Stuffs for content area
-    const selectedChannel = ref(['', ''])
+    const selectedChannelId = ref('')
     const selectedDirect = ref('')
     const inContentArea = ref(ContentArea.Empty)
 
@@ -59,8 +59,7 @@ export const useUserStore = defineStore(
     const selectedTheme = ref(DefaultTheme)
 
     function setActiveChannel(channelId: string) {
-      selectedChannel.value[0] = selectedServerId.value
-      selectedChannel.value[1] = channelId
+      selectedChannelId.value = channelId
     }
 
     const authController: AuthController = new AuthControllerImpl()
@@ -165,7 +164,7 @@ export const useUserStore = defineStore(
       photo,
       selectedServerId,
       selectedTab,
-      selectedChannel,
+      selectedChannelId,
       selectedDirect,
       inContentArea,
       setActiveChannel,

@@ -31,7 +31,7 @@ async function onSubmit() {
 }
 
 const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
+  return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
 })
 </script>
 

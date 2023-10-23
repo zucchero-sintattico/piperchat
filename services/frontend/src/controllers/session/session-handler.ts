@@ -5,6 +5,7 @@ type UserLeaveCallback = (username: string) => void
 
 export interface SessionHandler {
   start(myStream: MediaStream, onUserJoin: UserJoinCallback, onUserLeave: UserLeaveCallback): void
+  stop(): void
 }
 
 const WebRtcConfiguration: RTCConfiguration = {
@@ -42,6 +43,11 @@ export class SessionHandlerImpl implements SessionHandler {
     this.setupProtocolListener()
     console.log('Joining session', this.sessionId)
     this.socket.emit('join-session', this.sessionId)
+  }
+
+  stop(): void {
+    this.socket.disconnect()
+    this.socket.close()
   }
 
   private setupProtocolListener() {

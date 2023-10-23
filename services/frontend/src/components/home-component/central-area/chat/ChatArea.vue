@@ -7,7 +7,7 @@ const messageStore = useMessageStore()
 
 const userStore = useUserStore()
 
-let intitialLoadedMessages = 15
+let initialLoadedMessages = 15
 
 /**
  * Shows the chat if the user is in a valid content area
@@ -25,11 +25,11 @@ watch(
   () => userStore.selectedDirect,
   () => {
     console.log('New direct: ' + userStore.selectedDirect)
-    intitialLoadedMessages = 15
+    initialLoadedMessages = 15
     messageStore.getMessagesFromDirect({
       username: userStore.selectedDirect,
       from: 0,
-      limit: intitialLoadedMessages
+      limit: initialLoadedMessages
     })
   }
 )
@@ -39,15 +39,15 @@ watch(
  * refresh the messages
  */
 watch(
-  () => userStore.selectedChannel,
+  () => userStore.selectedChannelId,
   () => {
-    console.log('New channel: ' + userStore.selectedChannel)
-    intitialLoadedMessages = 15
+    console.log('New channel: ' + userStore.selectedChannelId)
+    initialLoadedMessages = 15
     messageStore.getMessagesFromChannel({
-      serverId: userStore.selectedChannel[0],
-      channelId: userStore.selectedChannel[1],
+      serverId: userStore.selectedServerId,
+      channelId: userStore.selectedChannelId,
       from: 0,
-      limit: intitialLoadedMessages
+      limit: initialLoadedMessages
     })
   }
 )
@@ -66,7 +66,7 @@ function handleScroll() {
         messageStore.getMessagesFromDirect(
           {
             username: userStore.selectedDirect.toString(),
-            from: intitialLoadedMessages,
+            from: initialLoadedMessages,
             limit: 10
           },
           true
@@ -74,22 +74,22 @@ function handleScroll() {
       } else if (userStore.inContentArea == ContentArea.Channel) {
         messageStore.getMessagesFromChannel(
           {
-            serverId: userStore.selectedChannel[0],
-            channelId: userStore.selectedChannel[1],
-            from: intitialLoadedMessages,
+            serverId: userStore.selectedServerId,
+            channelId: userStore.selectedChannelId,
+            from: initialLoadedMessages,
             limit: 10
           },
           true
         )
       }
-      intitialLoadedMessages += 10
+      initialLoadedMessages += 10
       done.value = true
     }, 500)
   }
 }
 
 onMounted(() => {
-  intitialLoadedMessages = 15
+  initialLoadedMessages = 15
 })
 </script>
 

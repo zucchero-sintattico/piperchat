@@ -9,9 +9,11 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
+import { useWebRTCStore } from '@/stores/webrtc'
 
 const userStore = useUserStore()
 const serverStore = useServerStore()
+const webrtcStore = useWebRTCStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
@@ -21,6 +23,9 @@ function setChannelContent(channelId: string, contentArea: ContentArea) {
   console.log('Switched')
   userStore.inContentArea = contentArea
   userStore.setActiveChannel(channelId)
+  if (contentArea == ContentArea.Multimedia) {
+    webrtcStore.joinChannel(userStore.selectedServerId, channelId)
+  }
 }
 const selectedServer = computed(() => {
   return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
