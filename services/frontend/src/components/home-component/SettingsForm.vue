@@ -54,11 +54,6 @@ function updateTheme() {
         />
         <h3 style="margin-left: 10px">{{ userStore.username }}</h3>
       </div>
-
-      <q-input :model-value="userStore.username" label="Username" outlined class="q-mb-md" />
-
-      <q-input :model-value="userStore.email" label="Email" outlined class="q-mb-md" />
-
       <q-select
         outlined
         v-model="userStore.selectedTheme"
