@@ -5,12 +5,14 @@ import router from '../router/index'
 import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
 import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
 import SettingsForm from '@/components/home-component/SettingsForm.vue'
+import { useNotificationService } from '@/controllers/notifications/notification-service'
 import { setCssVar } from 'quasar'
 
 const userStore = useUserStore()
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
 
+useNotificationService()
 setCssVar('primary', userStore.selectedTheme.primary)
 setCssVar('secondary', userStore.selectedTheme.secondary)
 setCssVar('accent', userStore.selectedTheme.accent)

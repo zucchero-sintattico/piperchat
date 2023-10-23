@@ -1,13 +1,13 @@
-import { Response } from 'express'
+import { Socket } from 'socket.io'
 
 export class ClientProxy {
-  private readonly socket: Response
+  private readonly socket: Socket
 
-  constructor(socket: Response) {
+  constructor(socket: Socket) {
     this.socket = socket
   }
 
   public send(data: object) {
-    this.socket.write(`data: ${JSON.stringify(data)}\n\n`)
+    this.socket.emit('notification', data)
   }
 }
