@@ -4,7 +4,7 @@ import {
 } from '@controllers/user/user-controller'
 import { UserControllerImpl } from '@controllers/user/user-controller-impl'
 import { GetUserPhotoApi, GetUserDescriptionApi } from '@api/users/user'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { Router } from 'express'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 

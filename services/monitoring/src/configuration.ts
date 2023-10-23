@@ -1,13 +1,16 @@
 import { DefaultMiddlewares, MicroserviceConfiguration } from '@commons/service'
 import { AllEventsListener } from './events'
 import { serviceRouter } from './routes/router'
+import { HealthCheckService } from './healtcheck-service'
 
-const EventListenerService = {
+const eventListenerService = {
   start: async () => {
     await AllEventsListener.initialize()
   },
   stop: async () => {},
 }
+
+const healthcheckService = new HealthCheckService()
 
 export const MonitoringServiceConfiguration: MicroserviceConfiguration = {
   port: Number.parseInt(process.env.PORT!) || 3000,
@@ -17,5 +20,5 @@ export const MonitoringServiceConfiguration: MicroserviceConfiguration = {
     middlewares: DefaultMiddlewares,
     serviceRouter: serviceRouter,
   },
-  otherServices: [EventListenerService],
+  otherServices: [eventListenerService, healthcheckService],
 }

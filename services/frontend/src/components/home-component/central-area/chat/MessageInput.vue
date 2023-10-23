@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { ContentArea, useUserStore } from '@/stores/user'
 
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 const message = ref('')
-
+let initialLoadedMessages = 50
 /**
  * Checks if the user is in a valid content area (direct or channel)
  */
+
 const shown = computed(() => {
   if (
     userStore.inContentArea == ContentArea.Direct ||
@@ -26,6 +27,11 @@ const shown = computed(() => {
  * then refreshes the messages
  */
 async function sendMessage() {
+  // check if message is empty
+  if (message.value.match(/^\s*$/)) {
+    return
+  }
+
   if (userStore.inContentArea == ContentArea.Direct) {
     await messageStore.sendMessageOnDirect(
       {
@@ -37,7 +43,7 @@ async function sendMessage() {
         messageStore.getMessagesFromDirect({
           username: userStore.selectedDirect,
           from: 0,
-          limit: 1000
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -54,7 +60,7 @@ async function sendMessage() {
           serverId: userStore.selectedChannel[0],
           channelId: userStore.selectedChannel[1],
           from: 0,
-          limit: 1000
+          limit: initialLoadedMessages
         }),
       () => console.log('Error')
     )
@@ -68,20 +74,20 @@ function deleteMessage() {
 </script>
 
 <template>
-  <div class="foot blurred" v-if="shown">
+  <q-footer v-if="shown">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
-        <q-icon v-if="message !== ''" name="close" @click="deleteMessage" class="cursor-pointer" />
+        <q-icon v-if="message != ''" name="close" @click="deleteMessage" class="cursor-pointer" />
       </template>
       <template v-slot:after>
         <q-btn round dense flat icon="send" color="primary" @click="sendMessage" id="send" />
       </template>
     </q-input>
-  </div>
+  </q-footer>
 </template>
 
-<style scoped lang="sass">
-.foot
-  position: sticky
-  bottom: 0
+<style scoped lang="scss">
+footer {
+  background-color: transparent !important;
+}
 </style>

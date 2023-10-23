@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import {
@@ -26,25 +26,39 @@ export class AuthControllerImpl extends BrokerController implements AuthControll
     email: string,
     password: string,
     description: string | null,
-    photo: Buffer | null
+    photo?: Photo
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt())
-    const user = await this.userRepository
-      .createUser(username, email, hashedPassword, description, photo)
-      .catch(() => {
-        throw new AuthControllerExceptions.UserAlreadyExists()
-      })
-
-    await this.publish(
-      UserCreatedMessage,
-      new UserCreatedMessage({
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        profilePicture: user.profilePicture,
-      })
-    )
-    return user
+    try {
+      const user = await this.userRepository.createUser(
+        username,
+        email,
+        hashedPassword,
+        description,
+        photo
+      )
+      await this.publish(
+        UserCreatedMessage,
+        new UserCreatedMessage({
+          username: user.username,
+          email: user.email,
+          description: user.description,
+          profilePicture: user.profilePicture,
+        })
+      )
+      return user
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      if (e.code === 11000) {
+        if (e.keyPattern.username) {
+          throw new AuthControllerExceptions.UserAlreadyExists()
+        }
+        if (e.keyPattern.email) {
+          throw new AuthControllerExceptions.EmailAlreadyExists()
+        }
+      }
+      throw e
+    }
   }
 
   async login(username: string, password: string): Promise<string> {

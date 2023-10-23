@@ -7,7 +7,7 @@ import {
   JWTAuthenticationMiddleware,
   JWTRefreshTokenMiddleware,
 } from '@commons/utils/jwt'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { LoginApi, RegisterApi, LogoutApi, RefreshTokenApi } from '@api/users/auth'
 import { Router } from 'express'
 
@@ -29,7 +29,7 @@ export const RegisterApiRoute = new Route<
       req.body.email,
       req.body.password,
       req.body.description ?? '',
-      req.body.photo ?? null
+      req.body.photo
     )
     const response = new RegisterApi.Responses.Success({
       username: user.username,
@@ -44,6 +44,12 @@ export const RegisterApiRoute = new Route<
       exception: AuthControllerExceptions.UserAlreadyExists,
       onException: (e, req, res) => {
         res.sendResponse(new RegisterApi.Errors.UserAlreadyExists())
+      },
+    },
+    {
+      exception: AuthControllerExceptions.EmailAlreadyExists,
+      onException: (e, req, res) => {
+        res.sendResponse(new RegisterApi.Errors.EmailAlreadyExists())
       },
     },
   ],

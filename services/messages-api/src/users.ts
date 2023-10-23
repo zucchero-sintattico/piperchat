@@ -5,12 +5,18 @@ export class UserCreatedMessage {
   username: string
   email: string
   description?: string
-  profilePicture?: Buffer
+  profilePicture?: {
+    data: Buffer
+    contentType: string
+  }
   constructor(data: {
     username: string
     email: string
     description?: string
-    profilePicture?: Buffer
+    profilePicture?: {
+      data: Buffer
+      contentType: string
+    }
   }) {
     this.username = data.username
     this.email = data.email

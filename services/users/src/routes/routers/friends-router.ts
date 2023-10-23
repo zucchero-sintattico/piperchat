@@ -8,7 +8,7 @@ import {
   SendFriendRequestApi,
   GetFriendsApi,
 } from '@api/users/friends'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { Router } from 'express'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 

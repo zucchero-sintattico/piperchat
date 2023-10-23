@@ -4,6 +4,8 @@ services:
     command: ['npm', 'run', '--workspace', './services/users', 'start']
     expose:
       - '${USERS_SERVICE_PORT}'
+    volumes:
+      - './.docker/uploads:/app/uploads'
     depends_on:
       db-users-service:
         condition: service_healthy

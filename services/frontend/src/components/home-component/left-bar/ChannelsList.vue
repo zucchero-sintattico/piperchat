@@ -15,6 +15,7 @@ const serverStore = useServerStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
+const dialogLeavesServer = ref(false)
 
 function setChannelContent(channelId: string) {
   console.log('Switched')
@@ -39,13 +40,20 @@ function popUpBanner(error?: string) {
     contentBanner.value = error
   } else {
     colorBanner.value = BannerColor.OK
-    contentBanner.value = 'Server created successfully'
+    contentBanner.value = 'Created successfully'
   }
   resultBanner.value = true
   setTimeout(() => {
     resultBanner.value = false
   }, BANNER_TIMEOUT)
   isNewChannelFormActive.value = false
+}
+
+function leaveServer() {
+  if (selectedServer.value?.id) {
+    serverStore.leaveServer(selectedServer.value.id as string)
+    popUpBanner('You left the server')
+  }
 }
 </script>
 
@@ -59,7 +67,21 @@ function popUpBanner(error?: string) {
       <div class="col fit">
         <q-item :clickable="amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
-            <q-icon v-if="amITheOwner == true" name="settings" class="q-mr-sm" />
+            <q-btn
+              v-if="amITheOwner == true"
+              icon="settings"
+              color="primary"
+              round
+              class="q-mr-sm q-mb-sm"
+            />
+            <q-btn
+              v-if="amITheOwner != true"
+              round
+              icon="exit_to_app"
+              class="q-mr-sm q-mb-sm"
+              color="primary"
+              @click="dialogLeavesServer = true"
+            />
             {{ selectedServer?.name }}
           </h4>
         </q-item>
@@ -77,6 +99,22 @@ function popUpBanner(error?: string) {
             @click="isNewChannelFormActive = true"
           />
         </div>
+
+        <q-dialog v-model="dialogLeavesServer">
+          <q-card>
+            <q-card-section class="items-center q-gutter-sm">
+              <div class="q-ma-none text-h5">Are you sure you want to leave this server?</div>
+              <q-btn
+                no-caps
+                label="Leave"
+                color="red justify center"
+                v-close-popup
+                @click="leaveServer"
+              />
+              <q-btn no-caps label="Close" color="primary justify center" v-close-popup />
+            </q-card-section>
+          </q-card>
+        </q-dialog>
 
         <BottomPopUp v-model:active="resultBanner" :content="contentBanner" :color="colorBanner" />
 

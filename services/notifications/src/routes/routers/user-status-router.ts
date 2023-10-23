@@ -5,7 +5,7 @@ import {
   UserStatusControllerImpl,
 } from '@controllers/user-status-controller'
 import { GetUserStatusApi } from '@api/users/user'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 
 const userStatusController: UserStatusController = new UserStatusControllerImpl()
 

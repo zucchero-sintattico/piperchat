@@ -17,11 +17,11 @@ const title = computed(() => {
     return userStore.selectedDirect
   } else if (userStore.inContentArea == ContentArea.Channel) {
     const server = serverStore.servers.filter(
-      (server) => server._id == userStore.selectedChannel[0]
+      (server) => server.id == userStore.selectedChannel[0]
     )[0]
     if (server) {
       const channel = server.channels.filter(
-        (channel) => channel._id == userStore.selectedChannel[1]
+        (channel) => channel.id == userStore.selectedChannel[1]
       )
       if (channel.length > 0) {
         return channel[0].name

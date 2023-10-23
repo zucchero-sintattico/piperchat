@@ -1,7 +1,7 @@
 import { UserController } from '@/controllers/user/user-controller'
 import { UserControllerImpl } from '@/controllers/user/user-controller-impl'
 import { WhoamiApi } from '@api/users/user'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
 import { Router } from 'express'
 

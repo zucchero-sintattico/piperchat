@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
-import type { WhoamiApi } from '@api/users/user'
+import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
+import type { UpdatePhotoApi } from '@api/users/profile'
+import { ThemesList, type Theme } from '@/assets/theme'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -26,7 +28,14 @@ export const useUserStore = defineStore(
     const username = ref('')
     const email = ref('')
     const description = ref('')
+
+    const photoLoaded = ref(false)
     const photo = ref('')
+
+    async function reload() {
+      await whoami()
+      await reloadUserPhoto()
+    }
 
     // Display direct or channel in left bar
     const selectedTab = ref(SelectedTab.Directs)
@@ -37,6 +46,16 @@ export const useUserStore = defineStore(
     const selectedChannel = ref(['', ''])
     const selectedDirect = ref('')
     const inContentArea = ref(ContentArea.Empty)
+
+    //Stuffs for Themes
+    const DefaultTheme: Theme = {
+      label: ThemesList[0].label,
+      primary: ThemesList[0].primary,
+      secondary: ThemesList[0].secondary,
+      accent: ThemesList[0].accent,
+      dark: ThemesList[0].dark
+    }
+    const selectedTheme = ref(DefaultTheme)
 
     function setActiveChannel(channelId: string) {
       selectedChannel.value[0] = selectedServerId.value
@@ -89,6 +108,74 @@ export const useUserStore = defineStore(
         username.value = response.user.username
         email.value = response.user.email
       } catch (e) {
+        logout()
+        console.log('automatic logout')
+      }
+    }
+
+    async function updatePhoto(newPhoto: string) {
+      try {
+        const response = await userController.updateUserPhoto({
+          photo: newPhoto
+        })
+        if (response.statusCode === 200) {
+          await reloadUserPhoto()
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    async function getUserPhoto(targetUsername: string) {
+      try {
+        const response = await userController.getUserPhoto({
+          username: targetUsername
+        })
+        if (response.statusCode === 200) {
+          const typed = response as GetUserPhotoApi.Responses.Success
+          if (typed.photo.data === undefined) {
+            return 'src/assets/user-avatar.png'
+          } else {
+            return (
+              'data:image/jpeg;base64,' +
+              btoa(
+                new Uint8Array(typed.photo.data.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                )
+              )
+            )
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    async function reloadUserPhoto() {
+      try {
+        console.log(username.value)
+        const response = await userController.getUserPhoto({
+          username: username.value
+        })
+        if (response.statusCode === 200) {
+          const typed = response as GetUserPhotoApi.Responses.Success
+          console.log(typed)
+          if (typed.photo.data === undefined) {
+            photo.value = 'src/assets/user-avatar.png'
+          } else {
+            photo.value =
+              'data:image/jpeg;base64,' +
+              btoa(
+                new Uint8Array(typed.photo.data.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                )
+              )
+          }
+          photoLoaded.value = true
+        }
+      } catch (e) {
         console.log(e)
       }
     }
@@ -108,7 +195,14 @@ export const useUserStore = defineStore(
       whoami,
       login,
       register,
-      logout
+      logout,
+      updatePhoto,
+      getUserPhoto,
+      reloadUserPhoto,
+      photoLoaded,
+      reload,
+      ThemesList,
+      selectedTheme
     }
   },
   { persist: true }

@@ -3,7 +3,13 @@ import { ChannelControllerImpl } from '@/controllers/piperchat/channel/channel-c
 import type { ServerController } from '@/controllers/piperchat/server/server-controller'
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
 import type { CreateChannelApi } from '@api/piperchat/channel'
-import type { CreateServerApi, GetServersApi, KickUserFromServerApi } from '@api/piperchat/server'
+import type {
+  CreateServerApi,
+  GetServerParticipantsApi,
+  GetServersApi,
+  JoinServerApi,
+  KickUserFromServerApi
+} from '@api/piperchat/server'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -54,6 +60,26 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function joinServer(serverId: string) {
+    const response = await serverController.joinServer({ serverId })
+    if (response.statusCode === 200) {
+      getServers() // TODO: adjust using notification
+    } else {
+      const typed = response as JoinServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
+  async function leaveServer(serverId: string) {
+    const response = await serverController.leaveServer({ serverId })
+    if (response.statusCode === 200) {
+      getServers() // TODO: adjust using notification
+    } else {
+      const typed = response as JoinServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   async function deleteChannel(serverId: string, channelId: string) {
     const response = await channelController.deleteChannel({ serverId, channelId })
     if (response.statusCode === 200) {
@@ -86,12 +112,26 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function getServerPartecipants(serverId: string) {
+    const response = await serverController.getServerParticipants({ serverId })
+    if (response.statusCode === 200) {
+      const typed = response as GetServerParticipantsApi.Responses.Success
+      return typed.participants
+    } else {
+      const typed = response as GetServerParticipantsApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   return {
     getServers,
     createServer,
     createChannel,
     deleteChannel,
     kickUser,
+    joinServer,
+    leaveServer,
+    getServerPartecipants,
     servers
   }
 })

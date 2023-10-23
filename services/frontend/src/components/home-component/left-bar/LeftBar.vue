@@ -12,6 +12,7 @@ const serverStore = useServerStore()
 onMounted(() => {
   serverStore.getServers()
   userStore.selectedTab = SelectedTab.Directs
+  userStore.selectedDirect = ''
 })
 </script>
 

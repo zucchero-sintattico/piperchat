@@ -14,7 +14,10 @@ export namespace RegisterApi {
       password: string
       email: string
       description?: string
-      photo?: Buffer
+      photo?: {
+        data: Buffer
+        contentType: string
+      }
     }
     export const Schema: RequestSchema = {
       Params: {},
@@ -33,7 +36,10 @@ export namespace RegisterApi {
       username: string
       email: string
       description?: string
-      photo?: Buffer
+      photo?: {
+        data: Buffer
+        contentType: string
+      }
     }
 
     export class Success extends Response {
@@ -54,7 +60,12 @@ export namespace RegisterApi {
       error = 'User already exists' as const
     }
 
-    export type Type = UserAlreadyExists
+    export class EmailAlreadyExists extends ErrorResponse {
+      statusCode = 409
+      error = 'Email already exists' as const
+    }
+
+    export type Type = UserAlreadyExists | EmailAlreadyExists
   }
 
   export type Response = Responses.Type | Errors.Type

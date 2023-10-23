@@ -1,4 +1,4 @@
-import { User } from '@models/user-model'
+import { Photo, User } from '@models/user-model'
 import { UserRepository } from '@repositories/user/user-repository'
 import { UserRepositoryImpl } from '@repositories/user/user-repository-impl'
 import { UserController, UserControllerExceptions } from './user-controller'
@@ -14,7 +14,7 @@ export class UserControllerImpl implements UserController {
     }
   }
 
-  async getUserPhoto(username: string): Promise<Buffer> {
+  async getUserPhoto(username: string): Promise<Photo> {
     try {
       return await this.userRepository.getUserPhoto(username)
     } catch (e) {

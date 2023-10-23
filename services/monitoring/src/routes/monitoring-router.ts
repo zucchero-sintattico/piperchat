@@ -1,7 +1,7 @@
 import { MonitoringController } from '@/controllers/monitoring-controller'
 import { MonitoringControllerImpl } from '@/controllers/monitoring-controller-impl'
 import { GetServicesStatusApi } from '@api/monitoring/status'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { Router } from 'express'
 
 const monitoringController: MonitoringController = new MonitoringControllerImpl()

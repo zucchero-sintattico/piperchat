@@ -4,7 +4,7 @@ import {
   ChannelControllerExceptions,
 } from '@controllers/channel/channel-controller'
 import { ChannelControllerImpl } from '@controllers/channel/channel-controller-impl'
-import { Route } from '@commons/router'
+import { Route } from '@commons/route'
 import { GetChannelMessagesApi, SendMessageInChannelApi } from '@api/messages/channel'
 
 const channelController: ChannelController = new ChannelControllerImpl()

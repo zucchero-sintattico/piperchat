@@ -33,6 +33,10 @@ export class FriendsControllerImpl extends BrokerController implements FriendsCo
     if (username === friendUsername) {
       throw new FriendsControllerExceptions.CannotSendFriendRequestToYourself()
     }
+    const friendsRequests = await this.getFriendsRequests(username)
+    if (friendsRequests.includes(friendUsername)) {
+      return await this.acceptFriendRequest(username, friendUsername)
+    }
     try {
       await this.userRepository.sendFriendRequest(username, friendUsername)
       await this.publish(

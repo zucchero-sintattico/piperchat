@@ -4,7 +4,10 @@ import {
   GetUserPhotoApi,
   GetUserDescriptionApi
 } from '@api/users/user'
+import { UpdatePhotoApi } from '@api/users/profile'
+
 export interface UserController {
+  updateUserPhoto(request: UpdatePhotoApi.Request.Type): Promise<UpdatePhotoApi.Response>
   /**
    * Get the current user.
    */
