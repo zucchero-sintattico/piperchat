@@ -40,7 +40,7 @@ function popUpBanner(error?: string) {
     contentBanner.value = error
   } else {
     colorBanner.value = BannerColor.OK
-    contentBanner.value = 'Created successfully'
+    contentBanner.value = 'Channel created successfully'
   }
   resultBanner.value = true
   setTimeout(() => {

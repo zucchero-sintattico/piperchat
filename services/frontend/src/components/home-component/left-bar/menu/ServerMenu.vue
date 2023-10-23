@@ -106,7 +106,25 @@ async function copyServerId() {
         <q-tab-panels v-model="serverTab" animated>
           <!-- start Setting Tab -->
           <q-tab-panel name="setting">
-            <div class="text-h4">Settings</div>
+            <div class="text-h4">Server Settings</div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Name:</div>
+              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
+                {{ selectedServer?.name }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Owner:</div>
+              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
+                {{ selectedServer?.owner }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Description:</div>
+              <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
+                {{ selectedServer?.description }}
+              </div>
+            </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Server Id:</div>
               <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
