@@ -97,7 +97,7 @@ watch(
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
-    bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
+    bottomContent.scrollTop - 300 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
     areMessagesLoaded.value
   ) {
     areMessagesLoaded.value = false
@@ -144,22 +144,13 @@ onMounted(() => {
 
       <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="showChat">
-          <div
-            v-for="(message, index) in messageStore.messages"
-            :key="index"
-            class="justify-bottom"
-          >
+          <div v-for="(message, index) in messageStore.messages" :key="index" class="justify-bottom">
             <!-- if sender is the user show the image, default image otherwise -->
-            <q-chat-message
-              :name="message.sender"
-              :text="[message.content]"
-              :sent="userStore.username == message.sender"
-              :avatar="
-                message.sender == userStore.username
-                  ? userStore.photo
-                  : usersPhotos.get(message.sender)
-              "
-            />
+            <q-chat-message :name="message.sender" :text="[message.content]" :sent="userStore.username == message.sender"
+              :avatar="message.sender == userStore.username
+                ? userStore.photo
+                : usersPhotos.get(message.sender)
+                " />
           </div>
         </div>
         <div id="last"></div>
