@@ -53,16 +53,39 @@ function updateFont() {
             <div class="absolute-bottom text-center text-caption">Change Photo</div>
           </q-img>
         </q-avatar>
-        <input id="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileChange" />
+        <input
+          id="fileInput"
+          type="file"
+          style="display: none"
+          accept="image/*"
+          @change="handleFileChange"
+        />
         <h3 style="margin-left: 10px">{{ userStore.username }}</h3>
       </div>
-      <q-select outlined v-model="appStore.selectedTheme" :options="appStore.ThemesList" label="Theme"
-        @update:model-value="updateTheme()" />
+      <q-select
+        outlined
+        v-model="appStore.selectedTheme"
+        :options="appStore.ThemesList"
+        label="Theme"
+        @update:model-value="updateTheme()"
+      />
 
-      <q-select outlined v-model="appStore.selectedFont" :options="appStore.FontFamilies" label="Font"
-        @update:model-value="updateFont()" />
+      <q-select
+        outlined
+        v-model="appStore.selectedFont"
+        :options="appStore.FontFamilies"
+        label="Font"
+        @update:model-value="updateFont()"
+      />
 
-      <q-btn label="Close" type="reset" color="primary" flat class="q-ml-sm q-mt-md" @click="event('close')" />
+      <q-btn
+        label="Close"
+        type="reset"
+        color="primary"
+        flat
+        class="q-ml-sm q-mt-md"
+        @click="event('close')"
+      />
     </q-form>
   </div>
 </template>
