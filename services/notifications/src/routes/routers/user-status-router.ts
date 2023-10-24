@@ -18,7 +18,7 @@ const GetUserStatusApiRoute = new Route<
   path: '/:username/status',
   schema: GetUserStatusApi.Request.Schema,
   handler: async (req, res) => {
-    const status = await userStatusController.getStatus(req.user.username)
+    const status = await userStatusController.getStatus(req.params.username)
     const response = new GetUserStatusApi.Responses.Success({
       online: status.status === 'online',
       lastActive: status.lastActive ?? new Date(0),

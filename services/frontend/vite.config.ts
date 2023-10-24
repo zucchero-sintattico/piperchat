@@ -26,7 +26,8 @@ export default defineConfig({
         target: 'http://localhost',
         // target for single service testing
         // target: 'http://localhost:3000',
-        changeOrigin: true
+        changeOrigin: true,
+        ws: true
       }
     }
   }

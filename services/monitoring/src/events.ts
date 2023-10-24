@@ -71,8 +71,12 @@ export class AllEventsListener {
       }
 
       const content = message.content.toString()
-      const data = JSON.parse(content)
-      callback(message.fields.routingKey, data)
+      try {
+        const data = JSON.parse(content)
+        callback(message.fields.routingKey, data)
+      } catch (error) {
+        console.error(error)
+      }
     })
   }
 }
