@@ -16,7 +16,7 @@ watch(
   () => messageStore.messages[messageStore.messages.length - 1],
   async () => {
     console.log('RESETTING MESSAGES')
-    messageStore.resetMessagesNumber()
+    messageStore.messagesNumber += 1
     tempLastScrollPosition = 0
   }
 )
@@ -91,9 +91,12 @@ onMounted(() => {
 
 .spinner-overlay {
   position: absolute;
-  top: 0%; /* Adjust as needed */
-  left: 50%; /* Adjust as needed */
+  top: 0%;
+  /* Adjust as needed */
+  left: 50%;
+  /* Adjust as needed */
   transform: translate(-50%, -50%);
-  z-index: 999; /* Ensure it's above other elements */
+  z-index: 999;
+  /* Ensure it's above other elements */
 }
 </style>
