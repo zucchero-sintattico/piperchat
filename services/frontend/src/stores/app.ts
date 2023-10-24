@@ -11,87 +11,91 @@ export enum SelectedTab {
 
 type Server = GetServersApi.Responses.Server
 type Channel = GetChannelByIdApi.Responses.Channel
-export const useAppStore = defineStore('app', () => {
-  // ==================== TABS AND SELECTION ==================== //
+export const useAppStore = defineStore(
+  'app',
+  () => {
+    // ==================== TABS AND SELECTION ==================== //
 
-  const isInDirects = ref(false)
-  const selectedServer: Ref<Server | null> = ref(null)
-  const selectedChannel: Ref<Channel | null> = ref(null)
-  const selectedDirect: Ref<string | null> = ref(null)
+    const isInDirects = ref(false)
+    const selectedServer: Ref<Server | null> = ref(null)
+    const selectedChannel: Ref<Channel | null> = ref(null)
+    const selectedDirect: Ref<string | null> = ref(null)
 
-  const isMessageSection = computed(
-    () =>
-      selectedDirect.value !== null ||
-      (selectedChannel.value !== null && selectedChannel.value.channelType !== 'multimedia')
-  )
+    const isMessageSection = computed(
+      () =>
+        selectedDirect.value !== null ||
+        (selectedChannel.value !== null && selectedChannel.value.channelType !== 'multimedia')
+    )
 
-  const isVideoSection = computed(
-    () => selectedChannel.value !== null && selectedChannel.value.channelType == 'multimedia'
-  )
+    const isVideoSection = computed(
+      () => selectedChannel.value !== null && selectedChannel.value.channelType == 'multimedia'
+    )
 
-  function setDirects() {
-    isInDirects.value = true
-    selectedDirect.value = null
-    selectedServer.value = null
-    selectedChannel.value = null
-  }
+    function setDirects() {
+      isInDirects.value = true
+      selectedDirect.value = null
+      selectedServer.value = null
+      selectedChannel.value = null
+    }
 
-  function selectServer(server: Server) {
-    selectedServer.value = server
-    selectedChannel.value = null
-    selectedDirect.value = null
-    isInDirects.value = false
-  }
+    function selectServer(server: Server) {
+      selectedServer.value = server
+      selectedChannel.value = null
+      selectedDirect.value = null
+      isInDirects.value = false
+    }
 
-  function selectChannel(channel: Channel) {
-    selectedChannel.value = channel
-  }
+    function selectChannel(channel: Channel) {
+      selectedChannel.value = channel
+    }
 
-  function selectDirect(direct: string) {
-    selectedDirect.value = direct
-  }
+    function selectDirect(direct: string) {
+      selectedDirect.value = direct
+    }
 
-  function unselectChat() {
-    selectedChannel.value = null
-    selectedDirect.value = null
-  }
+    function unselectChat() {
+      selectedChannel.value = null
+      selectedDirect.value = null
+    }
 
-  // ==================== THEME ==================== //
-  //Stuffs for Themes
-  const DefaultTheme: Theme = {
-    label: ThemesList[0].label,
-    primary: ThemesList[0].primary,
-    secondary: ThemesList[0].secondary,
-    accent: ThemesList[0].accent,
-    dark: ThemesList[0].dark
-  }
-  const selectedTheme = ref(DefaultTheme)
+    // ==================== THEME ==================== //
+    //Stuffs for Themes
+    const DefaultTheme: Theme = {
+      label: ThemesList[0].label,
+      primary: ThemesList[0].primary,
+      secondary: ThemesList[0].secondary,
+      accent: ThemesList[0].accent,
+      dark: ThemesList[0].dark
+    }
+    const selectedTheme = ref(DefaultTheme)
 
-  const DefaultFont: FontFamily = FontFamilies[0]
-  const selectedFont = ref(DefaultFont)
+    const DefaultFont: FontFamily = { label: FontFamilies[0].label, value: FontFamilies[0].value }
+    const selectedFont = ref(DefaultFont)
 
-  return {
-    isInDirects,
-    setDirects,
+    return {
+      isInDirects,
+      setDirects,
 
-    selectedServer,
-    selectServer,
+      selectedServer,
+      selectServer,
 
-    selectedChannel,
-    selectChannel,
+      selectedChannel,
+      selectChannel,
 
-    selectedDirect,
-    selectDirect,
+      selectedDirect,
+      selectDirect,
 
-    unselectChat,
+      unselectChat,
 
-    isMessageSection,
-    isVideoSection,
+      isMessageSection,
+      isVideoSection,
 
-    selectedTheme,
-    ThemesList,
+      selectedTheme,
+      ThemesList,
 
-    selectedFont,
-    FontFamilies
-  }
-})
+      selectedFont,
+      FontFamilies
+    }
+  },
+  { persist: true }
+)
