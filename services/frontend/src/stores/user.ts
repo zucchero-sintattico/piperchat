@@ -1,18 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
 import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
-import type { UpdatePhotoApi } from '@api/users/profile'
-import { ThemesList, type Theme } from '@/assets/theme'
 
-export enum SelectedTab {
-  Directs = 'directs',
-  Servers = 'servers'
-}
+import { SelectedTab } from './app'
 
 export enum ContentArea {
   Empty = 'empty',
@@ -36,34 +31,6 @@ export const useUserStore = defineStore(
     async function reload() {
       await whoami()
       await reloadUserPhoto()
-    }
-
-    // Display direct or channel in left bar
-    const selectedTab = ref(SelectedTab.Directs)
-    // Display channel of selected server in left bar
-    const selectedServerId = ref('')
-
-    // Stuffs for content area
-    const selectedChannelId = ref('')
-    const selectedDirect = ref('')
-    const inContentArea = ref(ContentArea.Empty)
-
-    function setContentArea(area: ContentArea) {
-      inContentArea.value = area
-    }
-
-    //Stuffs for Themes
-    const DefaultTheme: Theme = {
-      label: ThemesList[0].label,
-      primary: ThemesList[0].primary,
-      secondary: ThemesList[0].secondary,
-      accent: ThemesList[0].accent,
-      dark: ThemesList[0].dark
-    }
-    const selectedTheme = ref(DefaultTheme)
-
-    function setActiveChannel(channelId: string) {
-      selectedChannelId.value = channelId
     }
 
     const authController: AuthController = new AuthControllerImpl()
@@ -192,13 +159,6 @@ export const useUserStore = defineStore(
       email,
       description,
       photo,
-      selectedServerId,
-      selectedTab,
-      selectedChannelId,
-      selectedDirect,
-      inContentArea,
-      setContentArea,
-      setActiveChannel,
       whoami,
       login,
       register,
@@ -207,9 +167,7 @@ export const useUserStore = defineStore(
       getUserPhoto,
       reloadUserPhoto,
       photoLoaded,
-      reload,
-      ThemesList,
-      selectedTheme
+      reload
     }
   },
   { persist: true }

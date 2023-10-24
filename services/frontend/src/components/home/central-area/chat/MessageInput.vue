@@ -1,26 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useMessageStore } from '@/stores/messages'
-import { ContentArea, useUserStore } from '@/stores/user'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const messageStore = useMessageStore()
-const userStore = useUserStore()
 const message = ref('')
-let initialLoadedMessages = 50
-/**
- * Checks if the user is in a valid content area (direct or channel)
- */
-
-const shown = computed(() => {
-  if (
-    userStore.inContentArea == ContentArea.Direct ||
-    userStore.inContentArea == ContentArea.Channel
-  ) {
-    return true
-  } else {
-    return false
-  }
-})
 
 /**
  * Sends a message to the server,
@@ -31,40 +16,7 @@ async function sendMessage() {
   if (message.value.match(/^\s*$/)) {
     return
   }
-
-  if (userStore.inContentArea == ContentArea.Direct) {
-    await messageStore.sendMessageOnDirect(
-      {
-        content: message.value,
-        username: userStore.selectedDirect
-      },
-      // Refresh messages
-      () =>
-        messageStore.getMessagesFromDirect({
-          username: userStore.selectedDirect,
-          from: 0,
-          limit: initialLoadedMessages
-        }),
-      () => console.log('Error')
-    )
-  } else if (userStore.inContentArea == ContentArea.Channel) {
-    console.log('sending message on channel')
-    await messageStore.sendMessageOnChannel(
-      {
-        serverId: userStore.selectedServerId,
-        channelId: userStore.selectedChannelId,
-        content: message.value
-      },
-      () =>
-        messageStore.getMessagesFromChannel({
-          serverId: userStore.selectedServerId,
-          channelId: userStore.selectedChannelId,
-          from: 0,
-          limit: initialLoadedMessages
-        }),
-      () => console.log('Error')
-    )
-  }
+  await messageStore.sendMessage(message.value)
   deleteMessage()
 }
 
@@ -74,7 +26,7 @@ function deleteMessage() {
 </script>
 
 <template>
-  <q-footer v-if="shown">
+  <q-footer v-if="appStore.isMessageSection">
     <q-input padding filled v-model="message" label="Write..." @keydown.enter.prevent="sendMessage">
       <template v-slot:append>
         <q-icon v-if="message != ''" name="close" @click="deleteMessage" class="cursor-pointer" />

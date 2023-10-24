@@ -7,15 +7,18 @@ import ContentArea from '@/components/home/central-area/ContentArea.vue'
 import SettingsForm from '@/components/home/settings/SettingsForm.vue'
 import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
+
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
 
-setCssVar('primary', userStore.selectedTheme.primary)
-setCssVar('secondary', userStore.selectedTheme.secondary)
-setCssVar('accent', userStore.selectedTheme.accent)
-setCssVar('dark', userStore.selectedTheme.dark)
+setCssVar('primary', appStore.selectedTheme.primary)
+setCssVar('secondary', appStore.selectedTheme.secondary)
+setCssVar('accent', appStore.selectedTheme.accent)
+setCssVar('dark', appStore.selectedTheme.dark)
 useNotificationService()
 
 function logout() {
@@ -28,13 +31,14 @@ function toggleLeftDrawer() {
 }
 
 onMounted(() => {
-  userStore.inContentArea = ContentArea.Empty
   userStore.reload()
+  appStore.setDirects()
 })
 </script>
 
 <template>
-  <div @keydown.esc="userStore.inContentArea = ContentArea.empty">
+  <div>
+    <!-- // TODO: SERVIVA? @keydown.esc="userStore.inContentArea = ContentArea.empty" -->
     <q-layout view="hHh Lpr lff" class="bg-accent">
       <q-header elevated class="bg-primary text-white" height-hint="98">
         <q-toolbar>

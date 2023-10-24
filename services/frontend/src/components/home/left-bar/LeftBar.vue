@@ -2,17 +2,16 @@
 import ServerList from './ServerList.vue'
 import DirectsList from './DirectsList.vue'
 import ChannelsList from './ChannelsList.vue'
-import { SelectedTab, useUserStore } from '@/stores/user'
 import { onMounted } from 'vue'
 import { useServerStore } from '@/stores/server'
+import { useAppStore } from '@/stores/app'
 
-const userStore = useUserStore()
 const serverStore = useServerStore()
+const appStore = useAppStore()
 
-onMounted(() => {
-  serverStore.refreshUserServers()
-  userStore.selectedTab = SelectedTab.Directs
-  userStore.selectedDirect = ''
+onMounted(async () => {
+  await serverStore.refreshUserServers()
+  appStore.setDirects()
 })
 </script>
 
@@ -21,8 +20,8 @@ onMounted(() => {
     <div class="row no-wrap left-menu bg-dark">
       <ServerList />
 
-      <DirectsList v-if="userStore.selectedTab == SelectedTab.Directs" />
-      <ChannelsList v-if="userStore.selectedTab == SelectedTab.Servers" />
+      <DirectsList v-if="appStore.isInDirects" />
+      <ChannelsList v-if="appStore.selectedServer != null" />
     </div>
   </q-drawer>
 </template>

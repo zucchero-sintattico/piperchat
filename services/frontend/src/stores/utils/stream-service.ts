@@ -13,7 +13,6 @@ export class StreamService {
   }
 
   async start() {
-    console.log('Starting stream')
     this.stream.value = await navigator.mediaDevices.getUserMedia(this.constraints)
     this.mic_on.value = (this.constraints.audio as boolean) || false
     this.cam_on.value = (this.constraints.video as boolean) || false

@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useWebRTCStore } from '@/stores/webrtc'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
 const webrtcStore = useWebRTCStore()
 
 async function join() {
-  await webrtcStore.joinChannel(userStore.selectedServerId, userStore.selectedChannelId)
-}
-
-async function stop() {
-  webrtcStore.stop()
+  await webrtcStore.joinChannel(appStore.selectedServer!.id, appStore.selectedChannel!.id)
 }
 
 const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).length + 1))
@@ -61,7 +59,7 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
           :icon="webrtcStore.cam_on ? 'videocam' : 'videocam_off'"
           label="Toggle Webcam"
         />
-        <q-btn @click="stop" icon="close" label="Exit Call" />
+        <q-btn @click="webrtcStore.stop" icon="close" label="Exit Call" />
       </div>
     </q-page>
     <q-page v-if="!webrtcStore.joined">

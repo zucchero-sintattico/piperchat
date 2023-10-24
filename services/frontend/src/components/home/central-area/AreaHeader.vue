@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ContentArea, useUserStore } from '@/stores/user'
-import { useServerStore } from '@/stores/server'
+import { SelectedTab, useAppStore } from '@/stores/app'
 
-const userStore = useUserStore()
-const serverStore = useServerStore()
+const appStore = useAppStore()
 
 /**
  * Returns the title of the conversation
@@ -12,31 +10,16 @@ const serverStore = useServerStore()
  * or the name of the channel)
  */
 const title = computed(() => {
-  if (userStore.inContentArea == ContentArea.Direct) {
-    return userStore.selectedDirect
-  } else if (
-    userStore.inContentArea == ContentArea.Channel ||
-    userStore.inContentArea == ContentArea.Multimedia
-  ) {
-    const server = serverStore.servers.filter(
-      (server) => server.id == userStore.selectedServerId
-    )[0]
-    if (server) {
-      const channel = server.channels.filter((channel) => channel.id == userStore.selectedChannelId)
-      if (channel.length > 0) {
-        return channel[0].name
-      }
-    }
+  if (appStore.selectedTab == SelectedTab.Directs) {
+    return appStore.selectedDirect
+  } else {
+    return appStore.selectedChannel?.name
   }
-  return ''
 })
 </script>
 <template>
   <q-header>
     <q-toolbar>
-      <!-- <q-avatar>
-        <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
-      </q-avatar> -->
       <q-toolbar-title>
         {{ title }}
       </q-toolbar-title>

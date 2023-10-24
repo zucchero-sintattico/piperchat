@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useUserStore, ContentArea } from '@/stores/user'
-import { computed, onMounted, ref, watch, type Ref } from 'vue'
+import { ref } from 'vue'
 import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
@@ -9,48 +8,14 @@ import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
-import { useWebRTCStore } from '@/stores/webrtc'
+import { useAppStore } from '@/stores/app'
 
-const userStore = useUserStore()
 const serverStore = useServerStore()
-const webrtcStore = useWebRTCStore()
+const appStore = useAppStore()
 
 const isNewChannelFormActive = ref(false)
 const serverSettingMenuActive = ref(false)
 const dialogLeavesServer = ref(false)
-
-function setChannelContent(channelId: string, contentArea: ContentArea) {
-  console.log('Switched')
-  userStore.inContentArea = contentArea
-  userStore.setActiveChannel(channelId)
-}
-
-interface UserWithPhoto {
-  username: string
-  photo: string
-}
-const usersInMediaChannels: Ref<Record<string, UserWithPhoto[]>> = ref({})
-
-watch(serverStore.servers, () => {
-  serverStore.servers.forEach((server) => {
-    server.channels.forEach(async (channel) => {
-      if (channel.channelType == CreateChannelApi.ChannelType.Multimedia) {
-        usersInMediaChannels.value = {}
-        const users = await webrtcStore.getUsersInMediaChannel(
-          serverStore.selectedServer?.id as string,
-          channel.id
-        )
-        console.log('Users in media channel', users)
-        const usersWithPhoto: UserWithPhoto[] = []
-        for (const user of users) {
-          const photo = (await userStore.getUserPhoto(user))!
-          usersWithPhoto.push({ username: user, photo })
-        }
-        usersInMediaChannels.value[channel.id] = usersWithPhoto
-      }
-    })
-  })
-})
 
 const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
@@ -72,8 +37,8 @@ function popUpBanner(error?: string) {
 }
 
 function leaveServer() {
-  if (serverStore.selectedServer?.id) {
-    serverStore.leaveServer(serverStore.selectedServer?.id as string)
+  if (appStore.selectedServer?.id) {
+    serverStore.leaveServer(appStore.selectedServer!.id)
     popUpBanner('You left the server')
   }
 }
@@ -90,21 +55,21 @@ function leaveServer() {
         <q-item :clickable="serverStore.amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
             <q-btn
-              v-if="serverStore.amITheOwner == true"
+              v-if="serverStore.amITheOwner"
               icon="settings"
               color="primary"
               round
               class="q-mr-sm q-mb-sm"
             />
             <q-btn
-              v-if="serverStore.amITheOwner != true"
+              v-if="!serverStore.amITheOwner"
               round
               icon="exit_to_app"
               class="q-mr-sm q-mb-sm"
               color="primary"
               @click="dialogLeavesServer = true"
             />
-            {{ serverStore.selectedServer?.name }}
+            {{ appStore.selectedServer?.name }}
           </h4>
         </q-item>
 
@@ -155,11 +120,11 @@ function leaveServer() {
           bordered
           separator
           class="text-white text-h5"
-          v-for="channel in serverStore.selectedServer?.channels?.filter(
+          v-for="channel in appStore.selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Messages
           )"
           :key="channel.id"
-          @click="setChannelContent(channel.id, ContentArea.Channel)"
+          @click="appStore.selectChannel(channel)"
         >
           <HorizontalChannel :name="channel.name" icon="chat" clickable />
         </q-list>
@@ -170,7 +135,7 @@ function leaveServer() {
           bordered
           separator
           class="text-white text-h5"
-          v-for="channel in serverStore.selectedServer?.channels?.filter(
+          v-for="channel in appStore.selectedServer?.channels?.filter(
             (c) => c.channelType == CreateChannelApi.ChannelType.Multimedia
           )"
           :key="channel.id"
@@ -179,11 +144,15 @@ function leaveServer() {
             :name="channel.name"
             icon="volume_up"
             clickable
-            @click="setChannelContent(channel.id, ContentArea.Multimedia)"
+            @click="appStore.selectChannel(channel)"
           />
           <!-- "userStore.setActiveChannel(channel.id)" -->
 
-          <q-list dense v-for="user in usersInMediaChannels[channel.id]" :key="user.username">
+          <q-list
+            dense
+            v-for="user in serverStore.mediaChannelParticipants[channel.id]"
+            :key="user.username"
+          >
             <HorizontalUser :name="user.username" :photo="user.photo" />
           </q-list>
         </q-list>
