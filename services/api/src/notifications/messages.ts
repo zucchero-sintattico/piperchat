@@ -14,17 +14,12 @@ export class NewMessageOnChannelNotification {
   type = NewMessageOnChannelNotification.type
   from: string
   content: string
-  serverId: string
+  server: string
   channel: string
-  constructor(data: {
-    from: string
-    content: string
-    serverId: string
-    channel: string
-  }) {
+  constructor(data: { from: string; content: string; server: string; channel: string }) {
     this.from = data.from
     this.content = data.content
-    this.serverId = data.serverId
+    this.server = data.server
     this.channel = data.channel
   }
 }
