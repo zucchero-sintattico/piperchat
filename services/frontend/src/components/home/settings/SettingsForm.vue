@@ -79,7 +79,7 @@ function updateFont() {
       />
 
       <q-btn
-        label="Cancel"
+        label="Close"
         type="reset"
         color="primary"
         flat
