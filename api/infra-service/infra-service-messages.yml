@@ -3,7 +3,13 @@ info:
   title: Piperchat Message broker
   version: 1.0.0
   description: |
-    Piperchat intra microservices messages design
+    Piperchat intra microservices messages
+
+servers:
+  internal:
+    url: 'amqp://broker:5672'
+    protocol: amqp
+    description: Internal server for intra microservices communication
 
 channels:
   user.logged.in:
