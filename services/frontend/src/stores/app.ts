@@ -30,6 +30,7 @@ export const useAppStore = defineStore('app', () => {
 
   function setDirects() {
     isInDirects.value = true
+    selectedDirect.value = null
     selectedServer.value = null
     selectedChannel.value = null
   }

@@ -10,10 +10,12 @@ const appStore = useAppStore()
  * or the name of the channel)
  */
 const title = computed(() => {
-  if (appStore.selectedTab == SelectedTab.Directs) {
+  if (appStore.selectedDirect != null) {
     return appStore.selectedDirect
-  } else {
+  } else if (appStore.selectedChannel != null) {
     return appStore.selectedChannel?.name
+  } else {
+    return ''
   }
 })
 </script>
