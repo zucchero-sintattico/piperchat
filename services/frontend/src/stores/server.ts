@@ -8,7 +8,8 @@ import type {
   GetServerParticipantsApi,
   GetServersApi,
   JoinServerApi,
-  KickUserFromServerApi
+  KickUserFromServerApi,
+  UpdateServerApi
 } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -123,6 +124,20 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function updateServer(serverId: string, name?: string, description?: string) {
+    const response = await serverController.updateServer({
+      serverId,
+      name: name,
+      description: description
+    })
+    if (response.statusCode === 200) {
+      getServers()
+    } else {
+      const typed = response as UpdateServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   return {
     getServers,
     createServer,
@@ -132,6 +147,7 @@ export const useServerStore = defineStore('server', () => {
     joinServer,
     leaveServer,
     getServerPartecipants,
+    updateServer,
     servers
   }
 })

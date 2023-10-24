@@ -61,7 +61,7 @@ async function updateServerName(serverName: string) {
     return
   }
   try {
-    // await serverStore.updateServerName(selectedServer.value!.id, serverName)
+    await serverStore.updateServer(selectedServer.value!.id, serverName)
     popUpBanner('Server name updated', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
@@ -74,7 +74,7 @@ async function updateServerDescription(serverDescription: string) {
     return
   }
   try {
-    // await serverStore.updateServerDescription(selectedServer.value!.id, serverDescription)
+    await serverStore.updateServer(selectedServer.value!.id, undefined, serverDescription)
     popUpBanner('Server description updated', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
