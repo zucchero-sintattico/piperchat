@@ -146,6 +146,7 @@ export const useMessageStore = defineStore('message', () => {
   }
 
   async function loadNewMessages() {
+    if (loadingNewMessages.value) return
     loadingNewMessages.value = true
     if (currentSection.value === ContentArea.Channel) {
       const info = currentSectionInfo.value as { serverId: string; channelId: string }
@@ -195,15 +196,16 @@ export const useMessageStore = defineStore('message', () => {
         const typedResponse = response as GetDirectMessagesApi.Responses.Success
         console.log('Updating messages')
         if (concat) {
-          messages.value = typedResponse.messages.concat(messages.value)
           if (typedResponse.messages.length === 0) {
             console.log('No more messages')
-            return
+          } else {
+            console.log('Loaded new messages', typedResponse.messages)
+            messages.value = typedResponse.messages.concat(messages.value)
           }
         } else {
+          console.log('Setting messages to', typedResponse.messages)
           messages.value = typedResponse.messages
         }
-
         break
       }
       case 403:
@@ -236,15 +238,16 @@ export const useMessageStore = defineStore('message', () => {
         const typedResponse = response as GetDirectMessagesApi.Responses.Success
         console.log('Updating messages')
         if (concat) {
-          messages.value = typedResponse.messages.concat(messages.value)
           if (typedResponse.messages.length === 0) {
             console.log('No more messages')
-            return
+          } else {
+            console.log('Loaded new messages', typedResponse.messages)
+            messages.value = typedResponse.messages.concat(messages.value)
           }
         } else {
+          console.log('Setting messages to', typedResponse.messages)
           messages.value = typedResponse.messages
         }
-
         break
       }
       case 403:

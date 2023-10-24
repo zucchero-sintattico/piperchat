@@ -15,12 +15,13 @@ let tempLastScrollPosition = 0
 watch(
   () => messageStore.messages[messageStore.messages.length - 1],
   async () => {
+    console.log('RESETTING MESSAGES')
     messageStore.resetMessagesNumber()
     tempLastScrollPosition = 0
   }
 )
 
-function handleScroll() {
+async function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
@@ -42,12 +43,12 @@ onMounted(() => {
 <template>
   <q-page-container padding v-if="appStore.isMessageSection">
     <q-page>
-      <template v-if="messageStore.loadingNewMessages">
-        <div class="row justify-center q-my-md">
-          <q-spinner color="primary" name="dots" size="40px" />
-        </div>
-      </template>
-
+      <div
+        class="row justify-center q-my-md spinner-overlay"
+        v-if="messageStore.loadingNewMessages"
+      >
+        <q-spinner color="primary" name="dots" size="40px" />
+      </div>
       <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="appStore.isMessageSection">
           <div
@@ -89,5 +90,13 @@ onMounted(() => {
   flex-direction: column-reverse;
   overflow-anchor: none;
   /* Reverse the order of displayed items */
+}
+
+.spinner-overlay {
+  position: absolute;
+  top: 0%; /* Adjust as needed */
+  left: 50%; /* Adjust as needed */
+  transform: translate(-50%, -50%);
+  z-index: 999; /* Ensure it's above other elements */
 }
 </style>
