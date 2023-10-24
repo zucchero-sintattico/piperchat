@@ -1,9 +1,9 @@
 openapi: '3.0.3'
 info:
-  title: Piperchat API
+  title: Piperchat rest API
   version: '1.0'
   description: |
-    Piperchat design API description
+    Piperchat rest API to interact with the system.
 
 tags:
   - name: auth

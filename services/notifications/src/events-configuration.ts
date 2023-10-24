@@ -1,5 +1,10 @@
 import { EventsConfiguration } from '@commons/events/events-configuration'
-import { NewMessageOnChannel } from '@messages-api/channels'
+import {
+  ChannelCreated,
+  ChannelDeleted,
+  ChannelUpdated,
+  NewMessageOnChannel,
+} from '@messages-api/channels'
 import { NewMessageOnDirect } from '@messages-api/directs'
 import { notifiableUsers } from './models/notification-model'
 import {
@@ -12,6 +17,10 @@ import {
   ServerDeletedNotification,
   UserLeftServerNotification,
   UserJoinedServerNotification,
+  ServerUpdatedNotification,
+  ChannelCreatedNotification,
+  ChannelUpdatedNotification,
+  ChannelDeletedNotification,
 } from '@api/notifications/messages'
 import {
   FriendRequestSentMessage,
@@ -23,6 +32,7 @@ import {
   UserJoinedServer,
   UserLeftServer,
   UserKickedFromServer,
+  ServerUpdated,
 } from '@messages-api/servers'
 import {
   UserOnlineMessage,
@@ -40,6 +50,7 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
     this.listenToFriendsRequest()
     this.listenToMessages()
     this.listenToUserStatus()
+    this.listenToChannelsUpdates()
   }
 
   listenToUserStatus() {
@@ -99,6 +110,7 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
           new NewMessageOnChannelNotification({
             from: event.sender,
             content: event.message,
+            server: event.serverId,
             channel: event.channelId,
           })
         )
@@ -160,6 +172,18 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
       })
     })
 
+    this.on(ServerUpdated, async (event: ServerUpdated) => {
+      const server = await Servers.findOne({ _id: event.id })
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new ServerUpdatedNotification({
+            serverId: event.id,
+          })
+        )
+      })
+    })
+
     this.on(UserJoinedServer, async (event: UserJoinedServer) => {
       const server = await Servers.findOne({ _id: event.serverId })
       await Servers.updateOne(
@@ -206,6 +230,47 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
           new UserLeftServerNotification({
             serverId: event.serverId,
             user: event.username,
+          })
+        )
+      })
+    })
+  }
+
+  listenToChannelsUpdates() {
+    this.on(ChannelCreated, async (event: ChannelCreated) => {
+      const server = await Servers.findOne({ _id: event.serverId })
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new ChannelCreatedNotification({
+            serverId: event.serverId,
+            channel: event.channelId,
+          })
+        )
+      })
+    })
+
+    this.on(ChannelUpdated, async (event: ChannelUpdated) => {
+      const server = await Servers.findOne({ _id: event.serverId })
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new ChannelUpdatedNotification({
+            serverId: event.serverId,
+            channel: event.channelId,
+          })
+        )
+      })
+    })
+
+    this.on(ChannelDeleted, async (event: ChannelDeleted) => {
+      const server = await Servers.findOne({ _id: event.serverId })
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new ChannelDeletedNotification({
+            serverId: event.serverId,
+            channel: event.channelId,
           })
         )
       })

@@ -12,7 +12,7 @@ const appStore = useAppStore()
 const friendTabOpened = ref(false)
 
 onMounted(async () => {
-  await friendStore.fetchFriends()
+  await friendStore.refreshFriends()
 })
 </script>
 
@@ -41,6 +41,7 @@ onMounted(async () => {
             <HorizontalUser
               :name="friend.username"
               :online="friend.status.online"
+              :last-active="friend.status.lastActive"
               @click="appStore.selectDirect(friend.username)"
             />
           </q-list>

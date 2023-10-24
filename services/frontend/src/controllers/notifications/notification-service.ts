@@ -1,90 +1,184 @@
 import {
+  ChannelCreatedNotification,
+  ChannelDeletedNotification,
+  ChannelUpdatedNotification,
   FriendRequestAcceptedNotification,
   FriendRequestNotification,
   NewMessageOnChannelNotification,
   NewMessageOnDirectNotification,
   ServerDeletedNotification,
+  ServerUpdatedNotification,
   UserJoinedServerNotification,
   UserLeftServerNotification,
   UserOfflineNotification,
   UserOnlineNotification
 } from '@api/notifications/messages'
-import { useUserStore } from '@/stores/user'
 import { io } from 'socket.io-client'
-import { useWebRTCStore } from '@/stores/webrtc'
 import { useServerStore } from '@/stores/server'
 import { useMessageStore } from '@/stores/messages'
+import { useAppStore } from '@/stores/app'
+import { useFriendStore } from '@/stores/friend'
 
 class NotificationService {
-  callbacks: { [key: string]: Function } = {}
+  callbacks: Record<string, (message: any) => Promise<void>> = {}
 
-  on<T>(messageClass: { type: string }, callback: (message: T) => void) {
-    this.callbacks[messageClass.type] = callback
+  on(type: string, callback: (message: any) => Promise<void>) {
+    this.callbacks[type] = callback
   }
 }
-
 // Need to defer this function in order to avoid pinia errors
 function createNotificationService() {
   const notificationService = new NotificationService()
 
-  const userStore = useUserStore()
+  const appStore = useAppStore()
+  const friendsStore = useFriendStore()
   const messageStore = useMessageStore()
   const serverStore = useServerStore()
-  const webRtcStore = useWebRTCStore()
 
-  notificationService.on(
-    NewMessageOnDirectNotification.prototype,
-    async (data: NewMessageOnDirectNotification) => {
-      console.log(data)
-      if (userStore.selectedDirect === data.from) {
-        // TODO: Reload messages
+  function setupMessagesListeners() {
+    notificationService.on(
+      NewMessageOnDirectNotification.type,
+      async (data: NewMessageOnDirectNotification) => {
+        console.log('NotificationService: NewMessageOnDirectNotification', data)
+        if (appStore.selectedDirect == data.from) {
+          console.log('NotificationService: Refreshing messages')
+          await messageStore.refreshMessages()
+        }
       }
-    }
-  )
+    )
 
-  notificationService.on(
-    NewMessageOnChannelNotification.prototype,
-    (data: NewMessageOnChannelNotification) => {
-      console.log(data)
-      // TODO: Reload messages
-    }
-  )
+    notificationService.on(
+      NewMessageOnChannelNotification.type,
+      async (data: NewMessageOnChannelNotification) => {
+        console.log('NotificationService: NewMessageOnChannelNotification', data)
+        if (
+          appStore.selectedServer?.id == data.server &&
+          appStore.selectedChannel?.id == data.channel
+        ) {
+          console.log('NotificationService: Refreshing messages')
+          messageStore.refreshMessages()
+        }
+      }
+    )
+  }
 
-  notificationService.on(FriendRequestNotification.prototype, (data: FriendRequestNotification) => {
-    console.log(data)
-    // TODO: Popup and notification over the friends icon
-  })
+  function setupServersListeners() {
+    notificationService.on(
+      ServerDeletedNotification.type,
+      async (data: ServerDeletedNotification) => {
+        console.log('NotificationService: ServerDeletedNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers and moving to directs')
+          appStore.setDirects()
+          await serverStore.refreshUserServers()
+        }
+      }
+    )
 
-  notificationService.on(
-    FriendRequestAcceptedNotification.prototype,
-    (data: FriendRequestAcceptedNotification) => {
-      console.log(data)
-      // TODO: Popup
-    }
-  )
+    notificationService.on(
+      ServerUpdatedNotification.type,
+      async (data: ServerUpdatedNotification) => {
+        console.log('NotificationService: ServerUpdatedNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers')
+          await serverStore.refreshUserServers()
+        }
+      }
+    )
+  }
 
-  notificationService.on(UserOnlineNotification.prototype, (data: UserOnlineNotification) => {
-    console.log(data)
-    // TODO: Refresh users list
-  })
+  function setupChannelsListeners() {
+    notificationService.on(
+      ChannelCreatedNotification.type,
+      async (data: ChannelCreatedNotification) => {
+        console.log('NotificationService: ChannelCreatedNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers')
+          await serverStore.refreshUserServers()
+        }
+      }
+    )
+    notificationService.on(
+      ChannelUpdatedNotification.type,
+      async (data: ChannelUpdatedNotification) => {
+        console.log('NotificationService: ChannelUpdatedNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers')
+          await serverStore.refreshUserServers()
+        }
+      }
+    )
 
-  notificationService.on(UserOfflineNotification.prototype, (data: UserOfflineNotification) => {
-    console.log(data)
-    // TODO: Refresh users list
-  })
+    notificationService.on(
+      ChannelDeletedNotification.type,
+      async (data: ChannelDeletedNotification) => {
+        console.log('NotificationService: ChannelDeletedNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers')
+          await serverStore.refreshUserServers()
+        }
+      }
+    )
+  }
 
-  notificationService.on(ServerDeletedNotification.prototype, () => {
-    serverStore.refreshUserServers()
-  })
+  function setupUsersListeners() {
+    notificationService.on(UserOnlineNotification.type, async (data: UserOnlineNotification) => {
+      console.log('NotificationService: UserOnlineNotification', data)
+      friendsStore.refreshFriends()
+    })
 
-  notificationService.on(UserJoinedServerNotification.prototype, (data) => {
-    serverStore.refreshUserServers()
-  })
+    notificationService.on(UserOfflineNotification.type, async (data: UserOfflineNotification) => {
+      console.log('NotificationService: UserOfflineNotification', data)
+      friendsStore.refreshFriends()
+    })
 
-  notificationService.on(UserLeftServerNotification.prototype, (data) => {
-    serverStore.refreshUserServers()
-  })
+    notificationService.on(
+      UserJoinedServerNotification.type,
+      async (data: UserJoinedServerNotification) => {
+        console.log('NotificationService: UserJoinedServerNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers')
+          serverStore.refreshUserServers()
+        }
+      }
+    )
 
+    notificationService.on(
+      UserLeftServerNotification.type,
+      async (data: UserLeftServerNotification) => {
+        console.log('NotificationService: UserLeftServerNotification', data)
+        if (appStore.selectedServer?.id == data.serverId) {
+          console.log('NotificationService: Refreshing servers and moving to directs')
+          appStore.setDirects()
+          serverStore.refreshUserServers()
+        }
+      }
+    )
+  }
+
+  function setupFriendsListeners() {
+    notificationService.on(
+      FriendRequestNotification.type,
+      async (data: FriendRequestNotification) => {
+        console.log('NotificationService: FriendRequestNotification', data)
+        // TODO: Popup and notification over the friends icon
+      }
+    )
+
+    notificationService.on(
+      FriendRequestAcceptedNotification.type,
+      async (data: FriendRequestAcceptedNotification) => {
+        console.log('NotificationService: FriendRequestAcceptedNotification', data)
+        // TODO: Popup
+      }
+    )
+  }
+
+  setupMessagesListeners()
+  setupServersListeners()
+  setupChannelsListeners()
+  setupUsersListeners()
+  setupFriendsListeners()
   return notificationService
 }
 
@@ -100,6 +194,8 @@ export function useNotificationService() {
   })
 
   notificationSocket.on('notification', (data: any) => {
-    notificationService.callbacks[data.type]?.(data)
+    console.log('NotificationService: Received notification', data)
+    console.log(notificationService.callbacks[data.type])
+    notificationService.callbacks[data.type](data)
   })
 }

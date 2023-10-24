@@ -1,5 +1,6 @@
 export class NewMessageOnDirectNotification {
-  type = 'new-direct-message' as const
+  static type = 'new-direct-message' as const
+  type = NewMessageOnDirectNotification.type
   from: string
   content: string
   constructor(data: { from: string; content: string }) {
@@ -9,19 +10,23 @@ export class NewMessageOnDirectNotification {
 }
 
 export class NewMessageOnChannelNotification {
-  type = 'new-channel-message' as const
+  static type = 'new-channel-message' as const
+  type = NewMessageOnChannelNotification.type
   from: string
   content: string
+  server: string
   channel: string
-  constructor(data: { from: string; content: string; channel: string }) {
+  constructor(data: { from: string; content: string; server: string; channel: string }) {
     this.from = data.from
     this.content = data.content
+    this.server = data.server
     this.channel = data.channel
   }
 }
 
 export class FriendRequestNotification {
-  type = 'friend-request' as const
+  static type = 'friend-request' as const
+  type = FriendRequestNotification.type
   from: string
   constructor(data: { from: string }) {
     this.from = data.from
@@ -29,7 +34,8 @@ export class FriendRequestNotification {
 }
 
 export class FriendRequestAcceptedNotification {
-  type = 'friend-request-accepted' as const
+  static type = 'friend-request-accepted' as const
+  type = FriendRequestAcceptedNotification.type
   from: string
   constructor(data: { from: string }) {
     this.from = data.from
@@ -37,7 +43,8 @@ export class FriendRequestAcceptedNotification {
 }
 
 export class UserOnlineNotification {
-  type = 'user-online' as const
+  static type = 'user-online' as const
+  type = UserOnlineNotification.type
   user: string
   constructor(data: { user: string }) {
     this.user = data.user
@@ -45,7 +52,8 @@ export class UserOnlineNotification {
 }
 
 export class UserOfflineNotification {
-  type = 'user-offline' as const
+  static type = 'user-offline' as const
+  type = UserOfflineNotification.type
   user: string
   constructor(data: { user: string }) {
     this.user = data.user
@@ -53,7 +61,17 @@ export class UserOfflineNotification {
 }
 
 export class ServerDeletedNotification {
-  type = 'server-deleted' as const
+  static type = 'server-deleted' as const
+  type = ServerDeletedNotification.type
+  serverId: string
+  constructor(data: { serverId: string }) {
+    this.serverId = data.serverId
+  }
+}
+
+export class ServerUpdatedNotification {
+  static type = 'server-updated' as const
+  type = ServerUpdatedNotification.type
   serverId: string
   constructor(data: { serverId: string }) {
     this.serverId = data.serverId
@@ -61,7 +79,8 @@ export class ServerDeletedNotification {
 }
 
 export class UserJoinedServerNotification {
-  type = 'user-joined-server' as const
+  static type = 'user-joined-server' as const
+  type = UserJoinedServerNotification.type
   serverId: string
   user: string
   constructor(data: { serverId: string; user: string }) {
@@ -71,11 +90,44 @@ export class UserJoinedServerNotification {
 }
 
 export class UserLeftServerNotification {
-  type = 'user-left-server' as const
+  static type = 'user-left-server' as const
   serverId: string
   user: string
   constructor(data: { serverId: string; user: string }) {
     this.serverId = data.serverId
     this.user = data.user
+  }
+}
+
+export class ChannelCreatedNotification {
+  static type = 'channel-created' as const
+  type = ChannelCreatedNotification.type
+  serverId: string
+  channel: string
+  constructor(data: { serverId: string; channel: string }) {
+    this.serverId = data.serverId
+    this.channel = data.channel
+  }
+}
+
+export class ChannelDeletedNotification {
+  static type = 'channel-deleted' as const
+  type = ChannelDeletedNotification.type
+  serverId: string
+  channel: string
+  constructor(data: { serverId: string; channel: string }) {
+    this.serverId = data.serverId
+    this.channel = data.channel
+  }
+}
+
+export class ChannelUpdatedNotification {
+  static type = 'channel-updated' as const
+  type = ChannelUpdatedNotification.type
+  serverId: string
+  channel: string
+  constructor(data: { serverId: string; channel: string }) {
+    this.serverId = data.serverId
+    this.channel = data.channel
   }
 }
