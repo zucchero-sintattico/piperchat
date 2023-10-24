@@ -12,7 +12,7 @@ const usersPhotos = ref(new Map<string, string>())
 const areMessagesLoaded = ref(true)
 const messagesLimit = 30
 
-let tempLastScrollPosition = 0;
+let tempLastScrollPosition = 0
 let loadedMessages: number
 
 function resetLoadedMessages() {
@@ -59,6 +59,16 @@ const showChat = computed(() => {
   }
 })
 
+
+//if was send or receve a message, reset the scrolling position
+watch(
+  () => messageStore.messages[messageStore.messages.length - 1],
+  async () => {
+    resetLoadedMessages()
+    tempLastScrollPosition = 0
+  }
+)
+
 /**
  * When the user changes the selected direct,
  * refresh the messages and the photos
@@ -99,10 +109,10 @@ watch(
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
-    bottomContent.scrollTop - 300 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    areMessagesLoaded.value && tempLastScrollPosition > bottomContent.scrollTop
+    bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
+    areMessagesLoaded.value &&
+    tempLastScrollPosition >= bottomContent.scrollTop
   ) {
-    tempLastScrollPosition = bottomContent.scrollTop
     areMessagesLoaded.value = false
     setTimeout(() => {
       if (userStore.inContentArea == ContentArea.Direct) {
@@ -129,6 +139,7 @@ function handleScroll() {
       areMessagesLoaded.value = true
     }, 500)
   }
+  tempLastScrollPosition = bottomContent.scrollTop
 }
 
 onMounted(() => {
