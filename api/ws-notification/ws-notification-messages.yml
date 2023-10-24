@@ -1,0 +1,208 @@
+asyncapi: 2.6.0
+info:
+  title: Piperchat Notification API
+  version: 1.0.0
+  description: |
+    Piperchat user notification API. 
+    This API is used to notify users of events happening in the system.
+
+servers:
+  production:
+    url: '/notification'
+    protocol: ws
+    description: Service for notifying users of events happening in the system
+
+channels:
+  /:
+    subscribe:
+      message:
+        oneOf:
+          - '$ref': '#/components/messages/DirectMessage'
+          - '$ref': '#/components/messages/ChannelMessage'
+          - '$ref': '#/components/messages/FriendRequest'
+          - '$ref': '#/components/messages/FriendRequestAccepted'
+          - '$ref': '#/components/messages/UserOnline'
+          - '$ref': '#/components/messages/UserOffline'
+          - '$ref': '#/components/messages/ServerDeleted'
+          - '$ref': '#/components/messages/UserJoinedServer'
+          - '$ref': '#/components/messages/UserLeftServer'
+
+components:
+  messages:
+    DirectMessage:
+      summary: A user send a direct message to you
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/DirectMessageSchema'
+
+    ChannelMessage:
+      summary: A user send a message to a channel you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ChannelMessageSchema'
+
+    FriendRequest:
+      summary: A user send you a friend request
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/FriendRequestSchema'
+
+    FriendRequestAccepted:
+      summary: A user accepted your friend request
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/FriendRequestAcceptedSchema'
+
+    UserOnline:
+      summary: One of your friend has come online
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/UserOnlineSchema'
+
+    UserOffline:
+      summary: One of your friend has gone offline
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/UserOfflineSchema'
+
+    ServerDeleted:
+      summary: A server you are in has been deleted
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ServerDeletedSchema'
+
+    UserJoinedServer:
+      summary: A user has joined a server you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/UserJoinedServerSchema'
+
+    UserLeftServer:
+      summary: A user has left a server you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/UserLeftServerSchema'
+
+  schemas:
+    DirectMessageSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'new-direct-message'
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+        content:
+          type: string
+          description: Content of the message
+          example: Hello world
+
+    ChannelMessageSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'new-channel-message'
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+        content:
+          type: string
+          description: Content of the message
+          example: Hello world
+        server:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        channel:
+          type: string
+          description: Unique identifier representing a specific channel
+          example: channel1
+
+    FriendRequestSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'friend-request'
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    FriendRequestAcceptedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'friend-request-accepted'
+        from:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    UserOnlineSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'user-online'
+        user:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    UserOfflineSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'user-offline'
+        user:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    ServerDeletedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'server-deleted'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+
+    UserJoinedServerSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'user-joined-server'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        user:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
+
+    UserLeftServerSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'user-left-server'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        user:
+          type: string
+          description: Unique identifier representing a specific user
+          example: user1
