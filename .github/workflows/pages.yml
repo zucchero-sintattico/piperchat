@@ -41,7 +41,7 @@ jobs:
       - name: Copy files
         run: |
           cp -r ./api/infra-service/index.html ./tmp-site/infra-service/index.html
-          # cp -r ./api/ws-notification/index.html ./tmp-site/notification/index.html
+          cp -r ./api/ws-notification/index.html ./tmp-site/notification/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
