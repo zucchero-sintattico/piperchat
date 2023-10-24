@@ -27,5 +27,12 @@ export const ThemesList: Theme[] = [
     secondary: '#61876E',
     accent: '#EAE7B1',
     dark: '#2C3333'
+  },
+  {
+    label: 'High Contrast',
+    primary: '#606B6F',
+    secondary: '#323232',
+    accent: '#FOEFEE',
+    dark: '#333СЗЕ'
   }
 ]
