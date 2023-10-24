@@ -59,7 +59,6 @@ const showChat = computed(() => {
   }
 })
 
-
 //if was send or receve a message, reset the scrolling position
 watch(
   () => messageStore.messages[messageStore.messages.length - 1],
@@ -158,13 +157,22 @@ onMounted(() => {
 
       <q-infinite-scroll reverse class="bottom-content scrolling-area" v-on:scroll="handleScroll">
         <div v-if="showChat">
-          <div v-for="(message, index) in messageStore.messages" :key="index" class="justify-bottom">
+          <div
+            v-for="(message, index) in messageStore.messages"
+            :key="index"
+            class="justify-bottom"
+          >
             <!-- if sender is the user show the image, default image otherwise -->
-            <q-chat-message :name="message.sender" :text="[message.content]" :sent="userStore.username == message.sender"
-              :avatar="message.sender == userStore.username
-                ? userStore.photo
-                : usersPhotos.get(message.sender)
-                " />
+            <q-chat-message
+              :name="message.sender"
+              :text="[message.content]"
+              :sent="userStore.username == message.sender"
+              :avatar="
+                message.sender == userStore.username
+                  ? userStore.photo
+                  : usersPhotos.get(message.sender)
+              "
+            />
           </div>
         </div>
         <div id="last"></div>

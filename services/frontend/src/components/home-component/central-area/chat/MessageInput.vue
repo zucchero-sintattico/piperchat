@@ -11,8 +11,6 @@ let initialLoadedMessages = 30
  * Checks if the user is in a valid content area (direct or channel)
  */
 
-
-
 const shown = computed(() => {
   if (
     userStore.inContentArea == ContentArea.Direct ||
@@ -28,7 +26,6 @@ const shown = computed(() => {
  * Sends a message to the server,
  * then refreshes the messages
  */
-
 
 async function sendMessage() {
   // check if message is empty
