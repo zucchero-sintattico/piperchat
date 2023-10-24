@@ -52,7 +52,7 @@ function createNotificationService() {
       async (data: NewMessageOnChannelNotification) => {
         console.log('NotificationService: NewMessageOnChannelNotification', data)
         if (
-          appStore.selectedServer?.id == data.serverId &&
+          appStore.selectedServer?.id == data.server &&
           appStore.selectedChannel?.id == data.channel
         ) {
           console.log('NotificationService: Refreshing messages')

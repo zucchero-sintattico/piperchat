@@ -110,7 +110,7 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
           new NewMessageOnChannelNotification({
             from: event.sender,
             content: event.message,
-            serverId: event.serverId,
+            server: event.serverId,
             channel: event.channelId,
           })
         )
