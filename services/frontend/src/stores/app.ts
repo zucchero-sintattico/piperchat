@@ -50,6 +50,11 @@ export const useAppStore = defineStore('app', () => {
     selectedDirect.value = direct
   }
 
+  function unselectChat() {
+    selectedChannel.value = null
+    selectedDirect.value = null
+  }
+
   // ==================== THEME ==================== //
   //Stuffs for Themes
   const DefaultTheme: Theme = {
@@ -73,6 +78,8 @@ export const useAppStore = defineStore('app', () => {
 
     selectedDirect,
     selectDirect,
+
+    unselectChat,
 
     isMessageSection,
     isVideoSection,

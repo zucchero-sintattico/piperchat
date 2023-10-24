@@ -37,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div @keydown.esc="appStore.unselectChat">
     <q-layout view="hHh Lpr lff" class="bg-accent">
       <q-header elevated class="bg-primary text-white" height-hint="98">
         <q-toolbar>
