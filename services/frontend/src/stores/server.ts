@@ -164,6 +164,26 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function updateChannel(
+    serverId: string,
+    channelId: string,
+    name?: string,
+    description?: string
+  ) {
+    const response = await channelController.updateChannel({
+      serverId,
+      channelId,
+      name: name,
+      description: description
+    })
+    if (response.statusCode === 200) {
+      await refreshUserServers()
+    } else {
+      const typed = response as UpdateServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   return {
     refreshUserServers,
     createServer,
@@ -174,7 +194,7 @@ export const useServerStore = defineStore('server', () => {
     leaveServer,
     updateServer,
     getServerParticipants,
-
+    updateChannel,
     amITheOwner,
     servers,
     mediaChannelParticipants

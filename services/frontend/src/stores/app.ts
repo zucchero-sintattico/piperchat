@@ -37,8 +37,10 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function selectServer(server: Server) {
+    if (selectedServer.value?.id !== server.id) {
+      selectedChannel.value = null
+    }
     selectedServer.value = server
-    selectedChannel.value = null
     selectedDirect.value = null
     isInDirects.value = false
   }

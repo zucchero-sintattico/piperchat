@@ -55,7 +55,6 @@ function leaveServer() {
         <q-item :clickable="serverStore.amITheOwner" @click="serverSettingMenuActive = true">
           <h4 class="q-ma-none text-white ellipsis">
             <q-btn
-              v-if="serverStore.amITheOwner"
               icon="settings"
               color="primary"
               round
@@ -76,7 +75,7 @@ function leaveServer() {
 
         <ServerMenu v-model:active="serverSettingMenuActive" />
 
-        <!-- start Create new server -->
+        <!-- start Create new channel -->
         <div class="q-ma-md" style="text-align: center">
           <q-btn
             color="primary"
@@ -84,6 +83,7 @@ function leaveServer() {
             :rounded="true"
             icon="add"
             style="justify-content: space-between"
+            v-if="serverStore.amITheOwner"
             @click="isNewChannelFormActive = true"
           />
         </div>
@@ -127,7 +127,7 @@ function leaveServer() {
           :key="channel.id"
           @click="appStore.selectChannel(channel)"
         >
-          <HorizontalChannel :name="channel.name" icon="chat" clickable />
+          <HorizontalChannel :name="channel.name" icon="chat" clickable> </HorizontalChannel>
         </q-list>
         <!-- end Message channels -->
 
@@ -146,8 +146,8 @@ function leaveServer() {
             icon="volume_up"
             clickable
             @click="appStore.selectChannel(channel)"
-          />
-          <!-- "userStore.setActiveChannel(channel.id)" -->
+          >
+          </HorizontalChannel>
 
           <q-list
             dense
