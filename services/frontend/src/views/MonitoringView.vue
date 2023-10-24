@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PageGrid from '@/components/monitoring-component/PageGrid.vue'
+import PageGrid from '@/components/monitoring/PageGrid.vue'
 </script>
 
 <template>

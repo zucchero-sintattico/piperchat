@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { useServerStore } from '@/stores/server'
-import { useUserStore } from '@/stores/user'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
+import { useAppStore } from '@/stores/app'
 
 const event = defineEmits<{
   (e: 'result', error?: string): void
   (e: 'close'): void
 }>()
 
-const userStore = useUserStore()
+const appStore = useAppStore()
 const serverStore = useServerStore()
 
 const name = ref('')
@@ -22,23 +22,19 @@ async function onSubmit() {
       name.value,
       description.value,
       channelType.value,
-      userStore.selectedServerId
+      appStore.selectedServer!.id
     )
     event('result')
   } catch (e) {
     event('result', String(e))
   }
 }
-
-const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s._id == userStore.selectedServerId)
-})
 </script>
 
 <template>
   <div class="q-pa-xl bg-white">
     <q-form class="q-gutter-md" @submit="onSubmit">
-      <h2 class="text-h3">Create a new channel in {{ selectedServer?.name }} server</h2>
+      <h2 class="text-h3">Create a new channel in {{ appStore.selectedServer?.name }} server</h2>
 
       <q-input
         filled
@@ -59,7 +55,6 @@ const selectedServer = computed(() => {
 
       <div class="q-gutter-sm text-center">
         <q-radio
-          defa
           v-model="channelType"
           :val="CreateChannelApi.ChannelType.Messages"
           label="Message"

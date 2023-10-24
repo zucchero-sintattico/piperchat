@@ -51,3 +51,31 @@ export class UserOfflineNotification {
     this.user = data.user
   }
 }
+
+export class ServerDeletedNotification {
+  type = 'server-deleted' as const
+  serverId: string
+  constructor(data: { serverId: string }) {
+    this.serverId = data.serverId
+  }
+}
+
+export class UserJoinedServerNotification {
+  type = 'user-joined-server' as const
+  serverId: string
+  user: string
+  constructor(data: { serverId: string; user: string }) {
+    this.serverId = data.serverId
+    this.user = data.user
+  }
+}
+
+export class UserLeftServerNotification {
+  type = 'user-left-server' as const
+  serverId: string
+  user: string
+  constructor(data: { serverId: string; user: string }) {
+    this.serverId = data.serverId
+    this.user = data.user
+  }
+}

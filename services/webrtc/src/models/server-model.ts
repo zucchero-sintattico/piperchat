@@ -1,11 +1,15 @@
 import { Schema, model } from 'mongoose'
 
+/**
+ * A channel is a room in a server.
+ * It is associated with a session.
+ */
 export interface Channel {
   id: string
   sessionId: string
 }
 
-export const ChannelSchema = new Schema({
+export const ChannelSchema = new Schema<Channel>({
   id: {
     type: String,
     required: true,
@@ -23,7 +27,7 @@ export interface Server {
   channels: Channel[]
 }
 
-export const ServerSchema = new Schema({
+export const ServerSchema = new Schema<Server>({
   id: {
     type: String,
     required: true,
