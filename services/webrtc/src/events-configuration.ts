@@ -38,33 +38,40 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
 
   listenToServersUpdates() {
     this.on(ServerCreated, async (event: ServerCreated) => {
+      console.log('[Event] ServerCreated: ', event)
       await this.channelRepository.createServer(event.id, event.owner)
     })
 
     this.on(ServerDeleted, async (event: ServerDeleted) => {
+      console.log('[Event] ServerDeleted: ', event)
       await this.channelRepository.deleteServer(event.id)
     })
   }
 
   listenToServerParticipants() {
     this.on(UserJoinedServer, async (event: UserJoinedServer) => {
+      console.log('[Event] UserJoinedServer: ', event)
       await this.channelRepository.addServerParticipant(event.serverId, event.username)
     })
 
     this.on(UserLeftServer, async (event: UserLeftServer) => {
+      console.log('[Event] UserLeftServer: ', event)
       await this.channelRepository.removeServerParticipant(event.serverId, event.username)
     })
 
     this.on(UserKickedFromServer, async (event: UserKickedFromServer) => {
+      console.log('[Event] UserKickedFromServer: ', event)
       await this.channelRepository.removeServerParticipant(event.serverId, event.username)
     })
   }
 
   listenToChannelsUpdates() {
     this.on(ChannelCreated, async (event: ChannelCreated) => {
-      if (event.channelType !== CreateChannelApi.ChannelType.Messages) {
+      if (event.channelType !== CreateChannelApi.ChannelType.Multimedia) {
         return
       }
+
+      console.log('[Event] ChannelCreated: ', event)
 
       const server = await Servers.findOne({ id: event.serverId }).orFail()
       const sessionId = await this.sessionRepository.createSession(server.participants)
@@ -78,6 +85,7 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
 
     this.on(ChannelDeleted, async (event: ChannelDeleted) => {
       try {
+        console.log('[Event] ChannelDeleted: ', event)
         await this.channelRepository.deleteChannelInServer(
           event.serverId,
           event.channelId
@@ -90,6 +98,7 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
 
   listenToFriendsUpdates() {
     this.on(FriendRequestAcceptedMessage, async (event: FriendRequestAcceptedMessage) => {
+      console.log('[Event] FriendRequestAcceptedMessage: ', event)
       const sessionId = await this.sessionRepository.createSession([event.from, event.to])
       await this.friendshipRepository.createFriendship(event.from, event.to, sessionId)
     })

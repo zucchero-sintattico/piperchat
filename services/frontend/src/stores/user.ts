@@ -1,24 +1,19 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { AuthControllerImpl } from '@/controllers/users/auth/auth-controller-impl'
 import { UserControllerImpl } from '@/controllers/users/user/user-controller-impl'
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
 import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
-import type { UpdatePhotoApi } from '@api/users/profile'
-import { ThemesList, type Theme } from '@/assets/theme'
 
-export enum SelectedTab {
-  Directs = 'directs',
-  Servers = 'servers'
-}
+import { SelectedTab } from './app'
 
 export enum ContentArea {
   Empty = 'empty',
   Channel = 'channel',
   Direct = 'direct',
-  Multimedie = 'multimedia'
+  Multimedia = 'multimedia'
 }
 
 export const useUserStore = defineStore(
@@ -31,35 +26,11 @@ export const useUserStore = defineStore(
 
     const photoLoaded = ref(false)
     const photo = ref('')
+    const jwt = ref('')
 
     async function reload() {
       await whoami()
       await reloadUserPhoto()
-    }
-
-    // Display direct or channel in left bar
-    const selectedTab = ref(SelectedTab.Directs)
-    // Display channel of selected server in left bar
-    const selectedServerId = ref('')
-
-    // Stuffs for content area
-    const selectedChannel = ref(['', ''])
-    const selectedDirect = ref('')
-    const inContentArea = ref(ContentArea.Empty)
-
-    //Stuffs for Themes
-    const DefaultTheme: Theme = {
-      label: ThemesList[0].label,
-      primary: ThemesList[0].primary,
-      secondary: ThemesList[0].secondary,
-      accent: ThemesList[0].accent,
-      dark: ThemesList[0].dark
-    }
-    const selectedTheme = ref(DefaultTheme)
-
-    function setActiveChannel(channelId: string) {
-      selectedChannel.value[0] = selectedServerId.value
-      selectedChannel.value[1] = channelId
     }
 
     const authController: AuthController = new AuthControllerImpl()
@@ -73,6 +44,7 @@ export const useUserStore = defineStore(
       })
       if (response.statusCode === 200) {
         isLoggedIn.value = true
+        jwt.value = (response as LoginApi.Responses.Success).jwt
         await whoami()
       } else {
         const typed = response as LoginApi.Errors.Type
@@ -182,16 +154,11 @@ export const useUserStore = defineStore(
 
     return {
       isLoggedIn,
+      jwt,
       username,
       email,
       description,
       photo,
-      selectedServerId,
-      selectedTab,
-      selectedChannel,
-      selectedDirect,
-      inContentArea,
-      setActiveChannel,
       whoami,
       login,
       register,
@@ -200,9 +167,7 @@ export const useUserStore = defineStore(
       getUserPhoto,
       reloadUserPhoto,
       photoLoaded,
-      reload,
-      ThemesList,
-      selectedTheme
+      reload
     }
   },
   { persist: true }

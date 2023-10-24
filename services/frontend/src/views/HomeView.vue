@@ -2,21 +2,24 @@
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import router from '../router/index'
-import LeftBar from '@/components/home-component/left-bar/LeftBar.vue'
-import ContentArea from '@/components/home-component/central-area/chat/ContentArea.vue'
-import SettingsForm from '@/components/home-component/SettingsForm.vue'
-import { useNotificationService } from '@/controllers/notifications/notification-service'
+import LeftBar from '@/components/home/left-bar/LeftBar.vue'
+import ContentArea from '@/components/home/central-area/ContentArea.vue'
+import SettingsForm from '@/components/home/settings/SettingsForm.vue'
 import { setCssVar } from 'quasar'
+import { useNotificationService } from '@/controllers/notifications/notification-service'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
+
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
 
+setCssVar('primary', appStore.selectedTheme.primary)
+setCssVar('secondary', appStore.selectedTheme.secondary)
+setCssVar('accent', appStore.selectedTheme.accent)
+setCssVar('dark', appStore.selectedTheme.dark)
 useNotificationService()
-setCssVar('primary', userStore.selectedTheme.primary)
-setCssVar('secondary', userStore.selectedTheme.secondary)
-setCssVar('accent', userStore.selectedTheme.accent)
-setCssVar('dark', userStore.selectedTheme.dark)
 
 function logout() {
   userStore.logout()
@@ -28,13 +31,13 @@ function toggleLeftDrawer() {
 }
 
 onMounted(() => {
-  userStore.inContentArea = ContentArea.Empty
   userStore.reload()
+  appStore.setDirects()
 })
 </script>
 
 <template>
-  <div @keydown.esc="userStore.inContentArea = ContentArea.empty">
+  <div @keydown.esc="appStore.unselectChat">
     <q-layout view="hHh Lpr lff" class="bg-accent">
       <q-header elevated class="bg-primary text-white" height-hint="98">
         <q-toolbar>

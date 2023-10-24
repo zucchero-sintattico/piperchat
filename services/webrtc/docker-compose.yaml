@@ -1,7 +1,7 @@
 services:
   webrtc-service:
     image: piperchat
-    command: ['npm', 'run', '--workspace', './services/piperchat', 'start']
+    command: ['npm', 'run', '--workspace', './services/webrtc', 'start']
     expose:
       - '${WEBRTC_SERVICE_PORT}'
     depends_on:
@@ -21,6 +21,13 @@ services:
       - 'PORT=${WEBRTC_SERVICE_PORT}'
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-webrtc-service:27017/webrtc'
+    labels:
+      - |
+        traefik.http.routers.webrtc-service.rule=
+        (Method(`GET`) && PathPrefix(`/webrtc`)) ||
+        (Method(`GET`) && Path(`/users/{username:[^/]+}/session`))||
+        (Method(`GET`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}/session`))||
+        (Method(`GET`) && Path(`/sessions/{sessionId:[^/]+}`))
 
   db-webrtc-service:
     image: mongo

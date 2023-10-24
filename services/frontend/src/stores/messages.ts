@@ -1,31 +1,113 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import type { ChannelController } from '@/controllers/messages/channel/channel-controller'
 import { ChannelControllerImpl } from '@/controllers/messages/channel/channel-controller-impl'
 import type { DirectController } from '@/controllers/messages/direct/direct-controller'
 import { DirectControllerImpl } from '@/controllers/messages/direct/direct-controller-impl'
-import { GetDirectMessagesApi } from '@api/messages/direct'
+import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/direct'
+import { ContentArea, useUserStore } from './user'
+import type { SendMessageInChannelApi } from '@api/messages/channel'
+import { useAppStore } from './app'
+import { useServerStore } from './server'
 
 export const useMessageStore = defineStore('message', () => {
+  const userStore = useUserStore()
+  const appStore = useAppStore()
+  const serverStore = useServerStore()
+
   // array of message
+  const currentSection: Ref<ContentArea.Channel | ContentArea.Direct | undefined> = computed(() => {
+    if (appStore.selectedChannel !== null && appStore.selectedChannel.channelType !== 'multimedia')
+      return ContentArea.Channel
+    if (appStore.selectedDirect !== null) return ContentArea.Direct
+    return undefined
+  })
+
+  const currentSectionInfo = computed(() => {
+    if (currentSection.value == ContentArea.Channel) {
+      return {
+        serverId: appStore.selectedServer!.id,
+        channelId: appStore.selectedChannel!.id
+      }
+    } else if (currentSection.value == ContentArea.Direct) {
+      return {
+        username: appStore.selectedDirect!
+      }
+    } else {
+      return undefined
+    }
+  })
+
   const messages = ref<GetDirectMessagesApi.Responses.Message[]>([])
+  watch(currentSectionInfo, async (info) => {
+    if (info == undefined) return
+    messages.value = []
+    resetMessagesNumber()
+    await refreshMessages()
+  })
+
+  const messagesLoaded = computed(() => messages.value.length > 0)
+  const loadingNewMessages = ref(false)
+
+  const messagesNumberLimit = 30
+  const messagesNumber = ref(messagesNumberLimit)
+  function resetMessagesNumber() {
+    messagesNumber.value = messagesNumberLimit
+  }
+  function increaseMessagesNumber() {
+    messagesNumber.value += messagesNumberLimit
+  }
+
+  const usersPhotos = ref(new Map<string, string>())
+
+  async function fetchUsersPhotos() {
+    // If the user is in a direct, fetch the photo of the other user
+    if (currentSection.value == ContentArea.Direct) {
+      const info = currentSectionInfo.value as { username: string }
+      if (!usersPhotos.value.has(info.username)) {
+        const photo = await userStore.getUserPhoto(info.username)
+        usersPhotos.value.set(info.username, photo?.toString() || '')
+      }
+    }
+    // If the user is in a channel, fetch the photos of all the partecipants of the server
+    if (currentSection.value == ContentArea.Channel) {
+      const info = currentSectionInfo.value as { serverId: string }
+      for (const user of await serverStore.getServerParticipants(info.serverId)) {
+        if (!usersPhotos.value.has(user)) {
+          const photo = await userStore.getUserPhoto(user)
+          usersPhotos.value.set(user, photo?.toString() || '')
+        }
+      }
+    }
+  }
 
   const channelController: ChannelController = new ChannelControllerImpl()
   const directController: DirectController = new DirectControllerImpl()
 
-  async function sendMessageOnChannel(
-    parameters: { content: string; serverId: string; channelId: string },
-    onSuccess: () => void,
-    onError: (error: any) => void
+  async function sendMessage(
+    content: string,
+    onSuccess: () => void = () => {},
+    onError: (error: any) => void = () => {}
   ) {
     try {
-      const response = await channelController.sendMessage({
-        content: parameters.content,
-        serverId: parameters.serverId,
-        channelId: parameters.channelId
-      })
+      let response: SendMessageInChannelApi.Response | SendDirectMessageApi.Response
+      if (currentSection.value == ContentArea.Channel) {
+        const info = currentSectionInfo.value as { serverId: string; channelId: string }
+        response = await channelController.sendMessage({
+          content: content,
+          serverId: info.serverId,
+          channelId: info.channelId
+        })
+      } else {
+        const info = currentSectionInfo.value as { username: string }
+        response = await directController.sendDirectMessage({
+          message: content,
+          username: info.username
+        })
+      }
       switch (response.statusCode) {
         case 200:
+          await refreshMessages()
           onSuccess()
           break
         case 403:
@@ -43,36 +125,56 @@ export const useMessageStore = defineStore('message', () => {
     }
   }
 
-  async function sendMessageOnDirect(
-    parameters: { content: string; username: string },
-    onSuccess: () => void,
-    onError: (error: any) => void
-  ) {
-    try {
-      const response = await directController.sendDirectMessage({
-        message: parameters.content,
-        username: parameters.username
+  async function refreshMessages() {
+    if (currentSection.value === ContentArea.Channel) {
+      const info = currentSectionInfo.value as { serverId: string; channelId: string }
+      await refreshMessagesFromChannel({
+        serverId: info.serverId,
+        channelId: info.channelId,
+        from: 0,
+        limit: messagesNumber.value
       })
-      switch (response.statusCode) {
-        case 200:
-          onSuccess()
-          break
-        case 403:
-          onError("You don't have permission to access this resource")
-          break
-        case 404:
-          onError('User not found')
-          break
-        default:
-          onError('Error')
-          break
-      }
-    } catch (e) {
-      onError(e)
+    } else {
+      const info = currentSectionInfo.value as { username: string }
+      await refreshMessagesFromDirect({
+        username: info.username,
+        from: 0,
+        limit: messagesNumber.value
+      })
     }
+    await fetchUsersPhotos()
   }
 
-  async function getMessagesFromDirect(
+  async function loadNewMessages() {
+    if (loadingNewMessages.value) return
+    loadingNewMessages.value = true
+    if (currentSection.value === ContentArea.Channel) {
+      const info = currentSectionInfo.value as { serverId: string; channelId: string }
+      await refreshMessagesFromChannel(
+        {
+          serverId: info.serverId,
+          channelId: info.channelId,
+          from: messagesNumber.value,
+          limit: messagesNumberLimit
+        },
+        true
+      )
+    } else {
+      const info = currentSectionInfo.value as { username: string }
+      await refreshMessagesFromDirect(
+        {
+          username: info.username,
+          from: messagesNumber.value,
+          limit: messagesNumberLimit
+        },
+        true
+      )
+    }
+    increaseMessagesNumber()
+    loadingNewMessages.value = false
+  }
+
+  async function refreshMessagesFromDirect(
     {
       username,
       from,
@@ -94,15 +196,16 @@ export const useMessageStore = defineStore('message', () => {
         const typedResponse = response as GetDirectMessagesApi.Responses.Success
         console.log('Updating messages')
         if (concat) {
-          messages.value = typedResponse.messages.concat(messages.value)
           if (typedResponse.messages.length === 0) {
             console.log('No more messages')
-            return
+          } else {
+            console.log('Loaded new messages', typedResponse.messages)
+            messages.value = typedResponse.messages.concat(messages.value)
           }
         } else {
+          console.log('Setting messages to', typedResponse.messages)
           messages.value = typedResponse.messages
         }
-
         break
       }
       case 403:
@@ -114,7 +217,7 @@ export const useMessageStore = defineStore('message', () => {
     }
   }
 
-  async function getMessagesFromChannel(
+  async function refreshMessagesFromChannel(
     parameters: {
       serverId: string
       channelId: string
@@ -135,15 +238,16 @@ export const useMessageStore = defineStore('message', () => {
         const typedResponse = response as GetDirectMessagesApi.Responses.Success
         console.log('Updating messages')
         if (concat) {
-          messages.value = typedResponse.messages.concat(messages.value)
           if (typedResponse.messages.length === 0) {
             console.log('No more messages')
-            return
+          } else {
+            console.log('Loaded new messages', typedResponse.messages)
+            messages.value = typedResponse.messages.concat(messages.value)
           }
         } else {
+          console.log('Setting messages to', typedResponse.messages)
           messages.value = typedResponse.messages
         }
-
         break
       }
       case 403:
@@ -158,10 +262,20 @@ export const useMessageStore = defineStore('message', () => {
   }
 
   return {
+    currentSection,
+    currentSectionInfo,
+
+    usersPhotos,
     messages,
-    sendMessageOnChannel,
-    sendMessageOnDirect,
-    getMessagesFromChannel,
-    getMessagesFromDirect
+    messagesLoaded,
+    sendMessage,
+
+    messagesNumber,
+    increaseMessagesNumber,
+    resetMessagesNumber,
+    loadNewMessages,
+    loadingNewMessages,
+
+    refreshMessages
   }
 })

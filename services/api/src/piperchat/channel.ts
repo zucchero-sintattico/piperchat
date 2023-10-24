@@ -63,7 +63,7 @@ export namespace GetChannelByIdApi {
     }
   }
   export namespace Responses {
-    interface Channel {
+    export interface Channel {
       id: string
       name: string
       createdAt: Date

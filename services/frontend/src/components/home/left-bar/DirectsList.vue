@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
-import { ContentArea, useUserStore } from '@/stores/user'
 import FriendMenu from './menu/FriendMenu.vue'
 import { useFriendStore } from '@/stores/friend'
 import { onMounted, ref } from 'vue'
+import { useAppStore } from '@/stores/app'
 
-const userStore = useUserStore()
 const friendStore = useFriendStore()
+const appStore = useAppStore()
 
 const friendTabOpened = ref(false)
 
-function setActiveDirect(directUsarname: string) {
-  userStore.inContentArea = ContentArea.Direct
-  userStore.selectedDirect = directUsarname
-  console.log('changed direct', userStore.selectedDirect)
-}
-onMounted(() => {
-  friendStore.fetchFriends()
-  userStore.selectedDirect = ''
+onMounted(async () => {
+  await friendStore.fetchFriends()
 })
 </script>
 
@@ -47,7 +41,7 @@ onMounted(() => {
             <HorizontalUser
               :name="friend.username"
               :online="friend.status.online"
-              @click="setActiveDirect(friend.username)"
+              @click="appStore.selectDirect(friend.username)"
             />
           </q-list>
         </q-list>

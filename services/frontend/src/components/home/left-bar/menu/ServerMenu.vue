@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch, type Ref, onMounted } from 'vue'
 import HorizontalChannel from '../horizontal-component/HorizontalChannel.vue'
 import HorizontalUser from '../horizontal-component/HorizontalUser.vue'
-import { CreateChannelApi } from '@api/piperchat/channel'
+import { CreateChannelApi, GetChannelByIdApi } from '@api/piperchat/channel'
 import { useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
 const serverStore = useServerStore()
 
@@ -23,15 +25,35 @@ const active = computed({
   }
 })
 
-const selectedServer = computed(() => {
-  return serverStore.servers.find((s) => s.id == userStore.selectedServerId)
-})
-
-const selectedChannel = ref<{ id: string; name: string }>({ id: '', name: '' })
-const confirmDeleteChannel = ref(false)
+const wantToDeleteChannel = ref(false)
+const channelToDelete: Ref<GetChannelByIdApi.Responses.Channel | undefined> = ref(undefined)
+function setChannelToDelete(channel: GetChannelByIdApi.Responses.Channel) {
+  channelToDelete.value = channel
+  wantToDeleteChannel.value = true
+}
+async function deleteSelectedChannel() {
+  try {
+    await serverStore.deleteChannel(appStore.selectedServer!.id, channelToDelete.value!.id)
+    popUpBanner('Channel deleted', BannerColor.OK)
+  } catch (error) {
+    popUpBanner(String(error), BannerColor.ERROR)
+  }
+}
 
 const confirmKickUser = ref(false)
 const userToKick = ref('')
+function setUserToKick(user: string) {
+  userToKick.value = user
+  confirmKickUser.value = true
+}
+async function kickSelectedUser() {
+  try {
+    await serverStore.kickUser(appStore.selectedServer!.id, userToKick.value)
+    popUpBanner('User kicked', BannerColor.OK)
+  } catch (error) {
+    popUpBanner(String(error), BannerColor.ERROR)
+  }
+}
 
 const serverTab = ref('setting')
 
@@ -48,38 +70,54 @@ function popUpBanner(content: string, color: BannerColor) {
   }, BANNER_TIMEOUT)
 }
 
-function setChannelToDelete(channel: { id: string; name: string }) {
-  selectedChannel.value = channel
-  confirmDeleteChannel.value = true
+function validateText(text: string) {
+  // check if is emt or only white space
+  return text.trim().length > 0
 }
 
-async function deleteSelectedChannel() {
+const updatedServerInfo = ref({ name: '', description: '' })
+async function updateServerName(serverName: string) {
+  if (!validateText(serverName)) {
+    popUpBanner('Server name cannot be empty', BannerColor.ERROR)
+    return
+  }
   try {
-    await serverStore.deleteChannel(selectedServer.value!.id, selectedChannel.value.id)
-    popUpBanner('Channel deleted', BannerColor.OK)
+    await serverStore.updateServer(appStore.selectedServer!.id, serverName)
+    popUpBanner('Server name updated', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
   }
 }
-
-function setUserToKick(user: string) {
-  userToKick.value = user
-  confirmKickUser.value = true
-}
-
-async function kickSelectedUser() {
+async function updateServerDescription(serverDescription: string) {
+  if (!validateText(serverDescription)) {
+    popUpBanner('Server description cannot be empty', BannerColor.ERROR)
+    return
+  }
   try {
-    await serverStore.kickUser(selectedServer.value!.id, userToKick.value)
-    popUpBanner('User kicked', BannerColor.OK)
+    await serverStore.updateServer(appStore.selectedServer!.id, undefined, serverDescription)
+    popUpBanner('Server description updated', BannerColor.OK)
   } catch (error) {
     popUpBanner(String(error), BannerColor.ERROR)
   }
 }
 
 async function copyServerId() {
-  navigator.clipboard.writeText(selectedServer.value!.id)
+  navigator.clipboard.writeText(appStore.selectedServer!.id)
   popUpBanner('Server id copied', BannerColor.OK)
 }
+
+watch(
+  () => appStore.selectedServer,
+  () => {
+    console.log('selected server changed')
+    updatedServerInfo.value.name = appStore.selectedServer?.name as string
+    updatedServerInfo.value.description = appStore.selectedServer?.description as string
+  }
+)
+onMounted(() => {
+  updatedServerInfo.value.name = appStore.selectedServer?.name as string
+  updatedServerInfo.value.description = appStore.selectedServer?.description as string
+})
 </script>
 
 <template>
@@ -106,11 +144,54 @@ async function copyServerId() {
         <q-tab-panels v-model="serverTab" animated>
           <!-- start Setting Tab -->
           <q-tab-panel name="setting">
-            <div class="text-h4">Settings</div>
+            <div class="text-h4">Server Settings</div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Name:</div>
+              <!-- make readonly if the user is't the owner -->
+              <q-input
+                v-model="updatedServerInfo.name"
+                label="Server name"
+                outlined
+                class="q-mb-md"
+                :readonly="!serverStore.amITheOwner"
+              />
+              <q-btn
+                label="Save"
+                color="primary"
+                class="q-mb-md"
+                v-if="serverStore.amITheOwner"
+                @click="updateServerName(updatedServerInfo.name)"
+              />
+            </div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Owner:</div>
+              <div class="text-to-copy q-pa-sm text-h6">
+                {{ appStore.selectedServer?.owner }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="text-h6 q-pa-sm">Description:</div>
+              <q-input
+                v-model="updatedServerInfo.description"
+                label="Server description"
+                outlined
+                class="q-mb-md"
+                type="textarea"
+                :readonly="!serverStore.amITheOwner"
+              />
+              <!-- submit button -->
+              <q-btn
+                label="Save"
+                color="primary"
+                class="q-mb-md"
+                v-if="serverStore.amITheOwner"
+                @click="updateServerDescription(updatedServerInfo.description)"
+              />
+            </div>
             <div class="row">
               <div class="text-h6 q-pa-sm">Server Id:</div>
               <div class="text-to-copy q-pa-sm text-h6 bg-accent inset-shadow-down">
-                {{ selectedServer?.id }}
+                {{ appStore.selectedServer?.id }}
               </div>
               <q-btn round class="q-ml-md q-mb-md" icon="content_copy" @click="copyServerId" />
             </div>
@@ -122,7 +203,7 @@ async function copyServerId() {
           <!-- start Channels Tab -->
           <q-tab-panel name="channels">
             <div class="text-h4">Channels</div>
-            <q-list v-for="channel in selectedServer?.channels" :key="channel.id">
+            <q-list v-for="channel in appStore.selectedServer?.channels" :key="channel.id">
               <q-item>
                 <q-item-section style="font-size: 1.5em">
                   <HorizontalChannel
@@ -141,7 +222,8 @@ async function copyServerId() {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
-                  @click="setChannelToDelete({ id: channel.id, name: channel.name })"
+                  v-if="serverStore.amITheOwner"
+                  @click="setChannelToDelete(channel)"
                 />
                 <!-- start Cancel button -->
               </q-item>
@@ -154,7 +236,9 @@ async function copyServerId() {
             <div class="text-h4">Partecipants</div>
             <!-- Display only partecipants, not the owner -->
             <q-list
-              v-for="user in selectedServer?.participants.filter((p) => p !== userStore.username)"
+              v-for="user in appStore.selectedServer?.participants.filter(
+                (p) => p !== userStore.username
+              )"
               :key="user"
             >
               <q-item>
@@ -166,6 +250,7 @@ async function copyServerId() {
                   style="width: fit-content"
                   icon="close"
                   class="bg-red text-white"
+                  v-if="serverStore.amITheOwner"
                   @click="setUserToKick(user)"
                 />
                 <!-- start Kick button -->
@@ -179,13 +264,13 @@ async function copyServerId() {
     <!-- end Friends pop up -->
 
     <!-- start Confirm pop up -->
-    <q-dialog v-model="confirmDeleteChannel">
+    <q-dialog v-model="wantToDeleteChannel">
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="delete" color="black" text-color="white" />
           <span class="q-ml-sm"
             >Are you sure to delete
-            <strong>{{ selectedChannel.name }}</strong>
+            <strong>{{ channelToDelete?.name }}</strong>
             channel?
           </span>
         </q-card-section>

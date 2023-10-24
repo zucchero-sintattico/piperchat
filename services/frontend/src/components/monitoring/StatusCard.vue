@@ -4,16 +4,14 @@ import { onMounted } from 'vue'
 
 const monitoringStore = useMonitoringStore()
 
-function updateServiceStatus() {
-  monitoringStore.getServicesStatus()
-}
-
 onMounted(() => {
   monitoringStore.getServicesStatus()
-  window.setInterval(updateServiceStatus, 10000)
+  window.setInterval(monitoringStore.getServicesStatus, 10000)
 })
 </script>
+
 <template>
+  <!-- Template for the status card -->
   <q-item v-for="service in monitoringStore.serviceStatus" :key="service">
     <q-card bordered :class="service.status">
       <q-card-section>
@@ -25,6 +23,7 @@ onMounted(() => {
     </q-card>
   </q-item>
 </template>
+
 <style scoped lang="scss">
 .offline {
   background-color: $red-3;

@@ -1,21 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import NewServerForm from './form/NewServerForm.vue'
-import { SelectedTab, useUserStore } from '@/stores/user'
 import { useServerStore } from '@/stores/server'
-import type { GetServersApi } from '@api/piperchat/server'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
+import { SelectedTab, useAppStore } from '@/stores/app'
 
-const userStore = useUserStore()
 const serverStore = useServerStore()
+const appStore = useAppStore()
 
 const isNewServerFormActive = ref(false)
-
-function setActiveServer(server: GetServersApi.Responses.Server) {
-  userStore.selectedServerId = server.id
-  userStore.selectedTab = SelectedTab.Servers
-}
 
 const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
@@ -40,13 +34,7 @@ function popUpBanner(error?: string) {
 <template>
   <div class="column">
     <q-item>
-      <q-btn
-        size="20px"
-        color="primary"
-        round
-        icon="chat"
-        @click="userStore.selectedTab = SelectedTab.Directs"
-      />
+      <q-btn size="20px" color="primary" round icon="chat" @click="appStore.setDirects" />
     </q-item>
 
     <q-separator color="accent" style="height: 2px" inset />
@@ -79,7 +67,7 @@ function popUpBanner(error?: string) {
             round
             :label="server.name.charAt(0).toUpperCase()"
             text-color="primary"
-            @click="setActiveServer(server)"
+            @click="appStore.selectServer(server)"
           />
           <q-tooltip
             class="q-pa-md text-h4 bg-black"

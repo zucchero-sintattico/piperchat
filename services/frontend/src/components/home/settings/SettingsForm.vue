@@ -2,7 +2,9 @@
 import { useUserStore } from '@/stores/user'
 import { onMounted } from 'vue'
 import { setCssVar } from 'quasar'
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
 
 const event = defineEmits<{
@@ -30,10 +32,10 @@ function openFileInput() {
 }
 
 function updateTheme() {
-  setCssVar('primary', userStore.selectedTheme.primary)
-  setCssVar('secondary', userStore.selectedTheme.secondary)
-  setCssVar('accent', userStore.selectedTheme.accent)
-  setCssVar('dark', userStore.selectedTheme.dark)
+  setCssVar('primary', appStore.selectedTheme.primary)
+  setCssVar('secondary', appStore.selectedTheme.secondary)
+  setCssVar('accent', appStore.selectedTheme.accent)
+  setCssVar('dark', appStore.selectedTheme.dark)
 }
 </script>
 
@@ -56,15 +58,10 @@ function updateTheme() {
         />
         <h3 style="margin-left: 10px">{{ userStore.username }}</h3>
       </div>
-
-      <q-input :model-value="userStore.username" label="Username" outlined class="q-mb-md" />
-
-      <q-input :model-value="userStore.email" label="Email" outlined class="q-mb-md" />
-
       <q-select
         outlined
-        v-model="userStore.selectedTheme"
-        :options="userStore.ThemesList"
+        v-model="appStore.selectedTheme"
+        :options="appStore.ThemesList"
         label="Theme"
         @update:model-value="updateTheme()"
       />

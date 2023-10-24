@@ -9,6 +9,9 @@ import {
   NewMessageOnChannelNotification,
   UserOnlineNotification,
   UserOfflineNotification,
+  ServerDeletedNotification,
+  UserLeftServerNotification,
+  UserJoinedServerNotification,
 } from '@api/notifications/messages'
 import {
   FriendRequestSentMessage,
@@ -145,28 +148,67 @@ export class NotificationsServiceEventsConfiguration extends EventsConfiguration
     })
 
     this.on(ServerDeleted, async (event: ServerDeleted) => {
+      const server = await Servers.findOne({ _id: event.id })
       await Servers.deleteOne({ _id: event.id })
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new ServerDeletedNotification({
+            serverId: event.id,
+          })
+        )
+      })
     })
 
     this.on(UserJoinedServer, async (event: UserJoinedServer) => {
+      const server = await Servers.findOne({ _id: event.serverId })
       await Servers.updateOne(
         { _id: event.serverId },
         { $push: { participants: event.username } }
       )
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new UserJoinedServerNotification({
+            serverId: event.serverId,
+            user: event.username,
+          })
+        )
+      })
     })
 
     this.on(UserLeftServer, async (event: UserLeftServer) => {
+      const server = await Servers.findOne({ _id: event.serverId })
       await Servers.updateOne(
         { _id: event.serverId },
         { $pull: { participants: event.username } }
       )
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new UserLeftServerNotification({
+            serverId: event.serverId,
+            user: event.username,
+          })
+        )
+      })
     })
 
     this.on(UserKickedFromServer, async (event: UserKickedFromServer) => {
+      const server = await Servers.findOne({ _id: event.serverId })
       await Servers.updateOne(
         { _id: event.serverId },
         { $pull: { participants: event.username } }
       )
+      server?.participants.forEach((participant) => {
+        notifiableUsers.sendIfPresent(
+          participant,
+          new UserLeftServerNotification({
+            serverId: event.serverId,
+            user: event.username,
+          })
+        )
+      })
     })
   }
 }
