@@ -37,6 +37,10 @@ function updateTheme() {
   setCssVar('accent', appStore.selectedTheme.accent)
   setCssVar('dark', appStore.selectedTheme.dark)
 }
+
+function updateFont() {
+  setCssVar('fontfamily', appStore.selectedFont.value)
+}
 </script>
 
 <template>
@@ -64,6 +68,14 @@ function updateTheme() {
         :options="appStore.ThemesList"
         label="Theme"
         @update:model-value="updateTheme()"
+      />
+
+      <q-select
+        outlined
+        v-model="appStore.selectedFont"
+        :options="appStore.FontFamilies"
+        label="Font"
+        @update:model-value="updateFont()"
       />
 
       <q-btn

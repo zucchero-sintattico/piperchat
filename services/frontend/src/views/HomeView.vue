@@ -19,6 +19,7 @@ setCssVar('primary', appStore.selectedTheme.primary)
 setCssVar('secondary', appStore.selectedTheme.secondary)
 setCssVar('accent', appStore.selectedTheme.accent)
 setCssVar('dark', appStore.selectedTheme.dark)
+setCssVar('fontfamily', appStore.selectedFont.value)
 useNotificationService()
 
 function logout() {

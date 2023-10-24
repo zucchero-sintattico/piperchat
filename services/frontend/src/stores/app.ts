@@ -1,6 +1,6 @@
 import type { GetChannelByIdApi } from '@api/piperchat/channel'
 import type { GetServersApi } from '@api/piperchat/server'
-import { ThemesList, type Theme } from '@/assets/theme'
+import { ThemesList, type Theme, type FontFamily, FontFamilies } from '@/assets/theme'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 
@@ -67,6 +67,9 @@ export const useAppStore = defineStore('app', () => {
   }
   const selectedTheme = ref(DefaultTheme)
 
+  const DefaultFont: FontFamily = FontFamilies[0]
+  const selectedFont = ref(DefaultFont)
+
   return {
     isInDirects,
     setDirects,
@@ -86,6 +89,9 @@ export const useAppStore = defineStore('app', () => {
     isVideoSection,
 
     selectedTheme,
-    ThemesList
+    ThemesList,
+
+    selectedFont,
+    FontFamilies
   }
 })

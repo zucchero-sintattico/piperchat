@@ -36,3 +36,19 @@ export const ThemesList: Theme[] = [
     dark: '#333СЗЕ'
   }
 ]
+
+export interface FontFamily {
+  label: string
+  value: string
+}
+
+export const FontFamilies: FontFamily[] = [
+  {
+    label: 'Roboto',
+    value: 'Roboto'
+  },
+  {
+    label: 'OpenDyslexic',
+    value: 'OpenDyslexic'
+  }
+]
