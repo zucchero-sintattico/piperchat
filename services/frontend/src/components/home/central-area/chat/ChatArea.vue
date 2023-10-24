@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { useUserStore } from '@/stores/user'
 import MessageInput from './MessageInput.vue'
@@ -9,15 +9,28 @@ const appStore = useAppStore()
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 
+let tempLastScrollPosition = 0
+
+//if was send or receve a message, reset the scrolling position
+watch(
+  () => messageStore.messages[messageStore.messages.length - 1],
+  async () => {
+    messageStore.resetMessagesNumber()
+    tempLastScrollPosition = 0
+  }
+)
+
 function handleScroll() {
   const bottomContent = document.getElementsByClassName('scrolling-area')[0]
   if (
     bottomContent.scrollTop - 5 <= -(bottomContent.scrollHeight - bottomContent.clientHeight) &&
-    messageStore.messagesLoaded
+    messageStore.messagesLoaded &&
+    tempLastScrollPosition >= bottomContent.scrollTop
   ) {
     setTimeout(async () => {
       await messageStore.loadNewMessages()
     }, 500)
+    tempLastScrollPosition = bottomContent.scrollTop
   }
 }
 
