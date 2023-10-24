@@ -12,7 +12,7 @@ const appStore = useAppStore()
 const friendTabOpened = ref(false)
 
 onMounted(async () => {
-  await friendStore.fetchFriends()
+  await friendStore.refreshFriends()
 })
 </script>
 
