@@ -36,12 +36,14 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Create site directories
         run: |
-          mkdir -p ./tmp-site/infra-service
-          mkdir -p ./tmp-site/notification
+          mkdir -p ./tmp-site/api/infra-service
+          mkdir -p ./tmp-site/api/notification
+          mkdir -p ./tmp-site/api/rest
       - name: Copy files
         run: |
-          cp -r ./api/infra-service/index.html ./tmp-site/infra-service/index.html
-          cp -r ./api/ws-notification/index.html ./tmp-site/notification/index.html
+          cp -r ./api/infra-service/index.html ./tmp-site/api/infra-service/index.html
+          cp -r ./api/ws-notification/index.html ./tmp-site/api/notification/index.html
+          cp -r ./api/rest/index.html ./tmp-site/api/rest/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
