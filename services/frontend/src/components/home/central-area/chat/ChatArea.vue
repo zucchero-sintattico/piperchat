@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 import { useMessageStore } from '@/stores/messages'
 import { useUserStore } from '@/stores/user'
 import MessageInput from './MessageInput.vue'
