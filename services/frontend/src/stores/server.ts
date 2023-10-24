@@ -66,7 +66,7 @@ export const useServerStore = defineStore('server', () => {
     if (selectedServer !== null) {
       const server = servers.value.find((server) => server.id === selectedServer.id)
       if (server === undefined) {
-        appStore.selectDirect()
+        appStore.setDirects()
       } else {
         appStore.selectServer(server)
       }

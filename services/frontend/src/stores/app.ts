@@ -3,7 +3,6 @@ import type { GetServersApi } from '@api/piperchat/server'
 import { ThemesList, type Theme } from '@/assets/theme'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
-import { useServerStore } from './server'
 
 export enum SelectedTab {
   Directs = 'directs',
@@ -15,10 +14,8 @@ type Channel = GetChannelByIdApi.Responses.Channel
 export const useAppStore = defineStore('app', () => {
   // ==================== TABS AND SELECTION ==================== //
 
-  const serverStore = useServerStore()
-
   const isInDirects = ref(false)
-  const selectedServer = Ref<Channel | null>(null)
+  const selectedServer: Ref<Server | null> = ref(null)
   const selectedChannel: Ref<Channel | null> = ref(null)
   const selectedDirect: Ref<string | null> = ref(null)
 
