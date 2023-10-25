@@ -27,7 +27,12 @@ export const useFriendStore = defineStore(
     }
 
     // ================ Fetching ================ //
+    let refreshing = false
     async function refreshFriends() {
+      if (refreshing) {
+        return
+      }
+      refreshing = true
       try {
         const response = (await friendsController.getFriends()) as GetFriendsApi.Response
         if (response.statusCode === 200) {
@@ -47,6 +52,8 @@ export const useFriendStore = defineStore(
         }
       } catch (e) {
         console.error(e)
+      } finally {
+        refreshing = false
       }
     }
 

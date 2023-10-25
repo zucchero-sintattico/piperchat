@@ -30,10 +30,10 @@ export class NotificationSocketServer {
       const username = decodeAccessToken(jwt!)?.username
       if (username) {
         const clientProxy = new ClientProxy(socket)
-        this.notificationController.subscribe(username, clientProxy)
-        socket.on('disconnect', () => {
-          this.notificationController.unsubscribe(username)
+        socket.on('disconnect', async () => {
+          await this.notificationController.unsubscribe(username)
         })
+        await this.notificationController.subscribe(username, clientProxy)
       }
     })
   }

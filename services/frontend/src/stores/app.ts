@@ -16,7 +16,7 @@ export const useAppStore = defineStore(
   () => {
     // ==================== TABS AND SELECTION ==================== //
 
-    const isInDirects = ref(false)
+    const isInDirects = ref(true)
     const selectedServer: Ref<Server | null> = ref(null)
     const selectedChannel: Ref<Channel | null> = ref(null)
     const selectedDirect: Ref<string | null> = ref(null)
