@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import BottomPopUp from '../utils/BottomPopUp.vue'
 import { BannerColor } from '../utils/BannerColor'
+import { setCssVar } from 'quasar'
+
+setCssVar('fontfamily', 'Roboto')
 
 const userStore = useUserStore()
 
