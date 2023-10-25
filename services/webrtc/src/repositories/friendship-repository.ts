@@ -13,28 +13,43 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     second: string,
     sessionId: string
   ): Promise<void> {
-    const friendship = new Friendships({
+    await Friendships.create({
       first,
       second,
       sessionId,
     })
-    await friendship.save()
   }
 
   async existsFriendship(first: string, second: string): Promise<boolean> {
-    const friendship = await Friendships.findOne({
+    // Check if the friendship exists in both ways
+    const firstToSecond = await Friendships.exists({
       first,
       second,
     })
-    return friendship !== null
+    const secondToFirst = await Friendships.exists({
+      first: second,
+      second: first,
+    })
+    return firstToSecond !== null || secondToFirst !== null
   }
 
   async getFriendshipSessionId(first: string, second: string): Promise<string> {
-    const friendship = await Friendships.findOne({
+    // Check if the friendship exists in both ways
+    const firstToSecond = await Friendships.findOne({
       first,
       second,
-    }).orFail()
-    return friendship.sessionId
+    })
+    const secondToFirst = await Friendships.findOne({
+      first: second,
+      second: first,
+    })
+    if (firstToSecond !== null) {
+      return firstToSecond.sessionId
+    } else if (secondToFirst !== null) {
+      return secondToFirst.sessionId
+    } else {
+      throw new Error('Friendship not found')
+    }
   }
 
   async setFriendshipSessionId(
@@ -42,11 +57,23 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     second: string,
     sessionId: string
   ): Promise<void> {
-    const friendship = await Friendships.findOne({
+    // Check if the friendship exists in both ways
+    const firstToSecond = await Friendships.findOne({
       first,
       second,
-    }).orFail()
-    friendship.sessionId = sessionId
-    await friendship.save()
+    })
+    const secondToFirst = await Friendships.findOne({
+      first: second,
+      second: first,
+    })
+    if (firstToSecond !== null) {
+      firstToSecond.sessionId = sessionId
+      await firstToSecond.save()
+    } else if (secondToFirst !== null) {
+      secondToFirst.sessionId = sessionId
+      await secondToFirst.save()
+    } else {
+      throw new Error('Friendship not found')
+    }
   }
 }

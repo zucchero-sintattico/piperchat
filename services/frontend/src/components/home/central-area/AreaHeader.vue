@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SelectedTab, useAppStore } from '@/stores/app'
+import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
 
@@ -18,6 +18,14 @@ const title = computed(() => {
     return ''
   }
 })
+
+const isDirect = computed(() => {
+  return appStore.selectedDirect != null
+})
+
+function handleCallButtonClick() {
+  appStore.setDirectCall()
+}
 </script>
 <template>
   <q-header>
@@ -25,6 +33,7 @@ const title = computed(() => {
       <q-toolbar-title>
         {{ title }}
       </q-toolbar-title>
+      <q-btn v-if="isDirect" icon="video_call" flat round dense @click="handleCallButtonClick" />
     </q-toolbar>
   </q-header>
 </template>

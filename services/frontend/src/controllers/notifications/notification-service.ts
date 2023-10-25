@@ -194,8 +194,6 @@ export function useNotificationService() {
   })
 
   notificationSocket.on('notification', (data: any) => {
-    console.log('NotificationService: Received notification', data)
-    console.log(notificationService.callbacks[data.type])
     notificationService.callbacks[data.type](data)
   })
 }

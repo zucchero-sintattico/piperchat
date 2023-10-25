@@ -9,7 +9,11 @@ const userStore = useUserStore()
 const webrtcStore = useWebRTCStore()
 
 async function join() {
-  await webrtcStore.joinChannel(appStore.selectedServer!.id, appStore.selectedChannel!.id)
+  if (appStore.inDirectCall) {
+    await webrtcStore.joinDirect(appStore.selectedDirect!)
+  } else {
+    await webrtcStore.joinChannel(appStore.selectedServer!.id, appStore.selectedChannel!.id)
+  }
 }
 
 const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).length + 1))

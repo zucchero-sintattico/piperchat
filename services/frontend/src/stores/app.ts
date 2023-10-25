@@ -20,15 +20,18 @@ export const useAppStore = defineStore(
     const selectedServer: Ref<Server | null> = ref(null)
     const selectedChannel: Ref<Channel | null> = ref(null)
     const selectedDirect: Ref<string | null> = ref(null)
+    const inDirectCall: Ref<boolean> = ref(false)
 
     const isMessageSection = computed(
       () =>
-        selectedDirect.value !== null ||
+        (selectedDirect.value !== null && !inDirectCall.value) ||
         (selectedChannel.value !== null && selectedChannel.value.channelType !== 'multimedia')
     )
 
     const isVideoSection = computed(
-      () => selectedChannel.value !== null && selectedChannel.value.channelType == 'multimedia'
+      () =>
+        (selectedChannel.value !== null && selectedChannel.value.channelType == 'multimedia') ||
+        (selectedDirect.value !== null && inDirectCall.value)
     )
 
     function setDirects() {
@@ -36,6 +39,7 @@ export const useAppStore = defineStore(
       selectedDirect.value = null
       selectedServer.value = null
       selectedChannel.value = null
+      inDirectCall.value = false
     }
 
     function selectServer(server: Server) {
@@ -43,6 +47,7 @@ export const useAppStore = defineStore(
       selectedChannel.value = null
       selectedDirect.value = null
       isInDirects.value = false
+      inDirectCall.value = false
     }
 
     function selectChannel(channel: Channel) {
@@ -56,6 +61,10 @@ export const useAppStore = defineStore(
     function unselectChat() {
       selectedChannel.value = null
       selectedDirect.value = null
+    }
+
+    function setDirectCall() {
+      inDirectCall.value = true
     }
 
     // ==================== THEME ==================== //
@@ -84,6 +93,9 @@ export const useAppStore = defineStore(
 
       selectedDirect,
       selectDirect,
+
+      inDirectCall,
+      setDirectCall,
 
       unselectChat,
 
