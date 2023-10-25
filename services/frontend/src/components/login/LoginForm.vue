@@ -4,6 +4,9 @@ import { useUserStore } from '@/stores/user'
 import router from '../../router/index'
 import BottomPopUp from '../utils/BottomPopUp.vue'
 import { BannerColor } from '../utils/BannerColor'
+import { setCssVar } from 'quasar'
+
+setCssVar('fontfamily', 'Roboto')
 
 const username = ref('')
 const password = ref('')
