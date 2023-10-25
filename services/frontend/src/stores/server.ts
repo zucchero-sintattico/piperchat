@@ -70,6 +70,16 @@ export const useServerStore = defineStore('server', () => {
       } else {
         appStore.selectServer(server)
       }
+      if (appStore.selectedChannel !== null) {
+        const channel = server?.channels.find(
+          (channel) => channel.id === appStore.selectedChannel?.id
+        )
+        if (channel === undefined) {
+          appStore.setDirects()
+        } else {
+          appStore.selectChannel(channel)
+        }
+      }
     }
   }
 
@@ -164,6 +174,26 @@ export const useServerStore = defineStore('server', () => {
     }
   }
 
+  async function updateChannel(
+    serverId: string,
+    channelId: string,
+    name?: string,
+    description?: string
+  ) {
+    const response = await channelController.updateChannel({
+      serverId,
+      channelId,
+      name: name,
+      description: description
+    })
+    if (response.statusCode === 200) {
+      await refreshUserServers()
+    } else {
+      const typed = response as UpdateServerApi.Errors.Type
+      throw new Error(String(typed.error))
+    }
+  }
+
   return {
     refreshUserServers,
     createServer,
@@ -174,7 +204,7 @@ export const useServerStore = defineStore('server', () => {
     leaveServer,
     updateServer,
     getServerParticipants,
-
+    updateChannel,
     amITheOwner,
     servers,
     mediaChannelParticipants
