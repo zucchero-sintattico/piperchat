@@ -8,6 +8,7 @@ import SettingsForm from '@/components/home/settings/SettingsForm.vue'
 import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
 import { useAppStore } from '@/stores/app'
+import NotificationComponent from '@/components/home/NotificationComponent.vue'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -45,6 +46,7 @@ onMounted(() => {
 
 <template>
   <div @keydown.esc="appStore.unselectChat">
+    <NotificationComponent />
     <q-layout view="hHh Lpr lff" class="bg-accent">
       <q-header elevated class="bg-primary text-white" height-hint="98">
         <q-toolbar>

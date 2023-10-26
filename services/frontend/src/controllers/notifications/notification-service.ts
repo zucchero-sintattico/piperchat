@@ -18,6 +18,7 @@ import { useServerStore } from '@/stores/server'
 import { useMessageStore } from '@/stores/messages'
 import { useAppStore } from '@/stores/app'
 import { useFriendStore } from '@/stores/friend'
+import { useNotificationStore } from '@/stores/notifications'
 
 class NotificationService {
   callbacks: Record<string, (message: any) => Promise<void>> = {}
@@ -34,12 +35,16 @@ function createNotificationService() {
   const friendsStore = useFriendStore()
   const messageStore = useMessageStore()
   const serverStore = useServerStore()
+  const notificationsStore = useNotificationStore()
 
   function setupMessagesListeners() {
     notificationService.on(
       NewMessageOnDirectNotification.type,
       async (data: NewMessageOnDirectNotification) => {
         console.log('NotificationService: NewMessageOnDirectNotification', data)
+        notificationsStore.addMessageOnDirect({
+          sender: data.from
+        })
         if (appStore.selectedDirect == data.from) {
           console.log('NotificationService: Refreshing messages')
           await messageStore.refreshMessages()
@@ -51,12 +56,19 @@ function createNotificationService() {
       NewMessageOnChannelNotification.type,
       async (data: NewMessageOnChannelNotification) => {
         console.log('NotificationService: NewMessageOnChannelNotification', data)
+        const channelName = serverStore.servers
+          .find((s) => s.id == data.server)
+          ?.channels.find((c) => c.id == data.channel)?.name
+        notificationsStore.addMessageOnChannel({
+          sender: data.from,
+          channelName: channelName ?? ''
+        })
         if (
           appStore.selectedServer?.id == data.server &&
           appStore.selectedChannel?.id == data.channel
         ) {
           console.log('NotificationService: Refreshing messages')
-          messageStore.refreshMessages()
+          await messageStore.refreshMessages()
         }
       }
     )
@@ -161,7 +173,7 @@ function createNotificationService() {
       FriendRequestNotification.type,
       async (data: FriendRequestNotification) => {
         console.log('NotificationService: FriendRequestNotification', data)
-        // TODO: Popup and notification over the friends icon
+        notificationsStore.addFriendRequest(data.from)
       }
     )
 
@@ -169,7 +181,7 @@ function createNotificationService() {
       FriendRequestAcceptedNotification.type,
       async (data: FriendRequestAcceptedNotification) => {
         console.log('NotificationService: FriendRequestAcceptedNotification', data)
-        // TODO: Popup
+        notificationsStore.addFriendRequestAccepted(data.from)
       }
     )
   }

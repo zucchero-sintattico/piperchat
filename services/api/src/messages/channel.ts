@@ -27,7 +27,7 @@ export namespace GetChannelMessagesApi {
     }
   }
   export namespace Responses {
-    interface Message {
+    export interface Message {
       _id: string
       sender: string
       content: string
