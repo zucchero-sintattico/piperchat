@@ -320,7 +320,7 @@ describe('Leave server', () => {
     const leaveServerResponse = await request
       .delete(`/servers/${serverId}/participants`)
       .set('Cookie', `jwt=${jwt1}`)
-    expect(leaveServerResponse.status).toBe(403)
+    expect(leaveServerResponse.status).toBe(405)
   })
 
   it('A user should be able to leave a server if he is a participant', async () => {
@@ -379,7 +379,7 @@ describe('Kick participant', () => {
     const kickParticipantResponse = await request
       .delete(`/servers/${serverId}/participants/${user1.username}`)
       .set('Cookie', `jwt=${jwt1}`)
-    expect(kickParticipantResponse.status).toBe(403)
+    expect(kickParticipantResponse.status).toBe(405)
   })
 
   it('A user should not be able to kick a participant if he is not the owner', async () => {
