@@ -134,7 +134,7 @@ export const RefreshTokenApiRoute = new Route<
     {
       exception: AuthControllerExceptions.RefreshTokenNotPresent,
       onException: (e, req, res) => {
-        res.sendResponse(new RefreshTokenApi.Errors.RefreshTokenNotPresent())
+        res.sendResponse(new RefreshTokenApi.Errors.InvalidRefreshToken())
       },
     },
   ],

@@ -147,11 +147,7 @@ export namespace LogoutApi {
       statusCode = 404
       error = 'User not found' as const
     }
-    export class NotLoggedIn extends ErrorResponse {
-      statusCode = 401
-      error = 'User not logged in' as const
-    }
-    export type Type = UserNotFound | NotLoggedIn
+    export type Type = UserNotFound
   }
   export type Response = Responses.Type | Errors.Type
 }
@@ -189,13 +185,9 @@ export namespace RefreshTokenApi {
     }
     export class InvalidRefreshToken extends ErrorResponse {
       statusCode = 401
-      error = 'Invalid refresh token' as const
+      error = 'Refresh token is missing or invalid' as const
     }
-    export class RefreshTokenNotPresent extends ErrorResponse {
-      statusCode = 401
-      error = 'Refresh token not present' as const
-    }
-    export type Type = UserNotFound | InvalidRefreshToken | RefreshTokenNotPresent
+    export type Type = UserNotFound | InvalidRefreshToken
   }
   export type Response = Responses.Type | Errors.Type
 }
