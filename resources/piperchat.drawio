@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-31T09:08:44.307Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="fnwOiAkiGj2afAPrBuAW" version="22.0.8" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2023-10-31T09:36:05.518Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="311r6oZ5rzmvoru1Li3c" version="22.0.8" type="github" pages="8">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2992" dy="2667" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -243,10 +243,10 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="qTeQhMNZ26lr6coK7uQn-2" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;" vertex="1" parent="1">
-          <mxGeometry x="50" y="560" width="20" height="300" as="geometry" />
+          <mxGeometry x="50" y="560" width="20" height="400" as="geometry" />
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-3" value="WebRtc Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="190" y="560" width="100" height="300" as="geometry" />
+          <mxGeometry x="190" y="560" width="100" height="400" as="geometry" />
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-4" value="" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="qTeQhMNZ26lr6coK7uQn-3">
           <mxGeometry x="45" y="70" width="10" height="30" as="geometry" />
@@ -265,23 +265,24 @@
           <mxGeometry x="35" y="535" width="50" height="30" as="geometry" />
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-9" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;" vertex="1" parent="1">
-          <mxGeometry x="415" y="560" width="20" height="300" as="geometry" />
-        </mxCell>
-        <mxCell id="qTeQhMNZ26lr6coK7uQn-12" value="" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="qTeQhMNZ26lr6coK7uQn-9">
-          <mxGeometry x="5" y="120" width="10" height="20" as="geometry" />
+          <mxGeometry x="415" y="560" width="20" height="400" as="geometry" />
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-10" value="Other Users" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="380" y="530" width="90" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="qTeQhMNZ26lr6coK7uQn-13" value="notify new user" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=5;" edge="1" target="qTeQhMNZ26lr6coK7uQn-12" parent="1">
+        <mxCell id="qTeQhMNZ26lr6coK7uQn-13" value="notify new user" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" target="qTeQhMNZ26lr6coK7uQn-9" parent="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="240" y="685" as="sourcePoint" />
+            <mxPoint x="420" y="685" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-15" value="send offer for new user" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" source="qTeQhMNZ26lr6coK7uQn-9" target="qTeQhMNZ26lr6coK7uQn-3">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="150" y="770" as="sourcePoint" />
             <mxPoint x="285" y="770" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="370" y="720" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="qTeQhMNZ26lr6coK7uQn-16" value="send offer from other user" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="qTeQhMNZ26lr6coK7uQn-2">
@@ -316,6 +317,25 @@
             <mxPoint x="57.65034482758605" y="820" as="sourcePoint" />
             <mxPoint x="422.34" y="820" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="qTeQhMNZ26lr6coK7uQn-21" value="Protocollo&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="438" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="qTeQhMNZ26lr6coK7uQn-22" value="user left" style="html=1;verticalAlign=bottom;endArrow=none;curved=0;rounded=0;startArrow=none;startFill=0;endFill=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60" y="900" as="sourcePoint" />
+            <mxPoint x="240" y="900" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qTeQhMNZ26lr6coK7uQn-23" value="notify new user left" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="240" y="920" as="sourcePoint" />
+            <mxPoint x="425" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qTeQhMNZ26lr6coK7uQn-24" value="Protocollo webrtc" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="180" y="490" width="120" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
