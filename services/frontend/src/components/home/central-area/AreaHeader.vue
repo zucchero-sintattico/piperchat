@@ -37,15 +37,14 @@ function handleCallButtonClick() {
     <q-toolbar>
       <q-toolbar-title>
         {{ title }}
-        <q-btn
-          v-if="appStore.selectedChannel != null"
-          icon="info"
-          class="q-ml-sm"
-          align="right"
-          color="primary"
-          @click="channelSettingMenuActive = true"
-        />
       </q-toolbar-title>
+      <q-btn
+        v-if="appStore.selectedChannel != null"
+        icon="info"
+        flat
+        round
+        @click="channelSettingMenuActive = true"
+      />
       <q-btn v-if="isDirect" icon="video_call" flat round dense @click="handleCallButtonClick" />
     </q-toolbar>
   </q-header>
