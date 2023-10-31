@@ -4,7 +4,6 @@ import NewChannelForm from './form/NewChannelForm.vue'
 import { CreateChannelApi } from '@api/piperchat/channel'
 import { useServerStore } from '@/stores/server'
 import HorizontalChannel from './horizontal-component/HorizontalChannel.vue'
-import HorizontalUser from './horizontal-component/HorizontalUser.vue'
 import ServerMenu from './menu/ServerMenu.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
@@ -149,13 +148,13 @@ function leaveServer() {
           >
           </HorizontalChannel>
 
-          <q-list
+          <!--           <q-list
             dense
-            v-for="user in serverStore.mediaChannelParticipants[channel.id]"
+            v-for="user of webrtcStore.userInMediaChannels[channel.id]"
             :key="user.username"
           >
             <HorizontalUser :name="user.username" :photo="user.photo" />
-          </q-list>
+          </q-list> -->
         </q-list>
         <!-- end Multimedia channels -->
       </div>

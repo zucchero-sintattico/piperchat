@@ -13,13 +13,10 @@ const channelSettingMenuActive = ref(false)
  */
 const title = computed(() => {
   if (appStore.selectedDirect !== null) {
-    console.log('Updating title to: ' + appStore.selectedDirect)
     return appStore.selectedDirect
   } else if (appStore.selectedChannel !== null) {
-    console.log('Updating title to: ' + appStore.selectedChannel?.name)
     return appStore.selectedChannel?.name
   } else {
-    console.log("Updating title to: ''")
     return ''
   }
 })

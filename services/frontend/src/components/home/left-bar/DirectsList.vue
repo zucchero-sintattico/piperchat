@@ -41,7 +41,7 @@ onMounted(async () => {
             <HorizontalUser
               :name="friend.username"
               :online="friend.status.online"
-              :last-active="friend.status.lastActive"
+              :last-active="friend.status.lastActive.toString()"
               @click="appStore.selectDirect(friend.username)"
             />
           </q-list>

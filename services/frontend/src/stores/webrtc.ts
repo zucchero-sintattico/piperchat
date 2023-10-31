@@ -3,10 +3,16 @@ import {
   type SessionController
 } from '@/controllers/session/session-controller'
 import { defineStore } from 'pinia'
-import { computed, ref, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useUserStore } from './user'
 import type { SessionHandler } from '@/controllers/session/session-handler'
 import { StreamService } from './utils/stream-service'
+import { useAppStore } from './app'
+
+interface UserWithPhoto {
+  username: string
+  photo: string
+}
 
 export const useWebRTCStore = defineStore('webrtc', () => {
   const userStore = useUserStore()
@@ -21,7 +27,6 @@ export const useWebRTCStore = defineStore('webrtc', () => {
   const sessionHandler: Ref<SessionHandler | null> = ref(null)
   const joined = computed(() => sessionHandler.value !== null)
   async function start() {
-    console.log('Starting session')
     otherStream.value = {}
     await streamService.start()
     sessionHandler.value!.start(
@@ -68,10 +73,46 @@ export const useWebRTCStore = defineStore('webrtc', () => {
   const mic_on = streamService.mic_on
   const cam_on = streamService.cam_on
 
-  async function getUsersInMediaChannel(serverId: string, channelId: string) {
-    const sessionId = await sessionController.getChannelSessionId(serverId, channelId)
-    return await sessionController.getUsersInSession(sessionId)
+  const userInMediaChannels = ref<Record<string, UserWithPhoto[]>>({})
+
+  /*   const refreshing = ref(false)
+  async function refreshUserInMultimediaChannels() {
+    if (refreshing.value) return
+    refreshing.value = true
+    userInMediaChannels.value = {}
+    for (const channel of appStore.selectedServer?.channels.filter(
+      (channel) => channel.channelType == 'multimedia'
+    ) ?? []) {
+      try {
+        const sessionId = await sessionController.getChannelSessionId(
+          appStore.selectedServer!.id,
+          channel.id
+        )
+        const usernames = await sessionController.getUsersInSession(sessionId)
+        const usersWithPhoto: UserWithPhoto[] = []
+        for (const username of usernames) {
+          const photo = (await userStore.getUserPhoto(username))!
+          usersWithPhoto.push({
+            username,
+            photo
+          })
+        }
+        userInMediaChannels.value[channel.id] = usersWithPhoto
+      } catch (e) {
+        continue
+      }
+    }
+    refreshing.value = false
   }
+
+  watch(
+    () => appStore.selectedServer,
+    async (server) => {
+      if (server === null) return
+      console.log('Refreshing users in multimedia channels')
+      await refreshUserInMultimediaChannels()
+    }
+  ) */
 
   return {
     myStream,
@@ -84,6 +125,7 @@ export const useWebRTCStore = defineStore('webrtc', () => {
     toggleVideo,
     mic_on,
     cam_on,
-    getUsersInMediaChannel
+    userInMediaChannels
+    // refreshUserInMultimediaChannels
   }
 })

@@ -34,13 +34,6 @@ function toggleLeftDrawer() {
 
 onMounted(() => {
   userStore.reload()
-  console.log(appStore.isInDirects)
-  console.log(appStore.selectedServer)
-  console.log(appStore.selectedChannel)
-  console.log(appStore.selectedDirect)
-  console.log(appStore.inDirectCall)
-  console.log('Message section? ' + appStore.isMessageSection)
-  console.log('Video section? ' + appStore.isVideoSection)
 })
 </script>
 

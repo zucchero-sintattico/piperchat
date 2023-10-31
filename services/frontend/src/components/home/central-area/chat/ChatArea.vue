@@ -15,7 +15,6 @@ let tempLastScrollPosition = 0
 watch(
   () => messageStore.messages[messageStore.messages.length - 1],
   async () => {
-    console.log('RESETTING MESSAGES')
     messageStore.messagesNumber += 1
     tempLastScrollPosition = 0
   }

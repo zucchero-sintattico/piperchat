@@ -20,15 +20,10 @@ import { useWebRTCStore } from './webrtc'
 type Server = GetServersApi.Responses.Server
 type Channel = GetChannelByIdApi.Responses.Channel
 
-interface UserWithPhoto {
-  username: string
-  photo: string
-}
 export const useServerStore = defineStore(
   'server',
   () => {
     const appStore = useAppStore()
-    const webrtcStore = useWebRTCStore()
     const userStore = useUserStore()
     const serverController: ServerController = new ServerControllerImpl()
     const channelController: ChannelController = new ChannelControllerImpl()
@@ -39,24 +34,6 @@ export const useServerStore = defineStore(
       if (appStore.selectedServer === null) return false
       return appStore.selectedServer.owner === userStore.username
     })
-
-    const mediaChannelParticipants: Ref<Record<string, UserWithPhoto[]>> = ref({})
-    watch(
-      () => appStore.selectedServer,
-      async (server) => {
-        server?.channels
-          .filter((channel) => channel.channelType === 'multimedia')
-          .forEach(async (channel) => {
-            const users = await webrtcStore.getUsersInMediaChannel(server.id, channel.id)
-            const usersWithPhoto: UserWithPhoto[] = []
-            for (const username of users) {
-              const photo = (await userStore.getUserPhoto(username))!
-              usersWithPhoto.push({ username, photo })
-            }
-            mediaChannelParticipants.value[channel.id] = usersWithPhoto
-          })
-      }
-    )
 
     async function refreshUserServers() {
       const response = await serverController.getServers()
@@ -209,8 +186,7 @@ export const useServerStore = defineStore(
       getServerParticipants,
 
       amITheOwner,
-      servers,
-      mediaChannelParticipants
+      servers
     }
   },
   { persist: true }

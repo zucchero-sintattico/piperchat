@@ -7,8 +7,6 @@ import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
 import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
 
-import { SelectedTab } from './app'
-
 export enum ContentArea {
   Empty = 'empty',
   Channel = 'channel',
