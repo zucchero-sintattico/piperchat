@@ -203,9 +203,12 @@ export class WebRTCSocketServer {
       // Disconnect the other user
       const otherSocket = this.sockets[username]
       otherSocket?.disconnect()
-      this.io.sockets.to(session.id).emit('user-disconnected', username)
-      await this.sessionRepository.removeUserFromSession(session.id, username)
-      await this.checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(session.id, username)
+      this.io.sockets.to(session._id).emit('user-disconnected', username)
+      await this.sessionRepository.removeUserFromSession(session._id, username)
+      await this.checkIfIsChannelOrDirectSessionAndPublishLeaveEvent(
+        session._id,
+        username
+      )
     }
   }
 }
