@@ -15,8 +15,6 @@ async function join() {
     await webrtcStore.joinChannel(appStore.selectedServer!.id, appStore.selectedChannel!.id)
   }
 }
-
-const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).length + 1))
 </script>
 
 <template>
@@ -24,30 +22,21 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
     <q-page v-if="webrtcStore.joined">
       <div class="q-pa-md">
         <div class="video-grid">
-          <div
-            :key="`video-${userStore.username}`"
-            class="video-col q-pa-md"
-            :style="{ width: `${100 / columns}%` }"
-          >
-            <div class="video-wrapper">
-              <div class="overlay">
-                <div class="username">{{ userStore.username }}</div>
-              </div>
-              <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
+          <div class="video-wrapper">
+            <div class="overlay">
+              <div class="username">{{ userStore.username }}</div>
             </div>
+            <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
           </div>
           <div
             v-for="(videoSrc, username) in webrtcStore.otherStream"
             :key="`video-${username}`"
-            class="video-col q-pa-md"
-            :style="{ width: `${100 / columns}%` }"
+            class="video-wrapper"
           >
-            <div class="video-wrapper">
-              <div class="overlay">
-                <div class="username">{{ username }}</div>
-              </div>
-              <video :srcObject="videoSrc" autoplay class="video-item"></video>
+            <div class="overlay">
+              <div class="username">{{ username }}</div>
             </div>
+            <video :srcObject="videoSrc" autoplay class="video-item"></video>
           </div>
         </div>
       </div>
@@ -86,19 +75,21 @@ const columns = computed(() => Math.min(2, Object.keys(webrtcStore.otherStream).
 }
 
 .video-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  width: 100%;
+  max-height: calc(75vh); /* Adjust as needed, subtracting the height of controls */
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1rem;
+  justify-items: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 1rem;
 }
-
-.video-col {
-  box-sizing: border-box;
-  flex: 1 0 calc(25% - 16px); /* Adjust width and gap as needed */
-}
-
 .video-wrapper {
   position: relative;
   height: 100%;
+  width: 100%;
 }
 
 .video-item {
