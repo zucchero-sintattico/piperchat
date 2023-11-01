@@ -40,7 +40,7 @@ async function onSubmit() {
     })
     registrationSuccess.value = true
     setTimeout(() => {
-      location.reload()
+      location.href = '/'
     }, REDIRECT_DELAY)
   } catch (e) {
     popUpBanner(String(e), BannerColor.ERROR)

@@ -9,7 +9,7 @@ import PageGrid from '@/components/monitoring/PageGrid.vue'
         <q-toolbar-title align="center" class="title">
           <router-link to="/" class="avatar-and-title text-white">
             <q-avatar>
-              <img src="/site/src/assets/piperchat-logo.jpg" />
+              <img src="../assets/piperchat-logo.jpg" />
             </q-avatar>
             <text-overline>Piperchat</text-overline>
           </router-link>

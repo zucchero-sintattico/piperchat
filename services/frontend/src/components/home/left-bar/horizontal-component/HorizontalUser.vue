@@ -45,7 +45,7 @@ watchEffect(() => {
       <q-avatar class="user-avatar">
         <img
           v-if="props.photo == '' || props.photo == undefined"
-          src="src/assets/default-user-photo.png"
+          src="../../../../assets/default-user-photo.png"
           alt="Default User Photo"
         />
         <img v-else :src="props.photo" alt="User Photo" />
