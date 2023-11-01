@@ -5,6 +5,7 @@ import { useServerStore } from '@/stores/server'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
 import { SelectedTab, useAppStore } from '@/stores/app'
+import type { StringExpressionOperator } from 'mongoose'
 
 const serverStore = useServerStore()
 const appStore = useAppStore()
@@ -15,13 +16,13 @@ const BANNER_TIMEOUT = 3000
 const resultBanner = ref(false)
 const colorBanner = ref(BannerColor.OK)
 const contentBanner = ref('')
-function popUpBanner(error?: string) {
+function popUpBanner(content: string, error?: string) {
   if (error) {
     colorBanner.value = BannerColor.ERROR
     contentBanner.value = error
   } else {
     colorBanner.value = BannerColor.OK
-    contentBanner.value = 'Server created successfully'
+    contentBanner.value = content
   }
   resultBanner.value = true
   setTimeout(() => {

@@ -3,7 +3,7 @@ import { useServerStore } from '@/stores/server'
 import { ref } from 'vue'
 
 const event = defineEmits<{
-  (e: 'result', error?: string): void
+  (e: 'result', content: string, error?: string): void
   (e: 'close'): void
 }>()
 
@@ -17,7 +17,7 @@ const newServerTab = ref('newServer')
 async function onSubmit() {
   try {
     await serverStore.createServer(name.value, description.value)
-    event('result')
+    event('result', 'Server created')
   } catch (e) {
     event('result', String(e))
   }
@@ -26,7 +26,7 @@ async function onSubmit() {
 async function joinServer() {
   try {
     await serverStore.joinServer(serverID.value)
-    event('result')
+    event('result', 'Server joined')
   } catch (e) {
     event('result', String(e))
   }
