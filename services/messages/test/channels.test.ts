@@ -97,7 +97,7 @@ describe('Send channel message', () => {
       .post(`/servers/${serverId}/channels/${channelId}/messages`)
       .set('Cookie', `jwt=${jwt2}`)
       .send({ content: 'test' })
-    expect(response.status).toBe(401)
+    expect(response.status).toBe(403)
     await addParticipant(serverId, user2.username)
     const response2 = await request
       .post(`/servers/${serverId}/channels/${channelId}/messages`)
@@ -171,7 +171,7 @@ describe('Get channel messages', () => {
       .get(`/servers/${serverId}/channels/${channelId}/messages`)
       .set('Cookie', `jwt=${jwt2}`)
       .query({ from: 0, limit: 1 })
-    expect(response.status).toBe(401)
+    expect(response.status).toBe(403)
     await addParticipant(serverId, user2.username)
     const response2 = await request
       .get(`/servers/${serverId}/channels/${channelId}/messages`)

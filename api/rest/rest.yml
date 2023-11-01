@@ -233,7 +233,7 @@ paths:
         - '$ref': '#/components/parameters/username'
       responses:
         '200':
-          description: Ok
+          description: Session id retrieved successfully
           content:
             application/json:
               schema:
@@ -247,7 +247,7 @@ paths:
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '404':
-          description: User not found
+          description: Friendship not found
 
   /friends:
     get:
@@ -313,7 +313,7 @@ paths:
                     - send
                     - accept
                     - deny
-                otherUser:
+                to:
                   type: string
                   example: user4
               required:
@@ -371,7 +371,7 @@ paths:
                 - name
       responses:
         '200':
-          description: Ok
+          description: Server created successfully
         '400':
           description: Bad request
         '401':
@@ -395,21 +395,25 @@ paths:
               properties:
                 name:
                   type: string
+                  description: Optional
                   example: Beautiful Server
                 description:
                   type: string
+                  description: Optional
                   example: This server is created for make new friends!
       responses:
         '200':
-          description: Ok
+          description: Server updated successfully
         '400':
           description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server not found
+        '422':
+          description: Name or description required
     delete:
       summary: Delete server
       description: The owner delete the server
@@ -421,7 +425,7 @@ paths:
         - '$ref': '#/components/parameters/serverId'
       responses:
         '200':
-          description: Ok
+          description: Server deleted successfully
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
@@ -454,7 +458,7 @@ paths:
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server not found
     post:
@@ -468,7 +472,7 @@ paths:
         - '$ref': '#/components/parameters/serverId'
       responses:
         '200':
-          description: Ok
+          description: Server joined successfully
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '404':
@@ -484,17 +488,17 @@ paths:
         - '$ref': '#/components/parameters/serverId'
       responses:
         '200':
-          description: Ok
+          description: Server left successfully
         '400':
-          description: 'Bad request: the user not found in the server'
+          description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not in the server
         '404':
           description: Server not found
         '422':
-          description: 'Unprocessable entity: the user is the owner of the server'
+          description: Owner cannot leave the server
 
   /servers/{serverId}/partecipants/{username}:
     delete:
@@ -509,13 +513,13 @@ paths:
         - '$ref': '#/components/parameters/username'
       responses:
         '200':
-          description: Ok
+          description: User kicked successfully
         '400':
           description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or user not found
         '422':
@@ -541,18 +545,20 @@ paths:
                 items:
                   '$ref': '#/components/schemas/basicChannel'
                 example:
-                  - channelId: channel123
+                  - id: channel123
                     name: Beautiful Channel
+                    createdAt: '2021-05-01T12:00:00.000Z'
                     description: This channel is created for make new friends!
                     channelType: message
-                  - channelId: channel456
+                  - id: channel456
                     name: Beautiful vocal channel
+                    createdAt: '2021-05-01T12:00:00.000Z'
                     description: This channel is created for make new friends!
                     channelType: multimedia
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server not found
     post:
@@ -570,22 +576,23 @@ paths:
             schema:
               type: object
               properties:
+                name:
+                  type: string
+                  example: channel1
                 channelType:
                   enum:
                     - message
                     - multimedia
-                name:
-                  type: string
-                  example: channel1
                 description:
                   type: string
                   example: This channel is created for make new friends!
+                  description: Optional
               required:
                 - channelType
                 - name
       responses:
         '200':
-          description: Ok
+          description: Channel created successfully
         '400':
           description: Bad request
         '401':
@@ -615,18 +622,20 @@ paths:
                 name:
                   type: string
                   example: Beautiful Channel 2.0
+                  description: Optional
                 description:
                   type: string
                   example: This channel is created for make new friends! 2.0
+                  description: Optional
       responses:
         '200':
-          description: Ok
+          description: Channel updated successfully
         '400':
           description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or Channel not found
     delete:
@@ -641,11 +650,11 @@ paths:
         - '$ref': '#/components/parameters/channelId'
       responses:
         '200':
-          description: Ok
+          description: Channel deleted successfully
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or Channel not found
 
@@ -676,23 +685,20 @@ paths:
           example: 10
       responses:
         '200':
-          description: Ok
+          description: Messages retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
                   '$ref': '#/components/schemas/message'
-                example:
-                  - messageId: 123
-                    sender: user1
-                    content: Hello World!
+
         '400':
-          description: This is not a message channel
+          description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or Channel not found
     post:
@@ -708,13 +714,13 @@ paths:
               '$ref': '#/components/schemas/messageWithoutId'
       responses:
         '200':
-          description: Ok
+          description: Message sent successfully
         '400':
           description: Bad request
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or Channel not found
 
@@ -731,7 +737,7 @@ paths:
         - '$ref': '#/components/parameters/channelId'
       responses:
         '200':
-          description: Ok
+          description: Session id retrieved successfully
           content:
             application/json:
               schema:
@@ -745,7 +751,7 @@ paths:
         '401':
           '$ref': '#/components/responses/UnauthorizedError'
         '403':
-          '$ref': '#/components/responses/ForbiddenError'
+          description: User not authorized
         '404':
           description: Server or Channel not found
 
@@ -1055,11 +1061,12 @@ components:
               - messageId: message123
                 sender: user1
                 content: Hello World!
+                timestamp: '2021-05-01T12:00:00.000Z'
   schemas:
     server:
       type: object
       properties:
-        serverId:
+        id:
           type: string
           example: server123
         name:
@@ -1068,16 +1075,50 @@ components:
         description:
           type: string
           example: This server is created for make new friends!
-
+        owner:
+          type: string
+          example: user1
+        participants:
+          type: array
+          items:
+            type: string
+          example:
+            - user1
+            - user2
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
+        channels:
+          type: array
+          items:
+            oneOf:
+              - '$ref': '#/components/schemas/messageChannel'
+              - '$ref': '#/components/schemas/multimediaChannel'
+          example:
+            - id: channel123
+              name: Beautiful Channel
+              createdAt: '2021-05-01T12:00:00.000Z'
+              description: This channel is created for make new friends!
+              channelType: message
+            - id: channel456
+              name: Beautiful vocal channel
+              createdAt: '2021-05-01T12:00:00.000Z'
+              description: This channel is created for make new friends!
+              channelType: multimedia
     basicChannel:
       type: object
       properties:
-        channelId:
+        id:
           type: string
           example: channel123
         name:
           type: string
           example: Beautiful Channel
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
         description:
           type: string
           example: This channel is created for make new friends!
@@ -1110,9 +1151,6 @@ components:
     messageWithoutId:
       type: object
       properties:
-        sender:
-          type: string
-          example: user1
         content:
           type: string
           example: Hello World

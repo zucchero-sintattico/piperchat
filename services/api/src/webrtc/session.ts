@@ -34,7 +34,11 @@ export namespace GetChannelSessionIdApi {
       statusCode = 404
       message = 'Channel not found' as const
     }
-    export type Type = ChannelNotFound
+    export class UserNotAuthorized extends Response {
+      statusCode = 403
+      message = 'User not authorized' as const
+    }
+    export type Type = ChannelNotFound | UserNotAuthorized
   }
   export type Response = Responses.Type | Errors.Type
 }

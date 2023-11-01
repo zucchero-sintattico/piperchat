@@ -28,7 +28,7 @@ export namespace KickUserFromServerApi {
   export namespace Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
-      error = 'Server not found' as const
+      error = 'Server or user not found' as const
     }
     export class UserNotAuthorized extends ErrorResponse {
       statusCode = 403
@@ -146,7 +146,7 @@ export namespace LeaveServerApi {
       error = 'User not in server' as const
     }
     export class OwnerCannotLeave extends ErrorResponse {
-      statusCode = 405
+      statusCode = 422
       error = 'Owner cannot leave the server' as const
     }
     export type Type = ServerNotFound | UserNotInServer | OwnerCannotLeave

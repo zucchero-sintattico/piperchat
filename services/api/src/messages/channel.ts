@@ -53,7 +53,7 @@ export namespace GetChannelMessagesApi {
     }
 
     export class UserNotAuthorized extends ErrorResponse {
-      statusCode = 401
+      statusCode = 403
       error = 'User not authorized' as const
     }
 
@@ -99,7 +99,7 @@ export namespace SendMessageInChannelApi {
       error = 'Server not found' as const
     }
     export class UserNotAuthorized extends ErrorResponse {
-      statusCode = 401
+      statusCode = 403
       error = 'User not authorized' as const
     }
     export type Type = ChannelNotFound | ServerNotFound | UserNotAuthorized
