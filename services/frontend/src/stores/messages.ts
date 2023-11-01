@@ -276,6 +276,7 @@ export const useMessageStore = defineStore('message', () => {
     loadNewMessages,
     loadingNewMessages,
 
-    refreshMessages
+    refreshMessages,
+    fetchUsersPhotos
   }
 })

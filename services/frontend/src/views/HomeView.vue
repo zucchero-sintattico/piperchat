@@ -9,9 +9,11 @@ import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
 import { useAppStore } from '@/stores/app'
 import NotificationComponent from '@/components/home/NotificationComponent.vue'
+import { useMessageStore } from '@/stores/messages'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
@@ -34,6 +36,7 @@ function toggleLeftDrawer() {
 
 onMounted(() => {
   userStore.reload()
+  messageStore.fetchUsersPhotos()
 })
 </script>
 
