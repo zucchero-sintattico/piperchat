@@ -5,9 +5,11 @@ import FriendMenu from './menu/FriendMenu.vue'
 import { useFriendStore } from '@/stores/friend'
 import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
+import { useMessageStore } from '@/stores/messages'
 
 const friendStore = useFriendStore()
 const appStore = useAppStore()
+const messageStore = useMessageStore()
 
 const friendTabOpened = ref(false)
 
@@ -42,6 +44,7 @@ onMounted(async () => {
               :name="friend.username"
               :online="friend.status.online"
               :last-active="friend.status.lastActive.toString()"
+              :photo="messageStore.usersPhotos.get(friend.username)"
               @click="appStore.selectDirect(friend.username)"
             />
           </q-list>

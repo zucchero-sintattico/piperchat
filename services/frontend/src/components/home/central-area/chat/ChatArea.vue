@@ -54,6 +54,18 @@ onMounted(() => {
           >
             <!-- if sender is the user show the image, default image otherwise -->
             <q-chat-message
+              v-if="
+                (message.sender == userStore.username && userStore.photo == '') ||
+                (message.sender != userStore.username &&
+                  messageStore.usersPhotos.get(message.sender) == '')
+              "
+              :name="message.sender"
+              :text="[message.content]"
+              :sent="userStore.username == message.sender"
+              avatar="../../../../assets/user-avatar.png"
+            />
+            <q-chat-message
+              v-else
               :name="message.sender"
               :text="[message.content]"
               :sent="userStore.username == message.sender"
