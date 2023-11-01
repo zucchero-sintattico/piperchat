@@ -26,7 +26,11 @@ const isDirect = computed(() => {
 })
 
 function handleCallButtonClick() {
-  appStore.setDirectCall()
+  if (appStore.inDirectCall) {
+    appStore.setDirectChat()
+  } else {
+    appStore.setDirectCall()
+  }
 }
 </script>
 <template>
@@ -42,7 +46,22 @@ function handleCallButtonClick() {
         round
         @click="channelSettingMenuActive = true"
       />
-      <q-btn v-if="isDirect" icon="video_call" flat round dense @click="handleCallButtonClick" />
+      <q-btn
+        v-if="isDirect && !appStore.inDirectCall"
+        icon="video_call"
+        flat
+        round
+        dense
+        @click="handleCallButtonClick"
+      />
+      <q-btn
+        v-if="isDirect && appStore.inDirectCall"
+        icon="chat"
+        flat
+        round
+        dense
+        @click="handleCallButtonClick"
+      />
     </q-toolbar>
   </q-header>
 

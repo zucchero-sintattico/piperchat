@@ -68,6 +68,10 @@ export const useAppStore = defineStore(
       inDirectCall.value = true
     }
 
+    function setDirectChat() {
+      inDirectCall.value = false
+    }
+
     // ==================== THEME ==================== //
     //Stuffs for Themes
     const DefaultTheme: Theme = {
@@ -97,6 +101,7 @@ export const useAppStore = defineStore(
 
       inDirectCall,
       setDirectCall,
+      setDirectChat,
 
       unselectChat,
 
