@@ -20,24 +20,22 @@ async function join() {
 <template>
   <q-page-container padding>
     <q-page v-if="webrtcStore.joined">
-      <div class="q-pa-md">
-        <div class="video-grid">
-          <div class="video-wrapper">
-            <div class="overlay">
-              <div class="username">{{ userStore.username }}</div>
-            </div>
-            <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
+      <div class="video-grid">
+        <div class="video-wrapper">
+          <div class="overlay">
+            <div class="username">{{ userStore.username }}</div>
           </div>
-          <div
-            v-for="(videoSrc, username) in webrtcStore.otherStream"
-            :key="`video-${username}`"
-            class="video-wrapper"
-          >
-            <div class="overlay">
-              <div class="username">{{ username }}</div>
-            </div>
-            <video :srcObject="videoSrc" autoplay class="video-item"></video>
+          <video :srcObject="webrtcStore.myStream" autoplay muted class="video-item"></video>
+        </div>
+        <div
+          v-for="(videoSrc, username) in webrtcStore.otherStream"
+          :key="`video-${username}`"
+          class="video-wrapper"
+        >
+          <div class="overlay">
+            <div class="username">{{ username }}</div>
           </div>
+          <video :srcObject="videoSrc" autoplay class="video-item"></video>
         </div>
       </div>
       <!-- Buttons for disabling mic, disabling webcam, and exiting the call -->
@@ -86,17 +84,41 @@ async function join() {
   margin: 0 auto;
   padding: 1rem;
 }
+
 .video-wrapper {
   position: relative;
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-item {
-  width: 100%;
-  height: 100%;
   box-sizing: border-box;
-  object-fit: cover;
+  object-fit: contain;
+  border-radius: 10px;
+  max-width: 100%; /* Add this property */
+  max-height: 100%; /* Add this property */
+}
+
+/* Introduce a media query for smaller screens */
+@media (max-width: 768px) {
+  .video-item {
+    max-width: 100%; /* Adjust as needed */
+    max-height: 100%; /* Adjust as needed */
+  }
+}
+
+.username {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust transparency */
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   border-radius: 10px;
 }
 
@@ -132,18 +154,6 @@ async function join() {
   color: white;
   background-color: rgba(0, 0, 0, 0); /* Adjust transparency */
   padding: 8px;
-}
-
-.username {
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust transparency */
-  width: 100%;
-  padding: 4px;
-  box-sizing: border-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-radius: 10px;
 }
 
 .join-button-wrapper {
