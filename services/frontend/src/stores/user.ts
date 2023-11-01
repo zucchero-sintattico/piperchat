@@ -104,7 +104,7 @@ export const useUserStore = defineStore(
         if (response.statusCode === 200) {
           const typed = response as GetUserPhotoApi.Responses.Success
           if (typed.photo.data === undefined) {
-            return 'src/assets/user-avatar.png'
+            return '' // TODO
           } else {
             return (
               'data:image/jpeg;base64,' +
@@ -132,7 +132,7 @@ export const useUserStore = defineStore(
           const typed = response as GetUserPhotoApi.Responses.Success
           console.log(typed)
           if (typed.photo.data === undefined) {
-            photo.value = 'src/assets/user-avatar.png'
+            photo.value = '' // TODO
           } else {
             photo.value =
               'data:image/jpeg;base64,' +

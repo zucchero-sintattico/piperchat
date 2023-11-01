@@ -19,8 +19,7 @@ services:
       - 'PORT=${MONITORING_SERVICE_PORT}'
       - 'AMQP_URI=${BROKER_URI}'
       - 'MONGO_URI=mongodb://db-monitoring-service:27017/monitoring'
-      - 'SERVICES_URI=${USERS_SERVICE_URI},${MESSAGES_SERVICE_URI},
-        ${PIPERCHAT_SERVICE_URI},${WEBRTC_SERVICE_URI},${NOTIFICATIONS_SERVICE_URI}'
+      - 'SERVICES_URI=${USERS_SERVICE_URI},${MESSAGES_SERVICE_URI},${PIPERCHAT_SERVICE_URI},${WEBRTC_SERVICE_URI},${NOTIFICATIONS_SERVICE_URI}'
     labels:
       - |
         traefik.http.routers.monitoring-service.rule=

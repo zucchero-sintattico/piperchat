@@ -48,7 +48,7 @@ onMounted(() => {
           <q-toolbar-title align="center" class="title">
             <div class="avatar-and-title">
               <q-avatar>
-                <img src="src/assets/piperchat-logo.jpg" />
+                <img src="../assets/piperchat-logo.jpg" />
               </q-avatar>
               <h1>Piperchat</h1>
             </div>
@@ -57,7 +57,12 @@ onMounted(() => {
           <!--Avatar image that toggle dropdown menu with logout and settings option-->
           <q-avatar>
             <!-- add hover effect to image -->
-            <img :src="userStore.photo" class="cursor-pointer" />
+            <img
+              v-if="userStore.photoLoaded && userStore.photo"
+              :src="userStore.photo"
+              class="cursor-pointer"
+            />
+            <img v-else src="../assets/user-avatar.png" class="cursor-pointer" />
             <q-menu align="right">
               <q-list>
                 <q-item clickable v-close-popup @click="isSettingsFormActive = true">

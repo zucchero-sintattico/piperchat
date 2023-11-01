@@ -48,8 +48,11 @@ function updateFont() {
     <q-form class="q-gutter-md">
       <!--Insert image with username-->
       <div class="avatar-and-title">
-        <q-avatar class="q-mb-md" size="100px" @click="openFileInput">
-          <q-img v-if="userStore.photoLoaded" :src="userStore.photo">
+        <q-avatar class="q-mb-md" size="100px" @click="openFileInput" style="cursor: pointer">
+          <q-img v-if="userStore.photoLoaded && userStore.photo != ''" :src="userStore.photo">
+            <div class="absolute-bottom text-center text-caption">Change Photo</div>
+          </q-img>
+          <q-img v-else src="../../../assets/user-avatar.png">
             <div class="absolute-bottom text-center text-caption">Change Photo</div>
           </q-img>
         </q-avatar>
