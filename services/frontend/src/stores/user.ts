@@ -5,30 +5,27 @@ import { UserControllerImpl } from '@/controllers/users/user/user-controller-imp
 import type { AuthController } from '@/controllers/users/auth/auth-controller'
 import type { UserController } from '@/controllers/users/user/user-controller'
 import { LoginApi, RegisterApi } from '@api/users/auth'
-import type { GetUserPhotoApi, WhoamiApi } from '@api/users/user'
-
-export enum ContentArea {
-  Empty = 'empty',
-  Channel = 'channel',
-  Direct = 'direct',
-  Multimedia = 'multimedia'
-}
+import type { WhoamiApi } from '@api/users/user'
+import { usePhotoStore } from './photo'
 
 export const useUserStore = defineStore(
   'user',
   () => {
+    const photoStore = usePhotoStore()
+
     const isLoggedIn = ref(false)
     const username = ref('')
     const email = ref('')
     const description = ref('')
-
-    const photoLoaded = ref(false)
-    const photo = ref('')
     const jwt = ref('')
 
-    async function reload() {
+    let refreshing = false
+    async function refresh() {
+      if (refreshing) return
+      refreshing = true
+      console.log('Refreshing user')
       await whoami()
-      await reloadUserPhoto()
+      refreshing = false
     }
 
     const authController: AuthController = new AuthControllerImpl()
@@ -89,61 +86,7 @@ export const useUserStore = defineStore(
           photo: newPhoto
         })
         if (response.statusCode === 200) {
-          await reloadUserPhoto()
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function getUserPhoto(targetUsername: string) {
-      try {
-        const response = await userController.getUserPhoto({
-          username: targetUsername
-        })
-        if (response.statusCode === 200) {
-          const typed = response as GetUserPhotoApi.Responses.Success
-          if (typed.photo.data === undefined) {
-            return '' // TODO
-          } else {
-            return (
-              'data:image/jpeg;base64,' +
-              btoa(
-                new Uint8Array(typed.photo.data.data).reduce(
-                  (data, byte) => data + String.fromCharCode(byte),
-                  ''
-                )
-              )
-            )
-          }
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    async function reloadUserPhoto() {
-      try {
-        console.log(username.value)
-        const response = await userController.getUserPhoto({
-          username: username.value
-        })
-        if (response.statusCode === 200) {
-          const typed = response as GetUserPhotoApi.Responses.Success
-          console.log(typed)
-          if (typed.photo.data === undefined) {
-            photo.value = '' // TODO
-          } else {
-            photo.value =
-              'data:image/jpeg;base64,' +
-              btoa(
-                new Uint8Array(typed.photo.data.data).reduce(
-                  (data, byte) => data + String.fromCharCode(byte),
-                  ''
-                )
-              )
-          }
-          photoLoaded.value = true
+          photoStore.reloadUserPhoto(username.value)
         }
       } catch (e) {
         console.log(e)
@@ -151,21 +94,19 @@ export const useUserStore = defineStore(
     }
 
     return {
-      isLoggedIn,
-      jwt,
+      // ================ Data ================ //
       username,
       email,
       description,
-      photo,
-      whoami,
+      isLoggedIn,
+      jwt,
+      // ================ Fetching ================ //
+      refresh,
+      // ================ Requests ================ //
       login,
       register,
       logout,
-      updatePhoto,
-      getUserPhoto,
-      reloadUserPhoto,
-      photoLoaded,
-      reload
+      updatePhoto
     }
   },
   { persist: true }

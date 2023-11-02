@@ -4,9 +4,9 @@ import { onMounted } from 'vue'
 
 const monitoringStore = useMonitoringStore()
 
-onMounted(() => {
-  monitoringStore.getServicesStatus()
-  window.setInterval(monitoringStore.getServicesStatus, 10000)
+onMounted(async () => {
+  await monitoringStore.refreshServicesStatus()
+  setInterval(monitoringStore.refreshServicesStatus, 2000)
 })
 </script>
 

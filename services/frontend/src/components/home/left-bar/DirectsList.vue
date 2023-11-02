@@ -5,16 +5,15 @@ import FriendMenu from './menu/FriendMenu.vue'
 import { useFriendStore } from '@/stores/friend'
 import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import { useMessageStore } from '@/stores/messages'
 
 const friendStore = useFriendStore()
+
 const appStore = useAppStore()
-const messageStore = useMessageStore()
 
 const friendTabOpened = ref(false)
 
 onMounted(async () => {
-  await friendStore.refreshFriends()
+  await friendStore.refresh()
 })
 </script>
 
@@ -38,15 +37,9 @@ onMounted(async () => {
             separator
             class="text-white text-h5"
             v-for="friend in friendStore.friends"
-            :key="friend.username"
+            :key="friend"
           >
-            <HorizontalUser
-              :name="friend.username"
-              :online="friend.status.online"
-              :last-active="friend.status.lastActive.toString()"
-              :photo="messageStore.usersPhotos.get(friend.username)"
-              @click="appStore.selectDirect(friend.username)"
-            />
+            <HorizontalUser :name="friend" @click="appStore.selectDirect(friend)" />
           </q-list>
         </q-list>
 

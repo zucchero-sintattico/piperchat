@@ -4,9 +4,11 @@ import { useMessageStore } from '@/stores/messages'
 import { useUserStore } from '@/stores/user'
 import MessageInput from './MessageInput.vue'
 import { useAppStore } from '@/stores/app'
+import { usePhotoStore } from '@/stores/photo'
 
 const appStore = useAppStore()
 const messageStore = useMessageStore()
+const photoStore = usePhotoStore()
 const userStore = useUserStore()
 
 let tempLastScrollPosition = 0
@@ -54,11 +56,7 @@ onMounted(() => {
           >
             <!-- if sender is the user show the image, default image otherwise -->
             <q-chat-message
-              v-if="
-                (message.sender == userStore.username && userStore.photo == '') ||
-                (message.sender != userStore.username &&
-                  messageStore.usersPhotos.get(message.sender) == '')
-              "
+              v-if="photoStore.getUserPhoto(message.sender).value === undefined"
               :name="message.sender"
               :text="[message.content]"
               :sent="userStore.username == message.sender"
@@ -69,11 +67,7 @@ onMounted(() => {
               :name="message.sender"
               :text="[message.content]"
               :sent="userStore.username == message.sender"
-              :avatar="
-                message.sender == userStore.username
-                  ? userStore.photo
-                  : messageStore.usersPhotos.get(message.sender)
-              "
+              :avatar="photoStore.getUserPhoto(message.sender).value"
             />
           </div>
         </div>

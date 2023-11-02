@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { onMounted } from 'vue'
 import { setCssVar } from 'quasar'
 import { useAppStore } from '@/stores/app'
+import { usePhotoStore } from '@/stores/photo'
 
 const appStore = useAppStore()
+const photoStore = usePhotoStore()
 const userStore = useUserStore()
 
 const event = defineEmits<{
   (e: 'close'): void
 }>()
-
-onMounted(async () => {
-  await userStore.reloadUserPhoto()
-})
 
 function handleFileChange(e: any) {
   const file = e.target.files[0]
@@ -49,7 +46,10 @@ function updateFont() {
       <!--Insert image with username-->
       <div class="avatar-and-title">
         <q-avatar class="q-mb-md" size="100px" @click="openFileInput" style="cursor: pointer">
-          <q-img v-if="userStore.photoLoaded && userStore.photo != ''" :src="userStore.photo">
+          <q-img
+            v-if="photoStore.getUserPhoto(userStore.username).value"
+            :src="photoStore.getUserPhoto(userStore.username).value"
+          >
             <div class="absolute-bottom text-center text-caption">Change Photo</div>
           </q-img>
           <q-img v-else src="../../../assets/user-avatar.png">

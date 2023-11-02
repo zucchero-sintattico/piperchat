@@ -10,7 +10,7 @@ const serverStore = useServerStore()
 const appStore = useAppStore()
 
 onMounted(async () => {
-  await serverStore.refreshUserServers()
+  await serverStore.refresh()
   appStore.setDirects()
 })
 </script>

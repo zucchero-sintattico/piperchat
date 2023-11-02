@@ -5,15 +5,18 @@ import { ChannelControllerImpl } from '@/controllers/messages/channel/channel-co
 import type { DirectController } from '@/controllers/messages/direct/direct-controller'
 import { DirectControllerImpl } from '@/controllers/messages/direct/direct-controller-impl'
 import { GetDirectMessagesApi, SendDirectMessageApi } from '@api/messages/direct'
-import { ContentArea, useUserStore } from './user'
 import type { SendMessageInChannelApi } from '@api/messages/channel'
 import { useAppStore } from './app'
-import { useServerStore } from './server'
+
+export enum ContentArea {
+  Empty = 'empty',
+  Channel = 'channel',
+  Direct = 'direct',
+  Multimedia = 'multimedia'
+}
 
 export const useMessageStore = defineStore('message', () => {
-  const userStore = useUserStore()
   const appStore = useAppStore()
-  const serverStore = useServerStore()
 
   // array of message
   const currentSection: Ref<ContentArea.Channel | ContentArea.Direct | undefined> = computed(() => {
@@ -56,29 +59,6 @@ export const useMessageStore = defineStore('message', () => {
   }
   function increaseMessagesNumber() {
     messagesNumber.value += messagesNumberLimit
-  }
-
-  const usersPhotos = ref(new Map<string, string>())
-
-  async function fetchUsersPhotos() {
-    // If the user is in a direct, fetch the photo of the other user
-    if (currentSection.value == ContentArea.Direct) {
-      const info = currentSectionInfo.value as { username: string }
-      if (!usersPhotos.value.has(info.username)) {
-        const photo = await userStore.getUserPhoto(info.username)
-        usersPhotos.value.set(info.username, photo?.toString() || '')
-      }
-    }
-    // If the user is in a channel, fetch the photos of all the partecipants of the server
-    if (currentSection.value == ContentArea.Channel) {
-      const info = currentSectionInfo.value as { serverId: string }
-      for (const user of await serverStore.getServerParticipants(info.serverId)) {
-        if (!usersPhotos.value.has(user)) {
-          const photo = await userStore.getUserPhoto(user)
-          usersPhotos.value.set(user, photo?.toString() || '')
-        }
-      }
-    }
   }
 
   const channelController: ChannelController = new ChannelControllerImpl()
@@ -142,7 +122,6 @@ export const useMessageStore = defineStore('message', () => {
         limit: messagesNumber.value
       })
     }
-    await fetchUsersPhotos()
   }
 
   async function loadNewMessages() {
@@ -262,10 +241,6 @@ export const useMessageStore = defineStore('message', () => {
   }
 
   return {
-    currentSection,
-    currentSectionInfo,
-
-    usersPhotos,
     messages,
     messagesLoaded,
     sendMessage,
@@ -276,7 +251,6 @@ export const useMessageStore = defineStore('message', () => {
     loadNewMessages,
     loadingNewMessages,
 
-    refreshMessages,
-    fetchUsersPhotos
+    refreshMessages
   }
 })

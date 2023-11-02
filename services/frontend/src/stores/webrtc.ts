@@ -3,11 +3,10 @@ import {
   type SessionController
 } from '@/controllers/session/session-controller'
 import { defineStore } from 'pinia'
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useUserStore } from './user'
 import type { SessionHandler } from '@/controllers/session/session-handler'
 import { StreamService } from './utils/stream-service'
-import { useAppStore } from './app'
 
 interface UserWithPhoto {
   username: string

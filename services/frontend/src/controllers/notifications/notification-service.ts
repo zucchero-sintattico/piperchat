@@ -19,6 +19,7 @@ import { useMessageStore } from '@/stores/messages'
 import { useAppStore } from '@/stores/app'
 import { useFriendStore } from '@/stores/friend'
 import { useNotificationStore } from '@/stores/notifications'
+import { useUsersStatusStore } from '@/stores/status'
 
 class NotificationService {
   callbacks: Record<string, (message: any) => Promise<void>> = {}
@@ -32,6 +33,7 @@ function createNotificationService() {
   const notificationService = new NotificationService()
 
   const appStore = useAppStore()
+  const userStatusStore = useUsersStatusStore()
   const friendsStore = useFriendStore()
   const messageStore = useMessageStore()
   const serverStore = useServerStore()
@@ -82,7 +84,7 @@ function createNotificationService() {
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers and moving to directs')
           appStore.setDirects()
-          await serverStore.refreshUserServers()
+          await serverStore.refresh()
         }
       }
     )
@@ -93,7 +95,7 @@ function createNotificationService() {
         console.log('NotificationService: ServerUpdatedNotification', data)
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers')
-          await serverStore.refreshUserServers()
+          await serverStore.refresh()
         }
       }
     )
@@ -106,7 +108,7 @@ function createNotificationService() {
         console.log('NotificationService: ChannelCreatedNotification', data)
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers')
-          await serverStore.refreshUserServers()
+          await serverStore.refresh()
         }
       }
     )
@@ -116,7 +118,7 @@ function createNotificationService() {
         console.log('NotificationService: ChannelUpdatedNotification', data)
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers')
-          await serverStore.refreshUserServers()
+          await serverStore.refresh()
         }
       }
     )
@@ -127,7 +129,7 @@ function createNotificationService() {
         console.log('NotificationService: ChannelDeletedNotification', data)
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers')
-          await serverStore.refreshUserServers()
+          await serverStore.refresh()
         }
       }
     )
@@ -136,12 +138,12 @@ function createNotificationService() {
   function setupUsersListeners() {
     notificationService.on(UserOnlineNotification.type, async (data: UserOnlineNotification) => {
       console.log('NotificationService: UserOnlineNotification', data)
-      friendsStore.refreshFriends()
+      userStatusStore.reloadUserStatus(data.user)
     })
 
     notificationService.on(UserOfflineNotification.type, async (data: UserOfflineNotification) => {
       console.log('NotificationService: UserOfflineNotification', data)
-      friendsStore.refreshFriends()
+      userStatusStore.reloadUserStatus(data.user)
     })
 
     notificationService.on(
@@ -150,7 +152,7 @@ function createNotificationService() {
         console.log('NotificationService: UserJoinedServerNotification', data)
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers')
-          serverStore.refreshUserServers()
+          serverStore.refresh()
         }
       }
     )
@@ -162,7 +164,7 @@ function createNotificationService() {
         if (appStore.selectedServer?.id == data.serverId) {
           console.log('NotificationService: Refreshing servers and moving to directs')
           appStore.setDirects()
-          serverStore.refreshUserServers()
+          serverStore.refresh()
         }
       }
     )
@@ -173,6 +175,7 @@ function createNotificationService() {
       FriendRequestNotification.type,
       async (data: FriendRequestNotification) => {
         console.log('NotificationService: FriendRequestNotification', data)
+        await friendsStore.refresh()
         notificationsStore.addFriendRequest(data.from)
       }
     )
@@ -181,6 +184,7 @@ function createNotificationService() {
       FriendRequestAcceptedNotification.type,
       async (data: FriendRequestAcceptedNotification) => {
         console.log('NotificationService: FriendRequestAcceptedNotification', data)
+        await friendsStore.refresh()
         notificationsStore.addFriendRequestAccepted(data.from)
       }
     )

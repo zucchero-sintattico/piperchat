@@ -9,11 +9,11 @@ import { setCssVar } from 'quasar'
 import { useNotificationService } from '@/controllers/notifications/notification-service'
 import { useAppStore } from '@/stores/app'
 import NotificationComponent from '@/components/home/NotificationComponent.vue'
-import { useMessageStore } from '@/stores/messages'
+import { usePhotoStore } from '@/stores/photo'
 
 const appStore = useAppStore()
+const photoStore = usePhotoStore()
 const userStore = useUserStore()
-const messageStore = useMessageStore()
 
 const leftDrawerOpen = ref(false)
 const isSettingsFormActive = ref(false)
@@ -35,8 +35,7 @@ function toggleLeftDrawer() {
 }
 
 onMounted(() => {
-  userStore.reload()
-  messageStore.fetchUsersPhotos()
+  userStore.refresh()
 })
 </script>
 
@@ -61,8 +60,8 @@ onMounted(() => {
           <q-avatar>
             <!-- add hover effect to image -->
             <img
-              v-if="userStore.photoLoaded && userStore.photo"
-              :src="userStore.photo"
+              v-if="photoStore.getUserPhoto(userStore.username).value !== undefined"
+              :src="photoStore.getUserPhoto(userStore.username).value"
               class="cursor-pointer"
             />
             <img v-else src="../assets/user-avatar.png" class="cursor-pointer" />

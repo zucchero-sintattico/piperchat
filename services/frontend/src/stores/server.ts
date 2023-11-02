@@ -2,31 +2,28 @@ import type { ChannelController } from '@/controllers/piperchat/channel/channel-
 import { ChannelControllerImpl } from '@/controllers/piperchat/channel/channel-controller-impl'
 import type { ServerController } from '@/controllers/piperchat/server/server-controller'
 import { ServerControllerImpl } from '@/controllers/piperchat/server/server-controller-impl'
-import type { CreateChannelApi, GetChannelByIdApi } from '@api/piperchat/channel'
+import type { CreateChannelApi } from '@api/piperchat/channel'
 import type {
   CreateServerApi,
-  GetServerParticipantsApi,
   GetServersApi,
   JoinServerApi,
   KickUserFromServerApi,
   UpdateServerApi
 } from '@api/piperchat/server'
 import { defineStore } from 'pinia'
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useUserStore } from './user'
 import { useAppStore } from './app'
-import { useWebRTCStore } from './webrtc'
 
 type Server = GetServersApi.Responses.Server
-type Channel = GetChannelByIdApi.Responses.Channel
 
 export const useServerStore = defineStore(
   'server',
   () => {
-    const appStore = useAppStore()
-    const userStore = useUserStore()
     const serverController: ServerController = new ServerControllerImpl()
     const channelController: ChannelController = new ChannelControllerImpl()
+    const appStore = useAppStore()
+    const userStore = useUserStore()
 
     const servers = ref<Server[]>([])
 
@@ -35,7 +32,13 @@ export const useServerStore = defineStore(
       return appStore.selectedServer.owner === userStore.username
     })
 
-    async function refreshUserServers() {
+    let refreshing = false
+    async function refresh() {
+      if (refreshing) {
+        return
+      }
+      refreshing = true
+      console.log('Refreshing servers')
       const response = await serverController.getServers()
       if (response.statusCode === 200) {
         const typed = response as GetServersApi.Responses.Success
@@ -60,7 +63,14 @@ export const useServerStore = defineStore(
           appStore.selectChannel(channel)
         }
       }
+      refreshing = false
     }
+
+    async function getServerParticipants(serverId: string) {
+      return servers.value.find((server) => server.id === serverId)?.participants ?? []
+    }
+
+    // ------------------ Requests ------------------
 
     async function createServer(name: string, description: string) {
       const response = await serverController.createServer({
@@ -68,7 +78,7 @@ export const useServerStore = defineStore(
         description
       })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as CreateServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -88,7 +98,7 @@ export const useServerStore = defineStore(
         serverId
       })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as CreateChannelApi.Errors.Type
         throw new Error(String(typed.error))
@@ -98,7 +108,7 @@ export const useServerStore = defineStore(
     async function joinServer(serverId: string) {
       const response = await serverController.joinServer({ serverId })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as JoinServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -108,7 +118,7 @@ export const useServerStore = defineStore(
     async function leaveServer(serverId: string) {
       const response = await serverController.leaveServer({ serverId })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as JoinServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -118,7 +128,7 @@ export const useServerStore = defineStore(
     async function deleteChannel(serverId: string, channelId: string) {
       const response = await channelController.deleteChannel({ serverId, channelId })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as KickUserFromServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -128,15 +138,11 @@ export const useServerStore = defineStore(
     async function kickUser(serverId: string, username: string) {
       const response = await serverController.kickUserFromTheServer({ serverId, username })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as KickUserFromServerApi.Errors.Type
         throw new Error(String(typed.error))
       }
-    }
-
-    async function getServerParticipants(serverId: string) {
-      return servers.value.find((server) => server.id === serverId)?.participants ?? []
     }
 
     async function updateServer(serverId: string, name?: string, description?: string) {
@@ -146,7 +152,7 @@ export const useServerStore = defineStore(
         description: description
       })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as UpdateServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -166,7 +172,7 @@ export const useServerStore = defineStore(
         description: description
       })
       if (response.statusCode === 200) {
-        await refreshUserServers()
+        await refresh()
       } else {
         const typed = response as UpdateServerApi.Errors.Type
         throw new Error(String(typed.error))
@@ -174,7 +180,7 @@ export const useServerStore = defineStore(
     }
 
     return {
-      refreshUserServers,
+      refresh,
       createServer,
       createChannel,
       deleteChannel,

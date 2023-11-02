@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { usePhotoStore } from '@/stores/photo'
+import { useUsersStatusStore } from '@/stores/status'
+import { computed } from 'vue'
+
+const photoStore = usePhotoStore()
+const statusStore = useUsersStatusStore()
 
 const props = defineProps<{
   name: string
-  photo?: string
-  online?: boolean
-  lastActive?: string
 }>()
 
-const formattedLastActive = ref<string>('')
+const photo = photoStore.getUserPhoto(props.name)
 
-watchEffect(() => {
-  if (props.lastActive) {
-    const date = new Date(props.lastActive)
-    formattedLastActive.value = date.toLocaleString('en-US', {
-      weekday: 'short',
-      hour: 'numeric',
-      minute: 'numeric'
-    })
-  }
-})
+const status = statusStore.getUserStatus(props.name)
+
+const color = computed(() => (status.value?.online ? 'green' : 'red'))
+
+const formattedDate = computed(() => formatDate(status.value?.lastActive ?? new Date()))
+
+function formatDate(date: Date) {
+  const newDate = new Date(date)
+  return newDate.toLocaleString('en-US', {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: 'numeric'
+  })
+}
 </script>
 
 <template>
@@ -28,14 +34,10 @@ watchEffect(() => {
     <div class="top-row">
       <div class="status-row">
         <div class="status-icon-container">
-          <q-icon
-            name="fiber_manual_record"
-            class="user-online-icon"
-            :color="props.online ? 'green' : 'red'"
-          ></q-icon>
+          <q-icon name="fiber_manual_record" class="user-online-icon" :color="color"></q-icon>
         </div>
         <div class="status-text">
-          {{ props.online ? 'Online' : 'Last Active: ' + formattedLastActive }}
+          {{ status?.online ? 'Online' : 'Last Active: ' + formattedDate }}
         </div>
       </div>
     </div>
@@ -44,11 +46,11 @@ watchEffect(() => {
     <div class="bottom-row">
       <q-avatar class="user-avatar">
         <img
-          v-if="props.photo == '' || props.photo == undefined"
+          v-if="photo === undefined"
           src="../../../../assets/user-avatar.png"
           alt="Default User Photo"
         />
-        <img v-else :src="props.photo" alt="User Photo" />
+        <img v-else :src="photo" alt="User Photo" />
       </q-avatar>
 
       <div class="user-details">

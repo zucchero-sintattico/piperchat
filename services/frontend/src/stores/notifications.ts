@@ -9,6 +9,7 @@ type ChannelMessage = {
 type DirectMessage = {
   sender: string
 }
+
 export const useNotificationStore = defineStore('notification', () => {
   const newFriendRequests: Ref<string[]> = ref([])
   const newFriendRequestsAccepted: Ref<string[]> = ref([])

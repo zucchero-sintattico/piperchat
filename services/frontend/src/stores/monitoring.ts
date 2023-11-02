@@ -8,7 +8,7 @@ export const useMonitoringStore = defineStore('monitoring', () => {
   const monitoringController: MonitoringController = new MonitoringControllerImpl()
   const serviceStatus = ref()
 
-  async function getServicesStatus() {
+  async function refreshServicesStatus() {
     const response =
       (await monitoringController.getServicesStatus()) as GetServicesStatusApi.Responses.Success
     if (response.statusCode === 200) {
@@ -19,6 +19,6 @@ export const useMonitoringStore = defineStore('monitoring', () => {
 
   return {
     serviceStatus,
-    getServicesStatus
+    refreshServicesStatus
   }
 })
