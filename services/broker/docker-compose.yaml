@@ -1,0 +1,23 @@
+services:
+  broker:
+    image: rabbitmq:3-management-alpine
+    expose:
+      - '${BROKER_PORT}'
+    # for development only
+    # ports:
+    #   - "15672:15672"
+    # volumes:
+    #   - .docker/broker/data/:/var/lib/broker/
+    networks:
+      backend:
+        aliases:
+          - ${BROKER_NAME}
+    volumes:
+      - './.docker/db-broker:/data/db'
+    environment:
+      - 'RABBITMQ_NODE_PORT=${BROKER_PORT}'
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+
+networks:
+  backend:

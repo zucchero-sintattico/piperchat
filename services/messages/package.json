@@ -1,0 +1,16 @@
+{
+  "name": "@piperchat/messages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/app.ts",
+  "scripts": {
+    "start": "ts-node --transpile-only -r tsconfig-paths/register .",
+    "dev": "ts-node-dev --respawn -r tsconfig-paths/register src/app.ts",
+    "test": "jest --verbose --testTimeout=5000 --detectOpenHandles --passWithNoTests",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

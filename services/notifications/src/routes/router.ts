@@ -1,9 +1,9 @@
-import { Router } from "express";
-import { entityRouter } from "./entity-router";
+import { Router } from 'express'
+import { userStatusRouter } from './routers/user-status-router'
+import { JWTAuthenticationMiddleware } from '@commons/utils/jwt'
+const serviceRouter = Router()
+serviceRouter.use(JWTAuthenticationMiddleware)
 
-const serviceRouter = Router();
+serviceRouter.use('/users', userStatusRouter)
 
-// Register all routers
-serviceRouter.use("/entity", entityRouter);
-
-export { serviceRouter };
+export { serviceRouter }

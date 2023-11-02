@@ -3,3 +3,7 @@ node_modules/
 .docker/
 dist/
 .env
+piperchat.code-workspace
+.idea/
+.vscode/settings.json
+

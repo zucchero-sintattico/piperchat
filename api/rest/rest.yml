@@ -1,0 +1,1219 @@
+openapi: '3.0.3'
+info:
+  title: Piperchat rest API
+  version: '1.0'
+  description: |
+    Piperchat rest API to interact with the system.
+
+tags:
+  - name: auth
+    description: Everything about authentication
+  - name: profile
+    description: Everything about user profile
+  - name: users
+    description: Everything about users and pair communication
+  - name: friends
+    description: Everything about friends relationships
+  - name: servers
+    description: Everything about servers information
+  - name: channels
+    description: Everything about channels information
+  - name: message-channel
+    description: Everything about message channel information
+  - name: multimedia-channel
+    description: Everything about multimedia channel information
+
+paths:
+  /auth/login:
+    post:
+      summary: Login a user
+      description: Login the user using his username and password
+      tags:
+        - 'auth'
+      requestBody:
+        '$ref': '#/components/requestBodies/login'
+      responses:
+        '200':
+          '$ref': '#/components/responses/LoggedIn'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/UsernameOrPasswordIncorrect'
+
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Register a new user with some information
+      tags:
+        - 'auth'
+      requestBody:
+        '$ref': '#/components/requestBodies/register'
+      responses:
+        '200':
+          '$ref': '#/components/responses/Registered'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '409':
+          '$ref': '#/components/responses/UserAlreadyExists'
+
+  /auth/logout:
+    post:
+      summary: Logout a user
+      description: Logout the user
+      tags:
+        - 'auth'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          '$ref': '#/components/responses/LoggedOut'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+
+  /auth/refresh-token:
+    post:
+      summary: Refresh token
+      description: Refresh the user authentication token
+      tags:
+        - 'auth'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          '$ref': '#/components/responses/RefreshToken'
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+
+  /profile/photo:
+    put:
+      summary: Change photo
+      description: Change user profile photo
+      tags:
+        - 'profile'
+      security:
+        - bearerAuth: []
+      requestBody:
+        '$ref': '#/components/requestBodies/updatePhoto'
+      responses:
+        '200':
+          '$ref': '#/components/responses/PhotoUpdated'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+
+  /profile/description:
+    put:
+      summary: Change description
+      description: Change user profile description
+      tags:
+        - 'profile'
+      security:
+        - bearerAuth: []
+      requestBody:
+        '$ref': '#/components/requestBodies/updateDescription'
+      responses:
+        '200':
+          '$ref': '#/components/responses/DescriptionUpdated'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+
+  /users/{username}/status:
+    get:
+      summary: Get online status
+      description: Get the online status of a user
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        '200':
+          '$ref': '#/components/responses/UserStatus'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+        '404':
+          '$ref': '#/components/responses/UserNotFound'
+
+  /users/{username}/photo:
+    get:
+      summary: Get photo
+      description: Get the photo of a user
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        '200':
+          '$ref': '#/components/responses/UserPhoto'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+        '404':
+          '$ref': '#/components/responses/UserNotFound'
+
+  /users/{username}/description:
+    get:
+      summary: Get description
+      description: Get the description of a user
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        '200':
+          '$ref': '#/components/responses/UserDescription'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+        '404':
+          '$ref': '#/components/responses/UserNotFound'
+
+  /users/{username}/messages:
+    get:
+      summary: Get messages list
+      description: Get the list of messages in a conversation with another user
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/username'
+        - '$ref': '#/components/parameters/from'
+        - '$ref': '#/components/parameters/limit'
+      responses:
+        '200':
+          '$ref': '#/components/responses/DirectMessages'
+        '400':
+          '$ref': '#/components/responses/BadRequest'
+        '401':
+          '$ref': '#/components/responses/JwtTokenMissingOrInvalid'
+    post:
+      summary: Send a message
+      description: Send a message to another user
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/username'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              '$ref': '#/components/schemas/messageWithoutId'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+
+  /users/{username}/session:
+    get:
+      summary: Get session for a call
+      description: Get the session of a user to perform a call
+      tags:
+        - 'users'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/username'
+      responses:
+        '200':
+          description: Session id retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session:
+                    type: string
+                    example: session123
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
+          description: Friendship not found
+
+  /friends:
+    get:
+      summary: Get friends list
+      description: Get the list of friends of the user
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user1
+                  - user2
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+
+  /friends/requests:
+    get:
+      summary: Get friend requests list
+      description: Get the list of friend requests of the user
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user3
+                  - user4
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+    post:
+      summary: Manage friend request
+      description: Manage a friend request in order to send, accept or deny it
+      tags:
+        - 'friends'
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                    - send
+                    - accept
+                    - deny
+                to:
+                  type: string
+                  example: user4
+              required:
+                - action
+                - otherUser
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
+          description: User not found
+
+  /servers:
+    get:
+      summary: Get servers list
+      description: Get the list of servers in which the user is joined
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  '$ref': '#/components/schemas/server'
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+    post:
+      summary: Create server
+      description: Create a new server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beautiful Server
+                description:
+                  type: string
+                  example: This server is created for make new friends!
+              required:
+                - name
+      responses:
+        '200':
+          description: Server created successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+
+  /servers/{serverId}:
+    put:
+      summary: Modify server
+      description: The owner modify server information
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Optional
+                  example: Beautiful Server
+                description:
+                  type: string
+                  description: Optional
+                  example: This server is created for make new friends!
+      responses:
+        '200':
+          description: Server updated successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server not found
+        '422':
+          description: Name or description required
+    delete:
+      summary: Delete server
+      description: The owner delete the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      responses:
+        '200':
+          description: Server deleted successfully
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
+          description: Server not found
+
+  /servers/{serverId}/partecipants:
+    get:
+      summary: Get partecipants list of a specific server
+      description: Get the list of partecipants of the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user1
+                  - user2
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server not found
+    post:
+      summary: Request to join the server
+      description: The user request to join the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      responses:
+        '200':
+          description: Server joined successfully
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '404':
+          description: Server not found
+    delete:
+      summary: Leave from the server
+      description: The user leave from the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      responses:
+        '200':
+          description: Server left successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not in the server
+        '404':
+          description: Server not found
+        '422':
+          description: Owner cannot leave the server
+
+  /servers/{serverId}/partecipants/{username}:
+    delete:
+      summary: Remove user from server
+      description: The owner remove a user from the server
+      tags:
+        - 'servers'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/username'
+      responses:
+        '200':
+          description: User kicked successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or user not found
+        '422':
+          description: Unprocessable entity
+
+  /servers/{serverId}/channels:
+    get:
+      summary: Get channels list
+      description: Get the list of message and multimedia channels in a server
+      tags:
+        - 'channels'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  '$ref': '#/components/schemas/basicChannel'
+                example:
+                  - id: channel123
+                    name: Beautiful Channel
+                    createdAt: '2021-05-01T12:00:00.000Z'
+                    description: This channel is created for make new friends!
+                    channelType: message
+                  - id: channel456
+                    name: Beautiful vocal channel
+                    createdAt: '2021-05-01T12:00:00.000Z'
+                    description: This channel is created for make new friends!
+                    channelType: multimedia
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server not found
+    post:
+      summary: Create a new channel
+      description: The server owner create a new channel
+      tags:
+        - 'channels'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: channel1
+                channelType:
+                  enum:
+                    - message
+                    - multimedia
+                description:
+                  type: string
+                  example: This channel is created for make new friends!
+                  description: Optional
+              required:
+                - channelType
+                - name
+      responses:
+        '200':
+          description: Channel created successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          '$ref': '#/components/responses/ForbiddenError'
+        '404':
+          description: Server not found
+
+  /servers/{serverId}/channels/{channelId}:
+    put:
+      summary: Modify a channel
+      description: The owner modify channel information
+      tags:
+        - 'channels'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beautiful Channel 2.0
+                  description: Optional
+                description:
+                  type: string
+                  example: This channel is created for make new friends! 2.0
+                  description: Optional
+      responses:
+        '200':
+          description: Channel updated successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or Channel not found
+    delete:
+      summary: Delete a channel
+      description: The owner delete a channel
+      tags:
+        - 'channels'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
+      responses:
+        '200':
+          description: Channel deleted successfully
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or Channel not found
+
+  /servers/{serverId}/channels/{channelId}/messages:
+    get:
+      summary: Get messages list
+      description: Get the list of messages in a channel
+      tags:
+        - 'message-channel'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
+        - in: query
+          name: from
+          required: false
+          description: Starting index of messages to return
+          schema:
+            type: number
+          example: 0
+        - in: query
+          name: limit
+          required: false
+          description: Limit of messages to return
+          schema:
+            type: number
+          example: 10
+      responses:
+        '200':
+          description: Messages retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  '$ref': '#/components/schemas/message'
+
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or Channel not found
+    post:
+      tags:
+        - 'message-channel'
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              '$ref': '#/components/schemas/messageWithoutId'
+      responses:
+        '200':
+          description: Message sent successfully
+        '400':
+          description: Bad request
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or Channel not found
+
+  /servers/{serverId}/channels/{channelId}/session:
+    get:
+      summary: Get session
+      description: Get the session of the multimedia channel to join
+      tags:
+        - 'multimedia-channel'
+      security:
+        - bearerAuth: []
+      parameters:
+        - '$ref': '#/components/parameters/serverId'
+        - '$ref': '#/components/parameters/channelId'
+      responses:
+        '200':
+          description: Session id retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    example: session123
+        '400':
+          description: This is not a multimedia channel
+        '401':
+          '$ref': '#/components/responses/UnauthorizedError'
+        '403':
+          description: User not authorized
+        '404':
+          description: Server or Channel not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  requestBodies:
+    login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+                description: Username of the user to be logged in
+              password:
+                type: string
+                example: password123
+                description: Password of the user to be logged in
+            required:
+              - username
+              - password
+    register:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: user1
+              password:
+                type: string
+                example: password123
+              email:
+                type: string
+                example: email@email.com
+              description:
+                type: string
+                example: 'Here to make new friends'
+              photo:
+                type: string
+                format: base64
+            required:
+              - username
+              - password
+              - email
+    updatePhoto:
+      description: Update photo request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              photo:
+                type: string
+                format: base64
+            required:
+              - photo
+    updateDescription:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                example: 'Here to make new friends'
+            required:
+              - description
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              params:
+                description: List of parameters that are not validß
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              body:
+                description: List of body fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+              query:
+                description: List of query fields that are not valid
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: username
+                    expected:
+                      type: string
+                      example: string
+                    received:
+                      type: string
+                      example: number
+    JwtTokenMissingOrInvalid:
+      description: JWT token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: JWT token Missing or Invalid
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    ForbiddenError:
+      description: You don't have permission to access this resource
+    UserNotFound:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User not found
+
+    # LOGIN
+    LoggedIn:
+      description: Logged in
+      content:
+        application/json:
+          schema:
+            properties:
+              jwt:
+                type: string
+                description: JWT token
+    UsernameOrPasswordIncorrect:
+      description: Username or password incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Username or password incorrect
+    # REGISTER
+    Registered:
+      description: User registered successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              createdUser:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: user1
+                  email:
+                    type: string
+                    example: email@email.com
+                  description:
+                    type: string
+                    example: 'Here to make new friends'
+                  photo:
+                    type: string
+                    format: base64
+                required:
+                  - username
+                  - email
+    UserAlreadyExists:
+      description: User already exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User already exists
+    # LOGOUT
+    LoggedOut:
+      description: Logged out
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Logged out
+
+    # REFRESH TOKEN
+    RefreshToken:
+      description: Refresh token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+                description: JWT token
+
+    # UPDATE PHOTO
+    PhotoUpdated:
+      description: Photo updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Photo updated successfully
+
+    # UPDATE DESCRIPTION
+    DescriptionUpdated:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Description updated successfully
+
+    # GET USER STATUS
+    UserStatus:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              online:
+                type: boolean
+                example: true
+              lastActive:
+                type: string
+                format: date-time
+                example: '2021-05-01T12:00:00.000Z'
+    # GET USER PHOTO
+    UserPhoto:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              photo:
+                type: string
+                format: base64
+    # GET USER DESCRIPTION
+    UserDescription:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                example: 'Here to make new friends'
+    # DIRECT MESSAGES
+    DirectMessages:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              '$ref': '#/components/schemas/message'
+            example:
+              - messageId: message123
+                sender: user1
+                content: Hello World!
+                timestamp: '2021-05-01T12:00:00.000Z'
+  schemas:
+    server:
+      type: object
+      properties:
+        id:
+          type: string
+          example: server123
+        name:
+          type: string
+          example: Beautiful Server
+        description:
+          type: string
+          example: This server is created for make new friends!
+        owner:
+          type: string
+          example: user1
+        participants:
+          type: array
+          items:
+            type: string
+          example:
+            - user1
+            - user2
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
+        channels:
+          type: array
+          items:
+            oneOf:
+              - '$ref': '#/components/schemas/messageChannel'
+              - '$ref': '#/components/schemas/multimediaChannel'
+          example:
+            - id: channel123
+              name: Beautiful Channel
+              createdAt: '2021-05-01T12:00:00.000Z'
+              description: This channel is created for make new friends!
+              channelType: message
+            - id: channel456
+              name: Beautiful vocal channel
+              createdAt: '2021-05-01T12:00:00.000Z'
+              description: This channel is created for make new friends!
+              channelType: multimedia
+    basicChannel:
+      type: object
+      properties:
+        id:
+          type: string
+          example: channel123
+        name:
+          type: string
+          example: Beautiful Channel
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
+        description:
+          type: string
+          example: This channel is created for make new friends!
+
+    messageChannel:
+      allOf:
+        - '$ref': '#/components/schemas/basicChannel'
+        - type: object
+          properties:
+            channelType:
+              type: string
+              enum:
+                - message
+
+    multimediaChannel:
+      allOf:
+        - '$ref': '#/components/schemas/basicChannel'
+        - type: object
+          properties:
+            channelType:
+              type: string
+              enum:
+                - multimedia
+
+    channel:
+      oneOf:
+        - '$ref': '#/components/schemas/messageChannel'
+        - '$ref': '#/components/schemas/multimediaChannel'
+
+    messageWithoutId:
+      type: object
+      properties:
+        content:
+          type: string
+          example: Hello World
+
+    message:
+      type: object
+      properties:
+        id:
+          type: string
+          example: message123
+        sender:
+          type: string
+          example: user1
+        content:
+          type: string
+          example: Hello World
+        timestamp:
+          type: string
+          format: date-time
+          example: '2021-05-01T12:00:00.000Z'
+
+  parameters:
+    username:
+      name: username
+      in: path
+      required: true
+      description: username of the user that you want to interact with
+      schema:
+        type: string
+      example: user1
+
+    from:
+      name: from
+      in: query
+      required: true
+      description: Starting index of messages to return
+      schema:
+        type: number
+      example: 0
+
+    limit:
+      name: limit
+      in: query
+      required: true
+      description: Limit of messages to return
+      schema:
+        type: number
+      example: 10
+
+    serverId:
+      name: serverId
+      in: path
+      required: true
+      description: serverId of the server that you want to interact with
+      schema:
+        type: string
+      example: server123
+
+    channelId:
+      name: channelId
+      in: path
+      required: true
+      description: channelID of the message channel that you want to interact with
+      schema:
+        type: string
+      example: channel123

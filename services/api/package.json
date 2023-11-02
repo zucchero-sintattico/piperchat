@@ -1,0 +1,11 @@
+{
+  "name": "@piperchat/api",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

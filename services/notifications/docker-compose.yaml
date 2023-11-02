@@ -1,0 +1,42 @@
+services:
+  notifications-service:
+    image: piperchat
+    command: ['npm', 'run', '--workspace', './services/notifications', 'start']
+    expose:
+      - '${NOTIFICATIONS_SERVICE_PORT}'
+    depends_on:
+      db-notifications-service:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+    networks:
+      notifications-network:
+      backend:
+        aliases:
+          - ${NOTIFICATIONS_SERVICE_NAME}
+      frontend:
+    environment:
+      - 'PORT=${NOTIFICATIONS_SERVICE_PORT}'
+      - 'AMQP_URI=${BROKER_URI}'
+      - 'MONGO_URI=mongodb://db-notifications-service:27017/notifications'
+    labels:
+      - |
+        traefik.http.routers.notifications-service.rule=
+        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`)) ||
+        (Method(`GET`) && PathPrefix(`/notification`))
+
+  db-notifications-service:
+    image: mongo
+    expose:
+      - '27017'
+    volumes:
+      - './.docker/db-notifications:/data/db'
+    healthcheck:
+      test: |
+        host=`hostname --ip-address || echo '127.0.0.1'`;
+        mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
+    networks:
+      - notifications-network
+
+networks:
+  notifications-network:

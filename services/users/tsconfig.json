@@ -1,12 +1,14 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
-		"outDir": "dist",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
-	},
-	"include": ["src/**/*"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "./",
+    "outDir": "./dist"
+  },
+  "include": ["./src/**/*", "./test/**/*"],
+  "references": [
+    { "path": "../commons" },
+    { "path": "../messages-api" },
+    { "path": "../api" }
+  ]
 }

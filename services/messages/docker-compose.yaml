@@ -1,0 +1,42 @@
+services:
+  messages-service:
+    image: piperchat
+    command: ['npm', 'run', '--workspace', './services/messages', 'start']
+    expose:
+      - '${MESSAGES_SERVICE_PORT}'
+    depends_on:
+      db-messages-service:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+    networks:
+      messages-network:
+      backend:
+        aliases:
+          - ${MESSAGES_SERVICE_NAME}
+      frontend:
+    environment:
+      - 'PORT=${MESSAGES_SERVICE_PORT}'
+      - 'AMQP_URI=${BROKER_URI}'
+      - 'MONGO_URI=mongodb://db-messages-service:27017/messages'
+    labels:
+      - |
+        traefik.http.routers.messages-service.rule=
+        (Method(`GET`, `POST`) && Path(`/users/{username:[^/]+}/messages`)) ||
+        (Method(`GET`, `POST`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}/messages`))
+
+  db-messages-service:
+    image: mongo
+    expose:
+      - '27017'
+    volumes:
+      - './.docker/db-messages:/data/db'
+    healthcheck:
+      test: |
+        host=`hostname --ip-address || echo '127.0.0.1'`;
+        mongo --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
+    networks:
+      - messages-network
+
+networks:
+  messages-network:

@@ -1,0 +1,16 @@
+services:
+  inspector:
+    image: ubuntu:latest
+    tty: true
+    env_file:
+      - .env
+
+    networks:
+      messages-network:
+      monitoring-network:
+      notifications-network:
+      piperchat-network:
+      users-network:
+      webrtc-network:
+      backend:
+      frontend:

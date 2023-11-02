@@ -1,0 +1,31 @@
+.blurred
+  backdrop-filter: blur(15px)
+  -webkit-backdrop-filter: blur(15px)
+
+// use openDyslexic font
+@font-face
+  font-family: 'OpenDyslexic'
+  src: url('../assets/font/OpenDyslexic-Regular.otf') format('opentype')
+
+@font-face
+  font-family: 'OpenDyslexic'
+  src: url('../assets/font/OpenDyslexic-Bold.otf') format('opentype')
+  font-weight: bold
+
+@font-face
+  font-family: 'OpenDyslexic'
+  src: url('../assets/font/OpenDyslexic-Italic.otf') format('opentype')
+  font-style: italic
+
+@font-face
+  font-family: 'OpenDyslexic'
+  src: url('../assets/font/OpenDyslexic-BoldItalic.otf') format('opentype')
+  font-weight: bold
+  font-style: italic
+
+// use openDyslexic font for all elements
+
+@import './quasar-variables.sass'
+
+body
+  font-family: var(--q-fontfamily), sans-serif !important

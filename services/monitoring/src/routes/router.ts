@@ -1,9 +1,9 @@
-import { Router } from "express";
-import { entityRouter } from "./entity-router";
+import { Router } from 'express'
+import { monitoringRouter } from './monitoring-router'
 
-const serviceRouter = Router();
+const serviceRouter = Router()
 
 // Register all routers
-serviceRouter.use("/entity", entityRouter);
+serviceRouter.use('/status', monitoringRouter)
 
-export { serviceRouter };
+export { serviceRouter }
