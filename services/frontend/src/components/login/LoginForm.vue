@@ -72,6 +72,18 @@ function onReset() {
     <!-- Error message -->
     <BottomPopUp :active="error" :color="colorBanner" :content="errorMessage" />
   </q-form>
+
+  <!--Button to redirect at page /monitoring-->
+
+  <router-link to="/monitoring">
+    <q-btn
+      class="q-ma-md"
+      fab
+      icon="monitor_heart"
+      color="primary"
+      style="position: fixed; bottom: 0; right: 0"
+    />
+  </router-link>
 </template>
 
 <style scoped lang="scss">
