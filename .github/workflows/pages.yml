@@ -39,6 +39,7 @@ jobs:
           mkdir -p ./tmp-site/api/infra-service
           mkdir -p ./tmp-site/api/notification
           mkdir -p ./tmp-site/api/rest
+          mkdir -p ./tmp-site/app
       - name: Copy files
         run: |
           cp -r ./api/infra-service/index.html ./tmp-site/api/infra-service/index.html
@@ -58,6 +59,9 @@ jobs:
             --output=./tmp-site/index.html
             --css=./github-pandoc.css
             main.tex
+      - name: Add redirect for app
+        run: |
+          cp -r ./resources/redirect.html ./tmp-site/app/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
