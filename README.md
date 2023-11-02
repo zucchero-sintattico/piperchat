@@ -64,17 +64,34 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-TODO
+- [Node.js](https://nodejs.org/en/)
+- [Docker](https://www.docker.com/)
 
 ### Installation
 
-TODO
+1. Clone the repo
 
-<!-- ROADMAP -->
+```sh
+git clone git@github.com:zucchero-sintattico/piperchat.git
+```
 
-## Roadmap
+2. Install NPM packages
 
-TODO
+```sh
+npm install
+```
+
+3. Run the backend with the bash script
+
+```sh
+./deploy.sh
+```
+
+4. Run the frontend
+
+```sh
+npm run -w services/frontend dev
+```
 
 <!-- CONTRIBUTING -->
 
