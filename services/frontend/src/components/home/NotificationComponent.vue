@@ -39,9 +39,9 @@ watch(notification, (newVal) => {
   if (newVal !== null) {
     // Show the notification
     setTimeout(() => {
-      // Hide the notification after 1 second
+      // Hide the notification after 3 second
       notification.value = null
-    }, 1000)
+    }, 3000)
   }
 })
 </script>
