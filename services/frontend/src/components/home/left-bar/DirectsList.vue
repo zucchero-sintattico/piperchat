@@ -27,6 +27,7 @@ onMounted(async () => {
       <div class="col fit">
         <q-list bordered separator class="text-white text-h5">
           <HorizontalChannel
+            class="bg-primary friend-button"
             name="Friends"
             icon="group"
             clickable
@@ -48,3 +49,10 @@ onMounted(async () => {
     </div>
   </q-scroll-area>
 </template>
+
+<style scoped>
+.friend-button {
+  border-radius: 1em !important;
+  margin: 5% !important;
+}
+</style>
