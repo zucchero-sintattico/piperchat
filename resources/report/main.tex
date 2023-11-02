@@ -1,0 +1,131 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{float}
+
+\newcommand{\emailaddr}[1]{\large\href{mailto:#1}{\texttt{#1}}}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define TypeScript language settings
+\lstdefinelanguage{TypeScript}{
+  morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, class, export, async, namespace, const, type, extends},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  sensitive=true
+}
+
+% Define code listing style
+\lstdefinestyle{typescript}{
+  language=TypeScript,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{purple},
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{white},
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% YAML syntax highlighting %%%%%%%%%%%%%%%%%
+
+% http://tex.stackexchange.com/questions/152829/how-can-i-highlight-yaml-code-in-a-pretty-way-with-listings
+
+% here is a macro expanding to the name of the language
+% (handy if you decide to change it further down the road)
+\newcommand\YAMLcolonstyle{\color{red}\mdseries}
+\newcommand\YAMLkeystyle{\color{black}\bfseries}
+\newcommand\YAMLvaluestyle{\color{blue}\mdseries}
+
+\makeatletter
+
+\newcommand\language@yaml{yaml}
+
+\expandafter\expandafter\expandafter\lstdefinelanguage
+\expandafter{\language@yaml}
+{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{darkgray}\bfseries,
+  basicstyle=\YAMLkeystyle,                                 % assuming a key comes first
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\YAMLvaluestyle\ttfamily,
+  moredelim=[l][\color{orange}]{\&},
+  moredelim=[l][\color{magenta}]{*},
+  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
+  morestring=[b]',
+  morestring=[b]",
+  literate =    {---}{{\ProcessThreeDashes}}3
+                {>}{{\textcolor{red}\textgreater}}1     
+                {|}{{\textcolor{red}\textbar}}1 
+                {\ -\ }{{\mdseries\ -\ }}3,
+}
+
+% switch to key style at EOL
+\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
+\makeatother
+
+\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
+
+%%%%%%%%%%% YAML syntax highlighting %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{
+    Piperchat \\
+    \large Applicazioni e Servizi Web
+}
+
+\author{ \Large
+    Alessandro Mazzoli \\ \emailaddr{alessandro.mazzoli9@studio.unibo.it}
+    \and \Large
+    Luigi Borriello \\ \emailaddr{luigi.borriello2@studio.unibo.it} 
+    \and \Large
+    Tommaso Patriti \\ \emailaddr{tommaso.patriti@studio.unibo.it}
+}
+\date{\today}
+
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\include{./sections/01-intro/intro}
+
+\include{./sections/02-requirements/requirements}
+
+\include{./sections/03-design/design}
+
+\include{./sections/04-technologies/technologies}
+
+\include{./sections/05-code/code}
+
+\include{./sections/06-test/test}
+
+\include{./sections/07-deployment/deployment}
+
+\include{./sections/08-conclusions/conclusions}
+
+
+% \bibliographystyle{plain}
+% \bibliography{references}
+\end{document}

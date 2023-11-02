@@ -5,7 +5,7 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ['main', 'develop']
-    paths: ['api/**']
+    paths: ['api/**', 'resources/**']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -44,6 +44,20 @@ jobs:
           cp -r ./api/infra-service/index.html ./tmp-site/api/infra-service/index.html
           cp -r ./api/ws-notification/index.html ./tmp-site/api/notification/index.html
           cp -r ./api/rest/index.html ./tmp-site/api/rest/index.html
+      - name: Move file to root and copy resources
+        run: |
+          cp -r ./resources/report/* ./
+          cp -r ./resources/report/* ./tmp-site/
+      - name: Produce HTML from LaTeX
+        uses: docker://pandoc/core:2.9
+        with:
+          args: >-
+            --from=latex
+            --to=html5
+            --standalone
+            --output=./tmp-site/index.html
+            --css=./github-pandoc.css
+            main.tex
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:

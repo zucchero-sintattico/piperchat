@@ -1,0 +1,177 @@
+\chapter{Codice}
+
+\section{Definizione API}
+
+Per quanto riguarda la gestione delle api dei vari microservizi si è optato per avere una struttura che rappresentasse ogni endpoint, incapsulando sia i dati richiesti sia le possibili risposte.
+
+A supporto di ciò è stato creato un modulo \textbf{api} che incapsula tutti gli endpoint del backend con le relativi informazioni.
+
+Tale modulo viene sfruttato sia dal backend, per avere un typing migliore e un controllo di validazione dei parametri richiesti, sia dal frontend per sapere già quali sono codice di risposta e tipologie di risposta per un determinato endpoint.
+
+\begin{lstlisting}[style=typescript, caption={Definizione API}, label=lst:login:api]
+export namespace LoginApi {
+  export namespace Request {
+    export type Body = {
+      username: string
+      password: string
+    }
+  }
+
+  export namespace Responses {
+    export class Success extends Response {
+      statusCode = 200
+      message = 'Logged in' as const
+      jwt: string
+    }
+  }
+
+  export namespace Errors {
+    export class UsernameOrPasswordIncorrect extends ErrorResponse {
+      statusCode = 401
+      error = 'Username or password incorrect' as const
+    }
+  }
+}
+\end{lstlisting}
+
+\section{Definizione Endpoint}
+
+Una volta costruita la struttura rappresentante le singole API è stata creata l'utility \textbf{Route}, che a partire da un api permette di implementare l'endpoint aggiungendo il supporto automatico alla validazione dei dati in modo che se i dati in ingresso non sono corretti l'handler non venga triggherato e venga restituito un messaggio di errore \textit{Bad Request}.
+%
+Inoltre permette e di dichiarare come reagire per ogni tipo di errore senza doverli controllare all'interno dell'handler.
+
+Altra utilità offerta dalla classe è il typing dei parametri della richiesta basati sulle api specificate.
+
+\begin{lstlisting}[style=typescript, caption={Definizione API}, label=lst:login:route]
+export const LoginApiRoute = new Route<
+  ...
+>({
+  method: 'post',
+  path: '/login',
+  schema: LoginApi.Request.Schema,
+  handler: async (req, res) => {
+    const token = await authController.login(req.body.username, req.body.password)
+    res.sendResponse(new LoginApi.Responses.Success(token))
+  },
+  exceptions: [
+    {
+      exception: InvalidUsernameOrPassword,
+      onException: (e, req, res) => {
+        res.sendResponse(new UsernameOrPasswordIncorrect())
+      },
+    },
+  ],
+})
+\end{lstlisting}
+
+\section{Definizione dei Controller}
+
+Per interfacciarsi con gli endpoint del backend sono quindi stati scritti i \textbf{Controller} lato frontend, che incapsulano la gestione delle API e sfruttano il modulo \textit{api} per ottenere un typing delle richieste e delle risposte.
+
+\begin{lstlisting}[style=typescript, caption={Definizione Controller}, label=lst:controller]
+export class AuthControllerImpl extends AxiosController implements AuthController {
+  async register(request: RegisterApi.Request.Type): Promise<RegisterApi.Response> {
+    const body = request as RegisterApi.Request.Body
+    return await this.post<RegisterApi.Response>('/auth/register', body)
+  }
+
+  async login(request: LoginApi.Request.Type): Promise<LoginApi.Response> {
+    const body = request as LoginApi.Request.Body
+    return await this.post<LoginApi.Response>('/auth/login', body)
+  }
+
+  async logout(): Promise<LogoutApi.Response> {
+    return await this.post<LogoutApi.Response>('/auth/logout', {})
+  }
+
+  async refreshToken(): Promise<RefreshTokenApi.Response> {
+    return await this.post<RefreshTokenApi.Response>(
+        '/auth/refresh-token', {})
+  }
+}
+\end{lstlisting}
+
+%
+%
+%
+\section{Definizione degli Store}
+
+Come già accennato in  precedenza, lo stato globale dell'applicazione è stato gestito tramite gli store di Pinia.
+%
+Di seguito un esempio dell'utilizzo per implementare il caching delle foto degli utenti:
+
+\begin{lstlisting}[style=typescript, caption={Definizione di uno Store}, label=lst:store]
+export const usePhotoStore = defineStore('photo', () => {
+  const userController: UserController = new UserControllerImpl()
+  const usersPhotos = ref<Record<string, string | undefined>>({})
+
+  async function reloadUserPhoto(targetUsername: string) {
+    try {
+      const response = await userController.getUserPhoto({
+        username: targetUsername
+      })
+      if (response.statusCode === 200) {
+        const typed = response as GetUserPhotoApi.Responses.Success
+        if (typed.photo.data !== undefined) {
+          usersPhotos.value[targetUsername] =
+            'data:image/jpeg;base64,' +
+            btoa(
+              new Uint8Array((typed.photo.data as any).data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                ''
+              )
+            )
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  function getUserPhoto(targetUsername: string): Ref<string | undefined> {
+    if (usersPhotos.value[targetUsername] === undefined) {
+      reloadUserPhoto(targetUsername)
+    }
+    return computed(() => usersPhotos.value[targetUsername])
+  }
+
+  return {
+    reloadUserPhoto,
+    getUserPhoto
+  }
+})
+
+\end{lstlisting}
+
+%
+%
+%
+\section{Definizione di Componenti}
+
+Nella sviluppo della nostra applicazione, abbiamo adottato un approccio modulare, suddividendola in diversi componenti che sono stati sviluppati utilizzando le \textit{Composition API} offerte da Vue.
+%
+Per migliorare l'estetica e lo stile di quest'ultimi, abbiamo arricchito ogni componente sfruttando le funzionalità offerte dal framework \textit{Quasar}:
+
+\begin{lstlisting}[style=typescript, caption={Definizione Components}, label=lst:component]
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import AreaHeader from './AreaHeader.vue'
+import EmptyContent from './EmptyContent.vue'
+import ChatArea from './chat/ChatArea.vue'
+import WebrtcArea from './video/WebrtcArea.vue'
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
+</script>
+
+<template>
+  <q-page class="q-pa-auto">
+    <q-layout view="lHh Lpr lFf" container style="min-height: inherit">
+      <AreaHeader />
+      <EmptyContent v-if="!appStore.isMessageSection && !appStore.isVideoSection" />
+      <ChatArea v-if="appStore.isMessageSection" />
+      <WebrtcArea v-if="appStore.isVideoSection" />
+    </q-layout>
+  </q-page>
+</template>
+\end{lstlisting}
