@@ -128,6 +128,16 @@ function onReset() {
       </q-card>
     </q-dialog>
   </q-form>
+
+  <router-link to="/monitoring">
+    <q-btn
+      class="q-ma-md"
+      fab
+      icon="monitor_heart"
+      color="primary"
+      style="position: fixed; bottom: 0; right: 0"
+    />
+  </router-link>
 </template>
 
 <style scoped>
