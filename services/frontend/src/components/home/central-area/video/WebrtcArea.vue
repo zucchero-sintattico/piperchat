@@ -9,9 +9,9 @@ const userStore = useUserStore()
 const webrtcStore = useWebRTCStore()
 
 async function join() {
-  if (appStore.inDirectCall) {
+  if (appStore.selectedDirect !== null && appStore.inDirectCall) {
     await webrtcStore.joinDirect(appStore.selectedDirect!)
-  } else {
+  } else if (appStore.selectedChannel !== null && appStore.isVideoSection) {
     await webrtcStore.joinChannel(appStore.selectedServer!.id, appStore.selectedChannel!.id)
   }
 }
@@ -75,7 +75,7 @@ async function join() {
 .video-grid {
   width: 100%;
   max-height: calc(75vh); /* Adjust as needed, subtracting the height of controls */
-  overflow: hidden;
+  overflow: scroll;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1rem;
@@ -92,21 +92,24 @@ async function join() {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
 }
 
 .video-item {
   box-sizing: border-box;
   object-fit: contain;
   border-radius: 10px;
-  max-width: 100%; /* Add this property */
-  max-height: 100%; /* Add this property */
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /* Introduce a media query for smaller screens */
 @media (max-width: 768px) {
   .video-item {
-    max-width: 100%; /* Adjust as needed */
-    max-height: 100%; /* Adjust as needed */
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 

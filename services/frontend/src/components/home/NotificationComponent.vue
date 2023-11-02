@@ -41,7 +41,7 @@ watch(notification, (newVal) => {
     setTimeout(() => {
       // Hide the notification after 1 second
       notification.value = null
-    }, 1000)
+    }, 2000)
   }
 })
 </script>

@@ -73,7 +73,7 @@ export class WebRtcServiceEventsConfiguration extends EventsConfiguration {
 
       console.log('[Event] ChannelCreated: ', event)
 
-      const server = await Servers.findOne({ id: event.serverId }).orFail()
+      const server = await Servers.findById(event.serverId).orFail()
       const sessionId = await this.sessionRepository.createSession(server.participants)
 
       await this.channelRepository.createChannelInServer(

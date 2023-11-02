@@ -65,18 +65,24 @@ export class AllEventsListener {
       return
     }
     await channel?.bindQueue(queue.queue, exchange, '')
-    channel?.consume(queue.queue, async (message) => {
-      if (!message) {
-        return
-      }
+    channel?.consume(
+      queue.queue,
+      async (message) => {
+        if (!message) {
+          return
+        }
 
-      const content = message.content.toString()
-      try {
-        const data = JSON.parse(content)
-        callback(message.fields.routingKey, data)
-      } catch (error) {
-        console.error(error)
+        const content = message.content.toString()
+        try {
+          const data = JSON.parse(content)
+          callback(message.fields.routingKey, data)
+        } catch (error) {
+          console.error(error)
+        }
+      },
+      {
+        noAck: true,
       }
-    })
+    )
   }
 }

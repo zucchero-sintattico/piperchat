@@ -59,15 +59,22 @@ export const GetChannelSessionIdApiRoute = new Route<
   path: '/servers/:serverId/channels/:channelId/session',
   schema: GetChannelSessionIdApi.Request.Schema,
   handler: async (req, res) => {
-    const channel = await channelRepository.getChannelInServer(
-      req.params.serverId,
-      req.params.channelId
-    )
-
-    const response = new GetChannelSessionIdApi.Responses.Success({
-      sessionId: channel.sessionId,
-    })
-    res.sendResponse(response)
+    console.log(req.params)
+    try {
+      const channel = await channelRepository.getChannelInServer(
+        req.params.serverId,
+        req.params.channelId
+      )
+      console.log(channel)
+      const response = new GetChannelSessionIdApi.Responses.Success({
+        sessionId: channel.sessionId,
+      })
+      res.sendResponse(response)
+    } catch (e) {
+      console.log(e)
+      const response = new GetChannelSessionIdApi.Errors.ChannelNotFound()
+      res.sendResponse(response)
+    }
   },
 })
 

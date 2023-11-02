@@ -23,24 +23,23 @@ export class ChannelRepositoryImpl implements ChannelRepository {
 
   async createServer(serverId: string, owner: string): Promise<Server> {
     const server = await Servers.create({
-      id: serverId,
+      _id: serverId,
       participants: [owner],
-      channels: [],
     })
     return server
   }
 
   async deleteServer(serverId: string): Promise<void> {
-    await Servers.deleteOne({ id: serverId })
+    await Servers.findByIdAndDelete(serverId)
   }
 
   async getServer(serverId: string): Promise<Server> {
-    return await Servers.findOne({ id: serverId }).orFail()
+    return await Servers.findById(serverId).orFail()
   }
 
   async addServerParticipant(serverId: string, username: string): Promise<void> {
-    await Servers.updateOne({ id: serverId }, { $addToSet: { participants: username } })
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    await Servers.findByIdAndUpdate(serverId, { $addToSet: { participants: username } })
+    const server = await Servers.findById(serverId).orFail()
     const channels = server.channels
     for (const channel of channels) {
       await this.sessionRepository.addAllowedUserToSession(channel.sessionId, username)
@@ -48,8 +47,8 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   async removeServerParticipant(serverId: string, username: string): Promise<void> {
-    await Servers.updateOne({ id: serverId }, { $pull: { participants: username } })
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    await Servers.findByIdAndUpdate(serverId, { $pull: { participants: username } })
+    const server = await Servers.findById(serverId).orFail()
     const channels = server.channels
     for (const channel of channels) {
       await this.sessionRepository.removeAllowedUserFromSession(
@@ -64,8 +63,8 @@ export class ChannelRepositoryImpl implements ChannelRepository {
     channelId: string,
     sessionId: string
   ): Promise<Channel> {
-    const server = await Servers.findOne({ id: serverId }).orFail()
-    const channel = {
+    const server = await Servers.findById(serverId).orFail()
+    const channel: Channel = {
       id: channelId,
       sessionId: sessionId,
     }
@@ -75,16 +74,16 @@ export class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   async deleteChannelInServer(serverId: string, channelId: string): Promise<void> {
-    await Servers.updateOne({ id: serverId }, { $pull: { channels: { id: channelId } } })
+    await Servers.findByIdAndUpdate(serverId, { $pull: { channels: { id: channelId } } })
   }
 
   async getChannelsInServer(serverId: string): Promise<Channel[]> {
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    const server = await Servers.findById(serverId).orFail()
     return server.channels
   }
 
   async getChannelInServer(serverId: string, channelId: string): Promise<Channel> {
-    const server = await Servers.findOne({ id: serverId }).orFail()
+    const server = await Servers.findById(serverId).orFail()
     const channel = server.channels.find((channel) => channel.id === channelId)
     if (!channel) throw new Error('Channel not found')
     return channel

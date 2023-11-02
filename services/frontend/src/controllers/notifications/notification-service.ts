@@ -44,12 +44,13 @@ function createNotificationService() {
       NewMessageOnDirectNotification.type,
       async (data: NewMessageOnDirectNotification) => {
         console.log('NotificationService: NewMessageOnDirectNotification', data)
-        notificationsStore.addMessageOnDirect({
-          sender: data.from
-        })
         if (appStore.selectedDirect == data.from) {
           console.log('NotificationService: Refreshing messages')
           await messageStore.refreshMessages()
+        } else {
+          notificationsStore.addMessageOnDirect({
+            sender: data.from
+          })
         }
       }
     )
@@ -61,16 +62,17 @@ function createNotificationService() {
         const channelName = serverStore.servers
           .find((s) => s.id == data.server)
           ?.channels.find((c) => c.id == data.channel)?.name
-        notificationsStore.addMessageOnChannel({
-          sender: data.from,
-          channelName: channelName ?? ''
-        })
         if (
           appStore.selectedServer?.id == data.server &&
           appStore.selectedChannel?.id == data.channel
         ) {
           console.log('NotificationService: Refreshing messages')
           await messageStore.refreshMessages()
+        } else {
+          notificationsStore.addMessageOnChannel({
+            sender: data.from,
+            channelName: channelName ?? ''
+          })
         }
       }
     )
@@ -175,6 +177,7 @@ function createNotificationService() {
       FriendRequestNotification.type,
       async (data: FriendRequestNotification) => {
         console.log('NotificationService: FriendRequestNotification', data)
+        await userStatusStore.reloadUserStatus(data.from)
         await friendsStore.refresh()
         notificationsStore.addFriendRequest(data.from)
       }
@@ -184,6 +187,7 @@ function createNotificationService() {
       FriendRequestAcceptedNotification.type,
       async (data: FriendRequestAcceptedNotification) => {
         console.log('NotificationService: FriendRequestAcceptedNotification', data)
+        await userStatusStore.reloadUserStatus(data.from)
         await friendsStore.refresh()
         notificationsStore.addFriendRequestAccepted(data.from)
       }
