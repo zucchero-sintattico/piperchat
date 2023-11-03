@@ -11,7 +11,7 @@ export interface SessionHandler {
 const WebRtcConfiguration: RTCConfiguration = {
   iceServers: [
     {
-      urls: 'stun.l.google.com:19302'
+      urls: 'stun.ekiga.net'
     },
     {
       urls: 'turn:localhost:5349',
