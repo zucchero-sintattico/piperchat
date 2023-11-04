@@ -10,8 +10,29 @@ export interface SessionHandler {
 
 const WebRtcConfiguration: RTCConfiguration = {
   iceServers: [
-    { urls: 'stun:freeturn.net:5349' },
-    { urls: 'turns:freeturn.tel:5349', username: 'free', credential: 'free' }
+    {
+      urls: 'stun:stun.relay.metered.ca:80'
+    },
+    {
+      urls: 'turn:a.relay.metered.ca:80',
+      username: '8b30c58abc39544a398d7942',
+      credential: 'KHzkgVUxR7AdvVg5'
+    },
+    {
+      urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+      username: '8b30c58abc39544a398d7942',
+      credential: 'KHzkgVUxR7AdvVg5'
+    },
+    {
+      urls: 'turn:a.relay.metered.ca:443',
+      username: '8b30c58abc39544a398d7942',
+      credential: 'KHzkgVUxR7AdvVg5'
+    },
+    {
+      urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+      username: '8b30c58abc39544a398d7942',
+      credential: 'KHzkgVUxR7AdvVg5'
+    }
   ]
 }
 
