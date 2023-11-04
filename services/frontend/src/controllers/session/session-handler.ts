@@ -10,14 +10,8 @@ export interface SessionHandler {
 
 const WebRtcConfiguration: RTCConfiguration = {
   iceServers: [
-    {
-      urls: 'stun2.l.google.com:19302'
-    },
-    {
-      urls: 'urn:numb.viagenie.ca',
-      username: 'muazkh',
-      credential: 'webrtc@live.com'
-    }
+    { urls: 'stun:freeturn.net:5349' },
+    { urls: 'turns:freeturn.tel:5349', username: 'free', credential: 'free' }
   ]
 }
 
