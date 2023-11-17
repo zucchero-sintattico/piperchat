@@ -60,6 +60,6 @@
     "services/notifications",
     "services/piperchat",
     "services/users",
-    "services/webrtc"
+    "services/multimedia"
   ]
 }

@@ -3,7 +3,8 @@ import {
   GetChannelSessionIdApi,
   GetDirectSessionIdApi,
   GetUsersInSession,
-} from '@api/webrtc/session'
+} from '@piperchat/api/src/multimedia/session'
+
 import {
   FriendshipRepository,
   FriendshipRepositoryImpl,
