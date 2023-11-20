@@ -22,8 +22,7 @@ services:
       - 'SERVICES_URI=${USERS_SERVICE_URI},${MESSAGES_SERVICE_URI},${PIPERCHAT_SERVICE_URI},${MULTIMEDIA_SERVICE_URI},${NOTIFICATIONS_SERVICE_URI}'
     labels:
       - |
-        traefik.http.routers.monitoring-service.rule=
-        (Method(`GET`) && Path(`/status`))
+        traefik.http.routers.monitoring-service.rule=Host(`api.localhost`) && (Method(`GET`) && Path(`/status`))
 
   db-monitoring-service:
     image: mongo

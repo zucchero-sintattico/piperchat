@@ -21,5 +21,5 @@ services:
       - frontend
     labels:
       - |
-        traefik.http.routers.frontend-service.rule=
+        traefik.http.routers.frontend-service.rule=Host(`localhost`) &&
         (Method(`GET`) && PathPrefix(`/`))

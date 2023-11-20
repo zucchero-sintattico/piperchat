@@ -4,7 +4,7 @@
   "scripts": {
     "build": "vite build",
     "build:check": "run-p type-check build",
-    "start": "serve dist",
+    "start": "serve -s dist",
     "dev": "vite --base /site",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
