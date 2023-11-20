@@ -7,7 +7,6 @@ import { EventsConfiguration } from './events/events-configuration'
 import { ServiceEvents } from './events/service-events'
 import cookieParser from 'cookie-parser'
 import mongoose, { Mongoose } from 'mongoose'
-import cors from 'cors'
 
 type GeneralService = {
   start: () => Promise<void>
@@ -130,5 +129,4 @@ export const DefaultMiddlewares = [
   express.json(),
   express.urlencoded({ extended: true }),
   cookieParser(),
-  cors(),
 ]

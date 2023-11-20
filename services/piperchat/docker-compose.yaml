@@ -21,13 +21,12 @@ services:
       - 'MONGO_URI=mongodb://db-piperchat-service:27017/piperchat'
     labels:
       - |
-        traefik.http.routers.piperchat-service.rule=Host(`api.localhost`) &&
-        ((Method(`GET`, `POST`) && Path(`/servers`)) ||
+        traefik.http.routers.piperchat-service.rule=(Method(`GET`, `POST`) && Path(`/servers`)) ||
         (Method(`GET`, `PUT`, `DELETE`) && Path(`/servers/{serverId:[^/]+}`)) ||
         (Method(`GET`, `POST`, `DELETE`) && Path(`/servers/{serverId:[^/]+}/participants`)) ||
         (Method(`DELETE`) && Path(`/servers/{serverId:[^/]+}/participants/{userId:[^/]+}`)) ||
         (Method(`GET`, `POST`) && Path(`/servers/{serverId:[^/]+}/channels`)) ||
-        (Method(`GET`, `PUT`, `DELETE`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}`)))
+        (Method(`GET`, `PUT`, `DELETE`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}`))
 
   db-piperchat-service:
     image: mongo

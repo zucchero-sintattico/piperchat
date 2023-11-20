@@ -2,7 +2,6 @@ import { BadRequest, InternalServerError } from '@api/errors'
 import axios from 'axios'
 
 export abstract class AxiosController {
-  private static API_URL = 'http://api.localhost'
   private async request<Response>(
     method: string,
     path: string,
@@ -12,7 +11,7 @@ export abstract class AxiosController {
     try {
       const response = await axios.request<Response>({
         method: method,
-        url: `${AxiosController.API_URL}${path}`,
+        url: path,
         data: data,
         headers: headers
       })
