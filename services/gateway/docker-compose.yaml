@@ -19,7 +19,7 @@ services:
       - notifications-service
       - piperchat-service
       - users-service
-      - webrtc-service
+      - multimedia-service
     networks:
       - frontend
 

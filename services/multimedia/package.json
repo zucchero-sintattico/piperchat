@@ -1,5 +1,5 @@
 {
-  "name": "webrtc",
+  "name": "@piperchat/multimedia",
   "version": "1.0.0",
   "description": "",
   "main": "./src/app.ts",
