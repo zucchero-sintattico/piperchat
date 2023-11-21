@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { EmptySchema, RequestSchema } from '../schema'
 
-export namespace GetFriendsApi {
-  export namespace Request {
+export module GetFriendsApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       friends: string[]
@@ -20,7 +19,7 @@ export namespace GetFriendsApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -30,14 +29,14 @@ export namespace GetFriendsApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetFriendsRequestsApi {
-  export namespace Request {
+export module GetFriendsRequestsApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       requests: string[]
@@ -48,7 +47,7 @@ export namespace GetFriendsRequestsApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -58,8 +57,8 @@ export namespace GetFriendsRequestsApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace SendFriendRequestApi {
-  export namespace Request {
+export module SendFriendRequestApi {
+  export module Request {
     export type Type = Body & Params
     export enum FriendRequestAction {
       send = 'send',
@@ -79,7 +78,7 @@ export namespace SendFriendRequestApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Friend request sent' as const
@@ -95,7 +94,7 @@ export namespace SendFriendRequestApi {
 
     export type Type = Success | FriendRequestAccepted | FriendRequestDenied
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const

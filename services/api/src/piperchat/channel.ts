@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
 
-export namespace GetChannelsApi {
-  export namespace Request {
+export module GetChannelsApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -16,7 +15,7 @@ export namespace GetChannelsApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     interface Channel {
       id: string
       name: string
@@ -33,7 +32,7 @@ export namespace GetChannelsApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -47,8 +46,8 @@ export namespace GetChannelsApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetChannelByIdApi {
-  export namespace Request {
+export module GetChannelByIdApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -62,7 +61,7 @@ export namespace GetChannelByIdApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export interface Channel {
       id: string
       name: string
@@ -79,7 +78,7 @@ export namespace GetChannelByIdApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -99,12 +98,12 @@ export namespace GetChannelByIdApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace CreateChannelApi {
+export module CreateChannelApi {
   export enum ChannelType {
     Messages = 'messages',
     Multimedia = 'multimedia',
   }
-  export namespace Request {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -125,7 +124,7 @@ export namespace CreateChannelApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     interface Channel {
       id: string
       name: string
@@ -144,7 +143,7 @@ export namespace CreateChannelApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -173,8 +172,8 @@ export namespace CreateChannelApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace UpdateChannelApi {
-  export namespace Request {
+export module UpdateChannelApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -195,14 +194,14 @@ export namespace UpdateChannelApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Channel updated successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -229,8 +228,8 @@ export namespace UpdateChannelApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace DeleteChannelApi {
-  export namespace Request {
+export module DeleteChannelApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -245,14 +244,14 @@ export namespace DeleteChannelApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Channel deleted successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const

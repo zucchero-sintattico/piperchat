@@ -1,9 +1,8 @@
 import { Empty, Response } from '@api/response'
 import { RequestSchema } from '@api/schema'
 
-/* eslint-disable @typescript-eslint/no-namespace */
-export namespace GetServicesStatusApi {
-  export namespace Request {
+export module GetServicesStatusApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
@@ -13,7 +12,7 @@ export namespace GetServicesStatusApi {
     }
   }
 
-  export namespace Responses {
+  export module Responses {
     interface ServiceStatus {
       _id: string
       service: string
@@ -30,7 +29,7 @@ export namespace GetServicesStatusApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export type Type = Empty
   }
   export type Response = Responses.Type | Errors.Type

@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response, ResponseFacade } from '../response'
 import { RequestSchema, EmptySchema } from '../schema'
 
 /**
  * Register endpoint
  */
-export namespace RegisterApi {
-  export namespace Request {
+export module RegisterApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = {
@@ -31,7 +30,7 @@ export namespace RegisterApi {
     }
   }
 
-  export namespace Responses {
+  export module Responses {
     interface UserLoginResponse {
       username: string
       email: string
@@ -54,7 +53,7 @@ export namespace RegisterApi {
     export type Type = Success
   }
 
-  export namespace Errors {
+  export module Errors {
     export class UserAlreadyExists extends ErrorResponse {
       statusCode = 409
       error = 'User already exists' as const
@@ -74,8 +73,8 @@ export namespace RegisterApi {
 /**
  * Login endpoint
  */
-export namespace LoginApi {
-  export namespace Request {
+export module LoginApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Record<string, unknown>
     export type Body = {
@@ -91,7 +90,7 @@ export namespace LoginApi {
     }
   }
 
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Logged in' as const
@@ -109,7 +108,7 @@ export namespace LoginApi {
     export type Type = Success
   }
 
-  export namespace Errors {
+  export module Errors {
     export class UsernameOrPasswordIncorrect extends ErrorResponse {
       statusCode = 401
       error = 'Username or password incorrect' as const
@@ -123,14 +122,14 @@ export namespace LoginApi {
 /**
  * Logout endpoint
  */
-export namespace LogoutApi {
-  export namespace Request {
+export module LogoutApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema = EmptySchema
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Logged out' as const
@@ -142,7 +141,7 @@ export namespace LogoutApi {
 
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -155,14 +154,14 @@ export namespace LogoutApi {
 /**
  * Refresh token endpoint
  */
-export namespace RefreshTokenApi {
-  export namespace Request {
+export module RefreshTokenApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema = EmptySchema
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Refreshed token' as const
@@ -178,7 +177,7 @@ export namespace RefreshTokenApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
