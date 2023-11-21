@@ -1,5 +1,6 @@
 import { Empty, Response } from '../response'
 import { RequestSchema } from '../schema'
+/* eslint-disable @typescript-eslint/no-namespace */
 
 /**
  * Update photo endpoint

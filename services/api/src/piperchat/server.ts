@@ -1,6 +1,6 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
-
+/* eslint-disable @typescript-eslint/no-namespace */
 export module KickUserFromServerApi {
   export module Request {
     export type Type = Params & Body

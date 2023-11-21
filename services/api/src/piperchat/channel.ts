@@ -1,6 +1,6 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
-
+/* eslint-disable @typescript-eslint/no-namespace */
 export module GetChannelsApi {
   export module Request {
     export type Type = Body & Params

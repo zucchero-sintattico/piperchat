@@ -1,6 +1,6 @@
 import { Empty, ErrorResponse, Response, ResponseFacade } from '../response'
 import { RequestSchema, EmptySchema } from '../schema'
-
+/* eslint-disable @typescript-eslint/no-namespace */
 /**
  * Register endpoint
  */

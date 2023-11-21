@@ -1,5 +1,6 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { EmptySchema, RequestSchema } from '../schema'
+/* eslint-disable @typescript-eslint/no-namespace */
 
 export module GetFriendsApi {
   export module Request {

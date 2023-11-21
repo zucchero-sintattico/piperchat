@@ -1,5 +1,6 @@
 import { Empty, Response } from '@api/response'
 import { RequestSchema } from '@api/schema'
+/* eslint-disable @typescript-eslint/no-namespace */
 
 export module GetServicesStatusApi {
   export module Request {

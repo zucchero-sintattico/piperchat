@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { EmptySchema, RequestSchema } from '../schema'
 import { UpdatePhotoApi } from './profile'

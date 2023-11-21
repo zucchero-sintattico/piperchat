@@ -1,5 +1,6 @@
 import { Response } from '../response'
 import { RequestSchema } from '../schema'
+/* eslint-disable @typescript-eslint/no-namespace */
 
 export module GetChannelSessionIdApi {
   export module Request {
