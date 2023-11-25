@@ -1,5 +1,6 @@
 #!/bin/bash
 
 rm -rf ./.docker
-docker image rm piperchat
-./deploy.sh
+./composeAll.sh down --rmi all --volumes --remove-orphans
+docker build . --tag piperchat
+./composeAll.sh up --build --force-recreate
