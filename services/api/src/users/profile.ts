@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-
 import { Empty, Response } from '../response'
 import { RequestSchema } from '../schema'
+/* eslint-disable @typescript-eslint/no-namespace */
 
 /**
  * Update photo endpoint
  */
-export namespace UpdatePhotoApi {
+export module UpdatePhotoApi {
   export type Photo = {
     data: Buffer
     contentType: string
   }
-  export namespace Request {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = {
@@ -24,14 +23,14 @@ export namespace UpdatePhotoApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Photo updated successfully' as const
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class InvalidPhoto extends Response {
       statusCode = 400
       message = 'Invalid photo' as const
@@ -44,8 +43,8 @@ export namespace UpdatePhotoApi {
 /**
  * Update description endpoint
  */
-export namespace UpdateDescriptionApi {
-  export namespace Request {
+export module UpdateDescriptionApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = {
@@ -58,14 +57,14 @@ export namespace UpdateDescriptionApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Description updated successfully' as const
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export type Type = Empty
   }
   export type Response = Responses.Type | Errors.Type

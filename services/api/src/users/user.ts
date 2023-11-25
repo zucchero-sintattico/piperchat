@@ -6,14 +6,14 @@ import { UpdatePhotoApi } from './profile'
 /**
  * Whoami endpoint
  */
-export namespace WhoamiApi {
-  export namespace Request {
+export module WhoamiApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
     export const Schema: RequestSchema = EmptySchema
   }
-  export namespace Responses {
+  export module Responses {
     interface WhoamiUser {
       username: string
       email: string
@@ -35,8 +35,8 @@ export namespace WhoamiApi {
 /**
  * Get user status
  */
-export namespace GetUserStatusApi {
-  export namespace Request {
+export module GetUserStatusApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       username: string
@@ -49,7 +49,7 @@ export namespace GetUserStatusApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export type UserStatusInfo = {
       online: boolean
       lastActive: Date
@@ -66,7 +66,7 @@ export namespace GetUserStatusApi {
 
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -79,8 +79,8 @@ export namespace GetUserStatusApi {
 /**
  * Get user photo
  */
-export namespace GetUserPhotoApi {
-  export namespace Request {
+export module GetUserPhotoApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       username: string
@@ -93,7 +93,7 @@ export namespace GetUserPhotoApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       photo: UpdatePhotoApi.Photo
@@ -104,7 +104,7 @@ export namespace GetUserPhotoApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -117,8 +117,8 @@ export namespace GetUserPhotoApi {
 /**
  * Get user description
  */
-export namespace GetUserDescriptionApi {
-  export namespace Request {
+export module GetUserDescriptionApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       username: string
@@ -131,7 +131,7 @@ export namespace GetUserDescriptionApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       description: string
@@ -142,7 +142,7 @@ export namespace GetUserDescriptionApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const

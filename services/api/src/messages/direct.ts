@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
-
-export namespace GetDirectMessagesApi {
-  export namespace Request {
+/* eslint-disable @typescript-eslint/no-namespace */
+export module GetDirectMessagesApi {
+  export module Request {
     export type Type = Body & Params & Query
     export type Params = {
       username: string
@@ -24,7 +23,7 @@ export namespace GetDirectMessagesApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export interface Message {
       _id: string
       sender: string
@@ -40,7 +39,7 @@ export namespace GetDirectMessagesApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class DirectNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Direct not found' as const
@@ -50,8 +49,8 @@ export namespace GetDirectMessagesApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace SendDirectMessageApi {
-  export namespace Request {
+export module SendDirectMessageApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       username: string
@@ -69,14 +68,14 @@ export namespace SendDirectMessageApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Message sent successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class DirectNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Direct not found' as const
