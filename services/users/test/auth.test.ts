@@ -129,11 +129,10 @@ describe('Logout', () => {
 
   it('A user should not be able to logout with wrong jwt', async () => {
     let response = await createUserAndLogin('test', 'test', 'test')
-    const cookie = response.header['set-cookie']
-    response = await request.post('/auth/logout').set(
-      'Cookie',
-      cookie.map((c: string) => c.replace('jwt=', 'jwt=wrong'))
-    )
+    const cookie = response.header['set-cookie'].toString()
+    response = await request
+      .post('/auth/logout')
+      .set('Cookie', cookie.replace('jwt=', 'jwt=wrong'))
     expect(response.status).toBe(401)
     response = await request.post('/auth/logout').set('Cookie', cookie)
     expect(response.status).toBe(200)

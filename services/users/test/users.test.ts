@@ -70,7 +70,6 @@ describe('Get user photo', () => {
       .set('Cookie', `jwt=${jwt1}`)
     expect(response.status).toBe(200)
     expect(response.body.photo).toBeDefined()
-    console.log(response.body.photo)
   })
 })
 
