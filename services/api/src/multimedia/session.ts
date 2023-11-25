@@ -1,9 +1,9 @@
 import { Response } from '../response'
 import { RequestSchema } from '../schema'
-
 /* eslint-disable @typescript-eslint/no-namespace */
-export namespace GetChannelSessionIdApi {
-  export namespace Request {
+
+export module GetChannelSessionIdApi {
+  export module Request {
     export type Type = Params
     export type Params = {
       serverId: string
@@ -17,7 +17,7 @@ export namespace GetChannelSessionIdApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Session id retrieved successfully' as const
@@ -29,7 +29,7 @@ export namespace GetChannelSessionIdApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ChannelNotFound extends Response {
       statusCode = 404
       message = 'Channel not found' as const
@@ -43,8 +43,8 @@ export namespace GetChannelSessionIdApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetDirectSessionIdApi {
-  export namespace Request {
+export module GetDirectSessionIdApi {
+  export module Request {
     export type Type = Params
     export type Params = {
       username: string
@@ -57,7 +57,7 @@ export namespace GetDirectSessionIdApi {
     }
   }
 
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Session id retrieved successfully' as const
@@ -70,7 +70,7 @@ export namespace GetDirectSessionIdApi {
     export type Type = Success
   }
 
-  export namespace Errors {
+  export module Errors {
     export class FriendshipNotFound extends Response {
       statusCode = 404
       message = 'Friendship not found' as const
@@ -81,8 +81,8 @@ export namespace GetDirectSessionIdApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetUsersInSession {
-  export namespace Request {
+export module GetUsersInSession {
+  export module Request {
     export type Type = Params
     export type Params = {
       sessionId: string
@@ -95,7 +95,7 @@ export namespace GetUsersInSession {
     }
   }
 
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Users retrieved successfully' as const
@@ -108,7 +108,7 @@ export namespace GetUsersInSession {
     export type Type = Success
   }
 
-  export namespace Errors {
+  export module Errors {
     export class SessionNotFound extends Response {
       statusCode = 404
       message = 'Session not found' as const

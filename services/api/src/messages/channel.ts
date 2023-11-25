@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
-
-export namespace GetChannelMessagesApi {
-  export namespace Request {
+/* eslint-disable @typescript-eslint/no-namespace */
+export module GetChannelMessagesApi {
+  export module Request {
     export type Type = Body & Params & Query
     export type Params = {
       serverId: string
@@ -26,7 +25,7 @@ export namespace GetChannelMessagesApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export interface Message {
       _id: string
       sender: string
@@ -42,7 +41,7 @@ export namespace GetChannelMessagesApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const
@@ -62,8 +61,8 @@ export namespace GetChannelMessagesApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace SendMessageInChannelApi {
-  export namespace Request {
+export module SendMessageInChannelApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -82,14 +81,14 @@ export namespace SendMessageInChannelApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Message sent successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ChannelNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Channel not found' as const

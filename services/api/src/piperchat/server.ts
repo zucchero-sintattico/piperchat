@@ -1,9 +1,8 @@
 import { Empty, ErrorResponse, Response } from '../response'
 import { RequestSchema } from '../schema'
-
 /* eslint-disable @typescript-eslint/no-namespace */
-export namespace KickUserFromServerApi {
-  export namespace Request {
+export module KickUserFromServerApi {
+  export module Request {
     export type Type = Params & Body
     export type Params = {
       serverId: string
@@ -18,14 +17,14 @@ export namespace KickUserFromServerApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'User kicked successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server or user not found' as const
@@ -43,8 +42,8 @@ export namespace KickUserFromServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServerParticipantsApi {
-  export namespace Request {
+export module GetServerParticipantsApi {
+  export module Request {
     export type Type = Params & Body
     export type Params = {
       serverId: string
@@ -57,7 +56,7 @@ export namespace GetServerParticipantsApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       constructor(public participants: string[]) {
@@ -66,7 +65,7 @@ export namespace GetServerParticipantsApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -80,8 +79,8 @@ export namespace GetServerParticipantsApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace JoinServerApi {
-  export namespace Request {
+export module JoinServerApi {
+  export module Request {
     export type Type = Params & Body
     export type Params = {
       serverId: string
@@ -94,14 +93,14 @@ export namespace JoinServerApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Server joined successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -115,8 +114,8 @@ export namespace JoinServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace LeaveServerApi {
-  export namespace Request {
+export module LeaveServerApi {
+  export module Request {
     export type Type = Params & Body
     export type Params = {
       serverId: string
@@ -129,14 +128,14 @@ export namespace LeaveServerApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Server left successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -154,8 +153,8 @@ export namespace LeaveServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServerApi {
-  export namespace Request {
+export module GetServerApi {
+  export module Request {
     export type Type = Params & Body
     export type Params = {
       serverId: string
@@ -168,7 +167,7 @@ export namespace GetServerApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export interface Channel {
       id: string
       name: string
@@ -193,7 +192,7 @@ export namespace GetServerApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -207,8 +206,8 @@ export namespace GetServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace UpdateServerApi {
-  export namespace Request {
+export module UpdateServerApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -227,14 +226,14 @@ export namespace UpdateServerApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Server updated successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -252,8 +251,8 @@ export namespace UpdateServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace DeleteServerApi {
-  export namespace Request {
+export module DeleteServerApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = {
       serverId: string
@@ -266,14 +265,14 @@ export namespace DeleteServerApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Server deleted successfully'
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class ServerNotFound extends ErrorResponse {
       statusCode = 404
       error = 'Server not found' as const
@@ -287,8 +286,8 @@ export namespace DeleteServerApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace GetServersApi {
-  export namespace Request {
+export module GetServersApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = Empty
@@ -297,7 +296,7 @@ export namespace GetServersApi {
       Body: {},
     }
   }
-  export namespace Responses {
+  export module Responses {
     export interface Channel {
       id: string
       name: string
@@ -322,7 +321,7 @@ export namespace GetServersApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class UserNotFound extends ErrorResponse {
       statusCode = 404
       error = 'User not found' as const
@@ -332,8 +331,8 @@ export namespace GetServersApi {
   export type Response = Responses.Type | Errors.Type
 }
 
-export namespace CreateServerApi {
-  export namespace Request {
+export module CreateServerApi {
+  export module Request {
     export type Type = Body & Params
     export type Params = Empty
     export type Body = {
@@ -348,7 +347,7 @@ export namespace CreateServerApi {
       },
     }
   }
-  export namespace Responses {
+  export module Responses {
     export class Success extends Response {
       statusCode = 200
       message = 'Server created successfully'
@@ -360,7 +359,7 @@ export namespace CreateServerApi {
     }
     export type Type = Success
   }
-  export namespace Errors {
+  export module Errors {
     export class NameOrDescriptionRequired extends ErrorResponse {
       statusCode = 422
       error = 'Name or description required' as const
