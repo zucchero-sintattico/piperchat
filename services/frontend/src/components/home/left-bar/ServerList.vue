@@ -4,8 +4,7 @@ import NewServerForm from './form/NewServerForm.vue'
 import { useServerStore } from '@/stores/server'
 import BottomPopUp from '@/components/utils/BottomPopUp.vue'
 import { BannerColor } from '@/components/utils/BannerColor'
-import { SelectedTab, useAppStore } from '@/stores/app'
-import type { StringExpressionOperator } from 'mongoose'
+import { useAppStore } from '@/stores/app'
 
 const serverStore = useServerStore()
 const appStore = useAppStore()

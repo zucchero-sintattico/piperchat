@@ -7,7 +7,7 @@ import {
   GetDirectSessionIdApi,
   GetUsersInSession
 } from '@api/multimedia/session'
-import type { Ref } from 'vue'
+
 export interface SessionController {
   getUsersInSession(sessionId: string): Promise<string[]>
   getChannelSessionId(serverId: string, channelId: string): Promise<string>
