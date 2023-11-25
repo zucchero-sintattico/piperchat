@@ -22,3 +22,4 @@ services:
     labels:
       - |
         traefik.http.routers.frontend-service.rule=Method(`GET`) && PathPrefix(`/`)
+      - traefik.http.routers.frontend-service.priority=1
