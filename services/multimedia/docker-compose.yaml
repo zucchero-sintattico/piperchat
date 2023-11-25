@@ -23,8 +23,7 @@ services:
       - 'MONGO_URI=mongodb://db-multimedia-service:27017/multimedia'
     labels:
       - |
-        traefik.http.routers.multimedia-service.rule=
-        (Method(`GET`) && PathPrefix(`/webrtc`)) ||
+        traefik.http.routers.multimedia-service.rule=(Method(`GET`) && PathPrefix(`/webrtc`)) ||
         (Method(`GET`) && Path(`/users/{username:[^/]+}/session`))||
         (Method(`GET`) && Path(`/servers/{serverId:[^/]+}/channels/{channelId:[^/]+}/session`))||
         (Method(`GET`) && Path(`/sessions/{sessionId:[^/]+}`))
