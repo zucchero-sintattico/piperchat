@@ -13,6 +13,12 @@ const router = createRouter({
       name: 'Monitoring',
       component: MonitoringView,
       meta: { requiresAuth: false }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: HomeView,
+      meta: { requiresAuth: true }
     }
   ]
 })

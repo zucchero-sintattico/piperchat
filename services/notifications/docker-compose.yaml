@@ -21,8 +21,7 @@ services:
       - 'MONGO_URI=mongodb://db-notifications-service:27017/notifications'
     labels:
       - |
-        traefik.http.routers.notifications-service.rule=
-        (Method(`GET`) && Path(`/users/{username:[^/]+}/status`)) ||
+        traefik.http.routers.notifications-service.rule=(Method(`GET`) && Path(`/users/{username:[^/]+}/status`)) ||
         (Method(`GET`) && PathPrefix(`/notification`))
 
   db-notifications-service:

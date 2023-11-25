@@ -11,6 +11,6 @@ services:
       notifications-network:
       piperchat-network:
       users-network:
-      webrtc-network:
+      multimedia-network:
       backend:
       frontend:

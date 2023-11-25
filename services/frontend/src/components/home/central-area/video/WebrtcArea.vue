@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { computed } from 'vue'
 import { useWebRTCStore } from '@/stores/webrtc'
 import { useAppStore } from '@/stores/app'
 

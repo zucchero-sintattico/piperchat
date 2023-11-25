@@ -23,8 +23,7 @@ services:
       - 'MONGO_URI=mongodb://db-users-service:27017/users'
     labels:
       - |
-        traefik.http.routers.users-service.rule=
-        (Method(`POST`) && Path(`/auth/{p:(login|register|logout|refresh-token)}`)) ||
+        traefik.http.routers.users-service.rule=(Method(`POST`) && Path(`/auth/{p:(login|register|logout|refresh-token)}`)) ||
         (Method(`PUT`) && Path(`/profile/{p:(photo|description)}`)) ||
         (Method(`GET`) && Path(`/friends`)) ||
         (Method(`GET`, `POST`) && Path(`/friends/requests`)) ||

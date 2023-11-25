@@ -6,8 +6,8 @@ import {
   GetChannelSessionIdApi,
   GetDirectSessionIdApi,
   GetUsersInSession
-} from '@api/webrtc/session'
-import type { Ref } from 'vue'
+} from '@api/multimedia/session'
+
 export interface SessionController {
   getUsersInSession(sessionId: string): Promise<string[]>
   getChannelSessionId(serverId: string, channelId: string): Promise<string>
