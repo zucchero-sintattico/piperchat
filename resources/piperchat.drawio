@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-26T15:33:48.082Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="IIb7wZMcF72o19tyyQ2B" version="22.1.4" type="github" pages="11">
+<mxfile host="app.diagrams.net" modified="2023-11-26T15:36:08.934Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="ev_sPmr5SMV9aT7QiPO-" version="22.1.4" type="github" pages="11">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2019" dy="2217" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1478,51 +1478,11 @@
             <mxPoint x="1080" y="200" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="F3enPIIrSAs-tL1YPmyN-51">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1080" y="200" as="sourcePoint" />
-          </mxGeometry>
+        <mxCell id="F3enPIIrSAs-tL1YPmyN-50" value="NewMessageOnChannel" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="165" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="F3enPIIrSAs-tL1YPmyN-53">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1080" y="200" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="F3enPIIrSAs-tL1YPmyN-52">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1080" y="200" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="F3enPIIrSAs-tL1YPmyN-54">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1080" y="200" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="F3enPIIrSAs-tL1YPmyN-55">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1080" y="200" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-50" value="UserCreated" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="80" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-51" value="UserLoggedIn" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="160" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-52" value="FriendRequestSent" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="240" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-53" value="UserLoggedOut" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="200" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-54" value="FriendRequestAccepted" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="280" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-55" value="FriendRequestDenied" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="320" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-56" value="UserUpdated" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="120" width="140" height="30" as="geometry" />
+        <mxCell id="F3enPIIrSAs-tL1YPmyN-56" value="NewMessageOnDirect" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="205" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="F3enPIIrSAs-tL1YPmyN-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="F3enPIIrSAs-tL1YPmyN-57" target="F3enPIIrSAs-tL1YPmyN-41">
           <mxGeometry relative="1" as="geometry" />
