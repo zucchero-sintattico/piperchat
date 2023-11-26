@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-26T15:39:35.294Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="3FItQwhInTRidxqlriIx" version="22.1.4" type="github" pages="11">
+<mxfile host="app.diagrams.net" modified="2023-11-26T15:40:49.844Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="qCeF3Q9LKseWXH-28Dq6" version="22.1.4" type="github" pages="11">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2019" dy="2217" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1550,10 +1550,10 @@
             <mxPoint x="1080" y="755" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-136" value="NewMessageOnChannel" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="F3enPIIrSAs-tL1YPmyN-136" value="UserOnline" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1120" y="720" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="F3enPIIrSAs-tL1YPmyN-137" value="NewMessageOnDirect" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="F3enPIIrSAs-tL1YPmyN-137" value="UserOffline" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1120" y="760" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="F3enPIIrSAs-tL1YPmyN-138" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="F3enPIIrSAs-tL1YPmyN-139" target="F3enPIIrSAs-tL1YPmyN-132">
