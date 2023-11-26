@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-26T13:01:24.214Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="x7_QnRd-NAVsDcZE-KLT" version="22.1.4" type="github" pages="10">
+<mxfile host="app.diagrams.net" modified="2023-11-26T14:57:38.868Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="AMD09O-Yj_HSC7K8jHwn" version="22.1.4" type="github" pages="10">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="1610" dy="1826" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1225,6 +1225,9 @@
         <mxCell id="ggrjBJ_u8Y16e6AiUJYx-24" value="sent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ggrjBJ_u8Y16e6AiUJYx-10" target="ggrjBJ_u8Y16e6AiUJYx-23">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-37" value="sent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ggrjBJ_u8Y16e6AiUJYx-10" target="ggrjBJ_u8Y16e6AiUJYx-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="ggrjBJ_u8Y16e6AiUJYx-10" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;User&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ username: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ email: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ password: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ online: boolean&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ lastActive: Date&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="120" y="190" width="175" height="130" as="geometry" />
         </mxCell>
@@ -1277,6 +1280,27 @@
         </mxCell>
         <mxCell id="ggrjBJ_u8Y16e6AiUJYx-34" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="340" y="510" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-38" value="receive" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ggrjBJ_u8Y16e6AiUJYx-36" target="ggrjBJ_u8Y16e6AiUJYx-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-36" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;FriendRequest&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ from: User&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ to: User&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="165" y="30" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-39" value="friend" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="ggrjBJ_u8Y16e6AiUJYx-10" target="ggrjBJ_u8Y16e6AiUJYx-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="164" y="170" />
+              <mxPoint x="100" y="170" />
+              <mxPoint x="100" y="223" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-40" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="90" y="220" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ggrjBJ_u8Y16e6AiUJYx-42" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="160" width="30" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
