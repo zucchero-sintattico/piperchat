@@ -301,7 +301,7 @@ onMounted(() => {
 
         <q-card-actions align="center">
           <q-btn
-            label="I want to delete the channel"
+            label="I want to kick the user"
             color="red"
             v-close-popup
             @click="kickSelectedUser"
