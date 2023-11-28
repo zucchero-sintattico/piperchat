@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-28T14:45:16.238Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="hngsH5RytDkgYrwpuLe-" version="22.1.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-11-28T14:47:40.477Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="TENwwKvxcRODTWyGRjVP" version="22.1.4" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="2117" dy="2310" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -205,8 +205,8 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="hUoIGhUYRTdeKqbPJZkR" name="WebRTC">
-    <mxGraphModel dx="771" dy="581" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+  <diagram id="hUoIGhUYRTdeKqbPJZkR" name="Multimedia">
+    <mxGraphModel dx="608" dy="581" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -309,7 +309,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="qYjvqvgn68T2RJMQHCX6" name="Casi d&#39;uso">
-    <mxGraphModel dx="1267" dy="1210" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1520" dy="1452" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -769,7 +769,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="kRD3UhwRUW5oBwB9nB_q" name="microservizi">
-    <mxGraphModel dx="964" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="760" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1141,7 +1141,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="dmc8Qe4hpHAquoWF2X3L" name="Dominio">
-    <mxGraphModel dx="1814" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1610" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1273,7 +1273,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="q7p-E9C2RwkT0XrXyVsJ" name="Eventi">
-    <mxGraphModel dx="964" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="760" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1669,7 +1669,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="y4CIL3AIXxBJpzeJlnhW" name="Modules">
-    <mxGraphModel dx="964" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="760" dy="726" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
