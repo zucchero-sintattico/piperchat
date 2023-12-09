@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-12-09T14:49:19.962Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1.2 Safari/605.1.15" etag="8GP3AlvhbzxU3DZ-I7q1" version="22.1.7" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-12-09T15:30:55.861Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1.2 Safari/605.1.15" etag="jHbvumBopr4e0hH5Z-uh" version="22.1.7" type="github" pages="7">
   <diagram name="General" id="8NHsR8Ymc2wK5Nyu_gr6">
     <mxGraphModel dx="1866" dy="1721" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1242,7 +1242,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="kRD3UhwRUW5oBwB9nB_q" name="microservizi">
-    <mxGraphModel dx="1016" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1195" dy="731" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1322,7 +1322,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="eyJRurYT03D14h-zPR-5-37" value="" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="310" y="550" width="489.5" height="500" as="geometry" />
+          <mxGeometry x="310" y="550" width="470" height="500" as="geometry" />
         </mxCell>
         <mxCell id="eyJRurYT03D14h-zPR-5-39" value="frontend" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="458.5" y="560" width="80" height="50" as="geometry" />
