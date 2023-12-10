@@ -71,6 +71,12 @@ components:
       payload:
         '$ref': '#/components/schemas/ServerDeletedSchema'
 
+    ServerUpdated:
+      summary: A server you are in has been updated
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ServerUpdatedSchema'
+
     UserJoinedServer:
       summary: A user has joined a server you are in
       contentType: application/json
@@ -82,6 +88,24 @@ components:
       contentType: application/json
       payload:
         '$ref': '#/components/schemas/UserLeftServerSchema'
+
+    ChannelCreated:
+      summary: A channel has been created in a server you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ChannelCreatedSchema'
+
+    ChannelDeleted:
+      summary: A channel has been deleted in a server you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ChannelDeletedSchema'
+
+    ChannelUpdated:
+      summary: A channel has been updated in a server you are in
+      contentType: application/json
+      payload:
+        '$ref': '#/components/schemas/ChannelUpdatedSchema'
 
   schemas:
     DirectMessageSchema:
@@ -177,6 +201,17 @@ components:
           description: Unique identifier representing a specific server
           example: server1
 
+    ServerUpdatedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'server-updated'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+
     UserJoinedServerSchema:
       type: object
       properties:
@@ -206,3 +241,48 @@ components:
           type: string
           description: Unique identifier representing a specific user
           example: user1
+
+    ChannelCreatedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'channel-created'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        channel:
+          type: string
+          description: Unique identifier representing a specific channel
+          example: channel1
+
+    ChannelDeletedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'channel-deleted'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        channel:
+          type: string
+          description: Unique identifier representing a specific channel
+          example: channel1
+
+    ChannelUpdatedSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          const: 'channel-updated'
+        serverId:
+          type: string
+          description: Unique identifier representing a specific server
+          example: server1
+        channel:
+          type: string
+          description: Unique identifier representing a specific channel
+          example: channel1
