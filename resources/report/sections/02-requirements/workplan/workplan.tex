@@ -1,0 +1,90 @@
+\section{Expected work plan}
+
+Is there any implicit requirement hidden within this project's requirements?
+%
+Is there any implicit hypothesis hidden within this project's requirements?
+%
+Are there any non-functional requirements implied by this project's requirements?
+
+What model / paradigm / techonology is the best suited to face this project's requirements?
+%
+What's the abstraction gap among the available models / paradigms / techonologies and the problem to be solved?
+
+Lo sviluppo del progetto sarà guidato dalla seguente scaletta, in modo da rendere l'integrazione delle features incrementali.
+
+\begin{enumerate}
+
+    \item Sviluppo scheletro infrastruttura a micro-servizi.
+    \begin{enumerate}
+        \item Selezione e integrazione del Broker.
+        \item Sviluppo sistema Logging per il monitoraggio degli eventi del sistema (utile per monitorare l'incremento delle features)
+        \item Sviluppo dashboard reattiva per la visualizzazione dello stato dei servizi.
+    \end{enumerate}
+    
+    \item Sviluppo sistema di utenti.
+    \begin{enumerate}
+        \item Sistema di registrazione.
+        \item Sistema di login
+        \item Sistema di gestione stato (online, offline, ultimo accesso, etc..)
+    \end{enumerate}
+
+    \item Sviluppo sistema di notifiche
+    \begin{enumerate}
+        \item Sistema di collegamento tramite websockets.
+        \item Sistema di memorizzazione di ricezione delle notifiche.
+    \end{enumerate}
+
+    \item Sviluppo sistema di messaggistica intra-utenti
+    \begin{enumerate}
+        \item Sistema di richieste di amicizia.
+        \item Aggiunta supporto notifiche richieste amicizia.
+        \item Sistema chat private tra utenti.
+        \item Aggiunta supporto notifiche messaggi.
+    \end{enumerate}
+
+    \item Sviluppo sistema di gestione dei server.
+    \begin{enumerate}
+        \item Sistema di creazione server.
+        \item Sistema di join dei server.
+        \item Sistema di creazione canali testuali all'interno dei server.
+    \end{enumerate}
+
+    \item Estensione della messaggistica all'audio/video.
+    \begin{enumerate}
+        \item Sistema di signaling WebRTC per inizializzazione chiamate.
+        \item Sistema di creazione di canali multimediali.
+        \item Sistema di chiamate multimediali intra-utenti.
+        \item Aggiunta supporto notifiche chiamate in entrata.
+    \end{enumerate}
+
+    \item Feature opzionali
+    \begin{enumerate}
+        \item Sistema di blacklisting intra-utenti.
+        \item Sistema di ban degli utenti dai server.
+        \item Sviluppo di un servizio adibito al salvataggio dei file inviati dagli utenti in modo da abilitare non solo messaggi testuali ma anche l’invio di file.
+        \item Gestione auto-scaling.
+    \end{enumerate}
+
+\end{enumerate}
+
+\subsection{Technologies}
+
+Di seguito le tecnologie che verranno utilizzate per l'implementazione del progetto:
+
+\begin{itemize}
+    \item Node.js per lo sviluppo dei servizi
+    \begin{itemize}
+        \item Typescript come linguaggio
+        \item Express.js per il server
+        \item Socket.io per la comunicazione tramite Websocket
+        \item Mongoose per la gestione del database
+        \item Amqplib per la connessione al broker
+        \item Jest per il testing
+    \end{itemize}
+    \item MongoDB per i database dei servizi
+    \item RabbitMQ come broker
+    \item Docker + Docker-Compose per l’infrastruttura
+    \item HTTP e Websocket come protocolli di comunicazione con i servizi
+    \item HTML, Javascript e CSS per il client Web.
+    \item WebRTC per la comunicazione audio/video
+\end{itemize}

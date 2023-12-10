@@ -1,0 +1,79 @@
+\section{Benchmarking}
+
+Di seguito sono riportate le prove di \emph{benchmarking} effettuate, al fine di mettere sotto sforzo il sistema per verificare che la \emph{scalabilità orizzontale} porti parte dei risultati attesi: aumentare il numero di richieste gestite nell'arco di un determinato periodo.
+
+\textbf{Obiettivo:}
+il test consiste nell'eseguire lo stesso carico di lavoro lato client variando il numero di repliche del servizio che le deve gestire.
+
+Lo scenario prevede un client che effettua richieste HTTP verso il server, dove è in esecuzione il software di Piperchat, all'interno degli appositi container docker.
+
+%
+%
+%
+\subsection{Configurazione}
+
+Sono state utilizzate le seguenti macchine:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|cc|}
+\hline
+\textbf{Componente} & \multicolumn{1}{c|}{\textbf{Client}} & \textbf{Server}           \\ \hline
+S.O.                & \multicolumn{1}{c|}{MacOS 14.1}      & Ubuntu 23.10              \\ \hline
+CPU                 & \multicolumn{1}{c|}{Apple M1 Pro}    & Intel Core i7-8700 6 core \\ \hline
+RAM                 & \multicolumn{1}{c|}{16 GB}           & 16 GB                     \\ \hline
+Connessione         & \multicolumn{2}{c|}{Connessione LAN @ $\sim$500 Mbit/s}                \\ \hline
+\end{tabular}
+\end{table}
+
+Lo strumento utilizzato per effettuare le richieste HTTP lato client è \href{https://github.com/wg/wrk}{\emph{wrk}}, un software di benchmarking che permette di generare carichi di lavoro significativi, sfruttando una singola CPU multi-core.
+
+Il microservizio sotto osservazione è \emph{users-service}, del quale è stata testata la rotta \texttt{/auth/login} con le credenziali di un utente già registrato, attraverso la seguente configurazione:
+
+\begin{verbatim}
+$ wrk -t10 -c150 -d30s http://<server-ip>/auth/login -s ./post.lua
+
+// Configurazione script del software (post.lua)
+wrk.method = "POST"
+wrk.body = '{"username": "user", "password": "12341234"}'
+wrk.headers["Content-Type"] = "application/json"
+\end{verbatim}
+
+\begin{itemize}
+    \item \texttt{-t10:} Vengono impiegati 10 threads
+    \item \texttt{-c150:} Vengono simulate 150 connessioni attive (utenti)
+    \item \texttt{-d30s:} Il test dura 30 secondi
+\end{itemize}
+
+%
+%
+%
+\subsection{Il test}
+
+Il test è stato eseguito più volte, mediante la configurazione esposta in precedenza, variando il numero di repliche del servizio.
+
+Di seguito vengono riportati i risultati, ognuno dei quali è la media di 4 esecuzioni.
+
+\input{sections/09-appendix-benchmarking/table/table-1-replica}
+\input{sections/09-appendix-benchmarking/table/table-2-replica}
+\input{sections/09-appendix-benchmarking/table/table-3-replica}
+\input{sections/09-appendix-benchmarking/table/table-5-replica}
+\input{sections/09-appendix-benchmarking/table/table-10-replica}
+\input{sections/09-appendix-benchmarking/table/table-20-replica}
+
+%
+%
+%
+\subsection{Risultati}
+
+Il test effettuato ha portato ai risultati attesi.
+%
+I dati di maggior rilievo da prendere che possono essere osservati sono la \emph{latenza} ed il \emph{numero di richieste}.
+
+Come si può notare, il numero di richieste tendere ad aumentare finché non si arriva al numero di repliche uguale al numero di core effettivi della macchina che deve prendere in carico la richiesta, per poi stabilizzarsi.
+
+Invece, la latenza di risposta alle richieste tende a diminuire costantemente finché non si raggiunge il numero di threads\footnote{Intel® Hyper-Threading Technology} di cui dispone la macchina.
+
+Superati i numeri evidenziati in precedenza, le prestazioni iniziano a degradare.
+%
+Come si può notare in Tabella \ref{tab:bench-replica-20}, il numero di socket che non riesce ad effettuare una connessione tende ad aumentare notevolmente.

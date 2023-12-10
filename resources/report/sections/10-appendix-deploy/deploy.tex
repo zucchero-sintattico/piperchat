@@ -1,0 +1,33 @@
+\section{Tentativo di deployment reale}
+
+Abbiamo proceduto con il deploy dell'applicazione online con l'obiettivo di testare e utilizzare concretamente l'applicativo. Durante questo processo, sono emersi alcuni problemi rilevanti relativi all'implementazione delle WebSocket.
+
+\subsection{Problema con WebSocket non Sicure}
+Durante il deploy, ci siamo accorti che l'applicazione utilizzava WebSocket non sicure (ws) invece di WebSocket sicure (wss). Questo ha causato il blocco delle connessioni da parte dei browser, poiché molti moderni browser richiedono connessioni sicure per proteggere la privacy degli utenti.
+
+Per affrontare questo problema, abbiamo implementato una soluzione intermedia utilizzando Nginx come proxy SSL. Nginx è stato configurato per gestire la crittografia SSL/TLS delle connessioni WebSocket, consentendo l'utilizzo di connessioni sicure (wss). Questo approccio ci ha permesso di ottenere connessioni sicure senza dover apportare modifiche dirette al codice sorgente dell'applicazione. 
+
+\begin{verbatim}
+location / {
+    # Configurazione del proxy pass verso il server sulla porta 80
+    proxy_pass http://localhost:80;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+location /notification {
+    proxy_pass http://localhost:80;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location /webrtc {
+    proxy_pass http://localhost:80;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+\end{verbatim}

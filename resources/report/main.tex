@@ -1,12 +1,18 @@
-\documentclass[11pt]{report}
+\documentclass[12pt]{scrartcl}
+\usepackage[margin=3cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
 \usepackage{hyperref}
-\usepackage{url}
+\usepackage{xurl}
 \usepackage{natbib}
 \usepackage{graphicx}
-\usepackage{parskip}
 \usepackage{float}
+\usepackage{multirow}
+\usepackage[inline]{enumitem}% http://ctan.org/pkg/enumitem
+
+\linespread{1.3} % ~35 linee per pagina
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.8em}
 
 \newcommand{\emailaddr}[1]{\large\href{mailto:#1}{\texttt{#1}}}
 
@@ -16,6 +22,14 @@
 % Define TypeScript language settings
 \lstdefinelanguage{TypeScript}{
   morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, class, export, async, namespace, const, type, extends},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  sensitive=true
+}
+\lstdefinelanguage{Yaml}{
+  morekeywords={services, image, command, expose, depends_on, networks, environment, labels, volumes, healthcheck, ports, restart, condition},
   morecomment=[l]{//},
   morecomment=[s]{/*}{*/},
   morestring=[b]',
@@ -40,92 +54,70 @@
   breakatwhitespace=true,
   tabsize=2
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%% YAML syntax highlighting %%%%%%%%%%%%%%%%%
-
-% http://tex.stackexchange.com/questions/152829/how-can-i-highlight-yaml-code-in-a-pretty-way-with-listings
-
-% here is a macro expanding to the name of the language
-% (handy if you decide to change it further down the road)
-\newcommand\YAMLcolonstyle{\color{red}\mdseries}
-\newcommand\YAMLkeystyle{\color{black}\bfseries}
-\newcommand\YAMLvaluestyle{\color{blue}\mdseries}
-
-\makeatletter
-
-\newcommand\language@yaml{yaml}
-
-\expandafter\expandafter\expandafter\lstdefinelanguage
-\expandafter{\language@yaml}
-{
-  keywords={true,false,null,y,n},
-  keywordstyle=\color{darkgray}\bfseries,
-  basicstyle=\YAMLkeystyle,                                 % assuming a key comes first
-  sensitive=false,
-  comment=[l]{\#},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\YAMLvaluestyle\ttfamily,
-  moredelim=[l][\color{orange}]{\&},
-  moredelim=[l][\color{magenta}]{*},
-  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
-  morestring=[b]',
-  morestring=[b]",
-  literate =    {---}{{\ProcessThreeDashes}}3
-                {>}{{\textcolor{red}\textgreater}}1     
-                {|}{{\textcolor{red}\textbar}}1 
-                {\ -\ }{{\mdseries\ -\ }}3,
+\lstdefinestyle{yaml}{
+  language=Yaml,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{purple},
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{white},
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
 }
 
-% switch to key style at EOL
-\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
-\makeatother
-
-\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
-
-%%%%%%%%%%% YAML syntax highlighting %%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\title{
-    Piperchat \\
-    \large Applicazioni e Servizi Web
+\title{\Huge
+    Piperchat
 }
 
-\author{ \Large
+% Consider watching:
+% https://www.youtube.com/watch?v=ihxSUsJB_14
+% https://www.youtube.com/watch?v=XTFWaV55uDo
+
+\author{\Large
     Alessandro Mazzoli \\ \emailaddr{alessandro.mazzoli9@studio.unibo.it}
     \and \Large
     Luigi Borriello \\ \emailaddr{luigi.borriello2@studio.unibo.it} 
     \and \Large
+    Manuel Andruccioli \\ \emailaddr{manuel.andruccioli@studio.unibo.it}
+    \and \Large
     Tommaso Patriti \\ \emailaddr{tommaso.patriti@studio.unibo.it}
 }
+
 \date{\today}
-
-
 
 \begin{document}
 
 \maketitle
 
+\input{sections/00-abstract/abstract}
+
 \tableofcontents
 
-\include{./sections/01-intro/intro}
+\include{sections/01-goal/goal}
+% \include{sections/workplan/workplan}
+\include{sections/02-requirements/requirements}
+\include{sections/03-design/design}
+\include{sections/04-implementation/implementation}
+\include{sections/05-validation/validation}
+\include{sections/06-deployment/deployment}
+\include{sections/07-usage-example/usage-example}
+\include{sections/08-conclusions/conclusions}
+% \include{sections/08-stylistic-notes/stylistic-notes}
 
-\include{./sections/02-requirements/requirements}
+\appendix
 
-\include{./sections/03-design/design}
-
-\include{./sections/04-technologies/technologies}
-
-\include{./sections/05-code/code}
-
-\include{./sections/06-test/test}
-
-\include{./sections/07-deployment/deployment}
-
-\include{./sections/08-conclusions/conclusions}
+\include{sections/09-appendix-benchmarking/benchmarking}
+\include{sections/10-appendix-deploy/deploy}
+\include{sections/11-appendix-dev-container/dev-container}
 
 
+% \nocite{*} % Includes all references from the `references.bib` file
 % \bibliographystyle{plain}
 % \bibliography{references}
 \end{document}

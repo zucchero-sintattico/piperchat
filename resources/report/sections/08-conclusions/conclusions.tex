@@ -1,21 +1,22 @@
-\chapter{Conclusioni}
+\section{Conclusioni}
 
-Il progetto "Piperchat" ha portato alla creazione di una piattaforma di comunicazione ispirata a Discord, con l'obiettivo di offrire un ambiente dove gli utenti possono interagire in varie forme.
-%
-Durante il processo di sviluppo, sono stati identificati diversi requisiti funzionali, tra cui la registrazione e l'autenticazione degli utenti, la gestione delle amicizie, la messaggistica intra-utente e la gestione dei server e dei canali.
-%
-Inoltre, sono stati definiti requisiti non funzionali per garantire usabilità e accessibilità.
-%
-Il design del progetto è stato basato su un modello iterativo e orientato all'utente, con una particolare attenzione all'usabilità e all'accessibilità.
-%
-Sono stati creati mockup per valutare diverse combinazioni cromatiche e configurazioni dell'interfaccia utente, garantendo un'esperienza visiva ottimale.
-%
-L'architettura del sistema è stata realizzata utilizzando un'architettura a microservizi, suddividendo la complessità in parti più piccole e coese.
-%
-Sono state utilizzate diverse tecnologie, MEVN (MongoDB, Express, Vue.js, Node.js), Docker per la gestione dei contenitori, Swagger per la documentazione delle API, Traefik per il routing del traffico, WebRTC per le videochiamate, Socket.IO per la comunicazione in tempo reale e altre librerie e framework.
-%
-Infine, è stata creata un'organizzazione chiara delle API, definendo le specifiche di ogni endpoint e utilizzando TypeScript per garantire un typing accurato.
-%
-In conclusione, il progetto "Piperchat" ha portato alla creazione di una piattaforma di comunicazione completa, con attenzione all'usabilità, all'accessibilità e alle esigenze specifiche degli utenti.
-%
-La sua architettura a microservizi e l'organizzazione delle API lo rendono scalabile e flessibile per future espansioni e miglioramenti.
+Il progetto Piperchat è stato sviluppato con l'obiettivo di creare una piattaforma di comunicazione ispirata a Discord, offrendo agli utenti la possibilità di interagire in varie forme, creare connessioni sociali e gestire server personalizzati. L'architettura a microservizi è stata scelta per gestire la complessità del sistema, consentendo una maggiore coesione e scalabilità.
+
+Durante lo sviluppo, sono stati affrontati diversi aspetti, tra cui la gestione delle amicizie, la messaggistica, la creazione e gestione di server e canali multimediali. L'implementazione di funzionalità come notifiche, chiamate vocali e video ha arricchito l'esperienza dell'utente.
+
+La valutazione della qualità del software prodotto ha considerato aspetti cruciali come funzionalità, affidabilità, scalabilità, sicurezza, usabilità e prestazioni. L'approccio a microservizi ha dimostrato la sua efficacia nel garantire una struttura modulare e gestibile.
+
+\subsection{Sviluppi futuri}
+A causa delle scarse tempistiche, l'implementazione della dashboard relativa ai log dell'intera applicazione, è stata messa in secondo piano.
+Detto ciò dunque, la prima feature da realizzare in termini di sviluppi futuri sarebbe proprio quest'ultima.
+
+Altro miglioramento che potremmo apportare alla nostra applicazione, riguarderebbe il deploy dell'architettura, difatti attualmente, l'applicazione di videochat viene distribuita utilizzando Docker Compose con un approccio basato su una singola macchina. Tuttavia, per migliorare la scalabilità, la resilienza e la gestione delle risorse, è previsto un futuro passaggio a un'architettura basata su Docker Swarm.
+
+
+\subsection{Cosa abbiamo imparato}
+
+Durante lo sviluppo di Piperchat, abbiamo acquisito una comprensione approfondita dell'architettura a microservizi e delle sfide associate. Abbiamo imparato a bilanciare aspetti cruciali come la sicurezza, la scalabilità e l'usabilità in un progetto di comunicazione in tempo reale.
+
+La collaborazione tra diversi team per lo sviluppo dei singoli microservizi e la gestione di comunicazione tra di essi attraverso un message broker hanno ampliato la nostra conoscenza delle best practice nello sviluppo di sistemi distribuiti.
+
+Inoltre, l'importanza di valutare la qualità del software in termini di funzionalità, affidabilità e prestazioni ci ha fornito un quadro completo delle sfide e delle opportunità nell'implementazione di una piattaforma di comunicazione complessa come Piperchat.

@@ -1,0 +1,236 @@
+\section{Autovalutazione / Validazione}
+
+% Choose a criterion for the evaluation of the produced software and \textbf{its compliance to the requirements above}.
+
+% Pseudo-formal or formal criteria are preferred.
+
+% In case of a test-driven development, describe tests here and possibly report the amount of passing tests, the total amount of tests and, possibly, the test coverage.
+
+%
+%
+%
+\subsection{Struttura del repository e analisi statica}
+
+Il progetto è stato sviluppato adottando una struttura \texttt{mono repository - multi project}.
+%
+Per garantire la coerenza, la qualità e la manutenibilità del codice sorgente, durante lo sviluppo abbiamo seguito \textbf{GitFlow} e adottato fin da subito diversi strumenti per l'analisi statica. 
+%
+Inoltre, al fine rendere estendibile e meno prolissa la manutenibilità di ogni progetto, sono stati adottati meccanismi di estensione nei file di configurazione.
+
+%
+%
+%
+\subsubsection{Lint}
+
+Come strumento di Linting abbiamo adottato \emph{ESLint}\footnote{\url{https://eslint.org}}, grazie al quale, il nostro team ha potuto identificare e correggere errori, migliorare la coerenza del codice e rispettare le best practices di programmazione durante il processo di sviluppo.
+
+%
+%
+%
+\subsubsection{Prettier}
+
+\emph{Prettier}\footnote{\url{https://prettier.io}} è uno strumento per la formattazione del codice, integrato nel nostro flusso di lavoro per garantire uno stile uniforme in tutto il progetto.
+%
+Le principali considerazioni includono:
+
+\begin{itemize}
+  \item \textbf{Configurazione condivisa:} lo strumento è configurato per seguire uno stile condiviso in tutto il progetto, garantendo coerenza nella formattazione del codice.
+
+  \item \textbf{Integrazione con ESLint:} la configurazione di Prettier è allineata con quella di ESLint, evitando conflitti e assicurando una formattazione coerente durante l'analisi statica.
+\end{itemize}
+
+L'utilizzo di Prettier ha migliorato la leggibilità del codice e semplificato notevolmente la gestione dello stile del codice degli artefatti.
+
+%
+%
+%
+\subsubsection{Pre-commit Hook (Git)}
+
+Gli \emph{hooks} di Git\footnote{\url{https://git-scm.com/book/it/v2/Customizing-Git-Git-Hooks}} sono strumenti che permettono di eseguire automaticamente azioni specifiche al verificarsi di eventi.
+
+È stato utilizzato l'hook di \emph{pre-commit}, al fine di eseguire controlli di formattazione prima di eseguire un commit.
+%
+Questo ha permesso di migliorare la qualità del codice, evitando commit con formattazione non conforme.
+%
+% Nel nostro progetto, li utilizziamo per eseguire alcuni controlli preventivi prima di immagazzinare le modifiche nel repository. Le considerazioni principali includono:
+
+% \begin{itemize}
+%   \item \textbf{Configurazione Customizzata:} Abbiamo configurato hook pre-commit per eseguire linting e formattazione automatica del codice prima di ogni commit.
+%   \item \textbf{Integrazione con ESLint e Prettier:} I hook pre-commit sono integrati con ESLint e Prettier, assicurando che il codice sorgente rispetti le regole di linting e formattazione prima di essere immagazzinato.
+% \end{itemize}
+
+%
+%
+%
+\subsection{Testing}
+
+La fase di testing è strutturata per verificare l'integrazione tra l'intero microservizio e le sue dipendenze, tra cui il Database e il Broker.
+
+% \begin{itemize}
+%     \item Il Database
+%     \item Il Broker
+% \end{itemize}
+
+%
+%
+%
+\subsubsection{Jest}
+
+Ogni microservizio definisce degli \emph{Unit Testing} mediante \emph{Jest} in modo da verificare la correttezza delle richieste e delle relative risposte, dei singoli microservizi.
+
+In questo modo, siamo stati in grado di concentrarci sui seguenti aspetti durante i test:
+
+\begin{itemize}
+    \item Verifica della correttezza delle richieste fornite.
+
+    \item Verifica della correttezza delle risposte fornite da diverse richieste.
+
+    \item Verifica della correttezza che gli endpoint si comportino come atteso, controllando i \emph{side effect} di una richiesta, eseguendo richieste successive.
+\end{itemize}
+
+Questo approccio ci ha permesso di sviluppare test solidi e garantire che i microservizi rispettassero gli standard richiesti.
+
+%
+%
+%
+\subsubsection{Test sui Microservizi}
+
+Tutti i microservizi posseggono una suite di test.
+%
+Di seguito un esempio con il core del testing del servizio degli utenti:
+
+\begin{lstlisting}[style=typescript, caption={microservice Test}, label=lst:login:route:test]
+const userMicroservice: Microservice = new Microservice(UserServiceConfiguration)
+let request: supertest.SuperTest<supertest.Test>
+
+beforeAll(async () => {
+  await userMicroservice.start()
+  request = supertest(userMicroservice.getServer())
+})
+
+afterAll(async () => {
+  await userMicroservice.stop()
+})
+
+afterEach(async () => {
+  await userMicroservice.clearDatabase()
+})
+
+describe('Register', () => {
+  it('A user must provide username, password and email', async () => {
+    let response = await request
+      .post('/auth/register')
+      .send({ username: 'test', password: 'test' })
+    expect(response.status).toBe(400)
+    // other test stuff
+    response = await request
+      .post('/auth/register')
+      .send({ username: 'test', password: 'test', email: 'test' })
+    expect(response.status).toBe(200)
+  })
+    // other test stuff
+})
+\end{lstlisting}
+
+% describe('Login', () => {
+%     it('A user should provide username and password to login', async () => {
+%         let response = await register('test', 'test', 'test')
+%         response = await request.post('/auth/login').send({ username: 'test' })
+%         expect(response.status).toBe(400)
+%         response = await request.post('/auth/login').send({ password: 'test' })
+%         expect(response.status).toBe(400)
+%         response = await request
+%           .post('/auth/login')
+%           .send({ username: 'test', password: 'test' })
+%         expect(response.status).toBe(200)
+%     })
+%     // other test stuff
+% })
+
+% describe('Logout', () => {
+%   it('A user should be able to logout', async () => {
+%     let response = await createUserAndLogin('test', 'test', 'test')
+%     const cookie = response.header['set-cookie']
+%     response = await request.post('/auth/logout').set('Cookie', cookie)
+%     expect(response.status).toBe(200)
+%   })
+%     // other test stuff
+% })
+
+% describe('Refresh token', () => {
+%   it('A user should be able to refresh token', async () => {
+%     let response = await createUserAndLogin('test', 'test', 'test')
+%     const cookie = response.header['set-cookie']
+%     response = await request.post('/auth/refresh-token').set('Cookie', cookie)
+%     expect(response.status).toBe(200)
+%     expect(response.header['set-cookie']).toHaveLength(1)
+%   })
+%     // other test stuff
+% })
+
+%
+%
+%
+\subsubsection{Esecuzione dei test}
+
+Al fine di eseguire le suite di test è necessario rendere disponibili le dipendenze dei microservizi.
+%
+Procedere come segue:
+
+\begin{verbatim}
+# Un terminale (directory = projectRoot)
+npm i
+cd dev
+./runDev.sh
+
+# Altro terminale (e.g. test su microservizio users)
+npm run --workspace services/users test
+# oppure (per eseguire tutti i test)
+npm run test
+\end{verbatim}
+
+%
+%
+%
+\subsection{Continuous Integration}
+
+Il progetto è ospitato in due servizi di hosting: GitHub e GitLab.
+%
+Il primo servizio è stato utilizzato per l'intera fase di sviluppo, mentre il secondo meramente per eseguire una copia all'interno del repository fornito per il progetto.
+
+%
+%
+%
+\subsubsection{Github Action}
+
+Le \emph{GitHub Actions} sono un sistema di automazione integrato direttamente nella piattaforma \emph{GitHub}, il servizio di hosting scelto per ospitare la fase di sviluppo del progetto.
+
+Sono stati realizzati i seguenti workflow:
+
+\begin{itemize}
+    \item \textbf{\href{https://github.com/zucchero-sintattico/piperchat/blob/develop/.github/workflows/check-style.yaml}{Check code style and lint}:} il workflow esegue i controlli di analisi statica sul codice per ogni push nel repository.
+
+    \item \textbf{\href{https://github.com/zucchero-sintattico/piperchat/blob/develop/.github/workflows/pages.yml}{Deploy pages}:} il workflow esegue il deploy del sito statico mediante \emph{GitHub Pages}.
+    All'interno del sito è possibile trovare le varie api, relazione, etc.
+
+    \item \textbf{\href{https://github.com/zucchero-sintattico/piperchat/blob/develop/.github/workflows/dispatch-services-test.yaml}{Dispatch tests}:} il workflow esegue i test di tutti i microservizi.
+
+    \item \textbf{\href{https://github.com/zucchero-sintattico/piperchat/actions/workflows/service-unit-testing.yaml}{Testing services}:} il workflow esegue i test dei microservizi che sono stati modificati nel push che lo ha innescato.
+\end{itemize}
+
+I test automatici eseguiti all'interno dei workflows necessitano delle dipendenze sopra citate, tra cui Database e Broker.
+%
+Al fine di risolverle, vengono utilizzati i \texttt{services} delle GitHub Action, che permettono di istanziare gli opportuni servizi.
+
+%
+%
+%
+\subsubsection{Dispatch tests e Testing services}
+
+Nell'ottica di uno sviluppo coadiuvato da un elevato numero di commit, l'idea iniziale per cui è stato realizzato il workflow \emph{Testing services} era per evitare di eseguire l'intera suite di test ad ogni push.
+%
+Infatti, il workflow esegue i test del microservizio modificato.
+%
+Il supporto fornito dalle API delle GitHub Action è limitato, infatti si è dovuto scrivere un complesso script bash.
+
+A seguito dello sviluppo è stato constatato che ciò non era necessario questo workflow aggiuntivo, infatti, l'intera suite di test non richiede eccessivo tempo per essere eseguita.

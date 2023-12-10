@@ -1,64 +1,100 @@
-\chapter{Requisiti}
-\section{Funzionali}
+\section{Analisi dei Requirements}
 
-\begin{itemize}
+Di seguito vengono formalizzati i requisiti:
+
+\subsection{Funzionali}
+
+\begin{enumerate}
     \item \textbf{Registrazione e Autenticazione}:
-    \begin{itemize}
+    \begin{enumerate}[label*=\arabic*.]
         \item Possibilità di registrazione al sistema.
         
         \item Possibilità di login nel sistema.
-    \end{itemize}
+    \end{enumerate}
     \item \textbf{Sistema di amicizie}:
-    \begin{itemize}
-        \item Possibilità di inviare richieste di amicizia.
+    \begin{enumerate}[label*=\arabic*.]
+        \item Possibilità di inviare richieste di amicizia ad altri utenti.
         
         \item Possibilità di accettare o rifiutare richieste di amicizia.
         
         \item Sistema di notifiche per la ricezione di nuovo richieste di amicizia.
         
-        \item Sistema di gestione dello stato e dell'ultimo accesso degli utenti.
-    \end{itemize}
-    \item \textbf{Messaggistica Infra-Utente}:
-    \begin{itemize}
-        \item Gestione messaggistica tra amici
+        \item Sistema di gestione dello stato (online) e dell'ultimo accesso degli utenti.
+    \end{enumerate}
+    \item \textbf{Interazioni con amici}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Gestione messaggistica tra i propri amici.
         
         \item Sistema di notifiche per l'arrivo di nuovi messaggi.
-    \end{itemize}
+
+        \item Possibilità di entrare in sessione con un amico.
+    \end{enumerate}
     \item \textbf{Gestione Server}:
-    \begin{itemize}
+    \begin{enumerate}[label*=\arabic*.]
         \item Possibilità di creazione di un nuovo server.
         
-        \item Possibilità di join di un server esistente.
+        \item Possibilità di entrare un server esistente.
         
-        \item Possibilità da parte del creatore del server di rimozione dei membri.
-    \end{itemize}
-    \item \textbf{Gestione canali testuali}:
-    \begin{itemize}
-        \item Possibilità di creazione di canali testuali da parte dell'owner del server.
-        \item Possibilità di rimozione di canali testuali da parte dell'owner del server.
-        \item Sistema di messaggistica per i canali testuali
+        \item Possibilità da parte del creatore del server di rimuovere i membri.
+    \end{enumerate}
+    \item \textbf{Gestione canali}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Possibilità di creazione di canali (testuali o multimediali) da parte del creatore del server.
+    
+        \item Possibilità di rimozione di canali da parte del creatore del server.
+
+        \item Sistema di messaggistica per i canali testuali.
+
         \item Sistema di notifiche per i nuovi messaggi inviati all'interno di canali testuali.
-    \end{itemize}
-    \item \textbf{Gestione canali multimediali}:
-    \begin{itemize}
-        \item Possibilità di creazione di canali multimediali da parte dell'owner del server.
-        \item Possibilità di rimozione di canali multimediali da parte dell'owner del server.
-        \item Sistema di videochiamate.
-        \item Gestione della webcam e del microfono.
-    \end{itemize}
-\end{itemize}
 
-\section{Requisiti non Funzionali (Usabilità e Accessibilità)}
-\begin{itemize}
+    % \end{enumerate}
+    % \item \textbf{Gestione canali multimediali}:
+    % \begin{enumerate}[label*=\arabic*.]
+        % \item Possibilità di creazione di canali multimediali da parte del creatore del server.
+        % \item Possibilità di rimozione di canali multimediali da parte del creatore del server.
+        \item Possibilità di accedere alla sessione dei canali multimediali.
+    \end{enumerate}
+
+    \item \textbf{Gestione sessione}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Possibilità di comunicare attraverso gli altri partecipanti alla stessa sessione.
+
+        \item Possibilità di accendere e spegnere il microfono e la fotocamera.
+    \end{enumerate}
+
     \item \textbf{Sistema di monitoring dei microservizi}:
-    \begin{itemize}
+    \begin{enumerate}[label*=\arabic*.]
         \item Sistema di monitoraggio dello stato dei servizi.
-        \item Dashboard per visualizzare lo stato real-time dei servizi.
-    \end{itemize}
+    \end{enumerate}
     
-    \item \textbf{Supporto temi}: l'applicazione deve poter gestire il cambio di tema, offrendo anche un opzione a supporto di utenti con dislessia.
+\end{enumerate}
+
+%
+%
+%
+\subsection{Non funzionali}
+
+\begin{enumerate}
+    \setcounter{enumi}{7}
+
+    \item \textbf{Sicurezza}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Autenticazione degli utenti per verificarne l'identità.
+
+        \item Autorizzazione degli utenti per l'accesso alle risorse in base alle regole stabilite.
+
+        \item Crittografia per garantire la confidenzialità delle password degli utenti.
+    \end{enumerate}
     
-    \item \textbf{Test di Accessibilità}: Prima del rilascio ufficiale, l'applicazione deve essere sottoposta a test di accessibilità per identificare e correggere eventuali problemi relativi all'accessibilità.
-\end{itemize}
+    \item \textbf{Scalabilità}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Scalabilità orizzontale per gestire l'aumento del carico operativo.
+    \end{enumerate}
 
+    \item \textbf{Manutenibilità}:
+    \begin{enumerate}[label*=\arabic*.]
+        \item Modularità degli artefatti.
+        \item Codice sorgente ben strutturato e comprensibile.
+    \end{enumerate}
 
+\end{enumerate}
