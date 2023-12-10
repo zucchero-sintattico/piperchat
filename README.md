@@ -69,29 +69,34 @@ To get a local copy up and running follow these simple steps.
 
 ### Installation
 
-1. Clone the repo
+1. **Clone the Repository:**
 
-```sh
-git clone git@github.com:zucchero-sintattico/piperchat.git
-```
+   ```sh
+   $ git clone https://github.com/zucchero-sintattico/piperchat.git
+   ```
 
-2. Install NPM packages
+2. **Install Dependencies:**
 
-```sh
-npm install
-```
+   ```sh
+   $ npm i
+   ```
 
-3. Run the backend with the bash script
+3. **Copy Environment Variables:**
 
-```sh
-./deploy.sh
-```
+   ```sh
+   $ cp .env.template .env
+   ```
 
-4. Run the frontend
+4. **Deploy the Architecture (including Image Build):**
 
-```sh
-npm run -w services/frontend dev
-```
+   ```sh
+   $ ./cleanDeploy.sh
+   ```
+
+5. **Subsequent Deployments (Preserving Volumes and Images):**
+   ```sh
+   $ ./deploy.sh
+   ```
 
 <!-- CONTRIBUTING -->
 
