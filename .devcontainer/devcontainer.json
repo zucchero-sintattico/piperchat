@@ -8,5 +8,5 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [80],
 
-  "postStartCommand": "cp .env.template .env && ./deploy.sh"
+  "postStartCommand": "cp .env.template .env && ./cleanDeploy.sh"
 }
